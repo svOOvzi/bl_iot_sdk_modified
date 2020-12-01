@@ -1,3 +1,8 @@
+TODO
+====
+
+- Capture built firmware from GitHub Actions Workflow as Artifacts
+
 BL602 SDK (Pine64 version)
 ==========================
 
