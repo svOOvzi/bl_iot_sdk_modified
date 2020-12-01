@@ -17,6 +17,12 @@ jobs:
       working-directory: customer_app
       env:
         BL60X_SDK_PATH: ${{ github.workspace }}
+        
+    - name: Upload Built Firmware
+      uses: actions/upload-artifact@v2
+      with:
+        name: customer_app.zip
+        path: customer_app
       
   build-msys:
     runs-on: windows-latest
