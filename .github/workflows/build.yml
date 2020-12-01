@@ -22,7 +22,9 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: customer_app.zip
-        path: customer_app
+        path: |
+          customer_app/**/*.bin
+          customer_app/**/*.elf
       
   build-msys:
     runs-on: windows-latest
