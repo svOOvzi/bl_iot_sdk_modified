@@ -1,3 +1,9 @@
+This is the "jtag" branch that remaps the JTAG Port to other GPIO Pins, because the original pins are used by the onboard LED.
+
+See...
+
+`"Quick Peek of PineCone BL602 RISC-V Evaluation Board" <https://lupyuen.github.io/articles/pinecone>`_
+
 TODO
 ====
 
