@@ -81,3 +81,46 @@ void bfl_main(void)
     helloworld();
 }
 
+/*
+Default JTAG port is...
+TDO: GPIO 11
+TMS: GPIO 12 (not remapped)
+TCK: GPIO 14
+TDI: GPIO 17
+
+But 3 of above pins are connected to LED...
+Blue:  GPIO 11
+Green: GPIO 14
+Red:   GPIO 17
+
+So we need to remap these pins to PWM...
+PWM Ch 1 (Blue):  GPIO 11
+PWM Ch 4 (Green): GPIO 14
+PWM Ch 2 (Red):   GPIO 17
+
+Then remap these pins to JTAG (0x0e)...
+TDI: GPIO 1
+TCK: GPIO 2
+TDO: GPIO 3
+
+GPIO_CFGCTL0
+地址：0x40000100
+27:24 GP1FUNC
+
+GPIO_CFGCTL1
+地址：0x40000104
+11:8 GP2FUNC
+27:24 GP3FUNC
+
+GPIO_CFGCTL5
+地址：0x40000114
+27:24 GP11FUNC
+
+GPIO_CFGCTL7
+地址：0x4000011c
+11:8 GP14FUNC
+
+GPIO_CFGCTL8
+地址：0x40000120
+27:24 GP17FUNC
+*/
