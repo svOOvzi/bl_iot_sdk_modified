@@ -1,3 +1,7 @@
+See...
+
+`"Quick Peek of PineCone BL602 RISC-V Evaluation Board" <https://lupyuen.github.io/articles/pinecone>`_
+
 TODO
 ====
 
