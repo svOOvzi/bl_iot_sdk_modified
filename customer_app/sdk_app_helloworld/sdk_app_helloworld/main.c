@@ -152,18 +152,6 @@ void bfl_main(void)
     const uint32_t GP17FUNC_SHIFT = 24;
     const uint32_t GP17FUNC_MASK  = 0xf << GP17FUNC_SHIFT;
 
-    //  GPIO 1 becomes JTAG TDI
-    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
-        | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
-        
-    //  GPIO 2 becomes JTAG TCK
-    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK) 
-        | (GPIO_FUN_JTAG << GP2FUNC_SHIFT);
-
-    //  GPIO 3 becomes JTAG TDO
-    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
-        | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
-
     //  GPIO 11 becomes PWM Ch 1 (Blue)
     *GP11FUNC_ADDR = (*GP11FUNC_ADDR & ~GP11FUNC_MASK) 
         | (GPIO_FUN_PWM << GP11FUNC_SHIFT);
@@ -175,4 +163,16 @@ void bfl_main(void)
     //  GPIO 17 becomes PWM Ch 2 (Red)
     *GP17FUNC_ADDR = (*GP17FUNC_ADDR & ~GP17FUNC_MASK) 
         | (GPIO_FUN_PWM << GP17FUNC_SHIFT);        
+        
+    //  GPIO 1 becomes JTAG TDI
+    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
+        
+    //  GPIO 2 becomes JTAG TCK
+    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP2FUNC_SHIFT);
+
+    //  GPIO 3 becomes JTAG TDO
+    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
 }
