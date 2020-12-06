@@ -152,6 +152,14 @@ void bfl_main(void)
     const uint32_t GP17FUNC_SHIFT = 24;
     const uint32_t GP17FUNC_MASK  = 0xf << GP17FUNC_SHIFT;
 
+    //  Print values before remap
+    printf("Before remap...\r\n");
+    printf("GPIO_CFGCTL0=%08x\r\n", *GPIO_CFGCTL0);
+    printf("GPIO_CFGCTL1=%08x\r\n", *GPIO_CFGCTL1);
+    printf("GPIO_CFGCTL5=%08x\r\n", *GPIO_CFGCTL5);
+    printf("GPIO_CFGCTL7=%08x\r\n", *GPIO_CFGCTL7);
+    printf("GPIO_CFGCTL8=%08x\r\n", *GPIO_CFGCTL8);
+
     //  GPIO 11 becomes PWM Ch 1 (Blue)
     *GP11FUNC_ADDR = (*GP11FUNC_ADDR & ~GP11FUNC_MASK) 
         | (GPIO_FUN_PWM << GP11FUNC_SHIFT);
@@ -163,7 +171,7 @@ void bfl_main(void)
     //  GPIO 17 becomes PWM Ch 2 (Red)
     *GP17FUNC_ADDR = (*GP17FUNC_ADDR & ~GP17FUNC_MASK) 
         | (GPIO_FUN_PWM << GP17FUNC_SHIFT);        
-        
+
     //  GPIO 1 becomes JTAG TDI
     *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
         | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
@@ -175,4 +183,15 @@ void bfl_main(void)
     //  GPIO 3 becomes JTAG TDO
     *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
         | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
+
+    //  Print values after remap
+    printf("After remap...\r\n");
+    printf("GPIO_CFGCTL0=%08x\r\n", *GPIO_CFGCTL0);
+    printf("GPIO_CFGCTL1=%08x\r\n", *GPIO_CFGCTL1);
+    printf("GPIO_CFGCTL5=%08x\r\n", *GPIO_CFGCTL5);
+    printf("GPIO_CFGCTL7=%08x\r\n", *GPIO_CFGCTL7);
+    printf("GPIO_CFGCTL8=%08x\r\n", *GPIO_CFGCTL8);
+
+    //  Loop forever
+    for(;;) {}
 }
