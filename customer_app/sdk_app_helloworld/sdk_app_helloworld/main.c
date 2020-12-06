@@ -79,48 +79,100 @@ void bfl_main(void)
      */
     bl_uart_init(0, 16, 7, 255, 255, 2 * 1000 * 1000);    
     helloworld();
+
+    /*
+    Default JTAG port is...
+    TDO: GPIO 11
+    TMS: GPIO 12 (not remapped)
+    TCK: GPIO 14
+    TDI: GPIO 17
+
+    But 3 of above pins are connected to LED...
+    Blue:  GPIO 11
+    Green: GPIO 14
+    Red:   GPIO 17
+
+    So we need to remap these pins to PWM...
+    PWM Ch 1 (Blue):  GPIO 11
+    PWM Ch 4 (Green): GPIO 14
+    PWM Ch 2 (Red):   GPIO 17
+
+    Then remap these pins to JTAG (0x0e)...
+    TDI: GPIO 1
+    TCK: GPIO 2
+    TDO: GPIO 3
+    */
+
+    //  GPIO Functions. From components/bl602/bl602_std/bl602_std/StdDriver/Inc/bl602_gpio.h
+    const uint32_t GPIO_FUN_PWM  =  8;
+    const uint32_t GPIO_FUN_JTAG = 14;
+
+    //  GPIO_CFGCTL0
+    //  Address：0x40000100
+    //  27:24 GP1FUNC
+    uint32_t *GPIO_CFGCTL0 = (uint32_t *) 0x40000100;
+    uint32_t *GP1FUNC_ADDR = GPIO_CFGCTL0;
+    const uint32_t GP1FUNC_SHIFT = 24;
+    const uint32_t GP1FUNC_MASK  = 0xf << GP1FUNC_SHIFT;
+
+    //  GPIO_CFGCTL1
+    //  Address：0x40000104
+    //  11:8 GP2FUNC
+    //  27:24 GP3FUNC
+    uint32_t *GPIO_CFGCTL1 = (uint32_t *) 0x40000104;
+    uint32_t *GP2FUNC_ADDR = GPIO_CFGCTL1;
+    const uint32_t GP2FUNC_SHIFT =  8;
+    const uint32_t GP2FUNC_MASK  = 0xf << GP2FUNC_SHIFT;
+
+    uint32_t *GP3FUNC_ADDR = GPIO_CFGCTL1;
+    const uint32_t GP3FUNC_SHIFT = 24;
+    const uint32_t GP3FUNC_MASK  = 0xf << GP3FUNC_SHIFT;
+
+    //  GPIO_CFGCTL5
+    //  Address：0x40000114
+    //  27:24 GP11FUNC
+    uint32_t *GPIO_CFGCTL5 = (uint32_t *) 0x40000114;
+    uint32_t *GP11FUNC_ADDR = GPIO_CFGCTL5;
+    const uint32_t GP11FUNC_SHIFT = 24;
+    const uint32_t GP11FUNC_MASK  = 0xf << GP11FUNC_SHIFT;
+
+    //  GPIO_CFGCTL7
+    //  Address：0x4000011c
+    //  11:8 GP14FUNC
+    uint32_t *GPIO_CFGCTL7 = (uint32_t *) 0x4000011c;
+    uint32_t *GP14FUNC_ADDR = GPIO_CFGCTL7;
+    const uint32_t GP14FUNC_SHIFT =  8;
+    const uint32_t GP14FUNC_MASK  = 0xf << GP14FUNC_SHIFT;
+
+    //  GPIO_CFGCTL8
+    //  Address：0x40000120
+    //  27:24 GP17FUNC
+    uint32_t *GPIO_CFGCTL8 = (uint32_t *) 0x40000120;
+    uint32_t *GP17FUNC_ADDR = GPIO_CFGCTL8;
+    const uint32_t GP17FUNC_SHIFT = 24;
+    const uint32_t GP17FUNC_MASK  = 0xf << GP17FUNC_SHIFT;
+
+    //  GPIO 1 becomes JTAG TDI
+    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
+        
+    //  GPIO 2 becomes JTAG TCK
+    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP2FUNC_SHIFT);
+
+    //  GPIO 3 becomes JTAG TDO
+    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
+        | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
+
+    //  GPIO 11 becomes PWM Ch 1 (Blue)
+    *GP11FUNC_ADDR = (*GP11FUNC_ADDR & ~GP11FUNC_MASK) 
+        | (GPIO_FUN_PWM << GP11FUNC_SHIFT);
+
+    //  GPIO 14 becomes PWM Ch 4 (Green)
+    *GP14FUNC_ADDR = (*GP14FUNC_ADDR & ~GP14FUNC_MASK) 
+        | (GPIO_FUN_PWM << GP14FUNC_SHIFT);
+
+    //  GPIO 17 becomes PWM Ch 2 (Red)
+    *GP17FUNC_ADDR = (*GP17FUNC_ADDR & ~GP17FUNC_MASK) 
+        | (GPIO_FUN_PWM << GP17FUNC_SHIFT);        
 }
-
-/*
-Default JTAG port is...
-TDO: GPIO 11
-TMS: GPIO 12 (not remapped)
-TCK: GPIO 14
-TDI: GPIO 17
-
-But 3 of above pins are connected to LED...
-Blue:  GPIO 11
-Green: GPIO 14
-Red:   GPIO 17
-
-So we need to remap these pins to PWM...
-PWM Ch 1 (Blue):  GPIO 11
-PWM Ch 4 (Green): GPIO 14
-PWM Ch 2 (Red):   GPIO 17
-
-Then remap these pins to JTAG (0x0e)...
-TDI: GPIO 1
-TCK: GPIO 2
-TDO: GPIO 3
-
-GPIO_CFGCTL0
-地址：0x40000100
-27:24 GP1FUNC
-
-GPIO_CFGCTL1
-地址：0x40000104
-11:8 GP2FUNC
-27:24 GP3FUNC
-
-GPIO_CFGCTL5
-地址：0x40000114
-27:24 GP11FUNC
-
-GPIO_CFGCTL7
-地址：0x4000011c
-11:8 GP14FUNC
-
-GPIO_CFGCTL8
-地址：0x40000120
-27:24 GP17FUNC
-*/
