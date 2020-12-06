@@ -195,3 +195,20 @@ void bfl_main(void)
     //  Loop forever
     for(;;) {}
 }
+
+#ifdef NOTUSED
+Output Log:
+
+Before remap...
+GPIO_CFGCTL0=bb17bb17
+GPIO_CFGCTL1=1103bb17
+GPIO_CFGCTL5=0e030b03
+GPIO_CFGCTL7=0b030e03
+GPIO_CFGCTL8=0e030717
+After remap...
+GPIO_CFGCTL0=ee17bb17
+GPIO_CFGCTL1=ee03ee17
+GPIO_CFGCTL5=08030b03
+GPIO_CFGCTL7=0b030803
+GPIO_CFGCTL8=08030717
+#endif  //  NOTUSED
