@@ -101,32 +101,56 @@ void bfl_main(void)
     TDI: GPIO 1
     TCK: GPIO 2
     TDO: GPIO 3
+
+    Also set the GPIO control for the remapped pins to...
+    Pull Down Control: 0
+    Pull Up Control:   0
+    Driving Control:   0
+    SMT Control:       1
+    Input Enable:      1
     */
 
     //  GPIO Functions. From components/bl602/bl602_std/bl602_std/StdDriver/Inc/bl602_gpio.h
     const uint32_t GPIO_FUN_PWM  =  8;
     const uint32_t GPIO_FUN_JTAG = 14;
 
+    //  GPIO Control
+    //  Pull Down Control: 0
+    //  Pull Up Control:   0
+    //  Driving Control:   0
+    //  SMT Control:       1
+    //  Input Enable:      1
+    const uint32_t GPIO_CTRL = 3;
+
     //  GPIO_CFGCTL0
     //  Address：0x40000100
+    //  21:16 GP1CTRL
     //  27:24 GP1FUNC
     uint32_t *GPIO_CFGCTL0 = (uint32_t *) 0x40000100;
     uint32_t *GP1FUNC_ADDR = GPIO_CFGCTL0;
+    const uint32_t GP1CTRL_SHIFT = 16;
+    const uint32_t GP1CTRL_MASK  = 0x3f << GP1CTRL_SHIFT;
     const uint32_t GP1FUNC_SHIFT = 24;
-    const uint32_t GP1FUNC_MASK  = 0xf << GP1FUNC_SHIFT;
+    const uint32_t GP1FUNC_MASK  = 0x0f << GP1FUNC_SHIFT;
 
     //  GPIO_CFGCTL1
     //  Address：0x40000104
-    //  11:8 GP2FUNC
+    //   5:0  GP2CTRL
+    //  11:8  GP2FUNC
+    //  21:16 GP3CTRL
     //  27:24 GP3FUNC
     uint32_t *GPIO_CFGCTL1 = (uint32_t *) 0x40000104;
     uint32_t *GP2FUNC_ADDR = GPIO_CFGCTL1;
+    const uint32_t GP2CTRL_SHIFT =  0;
+    const uint32_t GP2CTRL_MASK  = 0x3f << GP2CTRL_SHIFT;
     const uint32_t GP2FUNC_SHIFT =  8;
-    const uint32_t GP2FUNC_MASK  = 0xf << GP2FUNC_SHIFT;
+    const uint32_t GP2FUNC_MASK  = 0x0f << GP2FUNC_SHIFT;
 
     uint32_t *GP3FUNC_ADDR = GPIO_CFGCTL1;
+    const uint32_t GP3CTRL_SHIFT = 16;
+    const uint32_t GP3CTRL_MASK  = 0x3f << GP3CTRL_SHIFT;
     const uint32_t GP3FUNC_SHIFT = 24;
-    const uint32_t GP3FUNC_MASK  = 0xf << GP3FUNC_SHIFT;
+    const uint32_t GP3FUNC_MASK  = 0x0f << GP3FUNC_SHIFT;
 
     //  GPIO_CFGCTL5
     //  Address：0x40000114
@@ -134,7 +158,7 @@ void bfl_main(void)
     uint32_t *GPIO_CFGCTL5 = (uint32_t *) 0x40000114;
     uint32_t *GP11FUNC_ADDR = GPIO_CFGCTL5;
     const uint32_t GP11FUNC_SHIFT = 24;
-    const uint32_t GP11FUNC_MASK  = 0xf << GP11FUNC_SHIFT;
+    const uint32_t GP11FUNC_MASK  = 0x0f << GP11FUNC_SHIFT;
 
     //  GPIO_CFGCTL7
     //  Address：0x4000011c
@@ -142,7 +166,7 @@ void bfl_main(void)
     uint32_t *GPIO_CFGCTL7 = (uint32_t *) 0x4000011c;
     uint32_t *GP14FUNC_ADDR = GPIO_CFGCTL7;
     const uint32_t GP14FUNC_SHIFT =  8;
-    const uint32_t GP14FUNC_MASK  = 0xf << GP14FUNC_SHIFT;
+    const uint32_t GP14FUNC_MASK  = 0x0f << GP14FUNC_SHIFT;
 
     //  GPIO_CFGCTL8
     //  Address：0x40000120
@@ -150,7 +174,7 @@ void bfl_main(void)
     uint32_t *GPIO_CFGCTL8 = (uint32_t *) 0x40000120;
     uint32_t *GP17FUNC_ADDR = GPIO_CFGCTL8;
     const uint32_t GP17FUNC_SHIFT = 24;
-    const uint32_t GP17FUNC_MASK  = 0xf << GP17FUNC_SHIFT;
+    const uint32_t GP17FUNC_MASK  = 0x0f << GP17FUNC_SHIFT;
 
     //  Print values before remap
     printf("Before remap...\r\n");
@@ -172,41 +196,20 @@ void bfl_main(void)
     *GP17FUNC_ADDR = (*GP17FUNC_ADDR & ~GP17FUNC_MASK) 
         | (GPIO_FUN_PWM << GP17FUNC_SHIFT);        
 
-    //  GPIO 1 becomes JTAG TDI
-    //  *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
-    //      | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
+    //  GPIO 1 becomes JTAG TDI. Also set the GPIO control.
+    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK & ~GP1CTRL_MASK) 
+        | (GPIO_FUN_JTAG << GP1FUNC_SHIFT)
+        | (GPIO_CTRL     << GP1CTRL_SHIFT);
 
-    //  Pull Down Control: 0
-    //  Pull Up Control:   0
-    //  Driving Control:   0
-    //  SMT Control:       1
-    //  Input Enable:      1
-    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & 0x0fff0000) 
-        | 0x0e030000;
+    //  GPIO 2 becomes JTAG TCK. Also set the GPIO control.
+    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK & ~GP2CTRL_MASK) 
+        | (GPIO_FUN_JTAG << GP2FUNC_SHIFT)
+        | (GPIO_CTRL     << GP2CTRL_SHIFT);
 
-    //  GPIO 2 becomes JTAG TCK
-    //  *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK) 
-    //      | (GPIO_FUN_JTAG << GP2FUNC_SHIFT);
-
-    //  Pull Down Control: 0
-    //  Pull Up Control:   0
-    //  Driving Control:   0
-    //  SMT Control:       1
-    //  Input Enable:      1
-    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & 0x0fff) 
-        | 0x0e03;
-
-    //  GPIO 3 becomes JTAG TDO
-    //  *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
-    //      | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
-
-    //  Pull Down Control: 0
-    //  Pull Up Control:   0
-    //  Driving Control:   0
-    //  SMT Control:       1
-    //  Input Enable:      1
-    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & 0x0fff0000) 
-        | 0x0e030000;
+    //  GPIO 3 becomes JTAG TDO. Also set the GPIO control.
+    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK & ~GP3CTRL_MASK) 
+        | (GPIO_FUN_JTAG << GP3FUNC_SHIFT)
+        | (GPIO_CTRL     << GP3CTRL_SHIFT);
 
     //  Print values after remap
     printf("After remap...\r\n");
