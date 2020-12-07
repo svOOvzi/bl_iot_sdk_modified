@@ -175,14 +175,38 @@ void bfl_main(void)
     //  GPIO 1 becomes JTAG TDI
     *GP1FUNC_ADDR = (*GP1FUNC_ADDR & ~GP1FUNC_MASK) 
         | (GPIO_FUN_JTAG << GP1FUNC_SHIFT);
-        
+
+    //  Pull Down Control: 0
+    //  Pull Up Control:   0
+    //  Driving Control:   0
+    //  SMT Control:       1
+    //  Input Enable:      1
+    *GP1FUNC_ADDR = (*GP1FUNC_ADDR & 0x1f0000) 
+        | 0x030000;
+
     //  GPIO 2 becomes JTAG TCK
     *GP2FUNC_ADDR = (*GP2FUNC_ADDR & ~GP2FUNC_MASK) 
         | (GPIO_FUN_JTAG << GP2FUNC_SHIFT);
 
+    //  Pull Down Control: 0
+    //  Pull Up Control:   0
+    //  Driving Control:   0
+    //  SMT Control:       1
+    //  Input Enable:      1
+    *GP2FUNC_ADDR = (*GP2FUNC_ADDR & 0x1f) 
+        | 0x03;
+
     //  GPIO 3 becomes JTAG TDO
     *GP3FUNC_ADDR = (*GP3FUNC_ADDR & ~GP3FUNC_MASK) 
         | (GPIO_FUN_JTAG << GP3FUNC_SHIFT);
+
+    //  Pull Down Control: 0
+    //  Pull Up Control:   0
+    //  Driving Control:   0
+    //  SMT Control:       1
+    //  Input Enable:      1
+    *GP3FUNC_ADDR = (*GP3FUNC_ADDR & 0x1f0000) 
+        | 0x030000;
 
     //  Print values after remap
     printf("After remap...\r\n");
