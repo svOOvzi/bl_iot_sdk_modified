@@ -8,8 +8,8 @@ Pine64 BL602 SDK modded for the articles...
 
 - `"Porting Mynewt to BL602" <https://twitter.com/MisterTechBlog/status/1338759961526951937?s=20>`_
 
-TODO
-====
+Changes
+=======
 
 - Capture built firmware from GitHub Actions Workflow as Artifacts
 
