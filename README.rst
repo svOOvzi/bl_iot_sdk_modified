@@ -2,11 +2,11 @@ Pine64 BL602 SDK modded for the articles...
 
 - `"Debug Rust on PineCone BL602 with VSCode and GDB" <https://lupyuen.github.io/articles/debug>`_
 
+- `"Porting Mynewt to PineCone BL602" <https://lupyuen.github.io/articles/mynewt>`_
+
 - `"Connect PineCone BL602 to OpenOCD" <https://lupyuen.github.io/articles/openocd>`_
 
 - `"Quick Peek of PineCone BL602 RISC-V Evaluation Board" <https://lupyuen.github.io/articles/pinecone>`_
-
-- `"Porting Mynewt to BL602" <https://twitter.com/MisterTechBlog/status/1338759961526951937?s=20>`_
 
 Changes
 =======
