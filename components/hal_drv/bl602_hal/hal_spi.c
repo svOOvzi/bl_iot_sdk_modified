@@ -89,7 +89,8 @@ void bl_spi0_dma_int_handler_rx(void);
 
 static void hal_gpio_init(spi_hw_t *arg)
 {
-    uint8_t gpiopins[4];
+    GLB_GPIO_Type gpiopins[4];  ////  TODO: Fixed type error for Mynewt
+    ////  Previously: uint8_t gpiopins[4];
 
     if (!arg) {
         blog_error("arg err.\r\n");
