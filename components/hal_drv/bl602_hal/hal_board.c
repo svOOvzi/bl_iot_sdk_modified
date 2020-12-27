@@ -726,7 +726,7 @@ static int hal_board_load_fdt_info(const void *dtb)
         } else {
             pwr_table_ble = 0;
         }
-        pwr_table_ble += 0;  ////  TODO: Fixed variable set but not used warning for Mynewt
+        pwr_table_ble += 0;  //  Suppress "variable set but not used" warning
         blog_info("set pwr_table_ble = %ld in dts\r\n", pwr_table_ble);
 #ifdef CFG_BLE_ENABLE
         ble_controller_set_tx_pwr(pwr_table_ble);
