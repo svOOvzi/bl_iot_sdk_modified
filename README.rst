@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Flashing Firmware to PineCone BL602" <https://lupyuen.github.io/articles/flash>`_
+
 - `"Debug Rust on PineCone BL602 with VSCode and GDB" <https://lupyuen.github.io/articles/debug>`_
 
 - `"Porting Mynewt to PineCone BL602" <https://lupyuen.github.io/articles/mynewt>`_
