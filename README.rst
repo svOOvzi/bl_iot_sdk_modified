@@ -13,6 +13,8 @@ Changes
 
 - Capture built firmware from GitHub Actions Workflow as Artifacts
 
+- "jtag" branch contains a modified Hello World app that remaps the JTAG port: https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld
+
 BL602 SDK (Pine64 version)
 ==========================
 
