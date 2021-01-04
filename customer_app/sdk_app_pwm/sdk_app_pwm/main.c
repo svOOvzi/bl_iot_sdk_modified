@@ -145,7 +145,7 @@ void cmd_pwm_init(char *buf, int len, int argc, char **argv)
     bl_pwm_init(id, pin, freq);
 }
 
-//  pwm_duty_set 0 20000
+//  Set the Duty Cycle (percentage from 0 to 100): pwm_duty_set 0 50
 void cmd_pwm_duty_set(char *buf, int len, int argc, char **argv)
 {
     uint8_t id;
@@ -162,7 +162,7 @@ void cmd_pwm_duty_set(char *buf, int len, int argc, char **argv)
     bl_pwm_set_duty(id, duty);
 }
 
-//  pwm_duty_get 0
+//  Display the Duty Cycle (percentage from 0 to 100): pwm_duty_get 0
 void cmd_pwm_duty_get(char *buf, int len, int argc, char **argv)
 {
     uint8_t  id;
@@ -179,7 +179,7 @@ void cmd_pwm_duty_get(char *buf, int len, int argc, char **argv)
     printf("pwm duty %f\r\n", duty);
 }
 
-//  pwm_freq_set 0 3000
+//  Set the Frequency (2000 to 800000): pwm_freq_set 0 3000
 void cmd_pwm_freq_set(char *buf, int len, int argc, char **argv)
 {
     uint8_t  id;
@@ -273,7 +273,7 @@ void cmd_pwm_test(char *buf, int len, int argc, char **argv)
 
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     { "pwm_init", "pwm_init 0 0 3000", cmd_pwm_init},
-    { "pwm_duty_set", "pwm_duty_set 0 20000", cmd_pwm_duty_set},
+    { "pwm_duty_set", "pwm_duty_set 0 50", cmd_pwm_duty_set},
     { "pwm_duty_get", "pwm_duty_get 0", cmd_pwm_duty_get},
     { "pwm_freq_set", "pwm_freq_set 0 3000", cmd_pwm_freq_set},
     { "pwm_start", "pwm_start 0", cmd_pwm_start},
