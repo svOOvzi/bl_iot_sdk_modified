@@ -130,6 +130,26 @@ void cmd_pwm_init(char *buf, int len, int argc, char **argv)
 {
     uint8_t id;
     uint8_t pin;
+    uint32_t freq;
+
+    if (argc != 4) {
+        log_error("arg err.\r\n");
+        return;
+    }
+
+    id = atoi(argv[1]);
+    pin = atoi(argv[2]);
+    freq = atoi(argv[3]);
+
+    //  Frequency must be between 2000 and 800000
+    bl_pwm_init(id, pin, freq);
+}
+
+//  Set the Duty Cycle (percentage from 0 to 100): pwm_duty_set 0 50
+void cmd_pwm_duty_set(char *buf, int len, int argc, char **argv)
+{
+    uint8_t id;
+    float   duty;
 
     if (argc != 3) {
         log_error("arg err.\r\n");
@@ -137,9 +157,43 @@ void cmd_pwm_init(char *buf, int len, int argc, char **argv)
     }
 
     id = atoi(argv[1]);
-    pin = atoi(argv[2]);
+    duty = atof(argv[2]);
 
-    bl_pwm_init(id, pin, 6000000);
+    bl_pwm_set_duty(id, duty);
+}
+
+//  Display the Duty Cycle (percentage from 0 to 100): pwm_duty_get 0
+void cmd_pwm_duty_get(char *buf, int len, int argc, char **argv)
+{
+    uint8_t  id;
+    float    duty;
+
+    if (argc != 2) {
+        log_error("arg err.\r\n");
+        return;
+    }
+
+    id = atoi(argv[1]);
+
+    bl_pwm_get_duty(id, &duty);
+    printf("pwm duty %f\r\n", duty);
+}
+
+//  Set the Frequency (2000 to 800000): pwm_freq_set 0 3000
+void cmd_pwm_freq_set(char *buf, int len, int argc, char **argv)
+{
+    uint8_t  id;
+    uint32_t freq;
+
+    if (argc != 3) {
+        log_error("arg err.\r\n");
+        return;
+    }
+
+    id = atoi(argv[1]);
+    freq = atoi(argv[2]);
+
+    bl_pwm_set_freq(id, freq);
 }
 
 void cmd_pwm_start(char *buf, int len, int argc, char **argv)
@@ -218,7 +272,10 @@ void cmd_pwm_test(char *buf, int len, int argc, char **argv)
 }
 
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    { "pwm_init", "pwm_init 0 0", cmd_pwm_init},
+    { "pwm_init", "pwm_init 0 0 3000", cmd_pwm_init},
+    { "pwm_duty_set", "pwm_duty_set 0 50", cmd_pwm_duty_set},
+    { "pwm_duty_get", "pwm_duty_get 0", cmd_pwm_duty_get},
+    { "pwm_freq_set", "pwm_freq_set 0 3000", cmd_pwm_freq_set},
     { "pwm_start", "pwm_start 0", cmd_pwm_start},
     { "pwm_stop", "pwm_stop 0", cmd_pwm_stop},
     { "pwm_task", "pwm_task", cmd_pwm_task},
