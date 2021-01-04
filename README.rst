@@ -1,5 +1,3 @@
-This is the "pwm" branch for testing PWM.
-
 Pine64 BL602 SDK modded for the articles...
 
 - `"Flashing Firmware to PineCone BL602" <https://lupyuen.github.io/articles/flash>`_
@@ -18,6 +16,8 @@ Changes
 - Capture built firmware from GitHub Actions Workflow as Artifacts
 
 - "jtag" branch contains a modified Hello World app that remaps the JTAG port: https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld
+
+- Modified PWM Demo Firmware for use without Device Tree: https://github.com/lupyuen/bl_iot_sdk/pull/1
 
 BL602 SDK (Pine64 version)
 ==========================
