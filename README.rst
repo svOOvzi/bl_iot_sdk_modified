@@ -1,3 +1,5 @@
+This is the "pwm" branch for testing PWM.
+
 Pine64 BL602 SDK modded for the articles...
 
 - `"Flashing Firmware to PineCone BL602" <https://lupyuen.github.io/articles/flash>`_
