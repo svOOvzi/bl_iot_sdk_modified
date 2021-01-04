@@ -130,23 +130,20 @@ void cmd_pwm_init(char *buf, int len, int argc, char **argv)
 {
     uint8_t id;
     uint8_t pin;
+    uint32_t freq;
 
-    if (argc != 3) {
+    if (argc != 4) {
         log_error("arg err.\r\n");
         return;
     }
 
     id = atoi(argv[1]);
     pin = atoi(argv[2]);
+    freq = atoi(argv[3]);
 
-    bl_pwm_init(id, pin, 6000000);
+    //  Frequency must be between 2000 and 800000
+    bl_pwm_init(id, pin, freq);
 }
-
-/*
-int32_t bl_pwm_set_duty(uint8_t id, float duty);
-int32_t bl_pwm_get_duty(uint8_t id, float *p_duty);
-int32_t bl_pwm_set_freq(uint8_t id, uint32_t freq);
-*/
 
 //  pwm_duty_set 0 20000
 void cmd_pwm_duty_set(char *buf, int len, int argc, char **argv)
@@ -275,7 +272,7 @@ void cmd_pwm_test(char *buf, int len, int argc, char **argv)
 }
 
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    { "pwm_init", "pwm_init 0 0", cmd_pwm_init},
+    { "pwm_init", "pwm_init 0 0 3000", cmd_pwm_init},
     { "pwm_duty_set", "pwm_duty_set 0 20000", cmd_pwm_duty_set},
     { "pwm_duty_get", "pwm_duty_get 0", cmd_pwm_duty_get},
     { "pwm_freq_set", "pwm_freq_set 0 3000", cmd_pwm_freq_set},
