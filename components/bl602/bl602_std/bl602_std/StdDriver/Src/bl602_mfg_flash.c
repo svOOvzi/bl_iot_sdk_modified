@@ -21,11 +21,13 @@ static SPI_Flash_Cfg_Type *pFlashCfg;
 PtTable_Stuff_Config ptTableStuff[2];
 PtTable_Entry_Config ptEntry={0};
 
+#ifdef TODO  ////
 /*partiton need this*/
 void main(void)
 {
 
 }
+#endif  ////  TODO
 
 static BL_Err_Type PtTable_Flash_Read (uint32_t addr,uint8_t *data, uint32_t len)
 {

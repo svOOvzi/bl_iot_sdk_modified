@@ -61,7 +61,7 @@ void Trap_Handler(void){
     unsigned long epc;
 
     MSG("Trap_Handler\r\n");
-    MSG("mcause=%08x\r\n",(uint32_t)cause);
+    ////TODO: MSG("mcause=%08x\r\n",(uint32_t)cause);
 
     cause=(cause&0x3ff);
     switch(cause){
@@ -89,21 +89,21 @@ void Trap_Handler(void){
         case 8:
             MSG("Environment call from U-mode\r\n");
             epc=read_csr(mepc);
-            MSG("mepc:%08x\r\n",(uint32_t)epc);
+            ////TODO: MSG("mepc:%08x\r\n",(uint32_t)epc);
             epc+=4;
             write_csr(mepc,epc);
             break;
         case 9:
             MSG("Environment call from M-mode\r\n");
             epc=read_csr(mepc);
-            MSG("mepc:%08x\r\n",(uint32_t)epc);
+            ////TODO: MSG("mepc:%08x\r\n",(uint32_t)epc);
             epc+=4;
             write_csr(mepc,epc);
             break;
         default:
-            MSG("Cause num=%d\r\n",(uint32_t)cause);
+            ////TODO: MSG("Cause num=%d\r\n",(uint32_t)cause);
             epc=read_csr(mepc);
-            MSG("mepc:%08x\r\n",(uint32_t)epc);
+            ////TODO: MSG("mepc:%08x\r\n",(uint32_t)epc);
             epc+=4;
             write_csr(mepc,epc);
             break;

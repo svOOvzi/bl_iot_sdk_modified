@@ -35,6 +35,7 @@
   */
   
 #include "bl602_romdriver.h"
+#include "bl602_sflash_ext.h"  ////  TODO
 #include <string.h>
 
 /** @addtogroup  BL602_Periph_Driver
