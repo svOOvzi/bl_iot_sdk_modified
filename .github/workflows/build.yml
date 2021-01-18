@@ -1,7 +1,16 @@
 name: Build
 
-on: [push, pull_request]
+# When to run this Workflow...
+on:
 
+  # Run this Workflow when files are updated (Pushed) in this Branch
+  push:
+    branches: [ master ]
+    
+  # Also run this Workflow when a Pull Request is created or updated in this Branch
+  pull_request:
+    branches: [ master ]
+    
 jobs:
   build:
     runs-on: ${{ matrix.os }}
