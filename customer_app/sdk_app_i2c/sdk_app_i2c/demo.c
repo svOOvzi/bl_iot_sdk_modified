@@ -39,9 +39,6 @@
 #include <hal_i2c.h>
 #include <cli.h>
 
-//  TODO
-int _stat(const char *file, void *pstat) { return 0; }
-
 int i2c_data_test(void)
 {
     int i;
@@ -213,28 +210,37 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
     return;
 }
 
+//  TODO
+int _stat(const char *file, void *pstat) { return 0; }
+
 static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
 {
+    //  i2c_set_freq(???, 0);
 }
 
 static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
 {
+    i2c_gpio_init(0);
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
 {
+    i2c_clear_status(0);
 }
 
 static void test_do_write_data(char *buf, int len, int argc, char **argv)
 {
+    //  do_write_data(???);
 }
 
 static void test_do_read_data(char *buf, int len, int argc, char **argv)
 {
+    //  do_read_data(???);
 }
 
 static void test_i2c_transfer_start(char *buf, int len, int argc, char **argv)
 {
+    //  i2c_transfer_start(???);
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
