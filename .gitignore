@@ -10,3 +10,6 @@
 # MacOS
 .DS_Store
 __pycache__
+
+# General
+toolchain/riscv/Linux/bin/*.old

@@ -39,6 +39,9 @@
 #include <hal_i2c.h>
 #include <cli.h>
 
+//  TODO
+int _stat(const char *file, void *pstat) { return 0; }
+
 int i2c_data_test(void)
 {
     int i;
@@ -210,9 +213,39 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
     return;
 }
 
+static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
+{
+}
+
+static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
+{
+}
+
+static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
+{
+}
+
+static void test_do_write_data(char *buf, int len, int argc, char **argv)
+{
+}
+
+static void test_do_read_data(char *buf, int len, int argc, char **argv)
+{
+}
+
+static void test_i2c_transfer_start(char *buf, int len, int argc, char **argv)
+{
+}
+
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_i2c", "test i2c", test_i2c_api},
+    {"i2c_set_freq", "i2c_set_freq", test_i2c_set_freq},
+    {"i2c_gpio_init", "i2c_gpio_init", test_i2c_gpio_init},
+    {"i2c_clear_status", "i2c_clear_status", test_i2c_clear_status},
+    {"do_write_data", "do_write_data", test_do_write_data},
+    {"do_read_data", "do_read_data", test_do_read_data},
+    {"i2c_transfer_start", "i2c_transfer_start", test_i2c_transfer_start},
 };                                                                                   
 
 int i2c_cli_init(void)
