@@ -215,16 +215,19 @@ int _stat(const char *file, void *pstat) { return 0; }
 
 static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
 {
-    //  i2c_set_freq(???, 0);
+    //  Set I2C Port 0 to 500 kbps
+    i2c_set_freq(500, 0);
 }
 
 static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
 {
+    //  Init I2C Port 0 to GPIO 3 and 4
     i2c_gpio_init(0);
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
 {
+    //  Clear status for I2C Port 0
     i2c_clear_status(0);
 }
 
