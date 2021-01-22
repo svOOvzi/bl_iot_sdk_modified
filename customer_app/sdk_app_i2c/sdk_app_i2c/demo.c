@@ -231,14 +231,47 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
     i2c_clear_status(0);
 }
 
+static uint8_t testarr[32];
+
 static void test_do_write_data(char *buf, int len, int argc, char **argv)
 {
-    //  do_write_data(???);
+    int data_len = 1;
+    //  Get ID
+    //  testarr[0] = ???;
+
+    static i2c_msg_t msg;
+    msg.addr = 0x50;
+    msg.subflag = 1;
+    msg.subaddr = 0x04;
+    msg.buf = testarr;
+    msg.direct = I2C_M_WRITE;
+    msg.block = I2C_M_BLOCK;
+    msg.len = data_len;
+    msg.idex = 0;
+    msg.sublen = 2;
+    msg.i2cx = 0;
+    do_write_data(&msg);
 }
+
+static uint8_t recvarr01[32];
 
 static void test_do_read_data(char *buf, int len, int argc, char **argv)
 {
-    //  do_read_data(???);
+    int data_len = 1;
+    memset(recvarr01, 0, sizeof(recvarr01));
+
+    static i2c_msg_t msg;
+    msg.addr = 0x50;
+    msg.subflag = 1;
+    msg.subaddr = 0x04;
+    msg.buf = recvarr01;
+    msg.direct = I2C_M_READ;
+    msg.block = I2C_M_BLOCK;
+    msg.len = data_len;
+    msg.idex = 0;
+    msg.sublen = 2;
+    msg.i2cx = 0;
+    do_read_data(&msg);
 }
 
 static void test_i2c_transfer_start(char *buf, int len, int argc, char **argv)
