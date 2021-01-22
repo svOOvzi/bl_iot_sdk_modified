@@ -264,7 +264,7 @@ static void test_start_write_data(char *buf, int len, int argc, char **argv)
 static void test_do_write_data(char *buf, int len, int argc, char **argv)
 {
     //  Write 4 bytes of data to I2C device
-    //  TODO: Wait for data written interrupt. Repeat until all data is written
+    //  TODO: After writing, wait for data written interrupt. Repeat until all data is written
     do_write_data(&send_msg);
 }
 
@@ -294,7 +294,7 @@ static void test_start_read_data(char *buf, int len, int argc, char **argv)
 static void test_do_read_data(char *buf, int len, int argc, char **argv)
 {
     //  Read 4 bytes of data from I2C device
-    //  TODO: Wait for data received interrupt. Repeat until all data is read
+    //  TODO: Before reading, wait for data received interrupt. Repeat until all data is read
     do_read_data(&recv_msg);
 }
 
