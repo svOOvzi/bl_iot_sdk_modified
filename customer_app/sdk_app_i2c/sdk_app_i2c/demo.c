@@ -231,46 +231,47 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
     i2c_clear_status(0);
 }
 
-static uint8_t testarr[32];
+static uint8_t send_buf[32];
+static uint8_t recv_buf[32];
 
 static void test_do_write_data(char *buf, int len, int argc, char **argv)
 {
+    //  Write data to I2C device
     int data_len = 1;
-    //  Get ID
-    //  testarr[0] = ???;
+    send_buf[0] = 0xd0;  //  BME280 Chip ID Register
 
     static i2c_msg_t msg;
-    msg.addr = 0x50;
-    msg.subflag = 1;
-    msg.subaddr = 0x04;
-    msg.buf = testarr;
-    msg.direct = I2C_M_WRITE;
-    msg.block = I2C_M_BLOCK;
-    msg.len = data_len;
-    msg.idex = 0;
-    msg.sublen = 2;
-    msg.i2cx = 0;
+    msg.addr = 0x76;  //  BME280 I2C Primary Address
+    msg.subflag = 0;  //  TODO: Was 1
+    msg.subaddr = 0;  //  TODO: Was 0x04
+    msg.sublen  = 0;  //  TODO: Was 2
+    msg.buf     = send_buf;
+    msg.direct  = I2C_M_WRITE;
+    msg.block   = I2C_M_BLOCK;
+    msg.len     = data_len;
+    msg.idex    = 0;
+    msg.i2cx    = 0;
     do_write_data(&msg);
 }
 
-static uint8_t recvarr01[32];
-
 static void test_do_read_data(char *buf, int len, int argc, char **argv)
 {
+    //  Read data from I2C device
+    //  Expect result 0x60 for BME280, 0x58 for BMP280
     int data_len = 1;
-    memset(recvarr01, 0, sizeof(recvarr01));
+    memset(recv_buf, 0, sizeof(recv_buf));
 
-    static i2c_msg_t msg;
-    msg.addr = 0x50;
-    msg.subflag = 1;
-    msg.subaddr = 0x04;
-    msg.buf = recvarr01;
-    msg.direct = I2C_M_READ;
-    msg.block = I2C_M_BLOCK;
-    msg.len = data_len;
-    msg.idex = 0;
-    msg.sublen = 2;
-    msg.i2cx = 0;
+    static i2c_msg_t msg;    
+    msg.addr = 0x76;  //  BME280 I2C Primary Address
+    msg.subflag = 0;  //  TODO: Was 1
+    msg.subaddr = 0;  //  TODO: Was 0x04
+    msg.sublen  = 0;  //  TODO: Was 2
+    msg.buf     = recv_buf;
+    msg.direct  = I2C_M_READ;
+    msg.block   = I2C_M_BLOCK;
+    msg.len     = data_len;
+    msg.idex    = 0;
+    msg.i2cx    = 0;
     do_read_data(&msg);
 }
 
