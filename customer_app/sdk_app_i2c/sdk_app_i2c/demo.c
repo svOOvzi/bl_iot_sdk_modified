@@ -231,6 +231,7 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
     i2c_clear_status(0);
 }
 
+//  Buffers for sending and receiving I2C Data
 static uint8_t send_buf[32];
 static uint8_t recv_buf[32];
 
