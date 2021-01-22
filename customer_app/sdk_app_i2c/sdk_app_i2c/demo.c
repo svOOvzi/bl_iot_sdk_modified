@@ -241,17 +241,24 @@ static void test_do_write_data(char *buf, int len, int argc, char **argv)
     int data_len = 1;
     send_buf[0] = 0xd0;  //  BME280 Chip ID Register
 
+    //  Init the I2C message
     static i2c_msg_t msg;
     msg.addr = 0x76;  //  BME280 I2C Primary Address
     msg.subflag = 0;  //  TODO: Was 1
     msg.subaddr = 0;  //  TODO: Was 0x04
     msg.sublen  = 0;  //  TODO: Was 2
     msg.buf     = send_buf;
+    msg.len     = data_len;
     msg.direct  = I2C_M_WRITE;
     msg.block   = I2C_M_BLOCK;
-    msg.len     = data_len;
     msg.idex    = 0;
     msg.i2cx    = 0;
+
+    //  Start the transfer
+    i2c_transfer_start(&msg);
+
+    //  Write 4 bytes of data
+    //  TODO: Repeat until all data is written
     do_write_data(&msg);
 }
 
@@ -262,23 +269,30 @@ static void test_do_read_data(char *buf, int len, int argc, char **argv)
     int data_len = 1;
     memset(recv_buf, 0, sizeof(recv_buf));
 
+    //  Init the I2C message
     static i2c_msg_t msg;    
     msg.addr = 0x76;  //  BME280 I2C Primary Address
     msg.subflag = 0;  //  TODO: Was 1
     msg.subaddr = 0;  //  TODO: Was 0x04
     msg.sublen  = 0;  //  TODO: Was 2
     msg.buf     = recv_buf;
+    msg.len     = data_len;
     msg.direct  = I2C_M_READ;
     msg.block   = I2C_M_BLOCK;
-    msg.len     = data_len;
     msg.idex    = 0;
     msg.i2cx    = 0;
+
+    //  Start the transfer
+    i2c_transfer_start(&msg);
+
+    //  Read 4 bytes of data
+    //  TODO: Repeat until all data is read
     do_read_data(&msg);
 }
 
 static void test_i2c_transfer_start(char *buf, int len, int argc, char **argv)
 {
-    //  i2c_transfer_start(???);
+    //  Not Used
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
