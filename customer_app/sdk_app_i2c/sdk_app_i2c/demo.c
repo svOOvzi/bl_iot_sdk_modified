@@ -213,16 +213,16 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
 //  TODO
 int _stat(const char *file, void *pstat) { return 0; }
 
-static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
-{
-    //  Set I2C Port 0 to 500 kbps
-    i2c_set_freq(500, 0);
-}
-
 static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
 {
     //  Init I2C Port 0 to GPIO 3 and 4
     i2c_gpio_init(0);
+}
+
+static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
+{
+    //  Set I2C Port 0 to 500 kbps
+    i2c_set_freq(500, 0);
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
@@ -263,6 +263,8 @@ static void test_start_write_data(char *buf, int len, int argc, char **argv)
 
 static void test_do_write_data(char *buf, int len, int argc, char **argv)
 {
+    if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
+
     //  Write 4 bytes of data to I2C device
     //  TODO: After writing, wait for data written interrupt. Repeat until all data is written
     do_write_data(&send_msg);
@@ -293,16 +295,23 @@ static void test_start_read_data(char *buf, int len, int argc, char **argv)
 
 static void test_do_read_data(char *buf, int len, int argc, char **argv)
 {
+    if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
+
     //  Read 4 bytes of data from I2C device
     //  TODO: Before reading, wait for data received interrupt. Repeat until all data is read
     do_read_data(&recv_msg);
+
+    //  Dump the data received
+    for (int i = 0; i < recv_msg.len; i++) {
+        printf("02x\n", recv_buf[i]);
+    }
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_i2c", "test i2c", test_i2c_api},
-    {"i2c_set_freq", "i2c_set_freq", test_i2c_set_freq},
     {"i2c_gpio_init", "i2c_gpio_init", test_i2c_gpio_init},
+    {"i2c_set_freq", "i2c_set_freq", test_i2c_set_freq},
     {"i2c_clear_status", "i2c_clear_status", test_i2c_clear_status},
     {"start_write_data", "start_write_data", test_start_write_data},
     {"do_write_data", "do_write_data", test_do_write_data},
