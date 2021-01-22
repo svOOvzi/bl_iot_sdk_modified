@@ -258,7 +258,7 @@ static void test_do_write_data(char *buf, int len, int argc, char **argv)
     i2c_transfer_start(&msg);
 
     //  Write 4 bytes of data
-    //  TODO: Repeat until all data is written
+    //  TODO: Wait for data written interrupt. Repeat until all data is written
     do_write_data(&msg);
 }
 
@@ -286,7 +286,7 @@ static void test_do_read_data(char *buf, int len, int argc, char **argv)
     i2c_transfer_start(&msg);
 
     //  Read 4 bytes of data
-    //  TODO: Repeat until all data is read
+    //  TODO: Wait for data received interrupt. Repeat until all data is read
     do_read_data(&msg);
 }
 
