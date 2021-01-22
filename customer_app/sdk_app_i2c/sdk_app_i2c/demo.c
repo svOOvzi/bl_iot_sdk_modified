@@ -254,7 +254,7 @@ static void test_do_write_data(char *buf, int len, int argc, char **argv)
     msg.idex    = 0;
     msg.i2cx    = 0;
 
-    //  Start the transfer
+    //  Start the I2C transfer and enable I2C interrupts
     i2c_transfer_start(&msg);
 
     //  Write 4 bytes of data
@@ -282,7 +282,7 @@ static void test_do_read_data(char *buf, int len, int argc, char **argv)
     msg.idex    = 0;
     msg.i2cx    = 0;
 
-    //  Start the transfer
+    //  Start the I2C transfer and enable I2C interrupts
     i2c_transfer_start(&msg);
 
     //  Read 4 bytes of data
