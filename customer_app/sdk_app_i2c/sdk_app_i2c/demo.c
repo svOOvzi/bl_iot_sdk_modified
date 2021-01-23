@@ -210,8 +210,8 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
     return;
 }
 
-//  TODO
-int _stat(const char *file, void *pstat) { return 0; }
+//  TODO: For Linux only
+//  int _stat(const char *file, void *pstat) { return 0; }
 
 static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
 {
