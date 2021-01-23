@@ -184,8 +184,10 @@ static void aos_loop_proc(void *pvParameters)
 
 
     aos_register_event_filter(EV_I2C, event_cb_i2c_event, NULL);
-    ////TODO: This causes I2C Interrupt Handler to crash later when sending data
-    ////hal_i2c_init(0, 500);
+    ////  TODO: hal_i2c_init causes I2C Interrupt Handler to crash later when sending data.
+    ////  It sets the I2C Interrupt Handler to the High-Level I2C HAL (includes FreeRTOS)...
+    ////  But we are actually using the Low-Level I2C HAL (without FreeRTOS).
+    ////  hal_i2c_init(0, 500);
     i2c_cli_init();
 
     aos_loop_run();
