@@ -184,7 +184,7 @@ static void aos_loop_proc(void *pvParameters)
 
 
     aos_register_event_filter(EV_I2C, event_cb_i2c_event, NULL);
-    hal_i2c_init(0, 500);
+    ////TODO: hal_i2c_init(0, 500);
     i2c_cli_init();
 
     aos_loop_run();
