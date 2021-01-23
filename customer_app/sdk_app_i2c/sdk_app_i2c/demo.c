@@ -303,7 +303,7 @@ static void test_do_read_data(char *buf, int len, int argc, char **argv)
 
     //  Dump the data received
     for (int i = 0; i < recv_msg.len; i++) {
-        printf("02x\n", recv_buf[i]);
+        printf("%02x\n", recv_buf[i]);
     }
 }
 
