@@ -436,3 +436,19 @@ int i2c_cli_init(void)
 
 //  TODO: For Linux only
 //  int _stat(const char *file, void *pstat) { return 0; }
+
+#ifdef NOTUSED
+
+BMP280 was tested with the Bus Pirate command...
+    [0xee 0xd0] [0xef r]
+    
+Which means...
+    <Start> 0xee 0xd0 <Stop>
+    <Start> 0xef <Read> <Stop>
+
+We need to reproduce on BL602 the two <Start> ... <Stop>
+transactions, plus sending 3 bytes, and receiving 1 byte.
+
+The byte received should be 0x60
+
+#endif  //  NOTUSED
