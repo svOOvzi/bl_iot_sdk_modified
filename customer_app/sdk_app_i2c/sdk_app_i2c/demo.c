@@ -215,6 +215,9 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
 ///////////////////////////////////////////////////////////////////////////////
 //  Test Functions for Low Level I2C HAL (bl_i2c.c)
 
+/// Global pointer to current I2C Message
+static i2c_msg_t *gpstmsg;
+
 /// Messages for sending and receiving I2C Data
 static i2c_msg_t send_msg;
 static i2c_msg_t recv_msg;
@@ -226,27 +229,66 @@ static uint8_t recv_buf[32];
 /// Interrupt Counters
 static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, count_fer, count_unk;
 
+/// Stop the I2C Transfer. Called by I2C Interrupt Handler.
+static void test_i2c_callback(i2c_msg_t *pstmsg)
+{
+    I2C_Disable(pstmsg->i2cx);
+    I2C_IntMask(pstmsg->i2cx, I2C_INT_ALL, MASK);
+    i2c_clear_status(pstmsg->i2cx);
+}
+
 /// I2C Interrupt Handler. Based on i2c_interrupt_entry in hal_i2c.c
 static void test_i2c_interrupt_entry(void *ctx)
 {
+    i2c_msg_t *pstmsg = *((i2c_msg_t **)ctx);
+    uint32_t tmpval = BL_RD_REG(I2C_BASE, I2C_INT_STS);
+
     //  Increment the Interrupt Counters
     count_int++;  //  Overall interrupts
-    uint32_t tmpval = BL_RD_REG(I2C_BASE, I2C_INT_STS);
     if (BL_IS_REG_BIT_SET(tmpval,I2C_RXF_INT)) {
-        count_rfx++;  //  Rx Ready
+        //  Rx FIFO Ready
+        count_rfx++;
+        pstmsg->event = EV_I2C_RXF_INT;
+        //  Should not return
     } else if (BL_IS_REG_BIT_SET(tmpval, I2C_END_INT)) {
-        count_end++;  //  Transfer End
+        //  Transfer End
+        count_end++;
+        pstmsg->event = EV_I2C_END_INT;
+        test_i2c_callback(pstmsg);
+        return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(tmpval, I2C_NAK_INT)) {
-        count_nak++;  //  I2C NACK
+        //  I2C NACK
+        count_nak++;  
+        pstmsg->event = EV_I2C_NAK_INT;
+        test_i2c_callback(pstmsg);
+        return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(tmpval, I2C_TXF_INT)) {
-        count_txf++;  //  Tx Ready
+        //  Tx FIFO Ready
+        count_txf++;  
+        pstmsg->event = EV_I2C_TXF_INT;
+        //  Should not return
     } else if (BL_IS_REG_BIT_SET(tmpval, I2C_ARB_INT)) {
-        count_arb++;  //  Arbitration Lost
+        //  Arbitration Lost
+        count_arb++;  
+        pstmsg->event = EV_I2C_ARB_INT;
+        test_i2c_callback(pstmsg);
+        return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(tmpval,I2C_FER_INT)) {
-        count_fer++;  //  FIFO Error
+        //  FIFO Error
+        count_fer++;  
+        pstmsg->event = EV_I2C_FER_INT;
+        test_i2c_callback(pstmsg);
+        return;  //  Stop now
     } else {
-        count_unk++;  //  Unknown
+        //  Unknown Error
+        count_unk++;  
+        pstmsg->event = EV_I2C_UNKNOW_INT; 
+        test_i2c_callback(pstmsg);
+        //  Should not return
     }
+
+    //  TODO: For Rx FIFO Ready and Tx FIFO Ready, transfer 32 bits of data
+    //  i2c_transferbytes(pstmsg);
 }
 
 /// Dump the I2C Interrupt Counters
@@ -282,7 +324,7 @@ static void test_i2c_init(char *buf, int len, int argc, char **argv)
     I2C_IntMask(i2cx, I2C_INT_ALL, MASK);
  
     //  Register the I2C Interrupt Handler
-    bl_irq_register_with_ctx(I2C_IRQn, test_i2c_interrupt_entry, NULL);
+    bl_irq_register_with_ctx(I2C_IRQn, test_i2c_interrupt_entry, &gpstmsg);
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
@@ -313,6 +355,7 @@ static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
     //  if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
 
     //  Prepare to write 4 bytes of data to I2C device
+    gpstmsg = &send_msg;
     do_write_data(&send_msg);
 
     //  Start the I2C transfer and enable I2C interrupts
@@ -350,6 +393,7 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     //  if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
 
     //  Prepare to read 4 bytes of data from I2C device
+    gpstmsg = &recv_msg;
     do_read_data(&recv_msg);
 
     //  Start the I2C transfer and enable I2C interrupts
