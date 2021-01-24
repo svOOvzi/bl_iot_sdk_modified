@@ -230,23 +230,22 @@ static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, cou
 static void test_i2c_interrupt_entry(void *ctx)
 {
     //  Increment the Interrupt Counters
-    count_int++;
-    uint32_t tmpval;
-    tmpval = BL_RD_REG(I2C_BASE, I2C_INT_STS);
-    if(BL_IS_REG_BIT_SET(tmpval,I2C_RXF_INT)){
-        count_rfx++;
-    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_END_INT)){
-        count_end++;
-    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_NAK_INT)){
-        count_nak++;
-    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_TXF_INT)){
-        count_txf++;
-    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_ARB_INT)){
-        count_arb++;
-    } else if(BL_IS_REG_BIT_SET(tmpval,I2C_FER_INT)){
-        count_fer++;
+    count_int++;  //  Overall interrupts
+    uint32_t tmpval = BL_RD_REG(I2C_BASE, I2C_INT_STS);
+    if (BL_IS_REG_BIT_SET(tmpval,I2C_RXF_INT)) {
+        count_rfx++;  //  Rx Ready
+    } else if (BL_IS_REG_BIT_SET(tmpval, I2C_END_INT)) {
+        count_end++;  //  Transfer End
+    } else if (BL_IS_REG_BIT_SET(tmpval, I2C_NAK_INT)) {
+        count_nak++;  //  I2C NACK
+    } else if (BL_IS_REG_BIT_SET(tmpval, I2C_TXF_INT)) {
+        count_txf++;  //  Tx Ready
+    } else if (BL_IS_REG_BIT_SET(tmpval, I2C_ARB_INT)) {
+        count_arb++;  //  Arbitration Lost
+    } else if (BL_IS_REG_BIT_SET(tmpval,I2C_FER_INT)) {
+        count_fer++;  //  FIFO Error
     } else {
-        count_unk++;
+        count_unk++;  //  Unknown
     }
 }
 
