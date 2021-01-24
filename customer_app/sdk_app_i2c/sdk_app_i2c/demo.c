@@ -278,10 +278,15 @@ static void test_start_read_data(char *buf, int len, int argc, char **argv)
     memset(recv_buf, 0, sizeof(recv_buf));
 
     //  Init the I2C message
-    recv_msg.addr = 0x76;  //  BME280 I2C Primary Address
+    recv_msg.addr    = 0x76;  //  BME280 I2C Primary Address
+    recv_msg.subflag = 1;     //  Use I2C Sub Address
+    recv_msg.subaddr = 0xd0;  //  BME280 Chip ID Register
+    recv_msg.sublen  = 2;     //  TODO: Or 1?
+    /*
     recv_msg.subflag = 0;  //  TODO: Was 1
     recv_msg.subaddr = 0;  //  TODO: Was 0x04
     recv_msg.sublen  = 0;  //  TODO: Was 2
+    */
     recv_msg.buf     = recv_buf;
     recv_msg.len     = data_len;
     recv_msg.direct  = I2C_M_READ;
