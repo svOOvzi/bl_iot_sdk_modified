@@ -379,17 +379,15 @@ static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
     send_msg.idex    = 0;      //  Index of next byte to be written from buf
     recv_msg.i2cx    = 0;      //  I2C Port
 
-    //  if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
-
     //  Prepare to write 4 bytes of data to I2C device
-    gpstmsg = &send_msg;
-    do_write_data(&send_msg);
+    //  TODO: Is this needed?
+    //  do_write_data(&send_msg);
 
     //  Start the I2C transfer and enable I2C interrupts
+    gpstmsg = &send_msg;
     i2c_transfer_start(&send_msg);
 
-    //  TODO: After writing, wait for data written interrupt.
-    //  Repeat do_write_data until all data has been written.
+    //  do_write_data will be called to send data in the Interrupt Handler (test_i2c_transferbytes)
 }
 #endif  //  NOTUSED
 
@@ -421,21 +419,15 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     recv_msg.idex    = 0;      //  Index of next byte to be read into buf
     recv_msg.i2cx    = 0;      //  I2C Port
 
-    //  if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
-
     //  Start the I2C transfer and enable I2C interrupts
     gpstmsg = &recv_msg;
     i2c_transfer_start(&recv_msg);
+
+    //  do_read_data will be called to receive data in the I2C Interrupt Handler (test_i2c_transferbytes)
 }
 
 static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
-    //  Read 4 bytes of data from I2C device
-    //  do_read_data(&recv_msg);
-
-    //  TODO: Before reading, wait for data received interrupt. 
-    //  Repeat do_read_data until all data has been read.
-
     //  Stop the I2C transfer on I2C Port 0
     I2C_Disable(0);
 
