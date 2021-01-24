@@ -219,12 +219,16 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
 static i2c_msg_t *gpstmsg;
 
 /// Messages for sending and receiving I2C Data
-static i2c_msg_t send_msg;
 static i2c_msg_t recv_msg;
+#ifdef NOTUSED
+static i2c_msg_t send_msg;
+#endif  //  NOTUSED
 
 /// Buffers for sending and receiving I2C Data
-static uint8_t send_buf[32];
 static uint8_t recv_buf[32];
+#ifdef NOTUSED
+static uint8_t send_buf[32];
+#endif  //  NOTUSED
 
 /// Interrupt Counters
 static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, count_fer, count_unk;
@@ -333,6 +337,7 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
     i2c_clear_status(0);
 }
 
+#ifdef NOTUSED
 static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
 {
     //  Start writing data to I2C device
@@ -342,15 +347,15 @@ static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
     //  Init the I2C message
     //  send_msg.addr = 0x76;  //  BME280 I2C Primary Address
     send_msg.addr = 0x77;      //  BME280 I2C Secondary Address
-    send_msg.subflag = 0;  //  TODO: Was 1
-    send_msg.subaddr = 0;  //  TODO: Was 0x04
-    send_msg.sublen  = 0;  //  TODO: Was 2
+    send_msg.subflag = 0;      //  TODO: Was 1
+    send_msg.subaddr = 0;      //  TODO: Was 0x04
+    send_msg.sublen  = 0;      //  TODO: Was 2
     send_msg.buf     = send_buf;
     send_msg.len     = data_len;
     send_msg.direct  = I2C_M_WRITE;
     send_msg.block   = I2C_M_BLOCK;
-    send_msg.idex    = 0;
-    send_msg.i2cx    = 0;
+    send_msg.idex    = 0;      //  Index of next byte to be written from buf
+    recv_msg.i2cx    = 0;      //  I2C Port
 
     //  if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
 
@@ -361,49 +366,54 @@ static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
     //  Start the I2C transfer and enable I2C interrupts
     i2c_transfer_start(&send_msg);
 
-    //  TODO: After writing, wait for data written interrupt. Repeat do_write_data and i2c_transfer_start until all data is written
+    //  TODO: After writing, wait for data written interrupt.
+    //  Repeat do_write_data until all data has been written.
 }
+#endif  //  NOTUSED
 
+#ifdef NOTUSED
 static void test_i2c_stop_write(char *buf, int len, int argc, char **argv)
 {
     //  Stop the I2C transfer on I2C Port 0
     I2C_Disable(0);
 }
+#endif  //  NOTUSED
 
 static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
 {
     //  Start reading data from I2C device
     //  Expect result 0x60 for BME280, 0x58 for BMP280
-    int data_len = 1;
+    int data_len = 1;  //  Bytes to be read
     memset(recv_buf, 0, sizeof(recv_buf));
 
     //  Init the I2C message
-    //  send_msg.addr = 0x76;  //  BME280 I2C Primary Address
-    send_msg.addr = 0x77;      //  BME280 I2C Secondary Address
-    recv_msg.subflag = 0;  //  TODO: Was 1
-    recv_msg.subaddr = 0;  //  TODO: Was 0x04
-    recv_msg.sublen  = 0;  //  TODO: Was 2
+    //  recv_msg.addr = 0x76;  //  BME280 I2C Primary Address
+    recv_msg.addr = 0x77;      //  BME280 I2C Secondary Address
+    recv_msg.subflag = 1;      //  Enable Register Address
+    recv_msg.subaddr = 0xd0;   //  Register Address (BME280 Chip ID)
+    recv_msg.sublen  = 1;      //  Length of Register Address (bytes)
     recv_msg.buf     = recv_buf;
     recv_msg.len     = data_len;
     recv_msg.direct  = I2C_M_READ;
     recv_msg.block   = I2C_M_BLOCK;
-    recv_msg.idex    = 0;
-    recv_msg.i2cx    = 0;
+    recv_msg.idex    = 0;      //  Index of next byte to be read into buf
+    recv_msg.i2cx    = 0;      //  I2C Port
 
     //  if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
 
-    //  Prepare to read 4 bytes of data from I2C device
-    gpstmsg = &recv_msg;
-    do_read_data(&recv_msg);
-
     //  Start the I2C transfer and enable I2C interrupts
+    gpstmsg = &recv_msg;
     i2c_transfer_start(&recv_msg);
-
-    //  TODO: Before reading, wait for data received interrupt. Repeat do_read_data and i2c_transfer_start until all data is read
 }
 
 static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
+    //  Read 4 bytes of data from I2C device
+    do_read_data(&recv_msg);
+
+    //  TODO: Before reading, wait for data received interrupt. 
+    //  Repeat do_read_data until all data has been read.
+
     //  Stop the I2C transfer on I2C Port 0
     I2C_Disable(0);
 
@@ -419,8 +429,10 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"i2c_status", "I2C status", test_i2c_status},
     {"i2c_init", "Init I2C", test_i2c_init},
     {"i2c_clear_status", "Clear I2C Port status", test_i2c_clear_status},
+#ifdef NOTUSED
     {"i2c_start_write", "Start writing I2C data", test_i2c_start_write},
     {"i2c_stop_write", "Stop writing I2C data", test_i2c_stop_write},
+#endif  //  NOTUSED
     {"i2c_start_read", "Start reading I2C data", test_i2c_start_read},
     {"i2c_stop_read", "Stop reading I2C data", test_i2c_stop_read},
 };                                                                                   
