@@ -252,14 +252,14 @@ static void test_i2c_interrupt_entry(void *ctx)
 /// Dump the I2C Interrupt Counters
 static void test_i2c_status(char *buf, int len, int argc, char **argv)
 {
-    printf("Interrupts: %d\n", count_int);
-    printf("Trans End:  %d\n", count_end);
-    printf("Tx Ready:   %d\n", count_txf);
-    printf("Rx Ready:   %d\n", count_rfx);
-    printf("NACK:       %d\n", count_nak);
-    printf("Arb Lost:   %d\n", count_arb);
-    printf("FIFO Error: %d\n", count_fer);
-    printf("Unknown:    %d\n", count_unk);
+    printf("Interrupts: %d\r\n", count_int);
+    printf("Trans End:  %d\r\n", count_end);
+    printf("Tx Ready:   %d\r\n", count_txf);
+    printf("Rx Ready:   %d\r\n", count_rfx);
+    printf("NACK:       %d\r\n", count_nak);
+    printf("Arb Lost:   %d\r\n", count_arb);
+    printf("FIFO Error: %d\r\n", count_fer);
+    printf("Unknown:    %d\r\n", count_unk);
 }
 
 /// Init I2C functions. Based on hal_i2c_init in hal_i2c.c
