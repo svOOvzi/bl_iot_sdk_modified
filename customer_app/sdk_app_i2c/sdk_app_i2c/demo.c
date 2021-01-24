@@ -246,7 +246,8 @@ static void test_start_write_data(char *buf, int len, int argc, char **argv)
     send_buf[0] = 0xd0;  //  BME280 Chip ID Register
 
     //  Init the I2C message
-    send_msg.addr = 0x76;  //  BME280 I2C Primary Address
+    //  send_msg.addr = 0x76;  //  BME280 I2C Primary Address
+    send_msg.addr = 0x77;      //  BME280 I2C Secondary Address
     send_msg.subflag = 0;  //  TODO: Was 1
     send_msg.subaddr = 0;  //  TODO: Was 0x04
     send_msg.sublen  = 0;  //  TODO: Was 2
@@ -278,15 +279,11 @@ static void test_start_read_data(char *buf, int len, int argc, char **argv)
     memset(recv_buf, 0, sizeof(recv_buf));
 
     //  Init the I2C message
-    recv_msg.addr    = 0x76;  //  BME280 I2C Primary Address
-    recv_msg.subflag = 1;     //  Use I2C Sub Address
-    recv_msg.subaddr = 0xd0;  //  BME280 Chip ID Register
-    recv_msg.sublen  = 1;     //  TODO: Was 2
-    /*
+    //  send_msg.addr = 0x76;  //  BME280 I2C Primary Address
+    send_msg.addr = 0x77;      //  BME280 I2C Secondary Address
     recv_msg.subflag = 0;  //  TODO: Was 1
     recv_msg.subaddr = 0;  //  TODO: Was 0x04
     recv_msg.sublen  = 0;  //  TODO: Was 2
-    */
     recv_msg.buf     = recv_buf;
     recv_msg.len     = data_len;
     recv_msg.direct  = I2C_M_READ;
