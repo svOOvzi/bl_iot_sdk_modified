@@ -233,12 +233,34 @@ static uint8_t send_buf[32];
 /// Interrupt Counters
 static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, count_fer, count_unk;
 
-/// Stop the I2C Transfer. Called by I2C Interrupt Handler.
+/// Stop the I2C Transfer. Called by I2C Interrupt Handler. Based on i2c_callback in hal_i2c.c
 static void test_i2c_callback(i2c_msg_t *pstmsg)
 {
     I2C_Disable(pstmsg->i2cx);
     I2C_IntMask(pstmsg->i2cx, I2C_INT_ALL, MASK);
     i2c_clear_status(pstmsg->i2cx);
+}
+
+/// For Rx FIFO Ready and Tx FIFO Ready, transfer 32 bits of data. Based on i2c_transferbytes in hal_i2c.c
+static void test_i2c_transferbytes(i2c_msg_t *pstmsg)
+{
+    if ((pstmsg->direct == I2C_M_WRITE) && (pstmsg->event = EV_I2C_TXF_INT)) {
+        if (pstmsg->idex < pstmsg->len) {
+            do_write_data(pstmsg);
+        } else if (pstmsg->idex == pstmsg->len) {
+            I2C_IntMask(pstmsg->i2cx, I2C_TX_FIFO_READY_INT, MASK);
+            return;
+        } else {
+        } 
+    } else if ((pstmsg->direct == I2C_M_READ) && (pstmsg->event = EV_I2C_RXF_INT)){
+        if (pstmsg->idex < pstmsg->len) {
+             do_read_data(pstmsg);      
+        } else {
+            I2C_IntMask(pstmsg->i2cx, I2C_RX_FIFO_READY_INT, MASK);
+            return;
+        } 
+    } else {
+    }
 }
 
 /// I2C Interrupt Handler. Based on i2c_interrupt_entry in hal_i2c.c
@@ -291,8 +313,8 @@ static void test_i2c_interrupt_entry(void *ctx)
         //  Should not return
     }
 
-    //  TODO: For Rx FIFO Ready and Tx FIFO Ready, transfer 32 bits of data
-    //  i2c_transferbytes(pstmsg);
+    //  For Rx FIFO Ready and Tx FIFO Ready, transfer 32 bits of data
+    test_i2c_transferbytes(pstmsg);
 }
 
 /// Dump the I2C Interrupt Counters
@@ -409,7 +431,7 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
 static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
     //  Read 4 bytes of data from I2C device
-    do_read_data(&recv_msg);
+    //  do_read_data(&recv_msg);
 
     //  TODO: Before reading, wait for data received interrupt. 
     //  Repeat do_read_data until all data has been read.
