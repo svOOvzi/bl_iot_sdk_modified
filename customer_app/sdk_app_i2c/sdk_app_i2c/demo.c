@@ -439,9 +439,9 @@ int i2c_cli_init(void)
 
 #ifdef NOTUSED
 
-BMP280 was tested with the Bus Pirate command...
+BME280 was tested with the Bus Pirate I2C command...
     [0xee 0xd0] [0xef r]
-    
+
 Which means...
     <Start> 0xee 0xd0 <Stop>
     <Start> 0xef <Read> <Stop>
@@ -449,6 +449,6 @@ Which means...
 We need to reproduce on BL602 the two <Start> ... <Stop>
 transactions, plus sending 3 bytes, and receiving 1 byte.
 
-The byte received should be 0x60
+The byte received should be 0x60.
 
 #endif  //  NOTUSED
