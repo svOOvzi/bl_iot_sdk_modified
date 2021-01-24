@@ -37,6 +37,7 @@
 #include "demo.h"
 #include <bl_i2c.h>
 #include <hal_i2c.h>
+#include <bl602_i2c.h>
 #include <cli.h>
 
 int i2c_data_test(void)
@@ -239,7 +240,7 @@ static i2c_msg_t recv_msg;
 static uint8_t send_buf[32];
 static uint8_t recv_buf[32];
 
-static void test_start_write_data(char *buf, int len, int argc, char **argv)
+static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
 {
     //  Start writing data to I2C device
     int data_len = 1;
@@ -258,20 +259,24 @@ static void test_start_write_data(char *buf, int len, int argc, char **argv)
     send_msg.idex    = 0;
     send_msg.i2cx    = 0;
 
+    //  if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
+
+    //  Prepare to write 4 bytes of data to I2C device
+    do_write_data(&send_msg);
+
     //  Start the I2C transfer and enable I2C interrupts
     i2c_transfer_start(&send_msg);
+
+    //  TODO: After writing, wait for data written interrupt. Repeat do_write_data and i2c_transfer_start until all data is written
 }
 
-static void test_do_write_data(char *buf, int len, int argc, char **argv)
+static void test_i2c_stop_write(char *buf, int len, int argc, char **argv)
 {
-    if (send_msg.len == 0 || send_msg.idex > 0) { puts("Must start_write_data before do_write_data"); return; }
-
-    //  Write 4 bytes of data to I2C device
-    //  TODO: After writing, wait for data written interrupt. Repeat until all data is written
-    do_write_data(&send_msg);
+    //  Stop the I2C transfer on I2C Port 0
+    I2C_Disable(0);
 }
 
-static void test_start_read_data(char *buf, int len, int argc, char **argv)
+static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
 {
     //  Start reading data from I2C device
     //  Expect result 0x60 for BME280, 0x58 for BMP280
@@ -291,17 +296,21 @@ static void test_start_read_data(char *buf, int len, int argc, char **argv)
     recv_msg.idex    = 0;
     recv_msg.i2cx    = 0;
 
+    //  if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
+
+    //  Prepare to read 4 bytes of data from I2C device
+    do_read_data(&recv_msg);
+
     //  Start the I2C transfer and enable I2C interrupts
     i2c_transfer_start(&recv_msg);
+
+    //  TODO: Before reading, wait for data received interrupt. Repeat do_read_data and i2c_transfer_start until all data is read
 }
 
-static void test_do_read_data(char *buf, int len, int argc, char **argv)
+static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
-    if (recv_msg.len == 0 || recv_msg.idex > 0) { puts("Must start_read_data before do_read_data"); return; }
-
-    //  Read 4 bytes of data from I2C device
-    //  TODO: Before reading, wait for data received interrupt. Repeat until all data is read
-    do_read_data(&recv_msg);
+    //  Stop the I2C transfer on I2C Port 0
+    I2C_Disable(0);
 
     //  Dump the data received
     for (int i = 0; i < recv_msg.len; i++) {
@@ -312,13 +321,13 @@ static void test_do_read_data(char *buf, int len, int argc, char **argv)
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_i2c", "test i2c", test_i2c_api},
-    {"i2c_gpio_init", "i2c_gpio_init", test_i2c_gpio_init},
-    {"i2c_set_freq", "i2c_set_freq", test_i2c_set_freq},
-    {"i2c_clear_status", "i2c_clear_status", test_i2c_clear_status},
-    {"start_write_data", "start_write_data", test_start_write_data},
-    {"do_write_data", "do_write_data", test_do_write_data},
-    {"start_read_data", "start_read_data", test_start_read_data},
-    {"do_read_data", "do_read_data", test_do_read_data},
+    {"i2c_gpio_init", "Init I2C pins", test_i2c_gpio_init},
+    {"i2c_set_freq", "Set I2C frequency", test_i2c_set_freq},
+    {"i2c_clear_status", "Clear I2C Port status", test_i2c_clear_status},
+    {"i2c_start_write", "Start writing I2C data", test_i2c_start_write},
+    {"i2c_stop_write", "Stop writing I2C data", test_i2c_stop_write},
+    {"i2c_start_read", "Start reading I2C data", test_i2c_start_read},
+    {"i2c_stop_read", "Stop reading I2C data", test_i2c_stop_read},
 };                                                                                   
 
 int i2c_cli_init(void)
