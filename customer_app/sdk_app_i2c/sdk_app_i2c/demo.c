@@ -439,15 +439,25 @@ int i2c_cli_init(void)
 
 #ifdef NOTUSED
 
-BME280 was tested with the Bus Pirate I2C command...
+BME280 has I2C Device ID 0x77. We want to read 
+Register 0xd0 (Chip ID).
+
+BME280 was tested with this Bus Pirate I2C command...
     [0xee 0xd0] [0xef r]
 
 Which means...
     <Start> 0xee 0xd0 <Stop>
     <Start> 0xef <Read> <Stop>
 
-We need to reproduce on BL602 the two <Start> ... <Stop>
-transactions, plus sending 3 bytes, and receiving 1 byte.
+In which...
+    0xee = (0x77 * 2) + 0, for writing
+    0xef = (0x77 * 2) + 1, for reading
+    0xd0 = Register to be read (Chip ID)
+
+We need to reproduce on BL602 the two 
+<Start> ... <Stop> transactions, 
+plus sending 3 bytes, and 
+receiving 1 byte.
 
 The byte received should be 0x60.
 
