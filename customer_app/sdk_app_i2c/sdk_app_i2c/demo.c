@@ -38,6 +38,7 @@
 #include <bl_i2c.h>
 #include <hal_i2c.h>
 #include <bl602_i2c.h>
+#include <bl_irq.h>
 #include <cli.h>
 
 int i2c_data_test(void)
@@ -211,19 +212,78 @@ static void test_i2c_api(char *buf, int len, int argc, char **argv)
     return;
 }
 
-//  TODO: For Linux only
-//  int _stat(const char *file, void *pstat) { return 0; }
+///////////////////////////////////////////////////////////////////////////////
+//  Test Functions for Low Level I2C HAL (bl_i2c.c)
 
-static void test_i2c_gpio_init(char *buf, int len, int argc, char **argv)
+/// Messages for sending and receiving I2C Data
+static i2c_msg_t send_msg;
+static i2c_msg_t recv_msg;
+
+/// Buffers for sending and receiving I2C Data
+static uint8_t send_buf[32];
+static uint8_t recv_buf[32];
+
+/// Interrupt Counters
+static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, count_fer, count_unk;
+
+/// I2C Interrupt Handler. Based on i2c_interrupt_entry in hal_i2c.c
+static void test_i2c_interrupt_entry(void *ctx)
 {
-    //  Init I2C Port 0 to GPIO 3 and 4
-    i2c_gpio_init(0);
+    //  Increment the Interrupt Counters
+    count_int++;
+    uint32_t tmpval;
+    tmpval = BL_RD_REG(I2C_BASE, I2C_INT_STS);
+    if(BL_IS_REG_BIT_SET(tmpval,I2C_RXF_INT)){
+        count_rfx++;
+    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_END_INT)){
+        count_end++;
+    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_NAK_INT)){
+        count_nak++;
+    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_TXF_INT)){
+        count_txf++;
+    } else if(BL_IS_REG_BIT_SET(tmpval, I2C_ARB_INT)){
+        count_arb++;
+    } else if(BL_IS_REG_BIT_SET(tmpval,I2C_FER_INT)){
+        count_fer++;
+    } else {
+        count_unk++;
+    }
 }
 
-static void test_i2c_set_freq(char *buf, int len, int argc, char **argv)
+/// Dump the I2C Interrupt Counters
+static void test_i2c_status(char *buf, int len, int argc, char **argv)
 {
+    printf("Interrupts: %d\n", count_int);
+    printf("Trans End:  %d\n", count_end);
+    printf("Tx Ready:   %d\n", count_txf);
+    printf("Rx Ready:   %d\n", count_rfx);
+    printf("NACK:       %d\n", count_nak);
+    printf("Arb Lost:   %d\n", count_arb);
+    printf("FIFO Error: %d\n", count_fer);
+    printf("Unknown:    %d\n", count_unk);
+}
+
+/// Init I2C functions. Based on hal_i2c_init in hal_i2c.c
+static void test_i2c_init(char *buf, int len, int argc, char **argv)
+{
+    //  Use I2C Port 0
+    const int i2cx = 0;
+
+    //  Init I2C Port 0 to GPIO 3 and 4
+    i2c_gpio_init(i2cx);
+
     //  Set I2C Port 0 to 500 kbps
-    i2c_set_freq(500, 0);
+    i2c_set_freq(500, i2cx);
+
+    //  Disable I2C Port 0
+    I2C_Disable(i2cx);    
+
+    //  Enable I2C interrupts   
+    bl_irq_enable(I2C_IRQn);
+    I2C_IntMask(i2cx, I2C_INT_ALL, MASK);
+ 
+    //  Register the I2C Interrupt Handler
+    bl_irq_register_with_ctx(I2C_IRQn, test_i2c_interrupt_entry, NULL);
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
@@ -231,14 +291,6 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
     //  Clear status for I2C Port 0
     i2c_clear_status(0);
 }
-
-//  Messages for sending and receiving I2C Data
-static i2c_msg_t send_msg;
-static i2c_msg_t recv_msg;
-
-//  Buffers for sending and receiving I2C Data
-static uint8_t send_buf[32];
-static uint8_t recv_buf[32];
 
 static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
 {
@@ -321,8 +373,8 @@ static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_i2c", "test i2c", test_i2c_api},
-    {"i2c_gpio_init", "Init I2C pins", test_i2c_gpio_init},
-    {"i2c_set_freq", "Set I2C frequency", test_i2c_set_freq},
+    {"i2c_status", "I2C status", test_i2c_status},
+    {"i2c_init", "Init I2C", test_i2c_init},
     {"i2c_clear_status", "Clear I2C Port status", test_i2c_clear_status},
     {"i2c_start_write", "Start writing I2C data", test_i2c_start_write},
     {"i2c_stop_write", "Stop writing I2C data", test_i2c_stop_write},
@@ -338,3 +390,6 @@ int i2c_cli_init(void)
     //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
     return 0;
 }
+
+//  TODO: For Linux only
+//  int _stat(const char *file, void *pstat) { return 0; }
