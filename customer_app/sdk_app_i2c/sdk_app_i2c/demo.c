@@ -410,10 +410,12 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     int data_len = 1;  //  Bytes to be read
     memset(read_buf, 0, sizeof(read_buf));
 
-    //  Init the I2C message    
+    //  Set the I2C operation    
     read_msg.i2cx    = 0;            //  I2C Port
     read_msg.direct  = I2C_M_READ;   //  Read I2C data
     read_msg.block   = I2C_M_BLOCK;  //  Wait until data has been read
+
+    //  Set the I2C buffer
     read_msg.buf     = read_buf;     //  Read buffer
     read_msg.len     = data_len;     //  Number of bytes to be read
     read_msg.idex    = 0;            //  Index of next byte to be read into buf
