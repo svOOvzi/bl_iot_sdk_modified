@@ -350,7 +350,11 @@ static void test_i2c_init(char *buf, int len, int argc, char **argv)
     I2C_IntMask(i2cx, I2C_INT_ALL, MASK);
  
     //  Register the I2C Interrupt Handler
-    bl_irq_register_with_ctx(I2C_IRQn, test_i2c_interrupt_entry, &gpstmsg);
+    bl_irq_register_with_ctx(
+        I2C_IRQn,                  //  For I2C Interrupt:
+        test_i2c_interrupt_entry,  //  Interrupt Handler
+        &gpstmsg                   //  Pointer to current I2C Message
+    );
 }
 
 static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
