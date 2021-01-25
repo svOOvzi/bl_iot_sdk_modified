@@ -418,8 +418,8 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     read_msg.len     = data_len;     //  Number of bytes to be read
     read_msg.idex    = 0;            //  Index of next byte to be read into buf
 
-    // read_msg.addr = 0x76;   //  BME280 I2C Primary Address
-    read_msg.addr    = 0x77;   //  BME280 I2C Secondary Address
+    //  Set device address and register address
+    read_msg.addr    = 0x77;   //  BME280 I2C Secondary Address (Primary Address is 0x76)
     read_msg.subflag = 1;      //  Enable Register Address
     read_msg.subaddr = 0xd0;   //  Register Address (BME280 Chip ID)
     read_msg.sublen  = 1;      //  Length of Register Address (bytes)
