@@ -330,7 +330,7 @@ static void test_i2c_status(char *buf, int len, int argc, char **argv)
     printf("Unknown:    %d\r\n", count_unk);
 }
 
-/// Init I2C functions. Based on hal_i2c_init in hal_i2c.c
+/// Init I2C Port. Based on hal_i2c_init in hal_i2c.c
 static void test_i2c_init(char *buf, int len, int argc, char **argv)
 {
     //  Use I2C Port 0
@@ -445,8 +445,8 @@ static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_i2c", "test i2c", test_i2c_api},
     {"i2c_status", "I2C status", test_i2c_status},
-    {"i2c_init", "Init I2C", test_i2c_init},
-    {"i2c_clear_status", "Clear I2C Port status", test_i2c_clear_status},
+    {"i2c_init", "Init I2C port", test_i2c_init},
+    {"i2c_clear_status", "Clear I2C port status", test_i2c_clear_status},
 #ifdef NOTUSED
     {"i2c_start_write", "Start writing I2C data", test_i2c_start_write},
     {"i2c_stop_write", "Stop writing I2C data", test_i2c_stop_write},
