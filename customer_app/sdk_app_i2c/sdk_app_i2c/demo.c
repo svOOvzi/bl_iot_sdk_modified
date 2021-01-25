@@ -410,18 +410,19 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     int data_len = 1;  //  Bytes to be read
     memset(read_buf, 0, sizeof(read_buf));
 
-    //  Init the I2C message
-    //  read_msg.addr = 0x76;  //  BME280 I2C Primary Address
-    read_msg.addr = 0x77;      //  BME280 I2C Secondary Address
+    //  Init the I2C message    
+    read_msg.i2cx    = 0;            //  I2C Port
+    read_msg.direct  = I2C_M_READ;   //  Read I2C data
+    read_msg.block   = I2C_M_BLOCK;  //  Wait until data has been read
+    read_msg.buf     = read_buf;     //  Read buffer
+    read_msg.len     = data_len;     //  Number of bytes to be read
+    read_msg.idex    = 0;            //  Index of next byte to be read into buf
+
+    // read_msg.addr = 0x76;   //  BME280 I2C Primary Address
+    read_msg.addr    = 0x77;   //  BME280 I2C Secondary Address
     read_msg.subflag = 1;      //  Enable Register Address
     read_msg.subaddr = 0xd0;   //  Register Address (BME280 Chip ID)
     read_msg.sublen  = 1;      //  Length of Register Address (bytes)
-    read_msg.buf     = read_buf;
-    read_msg.len     = data_len;
-    read_msg.direct  = I2C_M_READ;
-    read_msg.block   = I2C_M_BLOCK;
-    read_msg.idex    = 0;      //  Index of next byte to be read into buf
-    read_msg.i2cx    = 0;      //  I2C Port
 
     //  Start the I2C transfer and enable I2C interrupts
     gpstmsg = &read_msg;
