@@ -234,29 +234,29 @@ static uint8_t write_buf[32];
 static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, count_fer, count_unk;
 
 /// Stop the I2C Transfer. Called by I2C Interrupt Handler. Based on i2c_callback in hal_i2c.c
-static void test_i2c_callback(i2c_msg_t *pstmsg)
+static void test_i2c_stop(i2c_msg_t *msg)
 {
-    I2C_Disable(pstmsg->i2cx);
-    I2C_IntMask(pstmsg->i2cx, I2C_INT_ALL, MASK);
-    i2c_clear_status(pstmsg->i2cx);
+    I2C_Disable(msg->i2cx);
+    I2C_IntMask(msg->i2cx, I2C_INT_ALL, MASK);
+    i2c_clear_status(msg->i2cx);
 }
 
 /// For Rx FIFO Ready and Tx FIFO Ready, transfer 32 bits of data. Based on i2c_transferbytes in hal_i2c.c
-static void test_i2c_transferbytes(i2c_msg_t *pstmsg)
+static void test_i2c_transferbytes(i2c_msg_t *msg)
 {
-    if ((pstmsg->direct == I2C_M_WRITE) && (pstmsg->event = EV_I2C_TXF_INT)) {
-        if (pstmsg->idex < pstmsg->len) {
-            do_write_data(pstmsg);
-        } else if (pstmsg->idex == pstmsg->len) {
-            I2C_IntMask(pstmsg->i2cx, I2C_TX_FIFO_READY_INT, MASK);
+    if ((msg->direct == I2C_M_WRITE) && (msg->event = EV_I2C_TXF_INT)) {
+        if (msg->idex < msg->len) {
+            do_write_data(msg);
+        } else if (msg->idex == msg->len) {
+            I2C_IntMask(msg->i2cx, I2C_TX_FIFO_READY_INT, MASK);
             return;
         } else {
         } 
-    } else if ((pstmsg->direct == I2C_M_READ) && (pstmsg->event = EV_I2C_RXF_INT)){
-        if (pstmsg->idex < pstmsg->len) {
-             do_read_data(pstmsg);      
+    } else if ((msg->direct == I2C_M_READ) && (msg->event = EV_I2C_RXF_INT)){
+        if (msg->idex < msg->len) {
+             do_read_data(msg);      
         } else {
-            I2C_IntMask(pstmsg->i2cx, I2C_RX_FIFO_READY_INT, MASK);
+            I2C_IntMask(msg->i2cx, I2C_RX_FIFO_READY_INT, MASK);
             return;
         } 
     } else {
@@ -283,13 +283,13 @@ static void test_i2c_interrupt_entry(void *ctx)
         //  Transfer End
         count_end++;
         msg->event = EV_I2C_END_INT;
-        test_i2c_callback(msg);
+        test_i2c_stop(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason, I2C_NAK_INT)) {
         //  No Acknowledge
         count_nak++;  
         msg->event = EV_I2C_NAK_INT;
-        test_i2c_callback(msg);
+        test_i2c_stop(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason, I2C_TXF_INT)) {
         //  Transmit FIFO Ready
@@ -300,19 +300,19 @@ static void test_i2c_interrupt_entry(void *ctx)
         //  Arbitration Lost
         count_arb++;  
         msg->event = EV_I2C_ARB_INT;
-        test_i2c_callback(msg);
+        test_i2c_stop(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason,I2C_FER_INT)) {
         //  FIFO Error
         count_fer++;  
         msg->event = EV_I2C_FER_INT;
-        test_i2c_callback(msg);
+        test_i2c_stop(msg);
         return;  //  Stop now
     } else {
         //  Unknown Error
         count_unk++;  
         msg->event = EV_I2C_UNKNOW_INT; 
-        test_i2c_callback(msg);
+        test_i2c_stop(msg);
         //  Should not return
     }
 
