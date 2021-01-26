@@ -265,7 +265,6 @@ static void test_i2c_transferbytes(i2c_msg_t *msg)
             I2C_IntMask(msg->i2cx, I2C_RX_FIFO_READY_INT, MASK);
             return;
         } 
-    } else {
     }
 }
 
