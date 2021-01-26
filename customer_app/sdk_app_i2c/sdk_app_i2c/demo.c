@@ -236,8 +236,13 @@ static int count_int, count_rfx, count_end, count_nak, count_txf, count_arb, cou
 /// Stop the I2C Transfer. Called by I2C Interrupt Handler. Based on i2c_callback in hal_i2c.c
 static void test_i2c_stop(i2c_msg_t *msg)
 {
+    //  Disable I2C Port
     I2C_Disable(msg->i2cx);
+
+    //  Suppress all I2C Interrupts
     I2C_IntMask(msg->i2cx, I2C_INT_ALL, MASK);
+
+    //  Clear any error status
     i2c_clear_status(msg->i2cx);
 }
 
@@ -404,7 +409,7 @@ static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
 static void test_i2c_stop_write(char *buf, int len, int argc, char **argv)
 {
     //  Stop the I2C transfer on I2C Port 0
-    I2C_Disable(0);
+    test_i2c_stop(&write_msg);
 }
 #endif  //  NOTUSED
 
@@ -441,7 +446,7 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
 static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
     //  Stop the I2C transfer on I2C Port 0
-    I2C_Disable(0);
+    test_i2c_stop(&read_msg);
 
     //  Dump the data received
     for (int i = 0; i < read_msg.len; i++) {
