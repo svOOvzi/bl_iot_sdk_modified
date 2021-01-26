@@ -413,9 +413,9 @@ static void test_i2c_stop_write(char *buf, int len, int argc, char **argv)
 }
 #endif  //  NOTUSED
 
+/// Start reading data from I2C device
 static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
 {
-    //  Start reading data from I2C device
     //  Expect result 0x60 for BME280, 0x58 for BMP280
     int data_len = 1;  //  Bytes to be read
     memset(read_buf, 0, sizeof(read_buf));
@@ -443,6 +443,7 @@ static void test_i2c_start_read(char *buf, int len, int argc, char **argv)
     //  do_read_data will be called to read data in the I2C Interrupt Handler (test_i2c_transferbytes)
 }
 
+/// Stop reading data from I2C device
 static void test_i2c_stop_read(char *buf, int len, int argc, char **argv)
 {
     //  Stop the I2C transfer on I2C Port 0
