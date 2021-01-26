@@ -267,7 +267,7 @@ static void test_i2c_transferbytes(i2c_msg_t *pstmsg)
 static void test_i2c_interrupt_entry(void *ctx)
 {
     //  Fetch the current I2C Message from the Interrupt Context
-    i2c_msg_t *pstmsg = *((i2c_msg_t **)ctx);
+    i2c_msg_t *msg = *((i2c_msg_t **)ctx);
 
     //  Get the reason for the interrupt
     uint32_t reason = BL_RD_REG(I2C_BASE, I2C_INT_STS);
@@ -277,47 +277,47 @@ static void test_i2c_interrupt_entry(void *ctx)
     if (BL_IS_REG_BIT_SET(reason, I2C_RXF_INT)) {
         //  Receive FIFO Ready
         count_rfx++;
-        pstmsg->event = EV_I2C_RXF_INT;
+        msg->event = EV_I2C_RXF_INT;
         //  Should not return
     } else if (BL_IS_REG_BIT_SET(reason, I2C_END_INT)) {
         //  Transfer End
         count_end++;
-        pstmsg->event = EV_I2C_END_INT;
-        test_i2c_callback(pstmsg);
+        msg->event = EV_I2C_END_INT;
+        test_i2c_callback(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason, I2C_NAK_INT)) {
         //  No Acknowledge
         count_nak++;  
-        pstmsg->event = EV_I2C_NAK_INT;
-        test_i2c_callback(pstmsg);
+        msg->event = EV_I2C_NAK_INT;
+        test_i2c_callback(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason, I2C_TXF_INT)) {
         //  Transmit FIFO Ready
         count_txf++;  
-        pstmsg->event = EV_I2C_TXF_INT;
+        msg->event = EV_I2C_TXF_INT;
         //  Should not return
     } else if (BL_IS_REG_BIT_SET(reason, I2C_ARB_INT)) {
         //  Arbitration Lost
         count_arb++;  
-        pstmsg->event = EV_I2C_ARB_INT;
-        test_i2c_callback(pstmsg);
+        msg->event = EV_I2C_ARB_INT;
+        test_i2c_callback(msg);
         return;  //  Stop now
     } else if (BL_IS_REG_BIT_SET(reason,I2C_FER_INT)) {
         //  FIFO Error
         count_fer++;  
-        pstmsg->event = EV_I2C_FER_INT;
-        test_i2c_callback(pstmsg);
+        msg->event = EV_I2C_FER_INT;
+        test_i2c_callback(msg);
         return;  //  Stop now
     } else {
         //  Unknown Error
         count_unk++;  
-        pstmsg->event = EV_I2C_UNKNOW_INT; 
-        test_i2c_callback(pstmsg);
+        msg->event = EV_I2C_UNKNOW_INT; 
+        test_i2c_callback(msg);
         //  Should not return
     }
 
     //  For Receive FIFO Ready and Transmit FIFO Ready, transfer 32 bits of data
-    test_i2c_transferbytes(pstmsg);
+    test_i2c_transferbytes(msg);
 }
 
 /// Dump the I2C Interrupt Counters
