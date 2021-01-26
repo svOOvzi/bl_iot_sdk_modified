@@ -250,7 +250,7 @@ static void test_i2c_transferbytes(i2c_msg_t *msg)
             //  If there is buffer data to be transmitted, transmit 4 bytes from buffer
             do_write_data(msg);
         } else if (msg->idex == msg->len) {
-            //  Otherwise suppress all future Data Transmitted Interrupts
+            //  Otherwise suppress the Data Transmitted Interrupts
             I2C_IntMask(msg->i2cx, I2C_TX_FIFO_READY_INT, MASK);
         } 
     //  For I2C Read Operation and I2C Data Received Interrupt...
@@ -259,7 +259,7 @@ static void test_i2c_transferbytes(i2c_msg_t *msg)
             //  If there is data to be received, copy 4 bytes into buffer
             do_read_data(msg);      
         } else {
-            //  Otherwise suppress all future Data Received Interrupts
+            //  Otherwise suppress the Data Received Interrupts
             I2C_IntMask(msg->i2cx, I2C_RX_FIFO_READY_INT, MASK);
         } 
     }
