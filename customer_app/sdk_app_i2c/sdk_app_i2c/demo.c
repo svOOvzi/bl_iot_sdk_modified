@@ -374,27 +374,31 @@ static void test_i2c_clear_status(char *buf, int len, int argc, char **argv)
 }
 
 #ifdef NOTUSED
+/// Start writing data to I2C device
 static void test_i2c_start_write(char *buf, int len, int argc, char **argv)
 {
-    //  Start writing data to I2C device
+    //  Write 0xB6 to Register 0xE0 (Reset) to reset BME280 
     int data_len = 1;
-    write_buf[0] = 0xd0;  //  BME280 Chip ID Register
+    write_buf[0] = 0xb6;  //  BME280 Reset command
 
-    //  Init the I2C message
-    //  write_msg.addr = 0x76;  //  BME280 I2C Primary Address
-    write_msg.addr = 0x77;      //  BME280 I2C Secondary Address
-    write_msg.subflag = 0;      //  TODO: Was 1
-    write_msg.subaddr = 0;      //  TODO: Was 0x04
-    write_msg.sublen  = 0;      //  TODO: Was 2
-    write_msg.buf     = write_buf;
-    write_msg.len     = data_len;
-    write_msg.direct  = I2C_M_WRITE;
-    write_msg.block   = I2C_M_BLOCK;
-    write_msg.idex    = 0;      //  Index of next byte to be written from buf
-    read_msg.i2cx    = 0;      //  I2C Port
+    //  Set the I2C operation    
+    write_msg.i2cx    = 0;            //  I2C Port
+    write_msg.direct  = I2C_M_WRITE;  //  Write I2C data
+    write_msg.block   = I2C_M_BLOCK;  //  Wait until data has been read
+
+    //  Set the I2C buffer
+    write_msg.buf     = write_buf;    //  Write buffer
+    write_msg.len     = data_len;     //  Number of bytes to be read
+    write_msg.idex    = 0;            //  Index of next byte to be read into buf
+
+    //  Set device address and register address
+    write_msg.addr    = 0x77;   //  BME280 I2C Secondary Address (Primary Address is 0x76)
+    write_msg.subflag = 1;      //  Enable Register Address
+    write_msg.subaddr = 0xe0;   //  Register Address (BME280 Reset)
+    write_msg.sublen  = 1;      //  Length of Register Address (bytes)
 
     //  Prepare to write 4 bytes of data to I2C device
-    //  TODO: Is this needed?
+    //  TODO: Is this needed for first write? Or will Interrupt Handler be triggered to do the first write?
     //  do_write_data(&write_msg);
 
     //  Start the I2C transfer and enable I2C interrupts
@@ -477,9 +481,6 @@ int i2c_cli_init(void)
     //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
     return 0;
 }
-
-//  TODO: For Linux only
-//  int _stat(const char *file, void *pstat) { return 0; }
 
 #ifdef NOTUSED
 
