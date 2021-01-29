@@ -53,7 +53,7 @@
 #include <utils_log.h>
 #include <blog.h>
 
-#define HAL_SPI_DEBUG       (0)
+#define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
 #define HAL_SPI_HARDCS      (1)
 
 #define SPI_NUM_MAX         1 /* only support spi0 */
