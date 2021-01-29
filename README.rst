@@ -1,5 +1,11 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"PineCone BL602 talks to I2C Sensors" <https://lupyuen.github.io/articles/i2c>`_
+
+- `"Mynewt GPIO ported to PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/gpio>`_
+
+- `"Control PineCone BL602 RGB LED with GPIO and PWM" <https://lupyuen.github.io/articles/led>`_
+
 - `"Flashing Firmware to PineCone BL602" <https://lupyuen.github.io/articles/flash>`_
 
 - `"Debug Rust on PineCone BL602 with VSCode and GDB" <https://lupyuen.github.io/articles/debug>`_
@@ -17,7 +23,9 @@ Changes
 
 - "jtag" branch contains a modified Hello World app that remaps the JTAG port: https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld
 
-- Modified PWM Demo Firmware for use without Device Tree: https://github.com/lupyuen/bl_iot_sdk/pull/1
+- "master" branch contains a modified PWM Demo Firmware that runs without Device Tree: https://github.com/lupyuen/bl_iot_sdk/pull/1
+
+- "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c/
 
 BL602 SDK (Pine64 version)
 ==========================
