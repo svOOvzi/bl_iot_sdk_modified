@@ -32,4 +32,10 @@
 
 int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_uart_offset);
 
+//  TODO: Init the SPI HAL without AOS and return the SPI Device. Return NULL in case of error. Supports only one instance of SPI Device.
+//  Based on vfs_spi_init_fullname
+spi_dev_t *spi_init(uint8_t port,
+            uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
+            uint8_t pin_clk, uint8_t pin_cs, uint8_t pin_mosi, uint8_t pin_miso);
+
 #endif
