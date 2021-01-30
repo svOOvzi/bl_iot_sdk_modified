@@ -35,7 +35,8 @@
 #include <semphr.h>
 
 #include "demo.h"
-#include <hal/soc/spi.h>
+#include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
+#include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>
 #include <cli.h>
 
@@ -46,7 +47,7 @@
 static spi_dev_t *spi;
 
 /// Init the SPI Port
-static void test_init_spi(char *buf, int len, int argc, char **argv)
+static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
     //  SPI settings based on BL602 Device Tree: https://github.com/bouffalolab/BLOpenFlasher/blob/main/bl602/device_tree/bl_factory_params_IoTKitA_40M.dts
     spi = spi_init(
@@ -65,12 +66,36 @@ static void test_init_spi(char *buf, int len, int argc, char **argv)
 
     //  TODO: int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
     //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
+}
+
+/// Start the SPI data transfer
+static void test_spi_transfer(char *buf, int len, int argc, char **argv)
+{
+    static spi_ioc_transfer_t trans;
     //  TODO: int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size);/* spi_ioc_transfer_t */
 }
 
+#ifdef NOTUSED
+typedef struct spi_ioc_transfer {
+    uint32_t   tx_buf;               /* uint64_t to uint32_t */
+    uint32_t   rx_buf;               /* uint64_t to uint32_t */
+    uint32_t   len;
+    uint32_t   speed_hz;
+    uint16_t   delay_usecs;          /* Unimplemented */
+    uint16_t   delay_msecs;          /* delay ms, bl add*/
+    uint8_t    bits_per_word;        /* Unimplemented */
+    uint8_t    cs_change;            /* 0: Keep CS activated */
+    uint8_t    tx_nbits;             /* Unimplemented */
+    uint8_t    rx_nbits;             /* Unimplemented */
+    uint8_t    word_delay_usecs;     /* Unimplemented */
+    uint8_t    pad;                  /* Unimplemented */
+} spi_ioc_transfer_t;
+#endif  //  NOTUSED
+
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"init_spi", "Init SPI port", test_init_spi},
+    {"spi_init", "Init SPI port", test_spi_init},
+    {"spi_transfer", "Transfer SPI data", test_spi_transfer},
 };                                                                                   
 
 int i2c_cli_init(void)
