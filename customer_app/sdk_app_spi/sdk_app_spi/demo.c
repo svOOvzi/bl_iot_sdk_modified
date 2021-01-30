@@ -52,7 +52,7 @@ static void test_init_spi(char *buf, int len, int argc, char **argv)
     spi.config.mode = HAL_SPI_MODE_MASTER;
     spi.config.freq = 500 * 1000;  //  500 kHz. Previously 3 * 1000 * 0000
 
-    //  TODO: Set spi.priv
+    //  TODO: Set spi.priv. Based on vfs_spi_open: https://github.com/lupyuen/bl_iot_sdk/blob/spi/components/fs/vfs/device/vfs_spi.c#L11-L35
 
     //  Init the port
     int rc = hal_spi_init(&spi);
