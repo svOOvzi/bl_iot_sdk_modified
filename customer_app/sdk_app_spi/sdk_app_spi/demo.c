@@ -41,14 +41,18 @@
 /// Use SPI Port Number 0
 #define SPI_PORT  0
 
-/// Based on AliOS SPI API: https://help.aliyun.com/document_detail/161063.html?spm=a2c4g.11186623.6.576.391045c4bGoNKS
+/// SPI Port
+static spi_dev_t spi;
+
+/// Init the SPI Port. Based on AliOS SPI API: https://help.aliyun.com/document_detail/161063.html?spm=a2c4g.11186623.6.576.391045c4bGoNKS
 static void test_init_spi(char *buf, int len, int argc, char **argv)
 {
-    spi_dev_t spi;
+    //  Set the port number, mode and frequency
     spi.port        = SPI_PORT;
     spi.config.mode = HAL_SPI_MODE_MASTER;
-    spi.config.freq = 500 * 1000;  //  Previously 3 * 1000 * 0000
+    spi.config.freq = 500 * 1000;  //  500 kHz. Previously 3 * 1000 * 0000
 
+    //  Init the port
     int rc = hal_spi_init(&spi);
     assert(rc == 0);
 }
