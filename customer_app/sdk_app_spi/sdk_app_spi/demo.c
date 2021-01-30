@@ -52,9 +52,15 @@ static void test_init_spi(char *buf, int len, int argc, char **argv)
     spi.config.mode = HAL_SPI_MODE_MASTER;
     spi.config.freq = 500 * 1000;  //  500 kHz. Previously 3 * 1000 * 0000
 
+    //  TODO: Set spi.priv
+
     //  Init the port
     int rc = hal_spi_init(&spi);
     assert(rc == 0);
+
+    //  TODO: int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
+    //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
+    //  TODO: int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size);/* spi_ioc_transfer_t */
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
@@ -86,17 +92,5 @@ typedef struct {
     spi_config_t config;  /* spi config */
     void        *priv;    /* priv data */
 } spi_dev_t;
-
-/**
- * Initialises the SPI interface for a given SPI device
- *
- * @param[in]  spi  the spi device
- *
- * @return  0 : on success, EIO : if the SPI device could not be initialised
- */
-int32_t hal_spi_init(spi_dev_t *spi);
-int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
-int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
-int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size);/* spi_ioc_transfer_t */
 
 #endif  //  NOTUSED
