@@ -36,27 +36,31 @@
 
 #include "demo.h"
 #include <hal/soc/spi.h>
+#include <hal_spi.h>
 #include <cli.h>
 
 /// Use SPI Port Number 0
 #define SPI_PORT  0
 
 /// SPI Port
-static spi_dev_t spi;
+static spi_dev_t *spi;
 
-/// Init the SPI Port. Based on AliOS SPI API: https://help.aliyun.com/document_detail/161063.html?spm=a2c4g.11186623.6.576.391045c4bGoNKS
+/// Init the SPI Port
 static void test_init_spi(char *buf, int len, int argc, char **argv)
 {
-    //  Set the port number, mode and frequency
-    spi.port        = SPI_PORT;
-    spi.config.mode = HAL_SPI_MODE_MASTER;
-    spi.config.freq = 500 * 1000;  //  500 kHz. Previously 3 * 1000 * 0000
-
-    //  Init the port
-    int rc = hal_spi_init(&spi);
-    assert(rc == 0);
-
-    //  TODO: To init the port, call vfs_spi_init_fullname instead
+    spi = spi_init(
+        SPI_PORT,             //  SPI Port
+        HAL_SPI_MODE_MASTER,  //  SPI Mode
+        0,                    //  SPI Polar Phase
+        500 * 1000,           //  SPI Frequency (500 kHz). Previously 3 * 1000 * 0000
+        2,  //  tx_dma_ch,
+        3,  //  rx_dma_ch,
+        3,  //  pin_clk, 
+        2,  //  pin_cs
+        1,  //  pin_mosi
+        0   //  pin_miso
+    );
+    assert(spi != NULL);
 
     //  TODO: int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
     //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
