@@ -73,6 +73,15 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
     static spi_ioc_transfer_t trans;
+    memset(&trans, 0, sizeof(spi_ioc_transfer_t));
+
+    //  trans.tx_buf = ???;
+    //  trans.rx_buf = ???;
+    //  trans.len    = ???;
+    //  trans.speed_hz    = ???;
+    //  trans.delay_msecs = ???;  //  delay ms, bl add
+    //  trans.cs_change   = ???;  //  0: Keep CS activated */
+
     //  TODO: int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size);/* spi_ioc_transfer_t */
 }
 
