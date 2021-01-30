@@ -44,13 +44,14 @@
 #define SPI_PORT  0
 
 /// SPI Port
-static spi_dev_t *spi;
+static spi_dev_t spi;
 
 /// Init the SPI Port
 static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
     //  SPI settings based on BL602 Device Tree: https://github.com/bouffalolab/BLOpenFlasher/blob/main/bl602/device_tree/bl_factory_params_IoTKitA_40M.dts
-    spi = spi_init(
+    int rc = spi_init(
+        &spi,                 //  SPI Device
         SPI_PORT,             //  SPI Port
         HAL_SPI_MODE_MASTER,  //  SPI Mode
         0,                    //  SPI Polar Phase
@@ -62,7 +63,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         1,  //  SPI Serial Data Out Pin (Previously MOSI)
         0   //  SPI Serial Data In Pin (Previously MISO)
     );
-    assert(spi != NULL);
+    assert(rc == 0);
 
     //  TODO: int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
     //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);

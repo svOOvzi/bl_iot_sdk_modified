@@ -29,6 +29,7 @@
  */
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 #include <device/vfs_spi.h>
 #include <vfs_err.h>
 #include <vfs_register.h>
@@ -796,28 +797,27 @@ void bl_spi0_dma_int_handler_rx(void)
 //  Global single instance of SPI Data
 static spi_priv_data_t g_spi_data;
 
-//  Global single instance of SPI Device
-static spi_dev_t g_spi_dev;
-
-//  TODO: Init the SPI HAL without AOS and return the SPI Device. Return NULL in case of error. Supports only one instance of SPI Device.
-//  Based on vfs_spi_init_fullname
-spi_dev_t *spi_init(uint8_t port,
-            uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
-            uint8_t pin_clk, uint8_t pin_cs, uint8_t pin_mosi, uint8_t pin_miso)
+//  TODO: Init the SPI Device without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
+//  Based on vfs_spi_init_fullname.
+int spi_init(spi_dev_t *spi, uint8_t port,
+    uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
+    uint8_t pin_clk, uint8_t pin_cs, uint8_t pin_mosi, uint8_t pin_miso)
 {
+    assert(spi != NULL);
+
     //  Use the global single instance of SPI Data
     g_hal_buf = &g_spi_data;
     memset(g_hal_buf, 0, sizeof(spi_priv_data_t));
 
+    //  Create the Event Group for DMA Interrupt Handler to notify Foreground Task
     g_hal_buf->hwspi[port].spi_dma_event_group = xEventGroupCreate();
     blog_info("port%d eventloop init = %08lx\r\n", port,
         (uint32_t)g_hal_buf->hwspi[port].spi_dma_event_group);
     if (NULL == g_hal_buf->hwspi[port].spi_dma_event_group) {
-        return NULL;
+        return -ENOMEM;
     }
 
-    //  Use the global single instance of SPI Device
-    spi_dev_t *spi = &g_spi_dev;
+    //  Init the SPI Device
     memset(spi, 0, sizeof(spi_dev_t));
     spi->port = port;
     spi->config.mode = mode;
@@ -833,12 +833,10 @@ spi_dev_t *spi_init(uint8_t port,
     g_hal_buf->hwspi[port].pin_mosi = pin_mosi;
     g_hal_buf->hwspi[port].pin_miso = pin_miso;
 
-    //  Global single instance of SPI Device points to global single instance of SPI Data
+    //  SPI Device points to global single instance of SPI Data
     spi->priv = g_hal_buf;
 
     blog_info("[HAL] [SPI] Init :\r\nport=%d, mode=%d, polar_phase = %d, freq=%ld, tx_dma_ch=%d, rx_dma_ch=%d, pin_clk=%d, pin_cs=%d, pin_mosi=%d, pin_miso=%d\r\n",
         port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
-
-    //  Return the global single instance of SPI Device
-    return spi;
+    return 0;
 }
