@@ -333,7 +333,9 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
 
-    ////  TODO: Seems to hang here, waiting for FreeRTOS Event Group that will be notified by DMA Interrupt Handler. Disable the waiting for testing.
+    ////  TODO: Seems to hang here, waiting for FreeRTOS Event Group 
+    ////  that will be notified by DMA Interrupt Handler. 
+    ////  Disable the waiting for testing.
 #ifdef NOTUSED
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
