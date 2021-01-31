@@ -86,12 +86,12 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     //  Set the SPI transfer
     static spi_ioc_transfer_t trans;
     memset(&trans, 0, sizeof(trans));    
-    trans.tx_buf = (uint32_t) tx_buf;
-    trans.rx_buf = (uint32_t) rx_buf;
-    trans.len    = sizeof(tx_buf);
-    trans.speed_hz    = 500 * 1000;  //  500 kHz
-    trans.delay_msecs = 0;  //  Delay in ms (bl add)
-    trans.cs_change   = 0;  //  0: Keep CS activated
+    trans.tx_buf = (uint32_t) tx_buf;  //  Transmit Buffer
+    trans.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
+    trans.len    = sizeof(tx_buf);     //  How many bytes
+    trans.speed_hz    = 500 * 1000;    //  Frequency (500 kHz)
+    trans.delay_msecs = 0;             //  Delay in ms (bl add)
+    trans.cs_change   = 0;             //  0 means keep CS activated
 
     //  Transmit and receive the data over SPI with DMA
     int rc = hal_spi_transfer(
