@@ -85,7 +85,7 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 
     //  Set the SPI transfer
     static spi_ioc_transfer_t trans;
-    memset(&trans, 0, sizeof(spi_ioc_transfer_t));    
+    memset(&trans, 0, sizeof(trans));    
     trans.tx_buf = (uint32_t) tx_buf;
     trans.rx_buf = (uint32_t) rx_buf;
     trans.len    = sizeof(tx_buf);
@@ -93,12 +93,15 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     trans.delay_msecs = 0;  //  Delay in ms (bl add)
     trans.cs_change   = 0;  //  0: Keep CS activated
 
+    //  Transmit and receive the data over SPI with DMA
     int rc = hal_spi_transfer(
         &spi,    //  SPI Device
         &trans,  //  SPI Transfer
-        1        //  How many transfers
+        1        //  How many transfers (Number of requests, not bytes)
     );
     assert(rc == 0);
+
+    //  DMA Controller will transmit and receive the SPI data in the background
 }
 
 /// Show the SPI data received
