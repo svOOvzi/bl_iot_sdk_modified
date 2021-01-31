@@ -30,7 +30,7 @@
 #ifndef __DEMO_H__
 #define __DEMO_H__i
 
-int i2c_cli_init(void);
+int cli_init(void);
 
 #endif
 

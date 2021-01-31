@@ -136,7 +136,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"spi_result", "Show SPI data received", test_spi_result},
 };                                                                                   
 
-int i2c_cli_init(void)
+int cli_init(void)
 {
     // static command(s) do NOT need to call aos_cli_register_command(s) to register.
     // However, calling aos_cli_register_command(s) here is OK but is of no effect as cmds_user are included in cmds list.

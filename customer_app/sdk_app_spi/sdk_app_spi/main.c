@@ -52,8 +52,6 @@
 #include <blog.h>
 #include <looprt.h>
 #include <loopset.h>
-#include <loopset_i2c.h>
-#include <hal_i2c.h>
 #include "demo.h"
 
 extern uint8_t _heap_start;
@@ -125,6 +123,7 @@ static int get_dts_addr(const char *name, uint32_t *start, uint32_t *off)
     return 0;
 }
 
+#ifdef NOTUSED
 static void event_cb_i2c_event(input_event_t *event, void *private_data)
 {
     switch (event->code) {
@@ -155,6 +154,7 @@ static void event_cb_i2c_event(input_event_t *event, void *private_data)
         }
     }
 }
+#endif  //  NOTUSED
 
 static void aos_loop_proc(void *pvParameters)
 {
@@ -165,7 +165,7 @@ static void aos_loop_proc(void *pvParameters)
     vfs_device_init();
 
     looprt_start(proc_stack_looprt, 512, &proc_task_looprt);
-    loopset_i2c_hook_on_looprt();
+    //  NOTUSED: loopset_i2c_hook_on_looprt();
 
     /* uart */
     if (0 == get_dts_addr("uart", &fdt, &offset)) {
@@ -183,9 +183,9 @@ static void aos_loop_proc(void *pvParameters)
     }
 
 
-    aos_register_event_filter(EV_I2C, event_cb_i2c_event, NULL);
-    hal_i2c_init(0, 500);
-    i2c_cli_init();
+    //  NOTUSED: aos_register_event_filter(EV_I2C, event_cb_i2c_event, NULL);
+    //  NOTUSED: hal_i2c_init(0, 500);
+    cli_init();
 
     aos_loop_run();
 
