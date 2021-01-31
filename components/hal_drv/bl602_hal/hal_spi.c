@@ -57,6 +57,13 @@
 #define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
 #define HAL_SPI_HARDCS      (1)
 
+#if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
+#undef  blog_info
+#define blog_info  printf
+#undef  blog_error
+#define blog_error printf
+#endif
+
 #define SPI_NUM_MAX         1 /* only support spi0 */
 #define LLI_BUFF_SIZE       2048
 
