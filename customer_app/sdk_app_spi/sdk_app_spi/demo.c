@@ -69,20 +69,44 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
 }
 
+/// SPI Transmit Buffer
+static uint8_t tx_buf[1];
+
+/// SPI Receive Buffer
+static uint8_t rx_buf[1];
+
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
+    //  Set the transmit data
+    memset(&rx_buf, 0, sizeof(rx_buf));
+    memset(&tx_buf, 0, sizeof(tx_buf));
+    tx_buf[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1.
+
+    //  Set the SPI transfer
     static spi_ioc_transfer_t trans;
-    memset(&trans, 0, sizeof(spi_ioc_transfer_t));
+    memset(&trans, 0, sizeof(spi_ioc_transfer_t));    
+    trans.tx_buf = (uint32_t) tx_buf;
+    trans.rx_buf = (uint32_t) rx_buf;
+    trans.len    = sizeof(tx_buf);
+    trans.speed_hz    = 500 * 1000;  //  500 kHz
+    trans.delay_msecs = 0;  //  Delay in ms (bl add)
+    trans.cs_change   = 0;  //  0: Keep CS activated
 
-    //  trans.tx_buf = ???;
-    //  trans.rx_buf = ???;
-    //  trans.len    = ???;
-    //  trans.speed_hz    = ???;
-    //  trans.delay_msecs = ???;  //  delay ms, bl add
-    //  trans.cs_change   = ???;  //  0: Keep CS activated */
+    int rc = hal_spi_transfer(
+        &spi,    //  SPI Device
+        &trans,  //  SPI Transfer
+        1        //  How many transfers
+    );
+    assert(rc == 0);
+}
 
-    //  TODO: int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size);/* spi_ioc_transfer_t */
+/// Show the SPI data received
+static void test_spi_result(char *buf, int len, int argc, char **argv)
+{
+    for (int i = 0; i < sizeof(rx_buf); i++) {
+        printf("%02x\r\n", rx_buf[i]);
+    }
 }
 
 #ifdef NOTUSED
@@ -106,6 +130,7 @@ typedef struct spi_ioc_transfer {
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"spi_init", "Init SPI port", test_spi_init},
     {"spi_transfer", "Transfer SPI data", test_spi_transfer},
+    {"spi_result", "Show SPI data received", test_spi_result},
 };                                                                                   
 
 int i2c_cli_init(void)
@@ -116,21 +141,3 @@ int i2c_cli_init(void)
     //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
     return 0;
 }
-
-#ifdef NOTUSED
-
-#define HAL_SPI_MODE_MASTER 1  /* spi communication is master mode */
-#define HAL_SPI_MODE_SLAVE  2  /* spi communication is slave mode */
-
-typedef struct {
-    uint8_t mode;           /* spi communication mode */
-    uint32_t freq;          /* communication frequency Hz */
-} spi_config_t;
-
-typedef struct {
-    uint8_t      port;    /* spi port */
-    spi_config_t config;  /* spi config */
-    void        *priv;    /* priv data */
-} spi_dev_t;
-
-#endif  //  NOTUSED
