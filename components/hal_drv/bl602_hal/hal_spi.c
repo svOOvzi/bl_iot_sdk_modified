@@ -823,7 +823,7 @@ void bl_spi0_dma_int_handler_rx(void)
 //  Global single instance of SPI Data
 static spi_priv_data_t g_spi_data;
 
-//  TODO: Init the SPI Device without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
+//  TODO: Init the SPI Device for DMA without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
 //  Based on vfs_spi_init_fullname.
 int spi_init(spi_dev_t *spi, uint8_t port,
     uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
@@ -864,5 +864,8 @@ int spi_init(spi_dev_t *spi, uint8_t port,
 
     blog_info("[HAL] [SPI] Init :\r\nport=%d, mode=%d, polar_phase = %d, freq=%ld, tx_dma_ch=%d, rx_dma_ch=%d, pin_clk=%d, pin_cs=%d, pin_mosi=%d, pin_miso=%d\r\n",
         port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
-    return 0;
+
+    //  Init the SPI Port and DMA
+    int rc = hal_spi_init(spi);
+    return rc;
 }
