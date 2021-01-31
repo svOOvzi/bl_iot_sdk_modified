@@ -104,12 +104,23 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     //  DMA Controller will transmit and receive the SPI data in the background
 }
 
-/// Show the SPI data received
+/// Show the SPI data received and the interrupt counters
 static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
+    //  Show the received data
+    printf("Data:\r\n");
     for (int i = 0; i < sizeof(rx_buf); i++) {
-        printf("%02x\r\n", rx_buf[i]);
+        printf("  %02x\r\n", rx_buf[i]);
     }
+
+    //  Show the Interrupt Counters defined in components/hal_drv/bl602_hal/hal_spi.c
+    extern int g_counter_tx, g_counter_tx_buf, g_counter_tx_nobuf, g_counter_rx, g_counter_rx_buf, g_counter_rx_nobuf;
+    printf("Tx Interrupts: %d\r\n", g_counter_tx);
+    printf("Tx Buffer OK:  %d\r\n", g_counter_tx_buf);
+    printf("Tx No Buffer:  %d\r\n", g_counter_tx_nobuf);
+    printf("Rx Interrupts: %d\r\n", g_counter_rx);
+    printf("Rx Buffer OK:  %d\r\n", g_counter_rx_buf);
+    printf("Rx No Buffer:  %d\r\n", g_counter_rx_nobuf);
 }
 
 #ifdef NOTUSED

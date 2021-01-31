@@ -333,6 +333,8 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
 
+    ////  TODO: Seems to hang here, waiting for FreeRTOS Event Group that will be notified by DMA Interrupt Handler. Disable the waiting for testing.
+#ifdef NOTUSED
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
                                      pdTRUE,
@@ -345,6 +347,7 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
 
     vPortFree(ptxlli);
     vPortFree(prxlli);
+#endif  //  NOTUSED
 }
 
 int32_t hal_spi_init(spi_dev_t *spi)
@@ -754,12 +757,22 @@ int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_spi_offset)
     return 0;
 }
 
+////  TODO: Interrupt Counters
+int g_counter_tx;
+int g_counter_tx_buf;
+int g_counter_tx_nobuf;
+int g_counter_rx;
+int g_counter_rx_buf;
+int g_counter_rx_nobuf;
+
 void bl_spi0_dma_int_handler_tx(void)
 {
+    g_counter_tx++;  //  Increment the Transmit Interrupt Counter
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     if (NULL != g_hal_buf) {
+        g_counter_tx_buf++;  //  Increment the Transmit Interrupt Buffer OK Counter
         bl_dma_int_clear(g_hal_buf->hwspi[0].tx_dma_ch);
 
         if (g_hal_buf->hwspi[0].spi_dma_event_group != NULL) {
@@ -772,6 +785,7 @@ void bl_spi0_dma_int_handler_tx(void)
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     } else {
+        g_counter_tx_nobuf++;  //  Increment the Transmit Interrupt No Buffer Counter
         blog_error("bl_spi0_dma_int_handler_tx no clear isr.\r\n");
     }
 
@@ -780,10 +794,12 @@ void bl_spi0_dma_int_handler_tx(void)
 
 void bl_spi0_dma_int_handler_rx(void)
 {
+    g_counter_rx++;  //  Increment the Receive Interrupt Counter
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     if (NULL != g_hal_buf) {
+        g_counter_rx_buf++;  //  Increment the Receive Interrupt Buffer OK Counter
         bl_dma_int_clear(g_hal_buf->hwspi[0].rx_dma_ch);
 
         if (g_hal_buf->hwspi[0].spi_dma_event_group != NULL) {
@@ -796,6 +812,7 @@ void bl_spi0_dma_int_handler_rx(void)
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     } else {
+        g_counter_rx_nobuf++;  //  Increment the Receive Interrupt No Buffer Counter
         blog_error("bl_spi0_dma_int_handler_rx no clear isr.\r\n");
     }
     return;
