@@ -58,10 +58,10 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         500 * 1000,           //  SPI Frequency (500 kHz). Previously 3 * 1000 * 0000
         2,  //  Transmit DMA Channel
         3,  //  Receive DMA Channel
-        3,  //  SPI Clock Pin 
-        2,  //  SPI Chip Select Pin
-        1,  //  SPI Serial Data Out Pin (Previously MOSI)
-        0   //  SPI Serial Data In Pin (Previously MISO)
+        3,  //  (Yellow) SPI Clock Pin 
+        2,  //  (Orange) SPI Chip Select Pin
+        1,  //  (Green)  SPI Serial Data Out Pin (Previously MOSI)
+        0   //  (Blue)   SPI Serial Data In Pin  (Previously MISO)
     );
     assert(rc == 0);
 
