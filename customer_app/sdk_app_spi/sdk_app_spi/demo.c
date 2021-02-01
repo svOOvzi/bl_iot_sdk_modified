@@ -105,7 +105,7 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
     //  Show the received data
-    printf("Data:\r\n");
+    printf("Received Data 0x%p:\r\n", rx_buf);
     for (int i = 0; i < sizeof(rx_buf); i++) {
         printf("  %02x\r\n", rx_buf[i]);
     }
