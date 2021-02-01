@@ -861,11 +861,16 @@ int spi_init(spi_dev_t *spi, uint8_t port,
 
     //  SPI Device points to global single instance of SPI Data
     spi->priv = g_hal_buf;
-
     blog_info("[HAL] [SPI] Init :\r\nport=%d, mode=%d, polar_phase = %d, freq=%ld, tx_dma_ch=%d, rx_dma_ch=%d, pin_clk=%d, pin_cs=%d, pin_mosi=%d, pin_miso=%d\r\n",
         port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
 
+    //  Init the SPI mode and speed
+    int rc = hal_spi_set_rwmode(spi, mode);
+    assert(rc == 0);
+    rc = hal_spi_set_rwspeed(spi, freq);
+    assert(rc == 0);
+
     //  Init the SPI Port and DMA
-    int rc = hal_spi_init(spi);
+    rc = hal_spi_init(spi);
     return rc;
 }
