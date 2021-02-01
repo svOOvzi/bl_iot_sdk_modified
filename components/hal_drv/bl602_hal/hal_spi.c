@@ -769,10 +769,20 @@ int g_counter_tx_nobuf;
 int g_counter_rx;
 int g_counter_rx_buf;
 int g_counter_rx_nobuf;
+uint32_t g_tx_status;  //  0x4000c000
+uint32_t g_tx_tc;  //  0x4000c004
+uint32_t g_tx_error; //  0x4000c00c
+uint32_t g_rx_status;  //  0x4000c000
+uint32_t g_rx_tc;  //  0x4000c004
+uint32_t g_rx_error; //  0x4000c00c
 
 void bl_spi0_dma_int_handler_tx(void)
 {
     g_counter_tx++;  //  Increment the Transmit Interrupt Counter
+    g_tx_status = *(uint32_t *) 0x4000c000;
+    g_tx_tc = *(uint32_t *) 0x4000c004;
+    g_tx_error = *(uint32_t *) 0x4000c00c;
+
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -800,6 +810,10 @@ void bl_spi0_dma_int_handler_tx(void)
 void bl_spi0_dma_int_handler_rx(void)
 {
     g_counter_rx++;  //  Increment the Receive Interrupt Counter
+    g_rx_status = *(uint32_t *) 0x4000c000;
+    g_rx_tc = *(uint32_t *) 0x4000c004;
+    g_rx_error = *(uint32_t *) 0x4000c00c;
+
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 

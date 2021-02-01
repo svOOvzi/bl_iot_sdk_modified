@@ -109,12 +109,20 @@ static void test_spi_result(char *buf, int len, int argc, char **argv)
 
     //  Show the Interrupt Counters defined in components/hal_drv/bl602_hal/hal_spi.c
     extern int g_counter_tx, g_counter_tx_buf, g_counter_tx_nobuf, g_counter_rx, g_counter_rx_buf, g_counter_rx_nobuf;
+    extern uint32_t g_tx_status, g_tx_tc, g_tx_error, g_rx_status, g_rx_tc, g_rx_error;
+
     printf("Tx Interrupts: %d\r\n", g_counter_tx);
     printf("Tx Buffer OK:  %d\r\n", g_counter_tx_buf);
     printf("Tx No Buffer:  %d\r\n", g_counter_tx_nobuf);
+    printf("Tx Status:     0x%x\r\n", g_tx_status);
+    printf("Tx Term Count: 0x%x\r\n", g_tx_tc);
+    printf("Tx Error:      0x%x\r\n", g_tx_error);
     printf("Rx Interrupts: %d\r\n", g_counter_rx);
     printf("Rx Buffer OK:  %d\r\n", g_counter_rx_buf);
     printf("Rx No Buffer:  %d\r\n", g_counter_rx_nobuf);
+    printf("Rx Status:     0x%x\r\n", g_rx_status);
+    printf("Rx Term Count: 0x%x\r\n", g_rx_tc);
+    printf("Rx Error:      0x%x\r\n", g_rx_error);
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
