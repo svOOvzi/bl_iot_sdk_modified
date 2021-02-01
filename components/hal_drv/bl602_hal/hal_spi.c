@@ -500,6 +500,7 @@ int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size)
 #endif
 
 #if (0 == HAL_SPI_HARDCS)
+    blog_info("Set CS pin %d to low\r\n", priv_data->hwspi[spi_dev->port].pin_cs);
     bl_gpio_output_set(priv_data->hwspi[spi_dev->port].pin_cs, 0);
 #endif
     for (i = 0; i < size; i++) {
