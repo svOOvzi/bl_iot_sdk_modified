@@ -51,22 +51,19 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
     //  SPI settings based on BL602 Device Tree: https://github.com/bouffalolab/BLOpenFlasher/blob/main/bl602/device_tree/bl_factory_params_IoTKitA_40M.dts
     int rc = spi_init(
-        &spi,                 //  SPI Device
-        SPI_PORT,             //  SPI Port
-        HAL_SPI_MODE_MASTER,  //  SPI Mode
-        0,                    //  SPI Polar Phase
-        500 * 1000,           //  SPI Frequency (500 kHz). Previously 3 * 1000 * 0000
+        &spi,        //  SPI Device
+        SPI_PORT,    //  SPI Port
+        0,           //  SPI Mode: 0 for Controller (previously Master), 1 for Peripheral (previously Slave)
+        0,           //  SPI Polar Phase
+        500 * 1000,  //  SPI Frequency (500 kHz). Previously 3 * 1000 * 0000
         2,  //  Transmit DMA Channel
         3,  //  Receive DMA Channel
         3,  //  (Yellow) SPI Clock Pin 
         2,  //  (Orange) SPI Chip Select Pin
-        1,  //  (Green)  SPI Serial Data Out Pin (Previously MOSI)
-        0   //  (Blue)   SPI Serial Data In Pin  (Previously MISO)
+        1,  //  (Green)  SPI Serial Data Out Pin (previously MOSI)
+        0   //  (Blue)   SPI Serial Data In Pin  (previously MISO)
     );
     assert(rc == 0);
-
-    //  TODO: int hal_spi_set_rwmode(spi_dev_t *spi_dev, int mode);
-    //  TODO: int hal_spi_set_rwspeed(spi_dev_t *spi_dev, uint32_t speed);
 }
 
 /// SPI Transmit Buffer
