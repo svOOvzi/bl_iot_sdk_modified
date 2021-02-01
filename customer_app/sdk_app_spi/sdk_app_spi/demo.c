@@ -80,15 +80,12 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     memset(&tx_buf, 0, sizeof(tx_buf));
     tx_buf[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1.
 
-    //  Set the SPI transfer
+    //  Set the SPI transfer (Other fields in trans are not implemented)
     static spi_ioc_transfer_t trans;
     memset(&trans, 0, sizeof(trans));    
     trans.tx_buf = (uint32_t) tx_buf;  //  Transmit Buffer
     trans.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
     trans.len    = sizeof(tx_buf);     //  How many bytes
-    trans.speed_hz    = 500 * 1000;    //  Frequency (500 kHz)
-    trans.delay_msecs = 0;             //  Delay in ms (bl add)
-    trans.cs_change   = 0;             //  0 means keep CS activated
 
     //  Transmit and receive the data over SPI with DMA
     int rc = hal_spi_transfer(
@@ -119,23 +116,6 @@ static void test_spi_result(char *buf, int len, int argc, char **argv)
     printf("Rx Buffer OK:  %d\r\n", g_counter_rx_buf);
     printf("Rx No Buffer:  %d\r\n", g_counter_rx_nobuf);
 }
-
-#ifdef NOTUSED
-typedef struct spi_ioc_transfer {
-    uint32_t   tx_buf;               /* uint64_t to uint32_t */
-    uint32_t   rx_buf;               /* uint64_t to uint32_t */
-    uint32_t   len;
-    uint32_t   speed_hz;
-    uint16_t   delay_usecs;          /* Unimplemented */
-    uint16_t   delay_msecs;          /* delay ms, bl add*/
-    uint8_t    bits_per_word;        /* Unimplemented */
-    uint8_t    cs_change;            /* 0: Keep CS activated */
-    uint8_t    tx_nbits;             /* Unimplemented */
-    uint8_t    rx_nbits;             /* Unimplemented */
-    uint8_t    word_delay_usecs;     /* Unimplemented */
-    uint8_t    pad;                  /* Unimplemented */
-} spi_ioc_transfer_t;
-#endif  //  NOTUSED
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {

@@ -250,7 +250,7 @@ static void hal_spi_dma_init(spi_hw_t *arg)
     } else {
         blog_error("node support polar_phase \r\n");
     }
-    SPI_Init(0,&spicfg);
+    SPI_Init(0,&spicfg);  //// TODO: In future when there are multiple SPI ports, this should be SPI_Init(spi_id, &spicfg)
 
     if (hw_arg->mode == 0)
     {
