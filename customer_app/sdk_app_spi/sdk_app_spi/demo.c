@@ -54,7 +54,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         &spi,        //  SPI Device
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
-        0,           //  SPI Polar Phase
+        0,           //  SPI Polar Phase: 0, 1, 2 or 3. TODO: Verify this
         500 * 1000,  //  SPI Frequency (500 kHz). Previously 3 * 1000 * 0000
         2,  //  Transmit DMA Channel
         3,  //  Receive DMA Channel
