@@ -88,7 +88,7 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     trans.len    = sizeof(tx_buf);     //  How many bytes
     trans.speed_hz    = 500 * 1000;    //  Frequency (500 kHz)
     trans.delay_msecs = 0;             //  Delay in ms (bl add)
-    trans.cs_change   = 0;             //  0 means keep CS activated
+    trans.cs_change   = 1;             //  0 means keep CS activated
 
     //  Transmit and receive the data over SPI with DMA
     int rc = hal_spi_transfer(
