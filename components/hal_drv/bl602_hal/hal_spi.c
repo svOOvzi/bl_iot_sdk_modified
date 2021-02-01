@@ -847,17 +847,17 @@ int spi_init(spi_dev_t *spi, uint8_t port,
     memset(spi, 0, sizeof(spi_dev_t));
     spi->port = port;
     spi->config.mode = mode;
-    spi->config.freq = freq;
-    g_hal_buf->hwspi[port].ssp_id = port;
-    g_hal_buf->hwspi[port].mode = mode;
+    spi->config.freq  = 0;  //  Will validate and set frequency in hal_spi_set_rwspeed
+    g_hal_buf->hwspi[port].ssp_id      = port;
+    g_hal_buf->hwspi[port].mode        = mode;
     g_hal_buf->hwspi[port].polar_phase = polar_phase;
-    g_hal_buf->hwspi[port].freq = freq;
-    g_hal_buf->hwspi[port].tx_dma_ch = tx_dma_ch;
-    g_hal_buf->hwspi[port].rx_dma_ch = rx_dma_ch;
-    g_hal_buf->hwspi[port].pin_clk = pin_clk;
-    g_hal_buf->hwspi[port].pin_cs = pin_cs;
-    g_hal_buf->hwspi[port].pin_mosi = pin_mosi;
-    g_hal_buf->hwspi[port].pin_miso = pin_miso;
+    g_hal_buf->hwspi[port].freq        = 0;  //  Will validate and set frequency in hal_spi_set_rwspeed
+    g_hal_buf->hwspi[port].tx_dma_ch   = tx_dma_ch;
+    g_hal_buf->hwspi[port].rx_dma_ch   = rx_dma_ch;
+    g_hal_buf->hwspi[port].pin_clk     = pin_clk;
+    g_hal_buf->hwspi[port].pin_cs      = pin_cs;
+    g_hal_buf->hwspi[port].pin_mosi    = pin_mosi;
+    g_hal_buf->hwspi[port].pin_miso    = pin_miso;
 
     //  SPI Device points to global single instance of SPI Data
     spi->priv = g_hal_buf;
@@ -865,9 +865,9 @@ int spi_init(spi_dev_t *spi, uint8_t port,
         port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
 
     //  Init the SPI mode and speed
-    int rc = hal_spi_set_rwmode(spi, mode);
+    int rc = hal_spi_set_rwspeed(spi, freq);
     assert(rc == 0);
-    rc = hal_spi_set_rwspeed(spi, freq);
+    rc = hal_spi_set_rwmode(spi, mode);
     assert(rc == 0);
 
     //  Init the SPI Port and DMA
