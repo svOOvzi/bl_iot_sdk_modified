@@ -884,10 +884,10 @@ int spi_init(spi_dev_t *spi, uint8_t port,
     //  Init the SPI mode and speed
     int rc = hal_spi_set_rwspeed(spi, freq);
     assert(rc == 0);
-    rc = hal_spi_set_rwmode(spi, mode);
-    assert(rc == 0);
+    //  rc = hal_spi_set_rwmode(spi, mode);
+    //  assert(rc == 0);
 
     //  Init the SPI Port and DMA
-    rc = hal_spi_init(spi);
+    //  rc = hal_spi_init(spi);
     return rc;
 }
