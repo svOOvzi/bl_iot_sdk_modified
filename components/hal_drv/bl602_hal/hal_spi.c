@@ -103,6 +103,7 @@ static void hal_gpio_init(spi_hw_t *arg)
         blog_error("arg err.\r\n");
         return;
     }
+    blog_info("hal_gpio_init: cs:%d, clk:%d, mosi:%d, miso: %d\r\n", arg->pin_cs, arg->pin_clk, arg->pin_mosi, arg->pin_miso);
 
     gpiopins[0] = arg->pin_cs;
     gpiopins[1] = arg->pin_clk;

@@ -56,12 +56,12 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
         0,           //  SPI Polar Phase: 0, 1, 2 or 3. TODO: Verify this
         250 * 1000,  //  SPI Frequency (250 kHz). Previously 3 * 1000 * 0000
-        2,  //  Transmit DMA Channel
-        3,  //  Receive DMA Channel
-        3,  //  (Yellow) SPI Clock Pin 
-        2,  //  (Orange) SPI Chip Select Pin
-        1,  //  (Green)  SPI Serial Data Out Pin (formerly MOSI)
-        0   //  (Blue)   SPI Serial Data In Pin  (formerly MISO)
+        2,   //  Transmit DMA Channel
+        3,   //  Receive DMA Channel
+        11,  //  (Yellow) SPI Clock Pin 
+        14,  //  (Orange) SPI Chip Select Pin
+        17,  //  (Green)  SPI Serial Data Out Pin (formerly MOSI)
+        0    //  (Blue)   SPI Serial Data In Pin  (formerly MISO)
     );
     assert(rc == 0);
 }
