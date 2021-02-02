@@ -41,7 +41,7 @@
 #include <cli.h>
 
 /// Use SPI Port Number 0
-#define SPI_PORT  0
+#define SPI_PORT 0
 
 /// SPI Port
 static spi_dev_t spi;
@@ -67,33 +67,46 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// SPI Transmit Buffer. First byte is Register ID (0xD0), second byte is unused.
-static uint8_t tx_buf[2];
+/// SPI Transmit and Receive Buffers for First SPI Transfer
+static uint8_t tx_buf1[1];  //  We shall transmit Register ID (0xD0)
+static uint8_t rx_buf1[1];  //  Unused. We expect to receive the result from BME280 in the second SPI Transfer.
 
-/// SPI Receive Buffer. First byte is unused, second byte is Chip ID (0x60).
-static uint8_t rx_buf[2];
+/// SPI Transmit and Receive Buffers for Second SPI Transfer
+static uint8_t tx_buf2[1];  //  Unused. For safety, we shall transmit 0xFF which is a read command (not write).
+static uint8_t rx_buf2[1];  //  We expect to receive Chip ID (0x60) from BME280
+
+/// SPI Receive Buffer. First byte is unused, 
 
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
-    //  Set the transmit data
-    memset(&rx_buf, 0, sizeof(rx_buf));
-    memset(&tx_buf, 0, sizeof(tx_buf));
-    tx_buf[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
-    tx_buf[1] = 0xff;  //  Unused. Read/Write Bit (High Bit) must be 1 for Read.
+    //  Clear the buffers
+    memset(&tx_buf1, 0, sizeof(tx_buf1));
+    memset(&rx_buf1, 0, sizeof(rx_buf1));
+    memset(&tx_buf2, 0, sizeof(tx_buf2));
+    memset(&rx_buf2, 0, sizeof(rx_buf2));
 
-    //  Set the SPI transfer (Other fields in trans are not implemented)
-    static spi_ioc_transfer_t trans;
-    memset(&trans, 0, sizeof(trans));    
-    trans.tx_buf = (uint32_t) tx_buf;  //  Transmit Buffer
-    trans.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
-    trans.len    = sizeof(tx_buf);     //  How many bytes
+    //  Prepare 2 SPI Transfers
+    static spi_ioc_transfer_t transfers[2];
+    memset(transfers, 0, sizeof(transfers));    
 
-    //  Transmit and receive the data over SPI with DMA
+    //  First SPI Transfer: Shall transmit Register ID (0xD0) to BME280
+    tx_buf1[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
+    transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
+    transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
+    transfers[0].len    = sizeof(tx_buf1);     //  How many bytes
+
+    //  Second SPI Transfer: Receive Chip ID (0x60) from BME280
+    tx_buf2[0] = 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
+    transfers[1].tx_buf = (uint32_t) tx_buf2;  //  Transmit Buffer
+    transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
+    transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
+
+    //  Execute the two SPI Transfers with the DMA Controller
     int rc = hal_spi_transfer(
-        &spi,    //  SPI Device
-        &trans,  //  SPI Transfer
-        1        //  How many transfers (Number of requests, not bytes)
+        &spi,       //  SPI Device
+        transfers,  //  SPI Transfers
+        sizeof(transfers) / sizeof(transfers[0])  //  How many transfers (Number of requests, not bytes)
     );
     assert(rc == 0);
 
@@ -104,9 +117,13 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
     //  Show the received data
-    printf("Received Data 0x%p:\r\n", rx_buf);
-    for (int i = 0; i < sizeof(rx_buf); i++) {
-        printf("  %02x\r\n", rx_buf[i]);
+    printf("SPI Transfer #1: Received Data 0x%p:\r\n", rx_buf1);
+    for (int i = 0; i < sizeof(rx_buf1); i++) {
+        printf("  %02x\r\n", rx_buf1[i]);
+    }
+    printf("SPI Transfer #2: Received Data 0x%p:\r\n", rx_buf2);
+    for (int i = 0; i < sizeof(rx_buf2); i++) {
+        printf("  %02x\r\n", rx_buf2[i]);
     }
 
     //  Show the Interrupt Counters defined in components/hal_drv/bl602_hal/hal_spi.c
