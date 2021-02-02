@@ -49,28 +49,29 @@ static spi_dev_t spi;
 /// Init the SPI Port
 static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
-    //  SPI settings based on BL602 Device Tree: https://github.com/bouffalolab/BLOpenFlasher/blob/main/bl602/device_tree/bl_factory_params_IoTKitA_40M.dts
+    //  Set SPI pins based on PineCone / Pinenut GPIO Definition: https://wiki.pine64.org/wiki/Nutcracker#Pinenut-12S_Module_information
+    //  TODO: Serial Data In and Serial Data Out seem to be flipped, inconsistent with Reference Manual
     int rc = spi_init(
         &spi,        //  SPI Device
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
-        0,           //  SPI Polar Phase: 0, 1, 2 or 3. TODO: Verify this
-        250 * 1000,  //  SPI Frequency (250 kHz). Previously 3 * 1000 * 0000
+        0,           //  SPI Polar Phase: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
+        250 * 1000,  //  SPI Frequency (250 kHz)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         11,  //  (Yellow) SPI Clock Pin 
         14,  //  (Orange) SPI Chip Select Pin
-        17,  //  (Green)  SPI Serial Data Out Pin (formerly MOSI)
-        0    //  (Blue)   SPI Serial Data In Pin  (formerly MISO)
+        17,  //  (Green)  SPI Serial Data In Pin  (formerly MISO)
+        0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 }
 
-/// SPI Transmit Buffer
-static uint8_t tx_buf[1];
+/// SPI Transmit Buffer. First byte is Register ID (0xD0), second byte is unused.
+static uint8_t tx_buf[2];
 
-/// SPI Receive Buffer
-static uint8_t rx_buf[1];
+/// SPI Receive Buffer. First byte is unused, second byte is Chip ID (0x60).
+static uint8_t rx_buf[2];
 
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
@@ -78,7 +79,8 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     //  Set the transmit data
     memset(&rx_buf, 0, sizeof(rx_buf));
     memset(&tx_buf, 0, sizeof(tx_buf));
-    tx_buf[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1.
+    tx_buf[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
+    tx_buf[1] = 0xff;  //  Unused. Read/Write Bit (High Bit) must be 1 for Read.
 
     //  Set the SPI transfer (Other fields in trans are not implemented)
     static spi_ioc_transfer_t trans;
