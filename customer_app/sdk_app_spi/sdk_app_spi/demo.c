@@ -72,6 +72,18 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
+    //  Change Pin 0 (MOSI) to Pull Down
+    GLB_GPIO_Cfg_Type gpioCfg = {
+        .gpioPin = GLB_GPIO_PIN_0,
+        .gpioFun = (uint8_t) GPIO_FUN_SPI,
+        .gpioMode = GPIO_MODE_AF,
+        .pullType = GPIO_PULL_DOWN,
+        .drive    = 1,
+        .smtCtrl  = 1
+    };    
+    gpioCfg.gpioPin = 0;
+    GLB_GPIO_Init(&gpioCfg);
+
     //  Configure Chip Select pin as GPIO Pin
     GLB_GPIO_Type pins[1];
     pins[0] = SPI_CS_PIN;
