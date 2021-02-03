@@ -65,9 +65,9 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         250 * 1000,  //  SPI Frequency (250 kHz)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
-        11,  //  (Yellow) SPI Clock Pin 
+        3,   //  (Yellow) SPI Clock Pin 
         2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
-        17,  //  (Green)  SPI Serial Data In Pin  (formerly MISO)
+        1,   //  (Green)  SPI Serial Data In Pin  (formerly MISO)
         0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
