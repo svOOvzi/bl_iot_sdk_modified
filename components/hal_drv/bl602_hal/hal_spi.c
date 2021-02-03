@@ -55,7 +55,7 @@
 #include <blog.h>
 
 #define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
-#define HAL_SPI_HARDCS      (0)  ////  TODO: Change to 0 to control Chip Select Pin as GPIO (instead of SPI). Set to 0 for BME280.
+#define HAL_SPI_HARDCS      (1)  ////  TODO: When set to 0, this is supposed to control Chip Select Pin as GPIO (instead of SPI). But this doesn't work, because the pin has been configured for SPI Port, which overrides GPIO.
 
 #if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
 #undef  blog_info
