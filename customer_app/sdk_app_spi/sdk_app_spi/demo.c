@@ -39,6 +39,7 @@
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
 
 /// Use SPI Port Number 0
@@ -70,6 +71,12 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
+
+    //  Configure Chip Select pin as GPIO Output Pin (instead of GPIO Input)
+    GLB_GPIO_Type pins[1];
+    pins[0] = SPI_CS_PIN;
+    GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
+    bl_gpio_enable_output(SPI_CS_PIN, 0, 0);
 
     //  Set Chip Select pin to High, to deactivate BME280
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
