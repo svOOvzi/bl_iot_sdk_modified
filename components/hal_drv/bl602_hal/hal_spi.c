@@ -55,7 +55,7 @@
 #include <blog.h>
 
 #define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
-#define HAL_SPI_HARDCS      (1)
+#define HAL_SPI_HARDCS      (0)  ////  TODO: Change to 0 to control Chip Select Pin as GPIO (instead of SPI). Set to 0 for BME280.
 
 #if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
 #undef  blog_info
@@ -336,10 +336,10 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
 
-    ////  TODO: Seems to hang here, waiting for FreeRTOS Event Group 
-    ////  that will be notified by DMA Interrupt Handler. 
-    ////  Disable the waiting for testing.
-#ifdef NOTUSED
+    ////  TODO: SPI Transfer may hang here, waiting for FreeRTOS Event Group 
+    ////  if it isn't notified by DMA Interrupt Handler.  To troubleshoot,
+    ////  comment out ALL lines below until end of function.
+    ////  Also comment out the second bl_gpio_output_set in hal_spi_transfer.
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
                                      pdTRUE,
@@ -352,7 +352,6 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
 
     vPortFree(ptxlli);
     vPortFree(prxlli);
-#endif  //  NOTUSED
 }
 
 int32_t hal_spi_init(spi_dev_t *spi)
@@ -513,6 +512,7 @@ int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size)
     }
 #if (0 == HAL_SPI_HARDCS)
     bl_gpio_output_set(priv_data->hwspi[spi_dev->port].pin_cs, 1);
+    blog_info("Set CS pin %d to high\r\n", priv_data->hwspi[spi_dev->port].pin_cs);
 #endif
 
     return 0;
@@ -782,7 +782,7 @@ void bl_spi0_dma_int_handler_tx(void)
     g_counter_tx++;  //  Increment the Transmit Interrupt Counter
     g_tx_status = *(uint32_t *) 0x4000c000;
     g_tx_tc = *(uint32_t *) 0x4000c004;
-    g_tx_error = *(uint32_t *) 0x4000c00c;
+    if (g_tx_error == 0) { g_tx_error = *(uint32_t *) 0x4000c00c; }
 
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -813,7 +813,7 @@ void bl_spi0_dma_int_handler_rx(void)
     g_counter_rx++;  //  Increment the Receive Interrupt Counter
     g_rx_status = *(uint32_t *) 0x4000c000;
     g_rx_tc = *(uint32_t *) 0x4000c004;
-    g_rx_error = *(uint32_t *) 0x4000c00c;
+    if (g_rx_error == 0) { g_rx_error = *(uint32_t *) 0x4000c00c; }
 
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
