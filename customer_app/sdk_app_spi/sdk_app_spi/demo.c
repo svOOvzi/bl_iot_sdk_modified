@@ -134,7 +134,7 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     transfers[0].len    = sizeof(tx_buf1);     //  How many bytes
 
     //  Second SPI Transfer: Receive Chip ID (0x60) from BME280
-    tx_buf2[0] = 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
+    tx_buf2[0] = 0x00;  //  TODO: 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
     transfers[1].tx_buf = (uint32_t) tx_buf2;  //  Transmit Buffer
     transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
     transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
@@ -168,7 +168,7 @@ static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
     //  Dump SPI config register
     printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
-    
+
     //  Show the received data
     printf("SPI Transfer #1: Received Data 0x%p:\r\n", rx_buf1);
     for (int i = 0; i < sizeof(rx_buf1); i++) {
