@@ -72,6 +72,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
+#ifdef NOTUSED
     //  Change Pin 0 (MOSI) to Pull None (Default is Pull Up)
     printf("Set MOSI pin %d to pull none\r\n", 0);
     GLB_GPIO_Cfg_Type gpioCfg = {
@@ -84,6 +85,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     };    
     gpioCfg.gpioPin = 0;
     GLB_GPIO_Init(&gpioCfg);
+#endif  //  NOTUSED
 
     //  Configure Chip Select pin as GPIO Pin
     GLB_GPIO_Type pins[1];
