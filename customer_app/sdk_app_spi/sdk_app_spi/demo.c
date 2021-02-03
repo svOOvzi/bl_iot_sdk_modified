@@ -72,13 +72,13 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Change Pin 0 (MOSI) to Pull Up (Default is Pull Up)
-    printf("Set MOSI pin %d to pull up\r\n", 0);
+    //  Change Pin 0 (MOSI) to Pull None (Default is Pull Up)
+    printf("Set MOSI pin %d to pull none\r\n", 0);
     GLB_GPIO_Cfg_Type gpioCfg = {
         .gpioPin  = GLB_GPIO_PIN_0,
         .gpioFun  = (uint8_t) GPIO_FUN_SPI,
         .gpioMode = GPIO_MODE_AF,
-        .pullType = GPIO_PULL_UP,
+        .pullType = GPIO_PULL_NONE,
         .drive    = 1,
         .smtCtrl  = 1
     };    
