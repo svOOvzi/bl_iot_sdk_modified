@@ -48,6 +48,9 @@
 /// Use GPIO 14 (PineCone Green LED) as SPI Chip Select Pin
 #define SPI_CS_PIN 14
 
+/// Use GPIO 4 as SPI Chip Serial Data Out Pin (formerly MISO)
+#define SPI_SDO_PIN 4
+
 /// SPI Port
 static spi_dev_t spi;
 
@@ -76,24 +79,21 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         3,   //  (Yellow) SPI Clock Pin 
         2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
         1,   //  (Green)  SPI Serial Data In Pin  (formerly MISO)
-        4    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
+        SPI_SDO_PIN    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 
-#ifdef NOTUSED
-    //  Change Pin 0 (MOSI) to Pull None (Default is Pull Up)
-    printf("Set MOSI pin %d to pull none\r\n", 0);
+    //  Change SDO Pin (MOSI) to Pull Down (Default is Pull Up)
     GLB_GPIO_Cfg_Type gpioCfg = {
-        .gpioPin  = GLB_GPIO_PIN_0,
+        .gpioPin  = SPI_SDO_PIN,
         .gpioFun  = (uint8_t) GPIO_FUN_SPI,
         .gpioMode = GPIO_MODE_AF,
-        .pullType = GPIO_PULL_NONE,
+        .pullType = GPIO_PULL_DOWN,
         .drive    = 1,
         .smtCtrl  = 1
     };    
-    gpioCfg.gpioPin = 0;
     GLB_GPIO_Init(&gpioCfg);
-#endif  //  NOTUSED
+    printf("Set SDO (MOSI) pin %d to pull down\r\n", gpioCfg.gpioPin);
 
     //  Configure Chip Select pin as GPIO Pin
     GLB_GPIO_Type pins[1];
