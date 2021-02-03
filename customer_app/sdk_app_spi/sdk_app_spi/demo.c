@@ -72,15 +72,20 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Configure Chip Select pin as GPIO Output Pin (instead of GPIO Input)
+    //  Configure Chip Select pin as GPIO Pin
     GLB_GPIO_Type pins[1];
     pins[0] = SPI_CS_PIN;
-    GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
-    bl_gpio_enable_output(SPI_CS_PIN, 0, 0);
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
+    assert(rc2 == SUCCESS);
+
+    //  Configure Chip Select pin as GPIO Output Pin (instead of GPIO Input)
+    rc = bl_gpio_enable_output(SPI_CS_PIN, 0, 0);
+    assert(rc == 0);
 
     //  Set Chip Select pin to High, to deactivate BME280
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
-    bl_gpio_output_set(SPI_CS_PIN, 1);
+    rc = bl_gpio_output_set(SPI_CS_PIN, 1);
+    assert(rc == 0);
 }
 
 /// SPI Transmit and Receive Buffers for First SPI Transfer
@@ -118,10 +123,11 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 
     //  Set Chip Select pin to Low, to activate BME280
     printf("Set CS pin %d to low\r\n", SPI_CS_PIN);
-    bl_gpio_output_set(SPI_CS_PIN, 0);
+    int rc = bl_gpio_output_set(SPI_CS_PIN, 0);
+    assert(rc == 0);
 
     //  Execute the two SPI Transfers with the DMA Controller
-    int rc = hal_spi_transfer(
+    rc = hal_spi_transfer(
         &spi,       //  SPI Device
         transfers,  //  SPI Transfers
         sizeof(transfers) / sizeof(transfers[0])  //  How many transfers (Number of requests, not bytes)
@@ -131,8 +137,9 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     //  DMA Controller will transmit and receive the SPI data in the background
 
     //  Set Chip Select pin to High, to deactivate BME280
+    rc = bl_gpio_output_set(SPI_CS_PIN, 1);
+    assert(rc == 0);
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
-    bl_gpio_output_set(SPI_CS_PIN, 1);
 }
 
 /// Show the SPI data received and the interrupt counters
