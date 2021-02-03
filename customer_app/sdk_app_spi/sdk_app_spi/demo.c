@@ -44,7 +44,7 @@
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// Use GPIO 14 (PineCone Blue LED) as SPI Chip Select Pin
+/// Use GPIO 14 (PineCone Green LED) as SPI Chip Select Pin
 #define SPI_CS_PIN 14
 
 /// SPI Port
@@ -64,7 +64,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         11,  //  (Yellow) SPI Clock Pin 
-        2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin)
+        2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
         17,  //  (Green)  SPI Serial Data In Pin  (formerly MISO)
         0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
