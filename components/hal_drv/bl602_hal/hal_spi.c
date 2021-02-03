@@ -285,7 +285,10 @@ static void hal_spi_dma_init(spi_hw_t *arg)
     return;
 }
 
-static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, uint32_t Len)
+static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, uint32_t Len,
+    int tx,  //  Set to 1 if we should transmit data, 0 if not
+    int rx   //  Set to 1 if we should receive data, 0 if not
+)
 {
     EventBits_t uxBits;
     DMA_LLI_Cfg_Type txllicfg;
@@ -329,12 +332,18 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
         return;
     }
 
-    DMA_LLI_Init(arg->tx_dma_ch, &txllicfg);
-    DMA_LLI_Init(arg->rx_dma_ch, &rxllicfg);
-    DMA_LLI_Update(arg->tx_dma_ch,(uint32_t)ptxlli);
-    DMA_LLI_Update(arg->rx_dma_ch,(uint32_t)prxlli);
-    DMA_Channel_Enable(arg->tx_dma_ch);
-    DMA_Channel_Enable(arg->rx_dma_ch);
+    if (tx != 0) { DMA_LLI_Init(arg->tx_dma_ch, &txllicfg); }
+    if (rx != 0) { DMA_LLI_Init(arg->rx_dma_ch, &rxllicfg); }
+    if (tx != 0) { DMA_LLI_Update(arg->tx_dma_ch,(uint32_t)ptxlli); }
+    if (rx != 0) { DMA_LLI_Update(arg->rx_dma_ch,(uint32_t)prxlli); }
+    if (tx != 0) { DMA_Channel_Enable(arg->tx_dma_ch); }
+    if (rx != 0) { DMA_Channel_Enable(arg->rx_dma_ch); }
+
+    //  Determine whether we should wait for transmit or receive or both
+    int event_group = 0;
+    if (tx != 0 && rx != 0) { event_group = EVT_GROUP_SPI_DMA_TR; }
+    else if (tx != 0) { event_group = EVT_GROUP_SPI_DMA_TX; }
+    else if (rx != 0) { event_group = EVT_GROUP_SPI_DMA_RX; }    
 
     ////  TODO: SPI Transfer may hang here, waiting for FreeRTOS Event Group 
     ////  if it isn't notified by DMA Interrupt Handler.  To troubleshoot,
@@ -342,7 +351,7 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     ////  Also comment out the second bl_gpio_output_set in hal_spi_transfer.
     ////  And comment out the second bl_gpio_output_set in test_spi_transfer.
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
-                                     EVT_GROUP_SPI_DMA_TR,
+                                     event_group,
                                      pdTRUE,
                                      pdTRUE,
                                      portMAX_DELAY);
@@ -508,8 +517,12 @@ int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size)
 #if (HAL_SPI_DEBUG)
         blog_info("transfer xfer[%d].len = %ld\r\n", i, s_xfer[i].len);
 #endif
+        ////  TODO: Remove hardcoding
+        int tx = (i == 0) ? 1 : 0;  //  First transfer is transmit only
+        int rx = (i == 1) ? 1 : 0;  //  Second transfer is receive only
         hal_spi_dma_trans(&priv_data->hwspi[spi_dev->port],
-                (uint8_t *)s_xfer[i].tx_buf, (uint8_t *)s_xfer[i].rx_buf, s_xfer[i].len);
+                (uint8_t *)s_xfer[i].tx_buf, (uint8_t *)s_xfer[i].rx_buf, s_xfer[i].len,
+                tx, rx);
     }
 #if (0 == HAL_SPI_HARDCS)
     bl_gpio_output_set(priv_data->hwspi[spi_dev->port].pin_cs, 1);

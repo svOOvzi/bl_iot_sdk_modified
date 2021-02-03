@@ -115,10 +115,10 @@ static uint8_t rx_buf2[1];  //  We expect to receive Chip ID (0x60) from BME280
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
     //  Clear the buffers
-    memset(&tx_buf1, 0, sizeof(tx_buf1));
-    memset(&rx_buf1, 0, sizeof(rx_buf1));
-    memset(&tx_buf2, 0, sizeof(tx_buf2));
-    memset(&rx_buf2, 0, sizeof(rx_buf2));
+    memset(&tx_buf1, 0,    sizeof(tx_buf1));
+    memset(&rx_buf1, 0x22, sizeof(rx_buf1));  //  TODO: Change to 0x0
+    memset(&tx_buf2, 0,    sizeof(tx_buf2));
+    memset(&rx_buf2, 0x22, sizeof(rx_buf2));  //  TODO: Change to 0x0
 
     //  Prepare 2 SPI Transfers
     static spi_ioc_transfer_t transfers[2];
