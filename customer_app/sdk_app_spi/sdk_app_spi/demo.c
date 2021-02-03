@@ -54,10 +54,17 @@ static spi_dev_t spi;
 /// Init the SPI Port
 static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
-    //  Set SPI pins based on PineCone / Pinenut GPIO Definition: https://wiki.pine64.org/wiki/Nutcracker#Pinenut-12S_Module_information
-    //  Note: The Chip Select Pin below (2) must NOT be the same as SPI_CS_PIN (14). Because the SPI Pin Function will override the GPIO Pin Function!
-    //  TODO: Serial Data In and Serial Data Out seem to be flipped, inconsistent with Reference Manual
-    //  TODO: Setting Serial Data Out to Pin 0 will switch on the WiFi LED. Why?
+    //  Configure the SPI Port
+    //  Note: The Chip Select Pin below (2) must NOT be the same as SPI_CS_PIN (14). 
+    //  Because the SPI Pin Function will override the GPIO Pin Function!
+
+    //  TODO: The pins for Serial Data In and Serial Data Out seem to be flipped,
+    //  when observed with a Logic Analyser. This contradicts the 
+    //  BL602 Reference Manual. Why ???
+
+    //  TODO: Setting Serial Data Out to Pin 0 will switch on the WiFi LED.
+    //  Why ???
+
     int rc = spi_init(
         &spi,        //  SPI Device
         SPI_PORT,    //  SPI Port
