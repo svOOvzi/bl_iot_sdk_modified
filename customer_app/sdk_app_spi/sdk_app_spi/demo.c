@@ -101,6 +101,9 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
     rc = bl_gpio_output_set(SPI_CS_PIN, 1);
     assert(rc == 0);
+
+    //  Dump SPI config register
+    printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
 }
 
 /// SPI Transmit and Receive Buffers for First SPI Transfer
@@ -155,11 +158,17 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     rc = bl_gpio_output_set(SPI_CS_PIN, 1);
     assert(rc == 0);
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
+
+    //  Dump SPI config register
+    printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
 }
 
 /// Show the SPI data received and the interrupt counters
 static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
+    //  Dump SPI config register
+    printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
+    
     //  Show the received data
     printf("SPI Transfer #1: Received Data 0x%p:\r\n", rx_buf1);
     for (int i = 0; i < sizeof(rx_buf1); i++) {

@@ -54,7 +54,7 @@
 #include <utils_log.h>
 #include <blog.h>
 
-#define HAL_SPI_DEBUG       (0)  ////  TODO: Change to 0 for production to disable logging
+#define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
 #define HAL_SPI_HARDCS      (1)  ////  TODO: When set to 0, this is supposed to control Chip Select Pin as GPIO (instead of SPI). But this doesn't work, because the pin has been configured for SPI Port, which overrides GPIO.
 
 #if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
@@ -113,8 +113,10 @@ static void hal_gpio_init(spi_hw_t *arg)
     GLB_GPIO_Func_Init(GPIO_FUN_SPI,gpiopins,sizeof(gpiopins)/sizeof(gpiopins[0]));
 
     if (arg->mode == 0) {
+        blog_info("hal_gpio_init: SPI controller mode\r\n");
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_MASTER);
     } else {
+        blog_info("hal_gpio_init: SPI peripheral mode\r\n");
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_SLAVE);
     }
 
