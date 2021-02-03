@@ -57,6 +57,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     //  Set SPI pins based on PineCone / Pinenut GPIO Definition: https://wiki.pine64.org/wiki/Nutcracker#Pinenut-12S_Module_information
     //  Note: The Chip Select Pin below (2) must NOT be the same as SPI_CS_PIN (14). Because the SPI Pin Function will override the GPIO Pin Function!
     //  TODO: Serial Data In and Serial Data Out seem to be flipped, inconsistent with Reference Manual
+    //  TODO: Setting Serial Data Out to Pin 0 will switch on the WiFi LED. Why?
     int rc = spi_init(
         &spi,        //  SPI Device
         SPI_PORT,    //  SPI Port
@@ -127,7 +128,7 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     static spi_ioc_transfer_t transfers[2];
     memset(transfers, 0, sizeof(transfers));    
 
-    //  First SPI Transfer: Shall transmit Register ID (0xD0) to BME280
+    //  First SPI Transfer: Transmit Register ID (0xD0) to BME280
     tx_buf1[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
     transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
     transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
