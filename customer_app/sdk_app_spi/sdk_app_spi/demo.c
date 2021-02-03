@@ -37,11 +37,15 @@
 #include "demo.h"
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
-#include <hal_spi.h>
+#include <hal_spi.h>         //  For spi_init
+#include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <cli.h>
 
 /// Use SPI Port Number 0
-#define SPI_PORT 0
+#define SPI_PORT   0
+
+/// Use GPIO 14 (PineCone Blue LED) as SPI Chip Select Pin
+#define SPI_CS_PIN 14
 
 /// SPI Port
 static spi_dev_t spi;
@@ -60,11 +64,15 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         11,  //  (Yellow) SPI Clock Pin 
-        14,  //  (Orange) SPI Chip Select Pin
+        2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin)
         17,  //  (Green)  SPI Serial Data In Pin  (formerly MISO)
         0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate BME280
+    printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
+    bl_gpio_output_set(SPI_CS_PIN, 1);
 }
 
 /// SPI Transmit and Receive Buffers for First SPI Transfer
@@ -74,8 +82,6 @@ static uint8_t rx_buf1[1];  //  Unused. We expect to receive the result from BME
 /// SPI Transmit and Receive Buffers for Second SPI Transfer
 static uint8_t tx_buf2[1];  //  Unused. For safety, we shall transmit 0xFF which is a read command (not write).
 static uint8_t rx_buf2[1];  //  We expect to receive Chip ID (0x60) from BME280
-
-/// SPI Receive Buffer. First byte is unused, 
 
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
@@ -102,6 +108,10 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
     transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
 
+    //  Set Chip Select pin to Low, to activate BME280
+    printf("Set CS pin %d to low\r\n", SPI_CS_PIN);
+    bl_gpio_output_set(SPI_CS_PIN, 0);
+
     //  Execute the two SPI Transfers with the DMA Controller
     int rc = hal_spi_transfer(
         &spi,       //  SPI Device
@@ -111,6 +121,10 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 
     //  DMA Controller will transmit and receive the SPI data in the background
+
+    //  Set Chip Select pin to High, to deactivate BME280
+    printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
+    bl_gpio_output_set(SPI_CS_PIN, 1);
 }
 
 /// Show the SPI data received and the interrupt counters

@@ -340,6 +340,7 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     ////  if it isn't notified by DMA Interrupt Handler.  To troubleshoot,
     ////  comment out ALL lines below until end of function.
     ////  Also comment out the second bl_gpio_output_set in hal_spi_transfer.
+    ////  And comment out the second bl_gpio_output_set in test_spi_transfer.
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
                                      pdTRUE,
