@@ -68,7 +68,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
         3,   //  (Yellow) SPI Clock Pin 
         2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
         1,   //  (Green)  SPI Serial Data In Pin  (formerly MISO)
-        0    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
+        4    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 
