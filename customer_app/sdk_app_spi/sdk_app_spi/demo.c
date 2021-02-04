@@ -67,6 +67,9 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     //  when observed with a Logic Analyser. This contradicts the 
     //  BL602 Reference Manual. Why ???
 
+    //  TODO: We must set Polarity=0, Phase=1. Though the Logic Analyser shows
+    //  that it looks like Phase=0. Why ???
+
     //  TODO: Setting Serial Data Out to Pin 0 will switch on the WiFi LED.
     //  Why ???
 
