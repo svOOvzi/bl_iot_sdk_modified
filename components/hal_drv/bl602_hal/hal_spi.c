@@ -54,7 +54,7 @@
 #include <utils_log.h>
 #include <blog.h>
 
-#define HAL_SPI_DEBUG       (0)  ////  TODO: Change to 0 for production to disable logging
+#define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
 #define HAL_SPI_HARDCS      (1)  ////  TODO: When set to 0, this is supposed to control Chip Select Pin as GPIO (instead of SPI). But this doesn't work, because the pin has been configured for SPI Port, which overrides GPIO.
 
 #if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
@@ -766,32 +766,29 @@ int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_spi_offset)
     return 0;
 }
 
-////  TODO: Interrupt Counters
-int g_counter_tx;
-int g_counter_tx_buf;
-int g_counter_tx_nobuf;
-int g_counter_rx;
-int g_counter_rx_buf;
-int g_counter_rx_nobuf;
-uint32_t g_tx_status;  //  0x4000c000
-uint32_t g_tx_tc;  //  0x4000c004
-uint32_t g_tx_error; //  0x4000c00c
-uint32_t g_rx_status;  //  0x4000c000
-uint32_t g_rx_tc;  //  0x4000c004
-uint32_t g_rx_error; //  0x4000c00c
+////  TODO: Interrupt Counters for Transmit and Receive
+int g_tx_counter;
+int g_rx_counter;
+
+////  TODO: Status, Terminal Counts and Error Codes for Transmit and Receive
+uint32_t g_tx_status;  //  Transmit Status (from 0x4000c000)
+uint32_t g_tx_tc;      //  Transmit Terminal Count (from 0x4000c004)
+uint32_t g_tx_error;   //  Transmit Error Code (from 0x4000c00c)
+uint32_t g_rx_status;  //  Receive Status (from 0x4000c000)
+uint32_t g_rx_tc;      //  Receive Terminal Count (0x4000c004)
+uint32_t g_rx_error;   //  Receive Error Code (0x4000c00c)
 
 void bl_spi0_dma_int_handler_tx(void)
 {
-    g_counter_tx++;  //  Increment the Transmit Interrupt Counter
-    g_tx_status = *(uint32_t *) 0x4000c000;
-    g_tx_tc = *(uint32_t *) 0x4000c004;
-    if (g_tx_error == 0) { g_tx_error = *(uint32_t *) 0x4000c00c; }
+    g_tx_counter++;  //  Increment the Transmit Interrupt Counter
+    g_tx_status = *(uint32_t *) 0x4000c000;  //  Set the Transmit Status
+    g_tx_tc     = *(uint32_t *) 0x4000c004;  //  Set the Transmit Terminal Count
+    if (g_tx_error == 0) { g_tx_error = *(uint32_t *) 0x4000c00c; }  //  Set the Transmit Error Code
 
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     if (NULL != g_hal_buf) {
-        g_counter_tx_buf++;  //  Increment the Transmit Interrupt Buffer OK Counter
         bl_dma_int_clear(g_hal_buf->hwspi[0].tx_dma_ch);
 
         if (g_hal_buf->hwspi[0].spi_dma_event_group != NULL) {
@@ -804,7 +801,6 @@ void bl_spi0_dma_int_handler_tx(void)
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     } else {
-        g_counter_tx_nobuf++;  //  Increment the Transmit Interrupt No Buffer Counter
         blog_error("bl_spi0_dma_int_handler_tx no clear isr.\r\n");
     }
 
@@ -813,16 +809,15 @@ void bl_spi0_dma_int_handler_tx(void)
 
 void bl_spi0_dma_int_handler_rx(void)
 {
-    g_counter_rx++;  //  Increment the Receive Interrupt Counter
-    g_rx_status = *(uint32_t *) 0x4000c000;
-    g_rx_tc = *(uint32_t *) 0x4000c004;
-    if (g_rx_error == 0) { g_rx_error = *(uint32_t *) 0x4000c00c; }
+    g_rx_counter++;  //  Increment the Receive Interrupt Counter
+    g_rx_status = *(uint32_t *) 0x4000c000;  //  Set the Receive Status
+    g_rx_tc     = *(uint32_t *) 0x4000c004;  //  Set the Receive Terminal Count
+    if (g_rx_error == 0) { g_rx_error = *(uint32_t *) 0x4000c00c; }  //  Set the Receive Error Code
 
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     if (NULL != g_hal_buf) {
-        g_counter_rx_buf++;  //  Increment the Receive Interrupt Buffer OK Counter
         bl_dma_int_clear(g_hal_buf->hwspi[0].rx_dma_ch);
 
         if (g_hal_buf->hwspi[0].spi_dma_event_group != NULL) {
@@ -835,13 +830,12 @@ void bl_spi0_dma_int_handler_rx(void)
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     } else {
-        g_counter_rx_nobuf++;  //  Increment the Receive Interrupt No Buffer Counter
         blog_error("bl_spi0_dma_int_handler_rx no clear isr.\r\n");
     }
     return;
 }
 
-//  Global single instance of SPI Data
+//  Global single instance of SPI Data. We supports only one instance of SPI Device.
 static spi_priv_data_t g_spi_data;
 
 //  TODO: Init the SPI Device for DMA without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
@@ -885,13 +879,8 @@ int spi_init(spi_dev_t *spi, uint8_t port,
     blog_info("[HAL] [SPI] Init :\r\nport=%d, mode=%d, polar_phase = %d, freq=%ld, tx_dma_ch=%d, rx_dma_ch=%d, pin_clk=%d, pin_cs=%d, pin_mosi=%d, pin_miso=%d\r\n",
         port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
 
-    //  Init the SPI mode and speed
+    //  Init the SPI speed, pins and DMA
     int rc = hal_spi_set_rwspeed(spi, freq);
     assert(rc == 0);
-    //  rc = hal_spi_set_rwmode(spi, mode);
-    //  assert(rc == 0);
-
-    //  Init the SPI Port and DMA
-    //  rc = hal_spi_init(spi);
     return rc;
 }
