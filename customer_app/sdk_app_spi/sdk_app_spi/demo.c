@@ -83,6 +83,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
+#ifdef NOTUSED
     //  Change SDO Pin (MOSI) to Pull Up (Default is Pull Up)
     GLB_GPIO_Cfg_Type gpioCfg = {
         .gpioPin  = SPI_SDO_PIN,
@@ -94,6 +95,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     };    
     GLB_GPIO_Init(&gpioCfg);
     printf("Set SDO (MOSI) pin %d to pull up\r\n", gpioCfg.gpioPin);
+#endif  //  NOTUSED
 
     //  Configure Chip Select pin as GPIO Pin
     GLB_GPIO_Type pins[1];
