@@ -54,6 +54,8 @@
 /// SPI Port
 static spi_dev_t spi;
 
+static void test_spi_result(char *buf, int len, int argc, char **argv);
+
 /// Init the SPI Port
 static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
@@ -127,50 +129,56 @@ static uint8_t rx_buf2[1];  //  We expect to receive Chip ID (0x60) from BME280
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
-    //  Clear the buffers
-    memset(&tx_buf1, 0,    sizeof(tx_buf1));
-    memset(&rx_buf1, 0x22, sizeof(rx_buf1));  //  TODO: Change to 0x0
-    memset(&tx_buf2, 0,    sizeof(tx_buf2));
-    memset(&rx_buf2, 0x22, sizeof(rx_buf2));  //  TODO: Change to 0x0
+    //  Dump Registers 0xD0 to 0xFE
+    for (int i = 0; i < 0xff - 0xd0; i++) {
+        //  Clear the buffers
+        memset(&tx_buf1, 0,    sizeof(tx_buf1));
+        memset(&rx_buf1, 0x22, sizeof(rx_buf1));  //  TODO: Change to 0x0
+        memset(&tx_buf2, 0,    sizeof(tx_buf2));
+        memset(&rx_buf2, 0x22, sizeof(rx_buf2));  //  TODO: Change to 0x0
 
-    //  Prepare 2 SPI Transfers
-    static spi_ioc_transfer_t transfers[2];
-    memset(transfers, 0, sizeof(transfers));    
+        //  Prepare 2 SPI Transfers
+        static spi_ioc_transfer_t transfers[2];
+        memset(transfers, 0, sizeof(transfers));    
 
-    //  First SPI Transfer: Transmit Register ID (0xD0) to BME280
-    tx_buf1[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
-    transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
-    transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
-    transfers[0].len    = sizeof(tx_buf1);     //  How many bytes
+        //  First SPI Transfer: Transmit Register ID (0xD0) to BME280
+        tx_buf1[0] = 0xd0 + i;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
+        transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
+        transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
+        transfers[0].len    = sizeof(tx_buf1);     //  How many bytes
 
-    //  Second SPI Transfer: Receive Chip ID (0x60) from BME280
-    tx_buf2[0] = 0x00;  //  TODO: 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
-    transfers[1].tx_buf = (uint32_t) tx_buf2;  //  Transmit Buffer
-    transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
-    transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
+        //  Second SPI Transfer: Receive Chip ID (0x60) from BME280
+        tx_buf2[0] = 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
+        transfers[1].tx_buf = (uint32_t) tx_buf2;  //  Transmit Buffer
+        transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
+        transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
 
-    //  Set Chip Select pin to Low, to activate BME280
-    printf("Set CS pin %d to low\r\n", SPI_CS_PIN);
-    int rc = bl_gpio_output_set(SPI_CS_PIN, 0);
-    assert(rc == 0);
+        //  Set Chip Select pin to Low, to activate BME280
+        printf("Set CS pin %d to low\r\n", SPI_CS_PIN);
+        int rc = bl_gpio_output_set(SPI_CS_PIN, 0);
+        assert(rc == 0);
 
-    //  Execute the two SPI Transfers with the DMA Controller
-    rc = hal_spi_transfer(
-        &spi,       //  SPI Device
-        transfers,  //  SPI Transfers
-        sizeof(transfers) / sizeof(transfers[0])  //  How many transfers (Number of requests, not bytes)
-    );
-    assert(rc == 0);
+        //  Execute the two SPI Transfers with the DMA Controller
+        rc = hal_spi_transfer(
+            &spi,       //  SPI Device
+            transfers,  //  SPI Transfers
+            sizeof(transfers) / sizeof(transfers[0])  //  How many transfers (Number of requests, not bytes)
+        );
+        assert(rc == 0);
 
-    //  DMA Controller will transmit and receive the SPI data in the background
+        //  DMA Controller will transmit and receive the SPI data in the background
 
-    //  Set Chip Select pin to High, to deactivate BME280
-    rc = bl_gpio_output_set(SPI_CS_PIN, 1);
-    assert(rc == 0);
-    printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
+        //  Set Chip Select pin to High, to deactivate BME280
+        rc = bl_gpio_output_set(SPI_CS_PIN, 1);
+        assert(rc == 0);
+        printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
 
-    //  Dump SPI config register
-    printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
+        //  Dump SPI config register
+        printf("SPI config: 0x%x\r\n", *(uint32_t *) 0x4000a200);
+
+        //  Show result
+        test_spi_result("", 0, 0, NULL);
+    }
 }
 
 /// Show the SPI data received and the interrupt counters
