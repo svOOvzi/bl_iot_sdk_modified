@@ -835,7 +835,7 @@ void bl_spi0_dma_int_handler_rx(void)
     return;
 }
 
-//  Global single instance of SPI Data. We supports only one instance of SPI Device.
+//  Global single instance of SPI Data. We support only one instance of SPI Device.
 static spi_priv_data_t g_spi_data;
 
 //  TODO: Init the SPI Device for DMA without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
