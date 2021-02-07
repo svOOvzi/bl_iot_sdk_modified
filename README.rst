@@ -2,6 +2,8 @@ Pine64 BL602 SDK modded for the articles...
 
 - `"PineCone BL602 talks to I2C Sensors" <https://lupyuen.github.io/articles/i2c>`_
 
+- `"PineCone BL602 talks SPI too!" <https://lupyuen.github.io/articles/spi>`_
+
 - `"Mynewt GPIO ported to PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/gpio>`_
 
 - `"Control PineCone BL602 RGB LED with GPIO and PWM" <https://lupyuen.github.io/articles/led>`_
