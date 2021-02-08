@@ -49,8 +49,8 @@
 | __`GPIO 2`__  | Do Not <br> Connect | Do Not <br> Connect
 | __`GPIO 3`__  | `SCL`               | Yellow 
 | __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `DC`                | ???
-| __`GPIO 12`__ | `BLK`               | ???
+| __`GPIO 5`__  | `DC`                | White
+| __`GPIO 12`__ | `BLK`               | Purple
 | __`GPIO 14`__ | Do Not <br> Connect | Orange
 | __`3V3`__     | `3.3V`              | Red
 | __`GND`__     | `GND`               | Black
