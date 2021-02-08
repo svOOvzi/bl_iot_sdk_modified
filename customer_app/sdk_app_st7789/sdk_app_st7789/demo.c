@@ -50,6 +50,7 @@
 | __`GPIO 3`__  | `SCL`               | Yellow 
 | __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
 | __`GPIO 5`__  | `DC`                | White
+| __`GPIO 11`__ | `RST`               | Black
 | __`GPIO 12`__ | `BLK`               | Purple
 | __`GPIO 14`__ | Do Not <br> Connect | Orange
 | __`3V3`__     | `3.3V`              | Red
@@ -61,6 +62,9 @@
 
 /// Use GPIO 5 as ST7789 Data/Command Pin (DC)
 #define SPI_DC_PIN 5
+
+/// Use GPIO 11 as ST7789 Reset Pin (RST)
+#define SPI_RST_PIN 11
 
 /// Use GPIO 12 as ST7789 Backlight Pin (BLK)
 #define SPI_BLK_PIN 12
@@ -103,17 +107,19 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Configure Chip Select, Data/Command, Backlight pins as GPIO Pins
-    GLB_GPIO_Type pins[3];
+    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
+    GLB_GPIO_Type pins[4];
     pins[0] = SPI_CS_PIN;
     pins[1] = SPI_DC_PIN;
-    pins[2] = SPI_BLK_PIN;
+    pins[2] = SPI_RST_PIN;
+    pins[3] = SPI_BLK_PIN;
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
     assert(rc2 == SUCCESS);
 
-    //  Configure Chip Select, Data/Command, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(SPI_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(SPI_DC_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SPI_RST_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(SPI_BLK_PIN, 0, 0);  assert(rc == 0);
 
     //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
@@ -156,6 +162,8 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     memset(transfers, 0, sizeof(transfers));    
 
     //  First SPI Transfer: Transmit Register ID (0xD0) to BME280
+    //  Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
+
     tx_buf1[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
     transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
     transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
