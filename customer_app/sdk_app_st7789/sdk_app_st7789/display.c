@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "lv_port_disp.h"
 #include "demo.h"
 
@@ -90,7 +92,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 
 /// Buffer for reading flash and writing to display
-static uint8_t flash_buffer[BATCH_SIZE];
+//  TODO: static uint8_t flash_buffer[BATCH_SIZE];
 
 /// Display the image in SPI Flash to ST7789 display controller. 
 /// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
@@ -191,13 +193,38 @@ int pinetime_lvgl_mynewt_set_window(uint8_t left, uint8_t top, uint8_t right, ui
 
 /// Runs commands to initialize the display. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/lib.rs
 int pinetime_lvgl_mynewt_init_display(void) {
-    //  Assume that SPI port 0 has been initialised by the SPI Flash Driver at startup.
+    //  Assume that SPI port 0 has been initialised.
+    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
+    GLB_GPIO_Type pins[4];
+    pins[0] = DISPLAY_CS_PIN;
+    pins[1] = DISPLAY_DC_PIN;
+    pins[2] = DISPLAY_RST_PIN;
+    pins[3] = DISPLAY_BLK_PIN;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
+    assert(rc2 == SUCCESS);
+
+    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     int rc;
-    rc = hal_gpio_init_out(DISPLAY_RST_PIN, 1); assert(rc == 0);
-    rc = hal_gpio_init_out(DISPLAY_CS_PIN, 1); assert(rc == 0);
-    rc = hal_gpio_init_out(DISPLAY_DC_PIN, 0); assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_RST_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
+    assert(rc == 0);
+
     //  Switch on backlight
-    rc = hal_gpio_init_out(DISPLAY_BLK_PIN, 0); assert(rc == 0);
+    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
+    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
+    assert(rc == 0);
+
+    /*
+    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
+    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
+    assert(rc == 0);
+    */
 
     hard_reset();
     pinetime_lvgl_mynewt_write_command(SWRESET, NULL, 0);
@@ -254,9 +281,9 @@ int pinetime_lvgl_mynewt_init_display(void) {
 
 /// Reset the display controller
 static int hard_reset(void) {
-    hal_gpio_write(DISPLAY_RST_PIN, 1);
-    hal_gpio_write(DISPLAY_RST_PIN, 0);
-    hal_gpio_write(DISPLAY_RST_PIN, 1);
+    bl_gpio_output_set(DISPLAY_RST_PIN, 1);
+    bl_gpio_output_set(DISPLAY_RST_PIN, 0);
+    bl_gpio_output_set(DISPLAY_RST_PIN, 1);
     return 0;
 }
 
@@ -276,7 +303,7 @@ static int set_orientation(uint8_t orientation) {
 
 /// Transmit ST7789 command
 int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, uint16_t len) {
-    hal_gpio_write(DISPLAY_DC_PIN, 0);
+    bl_gpio_output_set(DISPLAY_DC_PIN, 0);
     int rc = transmit_spi(&command, 1);
     assert(rc == 0);
     if (params != NULL && len > 0) {
@@ -288,7 +315,7 @@ int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, u
 
 /// Transmit ST7789 data
 int pinetime_lvgl_mynewt_write_data(const uint8_t *data, uint16_t len) {
-    hal_gpio_write(DISPLAY_DC_PIN, 1);
+    bl_gpio_output_set(DISPLAY_DC_PIN, 1);
     transmit_spi(data, len);
     return 0;
 }
@@ -297,7 +324,7 @@ int pinetime_lvgl_mynewt_write_data(const uint8_t *data, uint16_t len) {
 static int transmit_spi(const uint8_t *data, uint16_t len) {
     if (len == 0) { return 0; }
     //  Select the device
-    hal_gpio_write(DISPLAY_CS_PIN, 0);
+    bl_gpio_output_set(DISPLAY_CS_PIN, 0);
     //  Send the data
     int rc = hal_spi_txrx(
         (void *) data,  //  TX Buffer
@@ -306,7 +333,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     );
     assert(rc == 0);
     //  De-select the device
-    hal_gpio_write(DISPLAY_CS_PIN, 1);
+    bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     return 0;
 }
 

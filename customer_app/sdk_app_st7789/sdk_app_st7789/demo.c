@@ -36,6 +36,7 @@
 
 #include "demo.h"            //  For display pins
 #include "display.h"         //  For display functions
+#include "lv_port_disp.h"    //  For display functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
@@ -96,37 +97,9 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
-    GLB_GPIO_Type pins[4];
-    pins[0] = DISPLAY_CS_PIN;
-    pins[1] = DISPLAY_DC_PIN;
-    pins[2] = DISPLAY_RST_PIN;
-    pins[3] = DISPLAY_BLK_PIN;
-    BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
-    assert(rc2 == SUCCESS);
-
-    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
-    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_RST_PIN, 0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
-
-    //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
-    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
+    //  Configure the GPIO Pins and switch on backlight
+    rc = pinetime_lvgl_mynewt_init_display();
     assert(rc == 0);
-
-    //  Switch Backlight on
-
-    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
-    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
-    assert(rc == 0);
-
-    /*
-    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
-    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
-    assert(rc == 0);
-    */
 }
 
 /// SPI Transmit and Receive Buffers for First SPI Transfer
