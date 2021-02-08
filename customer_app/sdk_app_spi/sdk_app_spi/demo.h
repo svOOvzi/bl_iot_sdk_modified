@@ -27,15 +27,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef __HAL_SPI_H
-#define __HAL_SPI_H
+#ifndef __DEMO_H__
+#define __DEMO_H__i
 
-int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_uart_offset);
-
-//  TODO: Init the SPI Device without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
-//  Based on vfs_spi_init_fullname.
-int spi_init(spi_dev_t *spi, uint8_t port,
-    uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
-    uint8_t pin_clk, uint8_t pin_cs, uint8_t pin_mosi, uint8_t pin_miso);
+int cli_init(void);
 
 #endif
+

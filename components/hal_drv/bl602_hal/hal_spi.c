@@ -29,6 +29,7 @@
  */
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 #include <device/vfs_spi.h>
 #include <vfs_err.h>
 #include <vfs_register.h>
@@ -53,8 +54,15 @@
 #include <utils_log.h>
 #include <blog.h>
 
-#define HAL_SPI_DEBUG       (0)
-#define HAL_SPI_HARDCS      (1)
+#define HAL_SPI_DEBUG       (1)  ////  TODO: Change to 0 for production to disable logging
+#define HAL_SPI_HARDCS      (1)  ////  TODO: When set to 0, this is supposed to control Chip Select Pin as GPIO (instead of SPI). But this doesn't work, because the pin has been configured for SPI Port, which overrides GPIO.
+
+#if (HAL_SPI_DEBUG)  ////  TODO: Remove for production
+#undef  blog_info
+#define blog_info  printf
+#undef  blog_error
+#define blog_error printf
+#endif
 
 #define SPI_NUM_MAX         1 /* only support spi0 */
 #define LLI_BUFF_SIZE       2048
@@ -95,6 +103,7 @@ static void hal_gpio_init(spi_hw_t *arg)
         blog_error("arg err.\r\n");
         return;
     }
+    blog_info("hal_gpio_init: cs:%d, clk:%d, mosi:%d, miso: %d\r\n", arg->pin_cs, arg->pin_clk, arg->pin_mosi, arg->pin_miso);
 
     gpiopins[0] = arg->pin_cs;
     gpiopins[1] = arg->pin_clk;
@@ -104,8 +113,10 @@ static void hal_gpio_init(spi_hw_t *arg)
     GLB_GPIO_Func_Init(GPIO_FUN_SPI,gpiopins,sizeof(gpiopins)/sizeof(gpiopins[0]));
 
     if (arg->mode == 0) {
+        blog_info("hal_gpio_init: SPI controller mode\r\n");
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_MASTER);
     } else {
+        blog_info("hal_gpio_init: SPI peripheral mode\r\n");
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_SLAVE);
     }
 
@@ -172,12 +183,14 @@ static int lli_list_init(DMA_LLI_Ctrl_Type **pptxlli, DMA_LLI_Ctrl_Type **pprxll
         (*pptxlli)[i].srcDmaAddr = (uint32_t)(ptx_data + i * LLI_BUFF_SIZE);
         (*pptxlli)[i].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
         (*pptxlli)[i].dmaCtrl = dmactrl;
+        blog_info("Tx DMA src=0x%x, dest=0x%x, size=%d, si=%d, di=%d, i=%d\r\n", (unsigned) (*pptxlli)[i].srcDmaAddr, (unsigned) (*pptxlli)[i].destDmaAddr, dmactrl.TransferSize, dmactrl.SI, dmactrl.DI, dmactrl.I);
 
         dmactrl.SI = DMA_MINC_DISABLE;
         dmactrl.DI = DMA_MINC_ENABLE;
         (*pprxlli)[i].srcDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_RDATA_OFFSET);
         (*pprxlli)[i].destDmaAddr = (uint32_t)(prx_data + i * LLI_BUFF_SIZE);
         (*pprxlli)[i].dmaCtrl = dmactrl;
+        blog_info("Rx DMA src=0x%x, dest=0x%x, size=%d, si=%d, di=%d, i=%d\r\n", (unsigned) (*pprxlli)[i].srcDmaAddr, (unsigned) (*pprxlli)[i].destDmaAddr, dmactrl.TransferSize, dmactrl.SI, dmactrl.DI, dmactrl.I);
 
         if (i != 0) {
             (*pptxlli)[i-1].nextLLI = (uint32_t)&(*pptxlli)[i];
@@ -240,7 +253,7 @@ static void hal_spi_dma_init(spi_hw_t *arg)
     } else {
         blog_error("node support polar_phase \r\n");
     }
-    SPI_Init(0,&spicfg);
+    SPI_Init(0,&spicfg);  //// TODO: In future when there are multiple SPI ports, this should be SPI_Init(spi_id, &spicfg)
 
     if (hw_arg->mode == 0)
     {
@@ -325,6 +338,11 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
 
+    ////  TODO: SPI Transfer may hang here, waiting for FreeRTOS Event Group 
+    ////  if it isn't notified by DMA Interrupt Handler.  To troubleshoot,
+    ////  comment out ALL lines below until end of function.
+    ////  Also comment out the second bl_gpio_output_set in hal_spi_transfer.
+    ////  And comment out the second bl_gpio_output_set in test_spi_transfer.
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
                                      pdTRUE,
@@ -485,6 +503,7 @@ int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size)
 #endif
 
 #if (0 == HAL_SPI_HARDCS)
+    blog_info("Set CS pin %d to low\r\n", priv_data->hwspi[spi_dev->port].pin_cs);
     bl_gpio_output_set(priv_data->hwspi[spi_dev->port].pin_cs, 0);
 #endif
     for (i = 0; i < size; i++) {
@@ -496,6 +515,7 @@ int hal_spi_transfer(spi_dev_t *spi_dev, void *xfer, uint8_t size)
     }
 #if (0 == HAL_SPI_HARDCS)
     bl_gpio_output_set(priv_data->hwspi[spi_dev->port].pin_cs, 1);
+    blog_info("Set CS pin %d to high\r\n", priv_data->hwspi[spi_dev->port].pin_cs);
 #endif
 
     return 0;
@@ -746,8 +766,25 @@ int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_spi_offset)
     return 0;
 }
 
+//  Interrupt Counters for Transmit and Receive
+int g_tx_counter;
+int g_rx_counter;
+
+//  Status, Terminal Counts and Error Codes for Transmit and Receive
+uint32_t g_tx_status;  //  Transmit Status (from 0x4000c000)
+uint32_t g_tx_tc;      //  Transmit Terminal Count (from 0x4000c004)
+uint32_t g_tx_error;   //  Transmit Error Code (from 0x4000c00c)
+uint32_t g_rx_status;  //  Receive Status (from 0x4000c000)
+uint32_t g_rx_tc;      //  Receive Terminal Count (0x4000c004)
+uint32_t g_rx_error;   //  Receive Error Code (0x4000c00c)
+
 void bl_spi0_dma_int_handler_tx(void)
 {
+    g_tx_counter++;  //  Increment the Transmit Interrupt Counter
+    g_tx_status = *(uint32_t *) 0x4000c000;  //  Set the Transmit Status
+    g_tx_tc     = *(uint32_t *) 0x4000c004;  //  Set the Transmit Terminal Count
+    if (g_tx_error == 0) { g_tx_error = *(uint32_t *) 0x4000c00c; }  //  Set the Transmit Error Code
+
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -772,6 +809,11 @@ void bl_spi0_dma_int_handler_tx(void)
 
 void bl_spi0_dma_int_handler_rx(void)
 {
+    g_rx_counter++;  //  Increment the Receive Interrupt Counter
+    g_rx_status = *(uint32_t *) 0x4000c000;  //  Set the Receive Status
+    g_rx_tc     = *(uint32_t *) 0x4000c004;  //  Set the Receive Terminal Count
+    if (g_rx_error == 0) { g_rx_error = *(uint32_t *) 0x4000c00c; }  //  Set the Receive Error Code
+
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -791,4 +833,54 @@ void bl_spi0_dma_int_handler_rx(void)
         blog_error("bl_spi0_dma_int_handler_rx no clear isr.\r\n");
     }
     return;
+}
+
+//  Global single instance of SPI Data. We support only one instance of SPI Device.
+static spi_priv_data_t g_spi_data;
+
+//  Init the SPI Device for DMA without calling AOS and Device Tree. Return non-zero in case of error. Supports only one instance of SPI Device.
+//  Based on spi_arg_set_fdt2 and vfs_spi_init_fullname.
+int spi_init(spi_dev_t *spi, uint8_t port,
+    uint8_t mode, uint8_t polar_phase, uint32_t freq, uint8_t tx_dma_ch, uint8_t rx_dma_ch,
+    uint8_t pin_clk, uint8_t pin_cs, uint8_t pin_mosi, uint8_t pin_miso)
+{
+    assert(spi != NULL);
+
+    //  Use the global single instance of SPI Data
+    g_hal_buf = &g_spi_data;
+    memset(g_hal_buf, 0, sizeof(spi_priv_data_t));
+
+    //  Create the Event Group for DMA Interrupt Handler to notify Foreground Task
+    g_hal_buf->hwspi[port].spi_dma_event_group = xEventGroupCreate();
+    blog_info("port%d eventloop init = %08lx\r\n", port,
+        (uint32_t)g_hal_buf->hwspi[port].spi_dma_event_group);
+    if (NULL == g_hal_buf->hwspi[port].spi_dma_event_group) {
+        return -ENOMEM;
+    }
+
+    //  Init the SPI Device
+    memset(spi, 0, sizeof(spi_dev_t));
+    spi->port = port;
+    spi->config.mode = mode;
+    spi->config.freq  = 0;  //  Will validate and set frequency in hal_spi_set_rwspeed
+    g_hal_buf->hwspi[port].ssp_id      = port;
+    g_hal_buf->hwspi[port].mode        = mode;
+    g_hal_buf->hwspi[port].polar_phase = polar_phase;
+    g_hal_buf->hwspi[port].freq        = 0;  //  Will validate and set frequency in hal_spi_set_rwspeed
+    g_hal_buf->hwspi[port].tx_dma_ch   = tx_dma_ch;
+    g_hal_buf->hwspi[port].rx_dma_ch   = rx_dma_ch;
+    g_hal_buf->hwspi[port].pin_clk     = pin_clk;
+    g_hal_buf->hwspi[port].pin_cs      = pin_cs;
+    g_hal_buf->hwspi[port].pin_mosi    = pin_mosi;
+    g_hal_buf->hwspi[port].pin_miso    = pin_miso;
+
+    //  SPI Device points to global single instance of SPI Data
+    spi->priv = g_hal_buf;
+    blog_info("[HAL] [SPI] Init :\r\nport=%d, mode=%d, polar_phase = %d, freq=%ld, tx_dma_ch=%d, rx_dma_ch=%d, pin_clk=%d, pin_cs=%d, pin_mosi=%d, pin_miso=%d\r\n",
+        port, mode, polar_phase, freq, tx_dma_ch, rx_dma_ch, pin_clk, pin_cs, pin_mosi, pin_miso);
+
+    //  Init the SPI speed, pins and DMA
+    int rc = hal_spi_set_rwspeed(spi, freq);
+    assert(rc == 0);
+    return rc;
 }
