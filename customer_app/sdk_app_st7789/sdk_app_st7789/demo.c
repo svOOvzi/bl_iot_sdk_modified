@@ -34,7 +34,7 @@
 #include <task.h>
 #include <semphr.h>
 
-#include "demo.h"            //  For ST7789 pins
+#include "demo.h"            //  For display pins
 #include "display.h"         //  For display functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
