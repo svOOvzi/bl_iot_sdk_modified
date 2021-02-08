@@ -97,8 +97,8 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Configure the GPIO Pins and switch on backlight
-    rc = pinetime_lvgl_mynewt_init_display();
+    //  Configure the GPIO Pins, init the display controller and switch on backlight
+    rc = init_display();
     assert(rc == 0);
 }
 
