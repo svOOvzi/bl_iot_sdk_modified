@@ -68,6 +68,12 @@ int write_command(uint8_t command, const uint8_t *params, uint16_t len);
 /// Transmit ST7789 data
 int write_data(const uint8_t *data, uint16_t len);
 
+/// Switch on backlight
+int backlight_on(void);
+
+/// Switch off backlight
+int backlight_off(void);
+
 /**********************
  *      MACROS
  **********************/

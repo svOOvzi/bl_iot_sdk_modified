@@ -109,6 +109,20 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
+/// Switch on backlight
+static void test_backlight_on(char *buf, int len, int argc, char **argv)
+{
+    int rc = backlight_on();
+    assert(rc == 0);
+}
+
+/// Switch off backlight
+static void test_backlight_off(char *buf, int len, int argc, char **argv)
+{
+    int rc = backlight_off();
+    assert(rc == 0);
+}
+
 /// Show the interrupt counters
 static void test_display_result(char *buf, int len, int argc, char **argv)
 {
@@ -130,6 +144,8 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_init",   "Init display",  test_display_init},
     {"display_image",  "Display image", test_display_image},
     {"display_result", "Show result",   test_display_result},
+    {"backlight_on",   "Backlight on",  test_backlight_on},
+    {"backlight_off",  "Backlight off", test_backlight_off},
 };                                                                                   
 
 int cli_init(void)

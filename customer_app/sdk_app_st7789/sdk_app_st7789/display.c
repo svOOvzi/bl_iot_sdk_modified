@@ -132,7 +132,7 @@ int display_image(void) {
 
             //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
             rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data((const uint8_t *) 23000000, len); assert(rc == 0);  //  Dump the start of Flash ROM. TODO: Change this
+            rc = write_data((const uint8_t *) 0x23000000, len); assert(rc == 0);  //  Dump the start of Flash ROM. TODO: Change this
 
             left = right + 1;
         }
@@ -216,15 +216,8 @@ int init_display(void) {
     assert(rc == 0);
 
     //  Switch on backlight
-    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
-    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
+    rc = backlight_on();
     assert(rc == 0);
-
-    /*
-    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
-    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
-    assert(rc == 0);
-    */
 
     hard_reset();
     write_command(SWRESET, NULL, 0);
@@ -373,4 +366,20 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
 static void delay_ms(uint32_t ms) {
     //  TODO: Implement delay. For now we write to console.
     printf("TODO Delay %d\r\n", ms);
+}
+
+/// Switch on backlight
+int backlight_on(void) {
+    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
+    assert(rc == 0);
+    return 0;
+}
+
+/// Switch off backlight
+int backlight_off(void) {
+    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
+    assert(rc == 0);
+    return 0;
 }
