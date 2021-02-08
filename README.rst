@@ -29,7 +29,7 @@ Changes
 
 - "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c/
 
-- "spi" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/spi/customer_app/sdk_app_spi/
+- "master" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_spi/
 
 BL602 SDK (Pine64 version)
 ==========================
