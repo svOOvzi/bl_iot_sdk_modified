@@ -22,6 +22,7 @@
 #include <string.h>
 #include <assert.h>
 #include "lv_port_disp.h"
+#include "demo.h"
 
 //  Max number of SPI data bytes to be transmitted
 #define BATCH_SIZE  256
@@ -192,11 +193,11 @@ int pinetime_lvgl_mynewt_set_window(uint8_t left, uint8_t top, uint8_t right, ui
 int pinetime_lvgl_mynewt_init_display(void) {
     //  Assume that SPI port 0 has been initialised by the SPI Flash Driver at startup.
     int rc;
-    rc = hal_gpio_init_out(DISPLAY_RST, 1); assert(rc == 0);
-    rc = hal_gpio_init_out(DISPLAY_CS, 1); assert(rc == 0);
-    rc = hal_gpio_init_out(DISPLAY_DC, 0); assert(rc == 0);
+    rc = hal_gpio_init_out(DISPLAY_RST_PIN, 1); assert(rc == 0);
+    rc = hal_gpio_init_out(DISPLAY_CS_PIN, 1); assert(rc == 0);
+    rc = hal_gpio_init_out(DISPLAY_DC_PIN, 0); assert(rc == 0);
     //  Switch on backlight
-    rc = hal_gpio_init_out(DISPLAY_HIGH, 0); assert(rc == 0);
+    rc = hal_gpio_init_out(DISPLAY_BLK_PIN, 0); assert(rc == 0);
 
     hard_reset();
     pinetime_lvgl_mynewt_write_command(SWRESET, NULL, 0);
@@ -253,9 +254,9 @@ int pinetime_lvgl_mynewt_init_display(void) {
 
 /// Reset the display controller
 static int hard_reset(void) {
-    hal_gpio_write(DISPLAY_RST, 1);
-    hal_gpio_write(DISPLAY_RST, 0);
-    hal_gpio_write(DISPLAY_RST, 1);
+    hal_gpio_write(DISPLAY_RST_PIN, 1);
+    hal_gpio_write(DISPLAY_RST_PIN, 0);
+    hal_gpio_write(DISPLAY_RST_PIN, 1);
     return 0;
 }
 
@@ -275,7 +276,7 @@ static int set_orientation(uint8_t orientation) {
 
 /// Transmit ST7789 command
 int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, uint16_t len) {
-    hal_gpio_write(DISPLAY_DC, 0);
+    hal_gpio_write(DISPLAY_DC_PIN, 0);
     int rc = transmit_spi(&command, 1);
     assert(rc == 0);
     if (params != NULL && len > 0) {
@@ -287,7 +288,7 @@ int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, u
 
 /// Transmit ST7789 data
 int pinetime_lvgl_mynewt_write_data(const uint8_t *data, uint16_t len) {
-    hal_gpio_write(DISPLAY_DC, 1);
+    hal_gpio_write(DISPLAY_DC_PIN, 1);
     transmit_spi(data, len);
     return 0;
 }
@@ -296,20 +297,21 @@ int pinetime_lvgl_mynewt_write_data(const uint8_t *data, uint16_t len) {
 static int transmit_spi(const uint8_t *data, uint16_t len) {
     if (len == 0) { return 0; }
     //  Select the device
-    hal_gpio_write(DISPLAY_CS, 0);
+    hal_gpio_write(DISPLAY_CS_PIN, 0);
     //  Send the data
-    int rc = hal_spi_txrx(DISPLAY_SPI, 
+    int rc = hal_spi_txrx(
         (void *) data,  //  TX Buffer
         NULL,  //  RX Buffer (don't receive)
-        len);  //  Length
+        len    //  Length
+    );
     assert(rc == 0);
     //  De-select the device
-    hal_gpio_write(DISPLAY_CS, 1);
+    hal_gpio_write(DISPLAY_CS_PIN, 1);
     return 0;
 }
 
 /// Delay for the specified number of milliseconds
 static void delay_ms(uint32_t ms) {
     //  TODO: Implement delay. For now we write to console.
-    printf("Delay %d\r\n", uint32_t);
+    printf("Delay %d\r\n", ms);
 }

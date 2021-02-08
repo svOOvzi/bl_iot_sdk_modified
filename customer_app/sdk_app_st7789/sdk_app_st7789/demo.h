@@ -30,6 +30,19 @@
 #ifndef __DEMO_H__
 #define __DEMO_H__i
 
+/// Use GPIO 5 as ST7789 Data/Command Pin (DC)
+#define DISPLAY_DC_PIN 5
+
+/// Use GPIO 11 as ST7789 Reset Pin (RST)
+#define DISPLAY_RST_PIN 11
+
+/// Use GPIO 12 as ST7789 Backlight Pin (BLK)
+#define DISPLAY_BLK_PIN 12
+
+/// Use GPIO 14 as SPI Chip Select Pin (Unused for ST7789 SPI)
+#define DISPLAY_CS_PIN 14
+
+/// Init the command-line interface
 int cli_init(void);
 
 #endif

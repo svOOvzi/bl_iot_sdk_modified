@@ -34,8 +34,8 @@
 #include <task.h>
 #include <semphr.h>
 
-#include "demo.h"
-#include "display.h"         //  For ST7789 pins
+#include "demo.h"            //  For ST7789 pins
+#include "display.h"         //  For display functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
@@ -61,9 +61,6 @@
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// Use GPIO 14 as SPI Chip Select Pin (Unused for ST7789 SPI)
-#define SPI_CS_PIN 14
-
 /// SPI Port
 static spi_dev_t spi;
 
@@ -71,7 +68,7 @@ static spi_dev_t spi;
 static void test_spi_init(char *buf, int len, int argc, char **argv)
 {
     //  Configure the SPI Port
-    //  Note: The Chip Select Pin below (2) must NOT be the same as SPI_CS_PIN (14). 
+    //  Note: The Chip Select Pin below (2) must NOT be the same as DISPLAY_CS_PIN (14). 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 
     //  TODO: The pins for Serial Data In and Serial Data Out seem to be flipped,
@@ -101,33 +98,33 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
 
     //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
     GLB_GPIO_Type pins[4];
-    pins[0] = SPI_CS_PIN;
-    pins[1] = SPI_DC_PIN;
-    pins[2] = SPI_RST_PIN;
-    pins[3] = SPI_BLK_PIN;
+    pins[0] = DISPLAY_CS_PIN;
+    pins[1] = DISPLAY_DC_PIN;
+    pins[2] = DISPLAY_RST_PIN;
+    pins[3] = DISPLAY_BLK_PIN;
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
     assert(rc2 == SUCCESS);
 
     //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
-    rc = bl_gpio_enable_output(SPI_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(SPI_DC_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(SPI_RST_PIN, 0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(SPI_BLK_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_RST_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
 
     //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
-    printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
-    rc = bl_gpio_output_set(SPI_CS_PIN, 1);
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
 
     //  Switch Backlight on
 
-    printf("Set BLK pin %d to high\r\n", SPI_BLK_PIN);
-    rc = bl_gpio_output_set(SPI_BLK_PIN, 1);
+    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
+    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
     assert(rc == 0);
 
     /*
-    printf("Set BLK pin %d to low\r\n", SPI_BLK_PIN);
-    rc = bl_gpio_output_set(SPI_BLK_PIN, 0);
+    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
+    rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
     */
 }
@@ -168,8 +165,8 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
 
     //  Set Chip Select pin to Low, to activate BME280
-    printf("Set CS pin %d to low\r\n", SPI_CS_PIN);
-    int rc = bl_gpio_output_set(SPI_CS_PIN, 0);
+    printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
     assert(rc == 0);
 
     //  Execute the two SPI Transfers with the DMA Controller
@@ -185,9 +182,9 @@ static void test_spi_transfer(char *buf, int len, int argc, char **argv)
     //  Now that we're done with the two SPI Transfers...
 
     //  Set Chip Select pin to High, to deactivate BME280
-    rc = bl_gpio_output_set(SPI_CS_PIN, 1);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
-    printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
 }
 
 /// Show the SPI data received and the interrupt counters
