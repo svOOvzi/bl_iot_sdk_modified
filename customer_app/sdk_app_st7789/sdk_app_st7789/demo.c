@@ -65,8 +65,8 @@
 /// SPI Device Instance
 spi_dev_t spi_device;
 
-/// Init the SPI Port
-static void test_spi_init(char *buf, int len, int argc, char **argv)
+/// Init the display
+static void test_display_init(char *buf, int len, int argc, char **argv)
 {
     //  Configure the SPI Port
     //  Note: The Chip Select Pin below (2) must NOT be the same as DISPLAY_CS_PIN (14). 
@@ -102,14 +102,15 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// Start the SPI data transfer
-static void test_spi_transfer(char *buf, int len, int argc, char **argv)
+/// Display image
+static void test_display_image(char *buf, int len, int argc, char **argv)
 {
-    //  TODO
+    int rc = display_image();
+    assert(rc == 0);
 }
 
 /// Show the interrupt counters
-static void test_spi_result(char *buf, int len, int argc, char **argv)
+static void test_display_result(char *buf, int len, int argc, char **argv)
 {
     //  Show the Interrupt Counters, Status and Error Codes defined in components/hal_drv/bl602_hal/hal_spi.c
     extern int g_tx_counter, g_rx_counter;
@@ -126,9 +127,9 @@ static void test_spi_result(char *buf, int len, int argc, char **argv)
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"spi_init",     "Init SPI port",          test_spi_init},
-    {"spi_transfer", "Transfer SPI data",      test_spi_transfer},
-    {"spi_result",   "Show SPI data received", test_spi_result},
+    {"display_init",   "Init display",  test_display_init},
+    {"display_image",  "Display image", test_display_image},
+    {"display_result", "Show result",   test_display_result},
 };                                                                                   
 
 int cli_init(void)
@@ -139,70 +140,3 @@ int cli_init(void)
     //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
     return 0;
 }
-
-#ifdef NOTUSED
-Testing BME280 SPI with Bus Pirate:
-(See http://dangerousprototypes.com/docs/SPI)
-
-HiZ> m
-1. HiZ
-2. 1-WIRE
-3. UART
-4. I2C
-5. SPI
-6. 2WIRE
-7. 3WIRE
-8. KEYB
-9. LCD
-10. PIC
-11. DIO
-x. exit(without change)
-
-(1)> 5
-Set speed:
- 1. 30KHz
- 2. 125KHz
- 3. 250KHz
- 4. 1MHz
-
-(1)> 3
-Clock polarity:
- 1. Idle low *default
- 2. Idle high
-
-(1)>
-Output clock edge:
- 1. Idle to active
- 2. Active to idle *default
-
-(2)>
-Input sample phase:
- 1. Middle *default
- 2. End
-
-(1)>
-CS:
- 1. CS
- 2. /CS *default
-
-(2)>
-Select output type:
- 1. Open drain (H=Hi-Z, L=GND)
- 2. Normal (H=3.3V, L=GND)
-
-(1)>
-Clutch disengaged!!!
-To finish setup, start up the power supplies with command 'W'
-Ready
-
-SPI> W
-POWER SUPPLIES ON
-Clutch engaged!!!
-
-SPI> [ 0xD0 r ]
-/CS ENABLED
-WRITE: 0xD0 
-READ: 0x60 
-/CS DISABLED
-
-#endif  //  NOTUSED

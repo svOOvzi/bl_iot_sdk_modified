@@ -96,14 +96,13 @@ static void delay_ms(uint32_t ms);
 /// Buffer for reading flash and writing to display
 //  TODO: static uint8_t flash_buffer[BATCH_SIZE];
 
-/// Display the image in SPI Flash to ST7789 display controller. 
+/// Display image on ST7789 display controller. 
 /// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
-int NOTUSED_display_image(void) {
+int display_image(void) {
     printf("Displaying image...\r\n");
     int rc = init_display();  assert(rc == 0);
     rc = set_orientation(Landscape);  assert(rc == 0);
 
-#ifdef NOTUSED
     //  Render each row of pixels.
     for (uint8_t row = 0; row < ROW_COUNT; row++) {
         uint8_t top = row;
@@ -123,22 +122,21 @@ int NOTUSED_display_image(void) {
             uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
 
             //  Read the bytes from flash memory.
-            uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
-            int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
+            //  uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
+            //  int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
 
             //  printf("%lx: ", offset); console_dump(flash_buffer, len); printf("\r\n");
 
             //  Set the display window.
-            rc = set_window(left, top, right, bottom); assert(rc == 0);
+            int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
             //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
             rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data(flash_buffer, len); assert(rc == 0);
+            rc = write_data((const uint8_t *) 23000000, len); assert(rc == 0);  //  Dump the start of Flash ROM. TODO: Change this
 
             left = right + 1;
         }
     }
-#endif  //  NOTUSED
 
     /*
     //  Set Address Window Columns (CASET): st7735_lcd::draw() → set_pixel() → set_address_window()
@@ -193,7 +191,7 @@ int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
     return 0;
 }
 
-/// Runs commands to initialize the display. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/lib.rs
+/// Initialise the ST7789 display controller. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/lib.rs
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
     //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
@@ -323,7 +321,8 @@ int write_data(const uint8_t *data, uint16_t len) {
     int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 1);
     assert(rc == 0);
 
-    transmit_spi(data, len);
+    rc = transmit_spi(data, len);
+    assert(rc == 0);
     return 0;
 }
 

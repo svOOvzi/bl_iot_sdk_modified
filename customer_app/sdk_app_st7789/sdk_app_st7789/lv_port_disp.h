@@ -53,11 +53,14 @@ void lv_port_disp_init(void);
 
 //  Defined in display.c
 
+/// Initialise the ST7789 display controller
+int init_display(void);
+
+/// Display image on ST7789 display controller.
+int display_image(void);
+
 /// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
 int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom);
-
-/// Runs commands to initialize the display
-int init_display(void);
 
 /// Transmit ST7789 command
 int write_command(uint8_t command, const uint8_t *params, uint16_t len);
