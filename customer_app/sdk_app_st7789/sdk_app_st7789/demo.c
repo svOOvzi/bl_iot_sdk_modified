@@ -62,8 +62,8 @@
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// SPI Port
-static spi_dev_t spi;
+/// SPI Device Instance
+spi_dev_t spi_device;
 
 /// Init the SPI Port
 static void test_spi_init(char *buf, int len, int argc, char **argv)
@@ -83,7 +83,7 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     //  Why ???
 
     int rc = spi_init(
-        &spi,        //  SPI Device
+        &spi_device, //  SPI Device
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
         1,           //  SPI Polar Phase: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
@@ -102,77 +102,15 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// SPI Transmit and Receive Buffers for First SPI Transfer
-static uint8_t tx_buf1[1];  //  We shall transmit Register ID (0xD0)
-static uint8_t rx_buf1[1];  //  Unused. We expect to receive the result from BME280 in the second SPI Transfer.
-
-/// SPI Transmit and Receive Buffers for Second SPI Transfer
-static uint8_t tx_buf2[1];  //  Unused. For safety, we shall transmit 0xFF which is a read command (not write).
-static uint8_t rx_buf2[1];  //  We expect to receive Chip ID (0x60) from BME280
-
 /// Start the SPI data transfer
 static void test_spi_transfer(char *buf, int len, int argc, char **argv)
 {
-    //  Clear the buffers
-    memset(&tx_buf1, 0, sizeof(tx_buf1));
-    memset(&rx_buf1, 0, sizeof(rx_buf1));
-    memset(&tx_buf2, 0, sizeof(tx_buf2));
-    memset(&rx_buf2, 0, sizeof(rx_buf2));
-
-    //  Prepare 2 SPI Transfers
-    static spi_ioc_transfer_t transfers[2];
-    memset(transfers, 0, sizeof(transfers));    
-
-    //  First SPI Transfer: Transmit Register ID (0xD0) to BME280
-    //  Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
-
-    tx_buf1[0] = 0xd0;  //  Read BME280 Chip ID Register (0xD0). Read/Write Bit (High Bit) is 1 for Read.
-    transfers[0].tx_buf = (uint32_t) tx_buf1;  //  Transmit Buffer (Register ID)
-    transfers[0].rx_buf = (uint32_t) rx_buf1;  //  Receive Buffer
-    transfers[0].len    = sizeof(tx_buf1);     //  How many bytes
-
-    //  Second SPI Transfer: Receive Chip ID (0x60) from BME280
-    tx_buf2[0] = 0xff;  //  Unused. Read/Write Bit (High Bit) is 1 for Read.
-    transfers[1].tx_buf = (uint32_t) tx_buf2;  //  Transmit Buffer
-    transfers[1].rx_buf = (uint32_t) rx_buf2;  //  Receive Buffer (Chip ID)
-    transfers[1].len    = sizeof(tx_buf2);     //  How many bytes
-
-    //  Set Chip Select pin to Low, to activate BME280
-    printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
-    int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
-    assert(rc == 0);
-
-    //  Execute the two SPI Transfers with the DMA Controller
-    rc = hal_spi_transfer(
-        &spi,       //  SPI Device
-        transfers,  //  SPI Transfers
-        sizeof(transfers) / sizeof(transfers[0])  //  How many transfers (Number of requests, not bytes)
-    );
-    assert(rc == 0);
-
-    //  DMA Controller will transmit and receive the SPI data in the background.
-    //  hal_spi_transfer will wait for the two SPI Transfers to complete before returning.
-    //  Now that we're done with the two SPI Transfers...
-
-    //  Set Chip Select pin to High, to deactivate BME280
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
-    assert(rc == 0);
-    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    //  TODO
 }
 
-/// Show the SPI data received and the interrupt counters
+/// Show the interrupt counters
 static void test_spi_result(char *buf, int len, int argc, char **argv)
 {
-    //  Show the received data
-    printf("SPI Transfer #1: Received Data 0x%p:\r\n", rx_buf1);
-    for (int i = 0; i < sizeof(rx_buf1); i++) {
-        printf("  %02x\r\n", rx_buf1[i]);
-    }
-    printf("SPI Transfer #2: Received Data 0x%p:\r\n", rx_buf2);
-    for (int i = 0; i < sizeof(rx_buf2); i++) {
-        printf("  %02x\r\n", rx_buf2[i]);
-    }
-
     //  Show the Interrupt Counters, Status and Error Codes defined in components/hal_drv/bl602_hal/hal_spi.c
     extern int g_tx_counter, g_rx_counter;
     extern uint32_t g_tx_status, g_tx_tc, g_tx_error, g_rx_status, g_rx_tc, g_rx_error;

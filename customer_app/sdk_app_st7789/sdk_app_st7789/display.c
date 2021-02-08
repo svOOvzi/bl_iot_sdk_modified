@@ -21,12 +21,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
+#include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "lv_port_disp.h"
 #include "demo.h"
 
-//  Max number of SPI data bytes to be transmitted
+/// SPI Device Instance. TODO: Move to demo.h
+extern spi_dev_t spi_device;
+
+///  Max number of SPI data bytes to be transmitted
 #define BATCH_SIZE  256
 
 //  Screen Size
@@ -37,9 +42,6 @@
 //  ST7789 Colour Settings
 #define INVERTED 1  //  Display colours are inverted
 #define RGB      1  //  Display colours are RGB    
-
-//  Flash Device for Image
-#define FLASH_DEVICE 1  //  0 for Internal Flash ROM, 1 for External SPI Flash
 
 //  ST7789 Commands. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/instruction.rs
 #define NOP 0x00
@@ -281,9 +283,10 @@ int pinetime_lvgl_mynewt_init_display(void) {
 
 /// Reset the display controller
 static int hard_reset(void) {
-    bl_gpio_output_set(DISPLAY_RST_PIN, 1);
-    bl_gpio_output_set(DISPLAY_RST_PIN, 0);
-    bl_gpio_output_set(DISPLAY_RST_PIN, 1);
+    int rc;
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 0);  assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
     return 0;
 }
 
@@ -303,8 +306,10 @@ static int set_orientation(uint8_t orientation) {
 
 /// Transmit ST7789 command
 int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, uint16_t len) {
-    bl_gpio_output_set(DISPLAY_DC_PIN, 0);
-    int rc = transmit_spi(&command, 1);
+    int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 0);
+    assert(rc == 0);
+
+    rc = transmit_spi(&command, 1);
     assert(rc == 0);
     if (params != NULL && len > 0) {
         rc = pinetime_lvgl_mynewt_write_data(params, len);
@@ -315,30 +320,58 @@ int pinetime_lvgl_mynewt_write_command(uint8_t command, const uint8_t *params, u
 
 /// Transmit ST7789 data
 int pinetime_lvgl_mynewt_write_data(const uint8_t *data, uint16_t len) {
-    bl_gpio_output_set(DISPLAY_DC_PIN, 1);
+    int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 1);
+    assert(rc == 0);
+
     transmit_spi(data, len);
     return 0;
 }
 
-/// Write to the SPI port. From https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/mynewt/src/hal.rs
+/// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
+static uint8_t rx_buf[BATCH_SIZE];
+
+/// Write to the SPI port
 static int transmit_spi(const uint8_t *data, uint16_t len) {
+    assert(data != NULL);
+    assert(len <= sizeof(rx_buf));
     if (len == 0) { return 0; }
+
+    //  Clear the receive buffer
+    memset(&rx_buf, 0, sizeof(rx_buf));
+
+    //  Prepare SPI Transfer
+    static spi_ioc_transfer_t transfer;
+    memset(&transfer, 0, sizeof(transfer));    
+    transfer.tx_buf = (uint32_t) data;    //  Transmit Buffer
+    transfer.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
+    transfer.len    = len;                //  How many bytes
+
     //  Select the device
-    bl_gpio_output_set(DISPLAY_CS_PIN, 0);
-    //  Send the data
-    int rc = hal_spi_txrx(
-        (void *) data,  //  TX Buffer
-        NULL,  //  RX Buffer (don't receive)
-        len    //  Length
+    printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
+    assert(rc == 0);
+
+    //  Execute the SPI Transfer with the DMA Controller
+    rc = hal_spi_transfer(
+        &spi_device,  //  SPI Device
+        &transfer,    //  SPI Transfers
+        1             //  How many transfers (Number of requests, not bytes)
     );
     assert(rc == 0);
+
+    //  DMA Controller will transmit and receive the SPI data in the background.
+    //  hal_spi_transfer will wait for the SPI Transfer to complete before returning.
+    //  Now that we're done with the SPI Transfer...
+
     //  De-select the device
-    bl_gpio_output_set(DISPLAY_CS_PIN, 1);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
+    assert(rc == 0);
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
     return 0;
 }
 
 /// Delay for the specified number of milliseconds
 static void delay_ms(uint32_t ms) {
     //  TODO: Implement delay. For now we write to console.
-    printf("Delay %d\r\n", ms);
+    printf("TODO Delay %d\r\n", ms);
 }
