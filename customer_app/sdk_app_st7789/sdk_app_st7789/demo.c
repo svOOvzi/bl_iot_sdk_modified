@@ -42,10 +42,30 @@
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
 
+/*
+| BL602 Pin     | ST7789 SPI          | Wire Colour 
+|:--------------|:--------------------|:-------------------
+| __`GPIO 1`__  | Do Not <br> Connect <br> _(MISO)_ | Green 
+| __`GPIO 2`__  | Do Not <br> Connect | Do Not <br> Connect
+| __`GPIO 3`__  | `SCL`               | Yellow 
+| __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
+| __`GPIO 5`__  | `DC`                | ???
+| __`GPIO 12`__ | `BLK`               | ???
+| __`GPIO 14`__ | Do Not <br> Connect | Orange
+| __`3V3`__     | `3.3V`              | Red
+| __`GND`__     | `GND`               | Black
+*/
+
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// Use GPIO 14 as SPI Chip Select Pin
+/// Use GPIO 5 as Data/Command Pin (DC)
+#define SPI_DC_PIN 5
+
+/// Use GPIO 12 as Backlight Pin (BLK)
+#define SPI_BLK_PIN 12
+
+/// Use GPIO 14 as SPI Chip Select Pin (Unused for ST7789 SPI)
 #define SPI_CS_PIN 14
 
 /// SPI Port
