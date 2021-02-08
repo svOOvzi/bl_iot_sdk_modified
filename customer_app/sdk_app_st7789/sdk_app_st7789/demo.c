@@ -87,7 +87,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
         1,           //  SPI Polar Phase: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        200 * 1000,  //  SPI Frequency (200 kHz)
+        1000 * 1000,  //  SPI Frequency (1 MHz)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         3,   //  (Yellow) SPI Clock Pin 

@@ -388,5 +388,5 @@ int backlight_off(void) {
 //  Dump "len" number of bytes from "buffer" in hex format.
 static void console_dump(const uint8_t *buffer, unsigned int len) {
     if (buffer == NULL || len == 0) { return; }
-	for (int i = 0; i < 4 /* len */; i++) { printf("%02x ", buffer[i]); } 
+	for (int i = 0; i < (len > 8 ? 8 : len); i++) { printf("%02x ", buffer[i]); } 
 }
