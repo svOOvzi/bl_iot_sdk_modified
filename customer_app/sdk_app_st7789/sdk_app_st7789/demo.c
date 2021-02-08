@@ -59,10 +59,10 @@
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// Use GPIO 5 as Data/Command Pin (DC)
+/// Use GPIO 5 as ST7789 Data/Command Pin (DC)
 #define SPI_DC_PIN 5
 
-/// Use GPIO 12 as Backlight Pin (BLK)
+/// Use GPIO 12 as ST7789 Backlight Pin (BLK)
 #define SPI_BLK_PIN 12
 
 /// Use GPIO 14 as SPI Chip Select Pin (Unused for ST7789 SPI)
@@ -103,20 +103,35 @@ static void test_spi_init(char *buf, int len, int argc, char **argv)
     );
     assert(rc == 0);
 
-    //  Configure Chip Select pin as a GPIO Pin
-    GLB_GPIO_Type pins[1];
+    //  Configure Chip Select, Data/Command, Backlight pins as GPIO Pins
+    GLB_GPIO_Type pins[3];
     pins[0] = SPI_CS_PIN;
+    pins[1] = SPI_DC_PIN;
+    pins[2] = SPI_BLK_PIN;
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
     assert(rc2 == SUCCESS);
 
-    //  Configure Chip Select pin as a GPIO Output Pin (instead of GPIO Input)
-    rc = bl_gpio_enable_output(SPI_CS_PIN, 0, 0);
-    assert(rc == 0);
+    //  Configure Chip Select, Data/Command, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(SPI_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SPI_DC_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SPI_BLK_PIN, 0, 0);  assert(rc == 0);
 
-    //  Set Chip Select pin to High, to deactivate BME280
+    //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
     printf("Set CS pin %d to high\r\n", SPI_CS_PIN);
     rc = bl_gpio_output_set(SPI_CS_PIN, 1);
     assert(rc == 0);
+
+    //  Switch Backlight on
+
+    printf("Set BLK pin %d to high\r\n", SPI_BLK_PIN);
+    rc = bl_gpio_output_set(SPI_BLK_PIN, 1);
+    assert(rc == 0);
+
+    /*
+    printf("Set BLK pin %d to low\r\n", SPI_BLK_PIN);
+    rc = bl_gpio_output_set(SPI_BLK_PIN, 0);
+    assert(rc == 0);
+    */
 }
 
 /// SPI Transmit and Receive Buffers for First SPI Transfer
