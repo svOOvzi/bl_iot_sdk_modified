@@ -92,9 +92,10 @@ static int hard_reset(void);
 static int set_orientation(uint8_t orientation);
 static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
+static void console_dump(const uint8_t *buffer, unsigned int len);
 
-/// Buffer for reading flash and writing to display
-//  TODO: static uint8_t flash_buffer[BATCH_SIZE];
+//  Dump the start of Flash ROM. TODO: Change this
+static const uint8_t *flash_buffer = (const uint8_t *) 0x23000000;
 
 /// Display image on ST7789 display controller. 
 /// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
@@ -122,17 +123,17 @@ int display_image(void) {
             uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
 
             //  Read the bytes from flash memory.
-            //  uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
+            uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
             //  int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
 
-            //  printf("%lx: ", offset); console_dump(flash_buffer, len); printf("\r\n");
+            printf("%lx: ", offset); console_dump(flash_buffer, len); printf("\r\n");
 
             //  Set the display window.
             int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
             //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
             rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data((const uint8_t *) 0x23000000, len); assert(rc == 0);  //  Dump the start of Flash ROM. TODO: Change this
+            rc = write_data(flash_buffer, len); assert(rc == 0);
 
             left = right + 1;
         }
@@ -382,4 +383,10 @@ int backlight_off(void) {
     int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
     return 0;
+}
+
+//  Dump "len" number of bytes from "buffer" in hex format.
+static void console_dump(const uint8_t *buffer, unsigned int len) {
+    if (buffer == NULL || len == 0) { return; }
+	for (int i = 0; i < 4 /* len */; i++) { printf("%02x ", buffer[i]); } 
 }
