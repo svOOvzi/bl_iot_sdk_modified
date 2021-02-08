@@ -35,6 +35,7 @@
 #include <semphr.h>
 
 #include "demo.h"
+#include "display.h"         //  For ST7789 pins
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
@@ -59,15 +60,6 @@
 
 /// Use SPI Port Number 0
 #define SPI_PORT   0
-
-/// Use GPIO 5 as ST7789 Data/Command Pin (DC)
-#define SPI_DC_PIN 5
-
-/// Use GPIO 11 as ST7789 Reset Pin (RST)
-#define SPI_RST_PIN 11
-
-/// Use GPIO 12 as ST7789 Backlight Pin (BLK)
-#define SPI_BLK_PIN 12
 
 /// Use GPIO 14 as SPI Chip Select Pin (Unused for ST7789 SPI)
 #define SPI_CS_PIN 14

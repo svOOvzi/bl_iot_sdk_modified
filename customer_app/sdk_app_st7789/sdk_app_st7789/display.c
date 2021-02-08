@@ -18,25 +18,13 @@
  */
 //  Display image on ST7789 display controller (240 x 240)
 #include <inttypes.h>
-#include "os/mynewt.h"
-#include <console/console.h>
-#include <hal/hal_bsp.h>
-#include <hal/hal_flash.h>
-#include <hal/hal_flash_int.h>
-#include <hal/hal_gpio.h>
-#include <hal/hal_spi.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include "lv_port_disp.h"
 
-//  GPIO Pins. From rust\piet-embedded\piet-embedded-graphics\src\display.rs
-#define DISPLAY_SPI   0  //  Mynewt SPI port 0
-#define DISPLAY_CS   25  //  LCD_CS (P0.25): Chip select
-#define DISPLAY_DC   18  //  LCD_RS (P0.18): Clock/data pin (CD)
-#define DISPLAY_RST  26  //  LCD_RESET (P0.26): Display reset
-#define DISPLAY_HIGH 23  //  LCD_BACKLIGHT_{LOW,MID,HIGH} (P0.14, 22, 23): Backlight (active low)
-#define BATCH_SIZE  256  //  Max number of SPI data bytes to be transmitted
-#define PUSH_BUTTON_IN  13  //  GPIO Pin P0.13: PUSH BUTTON_IN
+//  Max number of SPI data bytes to be transmitted
+#define BATCH_SIZE  256
 
 //  Screen Size
 #define ROW_COUNT 240
@@ -106,10 +94,11 @@ static uint8_t flash_buffer[BATCH_SIZE];
 /// Display the image in SPI Flash to ST7789 display controller. 
 /// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
 int NOTUSED_display_image(void) {
-    console_printf("Displaying image...\n"); console_flush();
+    printf("Displaying image...\r\n");
     int rc = pinetime_lvgl_mynewt_init_display();  assert(rc == 0);
     rc = set_orientation(Landscape);  assert(rc == 0);
 
+#ifdef NOTUSED
     //  Render each row of pixels.
     for (uint8_t row = 0; row < ROW_COUNT; row++) {
         uint8_t top = row;
@@ -132,7 +121,7 @@ int NOTUSED_display_image(void) {
             uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
             int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
 
-            //  console_printf("%lx: ", offset); console_dump(flash_buffer, len); console_printf("\n"); console_flush();
+            //  printf("%lx: ", offset); console_dump(flash_buffer, len); printf("\r\n");
 
             //  Set the display window.
             rc = pinetime_lvgl_mynewt_set_window(left, top, right, bottom); assert(rc == 0);
@@ -144,6 +133,7 @@ int NOTUSED_display_image(void) {
             left = right + 1;
         }
     }
+#endif  //  NOTUSED
 
     /*
     //  Set Address Window Columns (CASET): st7735_lcd::draw() → set_pixel() → set_address_window()
@@ -177,7 +167,7 @@ int NOTUSED_display_image(void) {
     pinetime_lvgl_mynewt_write_data(RAMWR2_PARA, sizeof(RAMWR2_PARA));  //  40 bytes
     */
 
-    console_printf("Image displayed\n"); console_flush();
+    printf("Image displayed\r\n");
     return 0;
 }
 
@@ -318,17 +308,8 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     return 0;
 }
 
-/// Sleep for the specified number of milliseconds
+/// Delay for the specified number of milliseconds
 static void delay_ms(uint32_t ms) {
-#if MYNEWT_VAL(OS_SCHEDULING)  //  If Task Scheduler is enabled (i.e. not MCUBoot)...
-    uint32_t delay_ticks = ms * OS_TICKS_PER_SEC / 1000;
-    os_time_delay(delay_ticks);
-#else  //  If Task Scheduler is disabled (i.e. MCUBoot)...
-    //  os_time_delay() doesn't work in MCUBoot because the scheduler has not started
-    uint8_t button_samples = 0;
-    for (int i = 0; i < 64; i++) {
-        for (int delay = 0; delay < 100000; delay++) {}
-        button_samples += hal_gpio_read(PUSH_BUTTON_IN);
-    }
-#endif  //  MYNEWT_VAL(OS_SCHEDULING)
+    //  TODO: Implement delay. For now we write to console.
+    printf("Delay %d\r\n", uint32_t);
 }

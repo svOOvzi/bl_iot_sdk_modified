@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "limits": "cpp",
+        "lv_port_disp.h": "c"
+    }
+}
