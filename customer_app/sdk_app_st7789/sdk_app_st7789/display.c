@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  Display image on ST7789 display controller (240 x 240)
+//  Display Driver for ST7789 SPI. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/display.c
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
