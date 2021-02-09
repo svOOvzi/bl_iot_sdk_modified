@@ -92,7 +92,7 @@ void lv_port_disp_init(void)
 
     /* Example for 1) */
     static lv_disp_buf_t disp_buf_1;
-    static lv_color_t buf1_1[LV_HOR_RES_MAX * 10];                      /*A buffer for 10 rows*/
+    static lv_color_t buf1_1[LV_HOR_RES_MAX * 10];                      /*A buffer for 10 rows. TODO: Sync with rxbuf in display.c*/
     lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
 
     /* Example for 2) */
