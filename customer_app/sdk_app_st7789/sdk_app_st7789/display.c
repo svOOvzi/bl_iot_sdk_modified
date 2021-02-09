@@ -31,62 +31,47 @@
 /// SPI Device Instance. TODO: Move to demo.h
 extern spi_dev_t spi_device;
 
-///  Max number of SPI data bytes to be transmitted
+/// Max number of SPI data bytes to be transmitted when displaying image
 #define BATCH_SIZE  256
 
-//  Screen Size
+/// Screen Size
 #define ROW_COUNT 240
 #define COL_COUNT 240
 #define BYTES_PER_PIXEL 2
 
-//  ST7789 Colour Settings
+/// ST7789 Colour Settings
 #define INVERTED 1  //  Display colours are inverted
 #define RGB      1  //  Display colours are RGB    
 
-//  ST7789 Commands. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/instruction.rs
-#define NOP 0x00
-#define SWRESET 0x01
-#define RDDID 0x04
-#define RDDST 0x09
-#define SLPIN 0x10
-#define SLPOUT 0x11
-#define PTLON 0x12
-#define NORON 0x13
-#define INVOFF 0x20
-#define INVON 0x21
-#define DISPOFF 0x28
-#define DISPON 0x29
-#define CASET 0x2A
-#define RASET 0x2B
-#define RAMWR 0x2C
-#define RAMRD 0x2E
-#define PTLAR 0x30
-#define COLMOD 0x3A
-#define MADCTL 0x36
-#define FRMCTR1 0xB1
-#define FRMCTR2 0xB2
-#define FRMCTR3 0xB3
-#define INVCTR 0xB4
-#define DISSET5 0xB6
-#define PWCTR1 0xC0
-#define PWCTR2 0xC1
-#define PWCTR3 0xC2
-#define PWCTR4 0xC3
-#define PWCTR5 0xC4
-#define VMCTR1 0xC5
-#define RDID1 0xDA
-#define RDID2 0xDB
-#define RDID3 0xDC
-#define RDID4 0xDD
-#define PWCTR6 0xFC
-#define GMCTRP1 0xE0
-#define GMCTRN1 0xE1
+/// ST7789 Commands. From https://github.com/almindor/st7789/blob/master/src/instruction.rs
+#define NOP      0x00
+#define SWRESET  0x01
+#define RDDID    0x04
+#define RDDST    0x09
+#define SLPIN    0x10
+#define SLPOUT   0x11
+#define PTLON    0x12
+#define NORON    0x13
+#define INVOFF   0x20
+#define INVON    0x21
+#define DISPOFF  0x28
+#define DISPON   0x29
+#define CASET    0x2A
+#define RASET    0x2B
+#define RAMWR    0x2C
+#define RAMRD    0x2E
+#define PTLAR    0x30
+#define VSCRDER  0x33
+#define COLMOD   0x3A
+#define MADCTL   0x36
+#define VSCAD    0x37
+#define VCMOFSET 0xC5
 
-//  ST7789 Orientation. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/lib.rs#L52-L58
-#define Portrait 0x00
-#define Landscape 0x60
-#define PortraitSwapped 0xC0
-#define LandscapeSwapped 0xA0
+/// ST7789 Orientation. From https://github.com/almindor/st7789/blob/master/src/lib.rs#L42-L52
+#define Portrait         0x00  //  No inverting
+#define Landscape        0x60  //  Invert column and page/column order
+#define PortraitSwapped  0xC0  //  Invert page and column order
+#define LandscapeSwapped 0xA0  //  Invert page and page/column order
 
 static int hard_reset(void);
 static int set_orientation(uint8_t orientation);
@@ -94,7 +79,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 static void console_dump(const uint8_t *buffer, unsigned int len);
 
-//  Dump the start of Flash ROM. TODO: Change this
+/// Dump the start of Flash ROM. TODO: Change this
 static const uint8_t *flash_buffer = (const uint8_t *) 0x23000000;
 
 /// Display image on ST7789 display controller. 
@@ -139,38 +124,6 @@ int display_image(void) {
         }
     }
 
-    /*
-    //  Set Address Window Columns (CASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    write_command(CASET, NULL, 0);
-    static const uint8_t CASET1_PARA[] = { 0x00, 0x00, 0x00, 0x13 };
-    write_data(CASET1_PARA, sizeof(CASET1_PARA));  //  Col 0 to 19
-
-    //  Set Address Window Rows (RASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    write_command(RASET, NULL, 0);
-    static const uint8_t RASET1_PARA[] = { 0x00, 0x00, 0x00, 0x00 };
-    write_data(RASET1_PARA, sizeof(RASET1_PARA));  //  Row 0 to 0
-
-    //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
-    write_command(RAMWR, NULL, 0);
-    static const uint8_t RAMWR1_PARA[] = { 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0 };
-    write_data(RAMWR1_PARA, sizeof(RAMWR1_PARA));  //  40 bytes
-
-    //  Set Address Window Columns (CASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    write_command(CASET, NULL, 0);
-    static const uint8_t CASET2_PARA[] = { 0x00, 0x14, 0x00, 0x27 };
-    write_data(CASET2_PARA, sizeof(CASET2_PARA));  //  Col 20 to 39
-
-    //  Set Address Window Rows (RASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    write_command(RASET, NULL, 0);
-    static const uint8_t RASET2_PARA[] = { 0x00, 0x00, 0x00, 0x00 };
-    write_data(RASET2_PARA, sizeof(RASET2_PARA));  //  Row 0 to 0
-
-    //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
-    write_command(RAMWR, NULL, 0);
-    static const uint8_t RAMWR2_PARA[] = { 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0, 0x87, 0xe0 };
-    write_data(RAMWR2_PARA, sizeof(RAMWR2_PARA));  //  40 bytes
-    */
-
     printf("Image displayed\r\n");
     return 0;
 }
@@ -192,7 +145,7 @@ int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
     return 0;
 }
 
-/// Initialise the ST7789 display controller. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/lib.rs
+/// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
     //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
@@ -229,6 +182,7 @@ int init_display(void) {
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
+    /*
     //  BEGIN TODO: The Init Commands below are actually for ST7735, not ST7789, but seem to work with ST7789. Should be changed to ST7789.
     //  See ST7789 Init Commands here: https://github.com/almindor/st7789/blob/master/src/lib.rs
 
@@ -264,13 +218,23 @@ int init_display(void) {
 
     //  END TODO: The Init Commands above are actually for ST7735, not ST7789, but seem to work with ST7789.
     //  The Init Commands below are for ST7789...
+    */
 
-    //  TODO: Send Init Commands for...
-    //  - VSCRDER: Vertical scroll definition (0 TSA, 320 VSA, 0 BSA)
-    //  - MADCTL:  Left -> right, bottom -> top RGB
-    //  - COLMOD:  16-bit colors
-    //  - INVON:   Hack?
-    //  See https://github.com/almindor/st7789/blob/master/src/lib.rs#L108-L117
+    //  Vertical Scroll Definition: 0 TSA, 320 VSA, 0 BSA
+    static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
+    rc = write_command(VSCRDER, VSCRDER_PARA, sizeof(VSCRDER_PARA));  assert(rc == 0);
+
+    //  Memory Data Access Control: Top to Bottom, Left to Right, RGB Order
+    static const uint8_t MADCTL_PARA[] = { 0x00 };
+    rc = write_command(MADCTL, MADCTL_PARA, sizeof(MADCTL_PARA));  assert(rc == 0);
+
+    //  Display Inversion On (Hack?)
+    rc = write_command(INVON, NULL, 0);  assert(rc == 0);
+    delay_ms(10);  //  Need to wait at least 10 milliseconds
+
+    //  Normal Display Mode On
+    rc = write_command(NORON, NULL, 0);  assert(rc == 0);
+    delay_ms(10);  //  Need to wait at least 200 milliseconds
 
     //  Invert the display colours (light becomes dark and vice versa)
     if (INVERTED) {
@@ -340,7 +304,8 @@ int write_data(const uint8_t *data, uint16_t len) {
 }
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour). TODO: Sync with buf1_1 in lv_port_disp.c
+/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+/// TODO: Sync with buf1_1 in lv_port_disp.c
 static uint8_t rx_buf[10 * 240 * 2];
 
 /// Write to the SPI port
