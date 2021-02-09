@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#  macOS script to build, flash and run firmware
+#  macOS script to build, flash and run BL602 Firmware
 
 set -e  #  Exit when any command fails
 set -x  #  Echo commands
