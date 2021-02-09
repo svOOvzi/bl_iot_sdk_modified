@@ -25,12 +25,10 @@
 static bool started = false;
 
 /// Init the LVGL library
-void lvgl_init(void) {    
+void lvgl_init(void) {   
+    //  Assume that display controller has been initialised 
     printf("Init LVGL...\r\n");
     assert(started == false);
-
-    //  Init the display controller
-    int rc = init_display(); assert(rc == 0);
 
     //  Init the LVGL display
     lv_init();

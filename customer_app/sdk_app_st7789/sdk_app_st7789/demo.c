@@ -102,44 +102,10 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// Display image
+/// Display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
     int rc = display_image();
-    assert(rc == 0);
-}
-
-/// Switch on backlight
-static void test_backlight_on(char *buf, int len, int argc, char **argv)
-{
-    int rc = backlight_on();
-    assert(rc == 0);
-}
-
-/// Switch off backlight
-static void test_backlight_off(char *buf, int len, int argc, char **argv)
-{
-    int rc = backlight_off();
-    assert(rc == 0);
-}
-
-/// Init LVGL
-static void test_lvgl_init(char *buf, int len, int argc, char **argv)
-{
-    lvgl_init();
-}
-
-/// Test LVGL
-static void test_lvgl_test(char *buf, int len, int argc, char **argv)
-{
-    int rc = lvgl_test();
-    assert(rc == 0);
-}
-
-/// Render LVGL
-static void test_lvgl_test(char *buf, int len, int argc, char **argv)
-{
-    int rc = lvgl_render();
     assert(rc == 0);
 }
 
@@ -157,6 +123,40 @@ static void test_display_result(char *buf, int len, int argc, char **argv)
     printf("Rx Status:     0x%x\r\n", g_rx_status);
     printf("Rx Term Count: 0x%x\r\n", g_rx_tc);
     printf("Rx Error:      0x%x\r\n", g_rx_error);
+}
+
+/// Switch on backlight. Should be done after `display_init`
+static void test_backlight_on(char *buf, int len, int argc, char **argv)
+{
+    int rc = backlight_on();
+    assert(rc == 0);
+}
+
+/// Switch off backlight. Should be done after `display_init`
+static void test_backlight_off(char *buf, int len, int argc, char **argv)
+{
+    int rc = backlight_off();
+    assert(rc == 0);
+}
+
+/// Init LVGL. Should be done after `display_init`
+static void test_lvgl_init(char *buf, int len, int argc, char **argv)
+{
+    lvgl_init();
+}
+
+/// Test LVGL. Should be done after `lvgl_init`
+static void test_lvgl_test(char *buf, int len, int argc, char **argv)
+{
+    int rc = lvgl_test();
+    assert(rc == 0);
+}
+
+/// Render LVGL. Should be done after `lvgl_test`
+static void test_lvgl_render(char *buf, int len, int argc, char **argv)
+{
+    int rc = lvgl_render();
+    assert(rc == 0);
 }
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
