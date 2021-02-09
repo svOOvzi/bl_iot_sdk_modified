@@ -62,10 +62,30 @@ extern spi_dev_t spi_device;
 #define RAMRD    0x2E
 #define PTLAR    0x30
 #define VSCRDER  0x33
-#define COLMOD   0x3A
 #define MADCTL   0x36
 #define VSCAD    0x37
+#define COLMOD   0x3A
 #define VCMOFSET 0xC5
+
+////  TODO: Remove these
+#define FRMCTR1 0xB1
+#define FRMCTR2 0xB2
+#define FRMCTR3 0xB3
+#define INVCTR 0xB4
+#define DISSET5 0xB6
+#define PWCTR1 0xC0
+#define PWCTR2 0xC1
+#define PWCTR3 0xC2
+#define PWCTR4 0xC3
+#define PWCTR5 0xC4
+#define VMCTR1 0xC5
+#define RDID1 0xDA
+#define RDID2 0xDB
+#define RDID3 0xDC
+#define RDID4 0xDD
+#define PWCTR6 0xFC
+#define GMCTRP1 0xE0
+#define GMCTRN1 0xE1
 
 /// ST7789 Orientation. From https://github.com/almindor/st7789/blob/master/src/lib.rs#L42-L52
 #define Portrait         0x00  //  No inverting
@@ -182,7 +202,6 @@ int init_display(void) {
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
-    /*
     //  BEGIN TODO: The Init Commands below are actually for ST7735, not ST7789, but seem to work with ST7789. Should be changed to ST7789.
     //  See ST7789 Init Commands here: https://github.com/almindor/st7789/blob/master/src/lib.rs
 
@@ -214,11 +233,10 @@ int init_display(void) {
     rc = write_command(PWCTR5, PWCTR5_PARA, sizeof(PWCTR5_PARA));  assert(rc == 0);
     
     static const uint8_t VMCTR1_PARA[] = { 0x0E };
-    rc = write_command(VMCTR1, VMCTR1_PARA, sizeof(VMCTR1_PARA));  assert(rc == 0);
+    ////rc = write_command(VMCTR1, VMCTR1_PARA, sizeof(VMCTR1_PARA));  assert(rc == 0);
 
     //  END TODO: The Init Commands above are actually for ST7735, not ST7789, but seem to work with ST7789.
     //  The Init Commands below are for ST7789...
-    */
 
     //  Vertical Scroll Definition: 0 TSA, 320 VSA, 0 BSA
     static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
@@ -228,7 +246,8 @@ int init_display(void) {
     static const uint8_t MADCTL_PARA[] = { 0x00 };
     rc = write_command(MADCTL, MADCTL_PARA, sizeof(MADCTL_PARA));  assert(rc == 0);
 
-    //  Display Inversion On (Hack?)
+    //  Display Inversion On (Hack?) (ST7789 Datasheet Page 190)
+    //  https://www.rhydolabz.com/documents/33/ST7789.pdf
     rc = write_command(INVON, NULL, 0);  assert(rc == 0);
     delay_ms(10);  //  Need to wait at least 10 milliseconds
 
