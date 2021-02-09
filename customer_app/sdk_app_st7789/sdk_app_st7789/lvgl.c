@@ -40,8 +40,8 @@ void lvgl_init(void) {
 int lvgl_test(void) {
     printf("Test LVGL widgets...\r\n");
     lv_obj_t *btn = lv_btn_create(lv_scr_act(), NULL);     //  Add a button the current screen
-    lv_obj_set_pos(btn, 10, 10);                           //  Set its position
-    lv_obj_set_size(btn, 120, 50);                         //  Set its size
+    lv_obj_set_pos(btn, 10, 80);                           //  Set its position
+    lv_obj_set_size(btn, 220, 80);                         //  Set its size
 
     lv_obj_t *label = lv_label_create(btn, NULL);          //  Add a label to the button
     lv_label_set_text(label, "BL602 LVGL");               //  Set the label text

@@ -321,14 +321,14 @@ int write_data(const uint8_t *data, uint16_t len) {
 }
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Should contain 10 rows of 240 pixels of 2 bytes each. TODO: Sync with buf1_1 in lv_port_disp.c
-static uint8_t rx_buf[BATCH_SIZE];
+/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour). TODO: Sync with buf1_1 in lv_port_disp.c
+static uint8_t rx_buf[10 * 240 * 2];
 
 /// Write to the SPI port
 static int transmit_spi(const uint8_t *data, uint16_t len) {
     assert(data != NULL);
     if (len == 0) { return 0; }
-    if (len > sizeof(rx_buf)) { printf("trans_spi error: Too much data %d\r\n", len); return 1; }
+    if (len > sizeof(rx_buf)) { printf("transmit_spi error: Too much data %d\r\n", len); return 1; }
 
     //  Clear the receive buffer
     memset(&rx_buf, 0, sizeof(rx_buf));
