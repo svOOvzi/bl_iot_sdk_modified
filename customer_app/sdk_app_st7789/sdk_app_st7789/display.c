@@ -124,7 +124,8 @@ int init_display(void) {
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
-    //  TODO: This is needed to fix the Fallen Lorry problem, although this command comes from ST7735, not ST7789.
+    //  TODO: This is needed to fix the Fallen Lorry problem, 
+    //  although this command comes from ST7735, not ST7789.
     //  https://twitter.com/MisterTechBlog/status/1359077419156598785?s=20
     static const uint8_t PWCTR1_PARA[] = { 0xA2, 0x02, 0x84 };
     rc = write_command(PWCTR1, PWCTR1_PARA, sizeof(PWCTR1_PARA));  assert(rc == 0);
