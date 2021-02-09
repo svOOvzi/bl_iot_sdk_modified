@@ -7,7 +7,7 @@
  * COPY THIS FILE AS `lv_conf.h` NEXT TO the `lvgl` FOLDER
  */
 
-#if 0 /*Set it to "1" to enable content*/
+#if 1 /*Set it to "1" to enable content*/
 
 #ifndef LV_CONF_H
 #define LV_CONF_H
