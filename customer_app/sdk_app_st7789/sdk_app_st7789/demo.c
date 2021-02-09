@@ -167,6 +167,12 @@ static void test_a(char *buf, int len, int argc, char **argv) {
     test_lvgl_render("", 0, 0, NULL);
 }
 
+/// Init display, display image
+static void test_b(char *buf, int len, int argc, char **argv) {
+    test_display_init("", 0, 0, NULL);
+    test_display_image("", 0, 0, NULL);
+}
+
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_init",   "Init display",  test_display_init},
@@ -178,6 +184,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"lvgl_test",      "Test LVGL",     test_lvgl_test},
     {"lvgl_render",    "Render LVGL",   test_lvgl_render},
     {"a",              "Init display, init LVGL, test LVGL, render LVGL", test_a},
+    {"b",              "Init display, display image", test_b},
 };
 
 int cli_init(void)

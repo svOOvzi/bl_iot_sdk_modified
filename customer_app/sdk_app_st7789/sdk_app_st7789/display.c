@@ -80,71 +80,11 @@ static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 static void console_dump(const uint8_t *buffer, unsigned int len);
 
-/// Dump the start of Flash ROM. TODO: Change this
-static const uint8_t *flash_buffer = (const uint8_t *) 0x23000000;
-
-/// Display image on ST7789 display controller. 
-/// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
-int display_image(void) {
-    printf("Displaying image...\r\n");
-    int rc = init_display();  assert(rc == 0);
-    rc = set_orientation(Landscape);  assert(rc == 0);
-
-    //  Render each row of pixels.
-    for (uint8_t row = 0; row < ROW_COUNT; row++) {
-        uint8_t top = row;
-        uint8_t bottom = row;
-        uint8_t left = 0;
-        //  Screen Buffer: 240 * 240 * 2 / 1024 = 112.5 KB
-        //  Render a batch of columns in that row.
-        for (;;) {
-            if (left >= COL_COUNT) { break; }
-
-            //  How many columns we will render in a batch.
-            uint16_t batch_columns = BATCH_SIZE / BYTES_PER_PIXEL;
-            uint16_t right = left + batch_columns - 1;
-            if (right >= COL_COUNT) { right = COL_COUNT - 1; }
-
-            //  How many bytes we will transmit.
-            uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
-
-            //  Read the bytes from flash memory.
-            uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
-            //  int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
-
-            printf("%lx: ", offset); console_dump(flash_buffer + offset, len); printf("\r\n");
-
-            //  Set the display window.
-            int rc = set_window(left, top, right, bottom); assert(rc == 0);
-
-            //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
-            rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data(flash_buffer + offset, len); assert(rc == 0);
-
-            left = right + 1;
-        }
-    }
-
-    printf("Image displayed\r\n");
-    return 0;
-}
-
-/// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
-int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
-    assert(left < COL_COUNT && right < COL_COUNT && top < ROW_COUNT && bottom < ROW_COUNT);
-    assert(left <= right);
-    assert(top <= bottom);
-    //  Set Address Window Columns (CASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    int rc = write_command(CASET, NULL, 0); assert(rc == 0);
-    uint8_t col_para[4] = { 0x00, left, 0x00, right };
-    rc = write_data(col_para, 4); assert(rc == 0);
-
-    //  Set Address Window Rows (RASET): st7735_lcd::draw() → set_pixel() → set_address_window()
-    rc = write_command(RASET, NULL, 0); assert(rc == 0);
-    uint8_t row_para[4] = { 0x00, top, 0x00, bottom };
-    rc = write_data(row_para, 4); assert(rc == 0);
-    return 0;
-}
+/// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
+/// from PNG file https://github.com/lupyuen/pinetime-logo-loader/blob/master/logos/pine64-rainbow.png
+static const uint8_t image_data[] = {  //  Should be 115,200 bytes
+#include "image.inc"
+};
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
@@ -193,47 +133,92 @@ int init_display(void) {
     static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
     rc = write_command(VSCRDER, VSCRDER_PARA, sizeof(VSCRDER_PARA));  assert(rc == 0);
 
-    //  Display Inversion On (Hack?) (ST7789 Datasheet Page 190)
-    rc = write_command(INVON, NULL, 0);  assert(rc == 0);
-    delay_ms(10);  //  Need to wait at least 10 milliseconds
-
     //  Normal Display Mode On (ST7789 Datasheet Page 187)
     rc = write_command(NORON, NULL, 0);  assert(rc == 0);
     delay_ms(10);  //  Need to wait at least 200 milliseconds
 
-    //  Display Inversion: Invert the display colours (light becomes dark and vice versa) (ST7789 Datasheet Page 188, 190)
+    //  Display Inversion: Invert the display colours (light becomes dark and vice versa) (ST7789 Datasheet Pages 188, 190)
     if (INVERTED) {
-        rc = write_command(INVON, NULL, 0);  assert(rc == 0);  assert(rc == 0);
+        rc = write_command(INVON, NULL, 0);  assert(rc == 0);
     } else {
-        rc = write_command(INVOFF, NULL, 0);  assert(rc == 0);  assert(rc == 0);
+        rc = write_command(INVOFF, NULL, 0);  assert(rc == 0);
     }
 
     //  Set orientation to Landscape or Portrait
     rc = set_orientation(Landscape);  assert(rc == 0);
 
-    //  16-bit RGB565 colour (ST7789 Datasheet Page ???)
+    //  Interface Pixel Format: 16-bit RGB565 colour (ST7789 Datasheet Page 224)
     static const uint8_t COLMOD_PARA[] = { 0x55 };
     rc = write_command(COLMOD, COLMOD_PARA, sizeof(COLMOD_PARA));  assert(rc == 0);
     
-    //  Turn on display (ST7789 Datasheet Page ???)
+    //  Display On: Turn on display (ST7789 Datasheet Page 196)
     rc = write_command(DISPON, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
     return 0;
 }
 
-/// Reset the display controller
-static int hard_reset(void) {
-    //  Toggle the Reset Pin: High, Low, High
-    int rc;
-    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
-    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 0);  assert(rc == 0);
-    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
+/// Display image on ST7789 display controller. 
+/// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
+int display_image(void) {
+    printf("Displaying image...\r\n");
+
+    //  Render each row of pixels.
+    for (uint8_t row = 0; row < ROW_COUNT; row++) {
+        uint8_t top = row;
+        uint8_t bottom = row;
+        uint8_t left = 0;
+        //  Screen Buffer: 240 * 240 * 2 / 1024 = 112.5 KB
+        //  Render a batch of columns in that row.
+        for (;;) {
+            if (left >= COL_COUNT) { break; }
+
+            //  How many columns we will render in a batch.
+            uint16_t batch_columns = BATCH_SIZE / BYTES_PER_PIXEL;
+            uint16_t right = left + batch_columns - 1;
+            if (right >= COL_COUNT) { right = COL_COUNT - 1; }
+
+            //  How many bytes we will transmit.
+            uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
+
+            //  Read the bytes from flash memory.
+            uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
+            printf("%lx: ", offset); console_dump(image_data + offset, len); printf("\r\n");
+
+            //  Set the display window.
+            int rc = set_window(left, top, right, bottom); assert(rc == 0);
+
+            //   Memory Write (ST7789 Datasheet Page 202)
+            rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
+            rc = write_data(image_data + offset, len); assert(rc == 0);
+
+            left = right + 1;
+        }
+    }
+
+    printf("Image displayed\r\n");
+    return 0;
+}
+
+/// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
+int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
+    assert(left < COL_COUNT && right < COL_COUNT && top < ROW_COUNT && bottom < ROW_COUNT);
+    assert(left <= right);
+    assert(top <= bottom);
+    //  Set Address Window Columns (ST7789 Datasheet Page 198)
+    int rc = write_command(CASET, NULL, 0); assert(rc == 0);
+    uint8_t col_para[4] = { 0x00, left, 0x00, right };
+    rc = write_data(col_para, 4); assert(rc == 0);
+
+    //  Set Address Window Rows (ST7789 Datasheet Page 200)
+    rc = write_command(RASET, NULL, 0); assert(rc == 0);
+    uint8_t row_para[4] = { 0x00, top, 0x00, bottom };
+    rc = write_data(row_para, 4); assert(rc == 0);
     return 0;
 }
 
 /// Set the display orientation
 static int set_orientation(uint8_t orientation) {
-    // (ST7789 Datasheet Page ???)
+    //  Memory Data Access Control (ST7789 Datasheet Page 215)
     if (RGB) {
         uint8_t orientation_para[1] = { orientation };
         int rc = write_command(MADCTL, orientation_para, 1);
@@ -315,10 +300,14 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     return 0;
 }
 
-/// Delay for the specified number of milliseconds
-static void delay_ms(uint32_t ms) {
-    //  TODO: Implement delay. For now we write to console.
-    printf("TODO Delay %d\r\n", ms);
+/// Reset the display controller
+static int hard_reset(void) {
+    //  Toggle the Reset Pin: High, Low, High
+    int rc;
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 0);  assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
+    return 0;
 }
 
 /// Switch on backlight
@@ -335,6 +324,12 @@ int backlight_off(void) {
     int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
     return 0;
+}
+
+/// Delay for the specified number of milliseconds
+static void delay_ms(uint32_t ms) {
+    //  TODO: Implement delay. For now we write to console.
+    printf("TODO Delay %d\r\n", ms);
 }
 
 //  Dump "len" number of bytes from "buffer" in hex format.
