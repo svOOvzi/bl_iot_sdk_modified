@@ -126,14 +126,14 @@ int display_image(void) {
             uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
             //  int rc = hal_flash_read(FLASH_DEVICE, offset, flash_buffer, len); assert(rc == 0);
 
-            printf("%lx: ", offset); console_dump(flash_buffer, len); printf("\r\n");
+            printf("%lx: ", offset); console_dump(flash_buffer + offset, len); printf("\r\n");
 
             //  Set the display window.
             int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
             //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
             rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data(flash_buffer, len); assert(rc == 0);
+            rc = write_data(flash_buffer + offset, len); assert(rc == 0);
 
             left = right + 1;
         }
