@@ -1,3 +1,4 @@
+//  Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/lv_conf.h
 /**
  * @file lv_conf.h
  * Configuration file for v7.10.1
