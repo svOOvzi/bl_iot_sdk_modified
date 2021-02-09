@@ -39,6 +39,9 @@ COMPONENT_LIBRARY = lib$(COMPONENT_NAME).a
 # Source dirs a component has. Default to root directory of component.
 COMPONENT_SRCDIRS = .
 
+#### TODO: Clean up Makefile for LVGL
+COMPONENT_SRCDIRS += ./lvgl/src/lv_core
+
 # By default, include only the include/ dir.
 COMPONENT_ADD_INCLUDEDIRS = . include
 COMPONENT_ADD_LDFLAGS =
