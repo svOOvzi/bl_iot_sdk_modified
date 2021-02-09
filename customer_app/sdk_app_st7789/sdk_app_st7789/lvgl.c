@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  LVGL Interface for ST7789
+//  LVGL Interface for ST7789. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/lvgl.c
 #include <stdio.h>
 #include <assert.h>
 #include "lvgl/lvgl.h"
@@ -24,8 +24,8 @@
 
 static bool started = false;
 
-/// Init the LVGL library. Called by sysinit() during startup, defined in pkg.yml.
-void pinetime_lvgl_mynewt_init(void) {    
+/// Init the LVGL library
+void lvgl_init(void) {    
     printf("Init LVGL...\r\n");
     assert(started == false);
 
@@ -39,7 +39,7 @@ void pinetime_lvgl_mynewt_init(void) {
 }
 
 /// Render a Button Widget and a Label Widget
-int pinetime_lvgl_mynewt_test(void) {
+int lvgl_test(void) {
     printf("Test LVGL widgets...\r\n");
     lv_obj_t *btn = lv_btn_create(lv_scr_act(), NULL);     //  Add a button the current screen
     lv_obj_set_pos(btn, 10, 10);                           //  Set its position
@@ -51,7 +51,7 @@ int pinetime_lvgl_mynewt_test(void) {
 }
 
 /// Render the LVGL display
-int pinetime_lvgl_mynewt_render(void) {
+int lvgl_render(void) {
     printf("Render LVGL display...\r\n");
     //  Must tick at least 100 milliseconds to force LVGL to update display
     lv_tick_inc(100);

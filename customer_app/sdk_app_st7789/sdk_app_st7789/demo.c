@@ -123,6 +123,26 @@ static void test_backlight_off(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
+/// Init LVGL
+static void test_lvgl_init(char *buf, int len, int argc, char **argv)
+{
+    lvgl_init();
+}
+
+/// Test LVGL
+static void test_lvgl_test(char *buf, int len, int argc, char **argv)
+{
+    int rc = lvgl_test();
+    assert(rc == 0);
+}
+
+/// Render LVGL
+static void test_lvgl_test(char *buf, int len, int argc, char **argv)
+{
+    int rc = lvgl_render();
+    assert(rc == 0);
+}
+
 /// Show the interrupt counters
 static void test_display_result(char *buf, int len, int argc, char **argv)
 {
@@ -146,6 +166,9 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_result", "Show result",   test_display_result},
     {"backlight_on",   "Backlight on",  test_backlight_on},
     {"backlight_off",  "Backlight off", test_backlight_off},
+    {"lvgl_init",      "Init LVGL",     test_lvgl_init},
+    {"lvgl_test",      "Test LVGL",     test_lvgl_test},
+    {"lvgl_render",    "Render LVGL",   test_lvgl_render},
 };                                                                                   
 
 int cli_init(void)

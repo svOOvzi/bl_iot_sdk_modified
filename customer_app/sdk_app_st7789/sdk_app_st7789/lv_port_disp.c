@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  Display Driver for ST7789
+//  Display Driver for ST7789. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/lv_port_disp.c
 /**
  * @file lv_port_disp_templ.c
  *
