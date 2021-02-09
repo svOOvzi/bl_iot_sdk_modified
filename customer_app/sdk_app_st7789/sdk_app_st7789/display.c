@@ -213,63 +213,82 @@ int init_display(void) {
 
     //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
-    assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
 
     //  Switch on backlight
-    rc = backlight_on();
-    assert(rc == 0);
+    rc = backlight_on();  assert(rc == 0);
 
-    hard_reset();
-    write_command(SWRESET, NULL, 0);
-    delay_ms(200);
-    write_command(SLPOUT, NULL, 0);
-    delay_ms(200);
+    //  Reset the display controller through the Reset Pin
+    rc = hard_reset();  assert(rc == 0);
 
-    //  TODO: These commands are actually for ST7735, not ST7789, but seem to work with ST7789. Should be changed to ST7789.
+    //  Reset the display controller through firmware
+    rc = write_command(SWRESET, NULL, 0);  assert(rc == 0);
+    delay_ms(200);  //  Need to wait at least 200 milliseconds
+
+    //  Disable sleep
+    rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
+    delay_ms(200);  //  Need to wait at least 200 milliseconds
+
+    //  BEGIN TODO: The Init Commands below are actually for ST7735, not ST7789, but seem to work with ST7789. Should be changed to ST7789.
+    //  See ST7789 Init Commands here: https://github.com/almindor/st7789/blob/master/src/lib.rs
+
     static const uint8_t FRMCTR1_PARA[] = { 0x01, 0x2C, 0x2D };
-    write_command(FRMCTR1, FRMCTR1_PARA, sizeof(FRMCTR1_PARA));
+    rc = write_command(FRMCTR1, FRMCTR1_PARA, sizeof(FRMCTR1_PARA));  assert(rc == 0);
 
     static const uint8_t FRMCTR2_PARA[] = { 0x01, 0x2C, 0x2D };
-    write_command(FRMCTR2, FRMCTR2_PARA, sizeof(FRMCTR2_PARA));
+    rc = write_command(FRMCTR2, FRMCTR2_PARA, sizeof(FRMCTR2_PARA));  assert(rc == 0);
 
     static const uint8_t FRMCTR3_PARA[] = { 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D };
-    write_command(FRMCTR3, FRMCTR3_PARA, sizeof(FRMCTR3_PARA));
+    rc = write_command(FRMCTR3, FRMCTR3_PARA, sizeof(FRMCTR3_PARA));  assert(rc == 0);
 
     static const uint8_t INVCTR_PARA[] = { 0x07 };
-    write_command(INVCTR, INVCTR_PARA, sizeof(INVCTR_PARA));
+    rc = write_command(INVCTR, INVCTR_PARA, sizeof(INVCTR_PARA));  assert(rc == 0);
 
     static const uint8_t PWCTR1_PARA[] = { 0xA2, 0x02, 0x84 };
-    write_command(PWCTR1, PWCTR1_PARA, sizeof(PWCTR1_PARA));
+    rc = write_command(PWCTR1, PWCTR1_PARA, sizeof(PWCTR1_PARA));  assert(rc == 0);
 
     static const uint8_t PWCTR2_PARA[] = { 0xC5 };
-    write_command(PWCTR2, PWCTR2_PARA, sizeof(PWCTR2_PARA));
+    rc = write_command(PWCTR2, PWCTR2_PARA, sizeof(PWCTR2_PARA));  assert(rc == 0);
     
     static const uint8_t PWCTR3_PARA[] = { 0x0A, 0x00 };
-    write_command(PWCTR3, PWCTR3_PARA, sizeof(PWCTR3_PARA));
+    rc = write_command(PWCTR3, PWCTR3_PARA, sizeof(PWCTR3_PARA));  assert(rc == 0);
     
     static const uint8_t PWCTR4_PARA[] = { 0x8A, 0x2A };
-    write_command(PWCTR4, PWCTR4_PARA, sizeof(PWCTR4_PARA));
+    rc = write_command(PWCTR4, PWCTR4_PARA, sizeof(PWCTR4_PARA));  assert(rc == 0);
     
     static const uint8_t PWCTR5_PARA[] = { 0x8A, 0xEE };
-    write_command(PWCTR5, PWCTR5_PARA, sizeof(PWCTR5_PARA));
+    rc = write_command(PWCTR5, PWCTR5_PARA, sizeof(PWCTR5_PARA));  assert(rc == 0);
     
     static const uint8_t VMCTR1_PARA[] = { 0x0E };
-    write_command(VMCTR1, VMCTR1_PARA, sizeof(VMCTR1_PARA));
+    rc = write_command(VMCTR1, VMCTR1_PARA, sizeof(VMCTR1_PARA));  assert(rc == 0);
 
+    //  END TODO: The Init Commands above are actually for ST7735, not ST7789, but seem to work with ST7789.
+    //  The Init Commands below are for ST7789...
+
+    //  TODO: Send Init Commands for...
+    //  - VSCRDER: Vertical scroll definition (0 TSA, 320 VSA, 0 BSA)
+    //  - MADCTL:  Left -> right, bottom -> top RGB
+    //  - COLMOD:  16-bit colors
+    //  - INVON:   Hack?
+    //  See https://github.com/almindor/st7789/blob/master/src/lib.rs#L108-L117
+
+    //  Invert the display colours (light becomes dark and vice versa)
     if (INVERTED) {
-        write_command(INVON, NULL, 0);
+        rc = write_command(INVON, NULL, 0);  assert(rc == 0);  assert(rc == 0);
     } else {
-        write_command(INVOFF, NULL, 0);
+        rc = write_command(INVOFF, NULL, 0);  assert(rc == 0);  assert(rc == 0);
     }
 
-    set_orientation(Landscape);
+    //  Set orientation to Landscape or Portrait
+    rc = set_orientation(Landscape);  assert(rc == 0);
 
-    static const uint8_t COLMOD_PARA[] = { 0x05 };
-    write_command(COLMOD, COLMOD_PARA, sizeof(COLMOD_PARA));
+    //  16-bit RGB565 colour
+    static const uint8_t COLMOD_PARA[] = { 0x55 };
+    rc = write_command(COLMOD, COLMOD_PARA, sizeof(COLMOD_PARA));  assert(rc == 0);
     
-    write_command(DISPON, NULL, 0);
-    delay_ms(200);
+    //  Turn on display
+    rc = write_command(DISPON, NULL, 0);  assert(rc == 0);
+    delay_ms(200);  //  Need to wait at least 200 milliseconds
     return 0;
 }
 
