@@ -35,7 +35,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-////TODO #include "lvgl.h"
+#include "lvgl/lvgl.h"
 
 /*********************
  *      DEFINES
