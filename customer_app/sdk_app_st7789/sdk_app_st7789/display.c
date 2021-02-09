@@ -65,27 +65,8 @@ extern spi_dev_t spi_device;
 #define MADCTL   0x36
 #define VSCAD    0x37
 #define COLMOD   0x3A
+#define PWCTR1   0xC0
 #define VCMOFSET 0xC5
-
-////  TODO: Remove these
-#define FRMCTR1 0xB1
-#define FRMCTR2 0xB2
-#define FRMCTR3 0xB3
-#define INVCTR 0xB4
-#define DISSET5 0xB6
-#define PWCTR1 0xC0
-#define PWCTR2 0xC1
-#define PWCTR3 0xC2
-#define PWCTR4 0xC3
-#define PWCTR5 0xC4
-#define VMCTR1 0xC5
-#define RDID1 0xDA
-#define RDID2 0xDB
-#define RDID3 0xDC
-#define RDID4 0xDD
-#define PWCTR6 0xFC
-#define GMCTRP1 0xE0
-#define GMCTRN1 0xE1
 
 /// ST7789 Orientation. From https://github.com/almindor/st7789/blob/master/src/lib.rs#L42-L52
 #define Portrait         0x00  //  No inverting
@@ -194,68 +175,33 @@ int init_display(void) {
     //  Reset the display controller through the Reset Pin
     rc = hard_reset();  assert(rc == 0);
 
-    //  Reset the display controller through firmware
+    //  Software Reset: Reset the display controller through firmware (ST7789 Datasheet Page 163)
+    //  https://www.rhydolabz.com/documents/33/ST7789.pdf
     rc = write_command(SWRESET, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
-    //  Disable sleep
+    //  Sleep Out: Disable sleep (ST7789 Datasheet Page 184)
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
-    //  BEGIN TODO: The Init Commands below are actually for ST7735, not ST7789, but seem to work with ST7789. Should be changed to ST7789.
-    //  See ST7789 Init Commands here: https://github.com/almindor/st7789/blob/master/src/lib.rs
-
-    static const uint8_t FRMCTR1_PARA[] = { 0x01, 0x2C, 0x2D };
-    rc = write_command(FRMCTR1, FRMCTR1_PARA, sizeof(FRMCTR1_PARA));  assert(rc == 0);
-
-    static const uint8_t FRMCTR2_PARA[] = { 0x01, 0x2C, 0x2D };
-    rc = write_command(FRMCTR2, FRMCTR2_PARA, sizeof(FRMCTR2_PARA));  assert(rc == 0);
-
-    static const uint8_t FRMCTR3_PARA[] = { 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D };
-    rc = write_command(FRMCTR3, FRMCTR3_PARA, sizeof(FRMCTR3_PARA));  assert(rc == 0);
-
-    static const uint8_t INVCTR_PARA[] = { 0x07 };
-    rc = write_command(INVCTR, INVCTR_PARA, sizeof(INVCTR_PARA));  assert(rc == 0);
-
+    //  TODO: This is needed to fix the Fallen Lorry problem, although this command comes from ST7735, not ST7789.
+    //  https://twitter.com/MisterTechBlog/status/1359077419156598785?s=20
     static const uint8_t PWCTR1_PARA[] = { 0xA2, 0x02, 0x84 };
     rc = write_command(PWCTR1, PWCTR1_PARA, sizeof(PWCTR1_PARA));  assert(rc == 0);
 
-    static const uint8_t PWCTR2_PARA[] = { 0xC5 };
-    rc = write_command(PWCTR2, PWCTR2_PARA, sizeof(PWCTR2_PARA));  assert(rc == 0);
-    
-    static const uint8_t PWCTR3_PARA[] = { 0x0A, 0x00 };
-    rc = write_command(PWCTR3, PWCTR3_PARA, sizeof(PWCTR3_PARA));  assert(rc == 0);
-    
-    static const uint8_t PWCTR4_PARA[] = { 0x8A, 0x2A };
-    rc = write_command(PWCTR4, PWCTR4_PARA, sizeof(PWCTR4_PARA));  assert(rc == 0);
-    
-    static const uint8_t PWCTR5_PARA[] = { 0x8A, 0xEE };
-    rc = write_command(PWCTR5, PWCTR5_PARA, sizeof(PWCTR5_PARA));  assert(rc == 0);
-    
-    static const uint8_t VMCTR1_PARA[] = { 0x0E };
-    ////rc = write_command(VMCTR1, VMCTR1_PARA, sizeof(VMCTR1_PARA));  assert(rc == 0);
-
-    //  END TODO: The Init Commands above are actually for ST7735, not ST7789, but seem to work with ST7789.
-    //  The Init Commands below are for ST7789...
-
-    //  Vertical Scroll Definition: 0 TSA, 320 VSA, 0 BSA
+    //  Vertical Scrolling Definition: 0 TSA, 320 VSA, 0 BSA (ST7789 Datasheet Page 208)
     static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
     rc = write_command(VSCRDER, VSCRDER_PARA, sizeof(VSCRDER_PARA));  assert(rc == 0);
 
-    //  Memory Data Access Control: Top to Bottom, Left to Right, RGB Order
-    static const uint8_t MADCTL_PARA[] = { 0x00 };
-    rc = write_command(MADCTL, MADCTL_PARA, sizeof(MADCTL_PARA));  assert(rc == 0);
-
     //  Display Inversion On (Hack?) (ST7789 Datasheet Page 190)
-    //  https://www.rhydolabz.com/documents/33/ST7789.pdf
     rc = write_command(INVON, NULL, 0);  assert(rc == 0);
     delay_ms(10);  //  Need to wait at least 10 milliseconds
 
-    //  Normal Display Mode On
+    //  Normal Display Mode On (ST7789 Datasheet Page 187)
     rc = write_command(NORON, NULL, 0);  assert(rc == 0);
     delay_ms(10);  //  Need to wait at least 200 milliseconds
 
-    //  Invert the display colours (light becomes dark and vice versa)
+    //  Display Inversion: Invert the display colours (light becomes dark and vice versa) (ST7789 Datasheet Page 188, 190)
     if (INVERTED) {
         rc = write_command(INVON, NULL, 0);  assert(rc == 0);  assert(rc == 0);
     } else {
@@ -265,11 +211,11 @@ int init_display(void) {
     //  Set orientation to Landscape or Portrait
     rc = set_orientation(Landscape);  assert(rc == 0);
 
-    //  16-bit RGB565 colour
+    //  16-bit RGB565 colour (ST7789 Datasheet Page ???)
     static const uint8_t COLMOD_PARA[] = { 0x55 };
     rc = write_command(COLMOD, COLMOD_PARA, sizeof(COLMOD_PARA));  assert(rc == 0);
     
-    //  Turn on display
+    //  Turn on display (ST7789 Datasheet Page ???)
     rc = write_command(DISPON, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
     return 0;
@@ -287,6 +233,7 @@ static int hard_reset(void) {
 
 /// Set the display orientation
 static int set_orientation(uint8_t orientation) {
+    // (ST7789 Datasheet Page ???)
     if (RGB) {
         uint8_t orientation_para[1] = { orientation };
         int rc = write_command(MADCTL, orientation_para, 1);
