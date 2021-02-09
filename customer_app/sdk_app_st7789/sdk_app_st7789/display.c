@@ -258,6 +258,7 @@ int init_display(void) {
 
 /// Reset the display controller
 static int hard_reset(void) {
+    //  Toggle the Reset Pin: High, Low, High
     int rc;
     rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
     rc = bl_gpio_output_set(DISPLAY_RST_PIN, 0);  assert(rc == 0);
