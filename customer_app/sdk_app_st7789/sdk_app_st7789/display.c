@@ -82,13 +82,14 @@ static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 #include "image.inc"
 };
 
-/// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-static uint8_t tx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+/// SPI Transmit Buffer. We always copy pixels from Flash ROM to RAM
+/// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
+/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+uint8_t spi_tx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-static uint8_t rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
@@ -162,8 +163,7 @@ int init_display(void) {
     return 0;
 }
 
-/// Display image on ST7789 display controller. 
-/// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
+/// Display image on ST7789 display controller
 int display_image(void) {
     //  Render each batch of 10 rows
     printf("Displaying image...\r\n");
@@ -179,12 +179,15 @@ int display_image(void) {
         uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
         uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
+        //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
+        memcpy(spi_tx_buf, image_data + offset, len);
+
         //  Set the display window.
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
-        //  Memory Write: Write the bytes to display (ST7789 Datasheet Page 202)
+        //  Memory Write: Write the bytes from RAM to display (ST7789 Datasheet Page 202)
         rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-        rc = write_data(image_data + offset, len); assert(rc == 0);
+        rc = write_data(spi_tx_buf, len);   assert(rc == 0);
     }
     printf("Image displayed\r\n");
     return 0;
@@ -256,17 +259,17 @@ int write_data(const uint8_t *data, uint16_t len) {
 static int transmit_spi(const uint8_t *data, uint16_t len) {
     assert(data != NULL);
     if (len == 0) { return 0; }
-    if (len > sizeof(rx_buf)) { printf("transmit_spi error: Too much data %d\r\n", len); return 1; }
+    if (len > sizeof(spi_rx_buf)) { printf("transmit_spi error: Too much data %d\r\n", len); return 1; }
 
     //  Clear the receive buffer
-    memset(&rx_buf, 0, sizeof(rx_buf));
+    memset(&spi_rx_buf, 0, sizeof(spi_rx_buf));
 
     //  Prepare SPI Transfer
     static spi_ioc_transfer_t transfer;
     memset(&transfer, 0, sizeof(transfer));    
-    transfer.tx_buf = (uint32_t) data;    //  Transmit Buffer
-    transfer.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
-    transfer.len    = len;                //  How many bytes
+    transfer.tx_buf = (uint32_t) data;        //  Transmit Buffer
+    transfer.rx_buf = (uint32_t) spi_rx_buf;  //  Receive Buffer
+    transfer.len    = len;                    //  How many bytes
 
     //  Select the SPI Peripheral (not used for ST7789)
     printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);

@@ -58,6 +58,11 @@ void lv_port_disp_init(void);
 ///////////////////////////////////////////////////////////////////////////////
 //  Defined in display.c
 
+/// SPI Transmit Buffer. We always copy pixels from Flash ROM to RAM
+/// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
+/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+extern uint8_t spi_tx_buf[];
+
 /// Initialise the ST7789 display controller
 int init_display(void);
 

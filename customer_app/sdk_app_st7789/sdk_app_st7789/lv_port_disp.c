@@ -73,40 +73,11 @@ void lv_port_disp_init(void)
      *----------------------------*/
 
     /* LVGL requires a buffer where it draws the objects. The buffer's has to be greater than 1 display row
-     *
-     * There are three buffering configurations:
-     * 1. Create ONE buffer with some rows: 
-     *      LVGL will draw the display's content here and writes it to your display
-     * 
-     * 2. Create TWO buffer with some rows: 
-     *      LVGL will draw the display's content to a buffer and writes it your display.
-     *      You should use DMA to write the buffer's content to the display.
-     *      It will enable LVGL to draw the next part of the screen to the other buffer while
-     *      the data is being sent form the first buffer. It makes rendering and flushing parallel.
-     * 
-     * 3. Create TWO screen-sized buffer: 
-     *      Similar to 2) but the buffer have to be screen sized. When LVGL is ready it will give the
-     *      whole frame to display. This way you only need to change the frame buffer's address instead of
-     *      copying the pixels.
+     * We create ONE buffer with 10 rows. LVGL will draw the display's content here and writes it to the display
      * */
 
-    /* Example for 1) */
     static lv_disp_buf_t disp_buf_1;
-    static lv_color_t buf1_1[LV_HOR_RES_MAX * BUFFER_ROWS];                      /*A buffer for 10 rows*/
-    lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * BUFFER_ROWS);   /*Initialize the display buffer*/
-
-    /* Example for 2) */
-    // static lv_disp_buf_t disp_buf_2;
-    // static lv_color_t buf2_1[LV_HOR_RES_MAX * 10];                        /*A buffer for 10 rows*/
-    // static lv_color_t buf2_2[LV_HOR_RES_MAX * 10];                        /*An other buffer for 10 rows*/
-    // lv_disp_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
-
-    /* Example for 3) */
-    // static lv_disp_buf_t disp_buf_3;
-    // static lv_color_t buf3_1[LV_HOR_RES_MAX * LV_VER_RES_MAX];            /*A screen sized buffer*/
-    // static lv_color_t buf3_2[LV_HOR_RES_MAX * LV_VER_RES_MAX];            /*An other screen sized buffer*/
-    // lv_disp_buf_init(&disp_buf_3, buf3_1, buf3_2, LV_HOR_RES_MAX * LV_VER_RES_MAX);   /*Initialize the display buffer*/
-
+    lv_disp_buf_init(&disp_buf_1, spi_tx_buf, NULL, LV_HOR_RES_MAX * BUFFER_ROWS);   /*Initialize the display buffer*/
 
     /*-----------------------------------
      * Register the display in LVGL
