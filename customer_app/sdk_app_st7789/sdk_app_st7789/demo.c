@@ -35,7 +35,6 @@
 #include <semphr.h>
 
 #include "demo.h"            //  For display pins
-#include "display.h"         //  For display functions
 #include "lv_port_disp.h"    //  For display functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
@@ -44,17 +43,17 @@
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
 
-/*
+/* Connect BL602 to ST7789 SPI Display. See demo.h
 | BL602 Pin     | ST7789 SPI          | Wire Colour 
 |:--------------|:--------------------|:-------------------
-| __`GPIO 1`__  | Do Not <br> Connect <br> _(MISO)_ | Green 
-| __`GPIO 2`__  | Do Not <br> Connect | Do Not <br> Connect
+| __`GPIO 1`__  | Do Not <br> Connect <br> _(MISO)_ |
+| __`GPIO 2`__  | Do Not <br> Connect |
 | __`GPIO 3`__  | `SCL`               | Yellow 
 | __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
 | __`GPIO 5`__  | `DC`                | White
-| __`GPIO 11`__ | `RST`               | Black
+| __`GPIO 11`__ | `RST`               | Orange
 | __`GPIO 12`__ | `BLK`               | Purple
-| __`GPIO 14`__ | Do Not <br> Connect | Orange
+| __`GPIO 14`__ | Do Not <br> Connect |
 | __`3V3`__     | `3.3V`              | Red
 | __`GND`__     | `GND`               | Black
 */
@@ -62,13 +61,12 @@
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
-/// SPI Device Instance
+/// SPI Device Instance. Used by display.c
 spi_dev_t spi_device;
 
-/// Init the display
+/// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
-    //  Configure the SPI Port
     //  Note: The Chip Select Pin below (2) must NOT be the same as DISPLAY_CS_PIN (14). 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 
@@ -76,12 +74,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     //  when observed with a Logic Analyser. This contradicts the 
     //  BL602 Reference Manual. Why ???
 
-    //  TODO: We must set Polarity=0, Phase=1. Though the Logic Analyser shows
-    //  that it looks like Phase=0. Why ???
-
-    //  TODO: Setting Serial Data Out to Pin 0 will switch on the WiFi LED.
-    //  Why ???
-
+    //  Configure the SPI Port
     int rc = spi_init(
         &spi_device, //  SPI Device
         SPI_PORT,    //  SPI Port
@@ -102,14 +95,14 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// Display image. Should be done after `display_init`
+/// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
     int rc = display_image();
     assert(rc == 0);
 }
 
-/// Show the interrupt counters
+/// Command to show the interrupt counters
 static void test_display_result(char *buf, int len, int argc, char **argv)
 {
     //  Show the Interrupt Counters, Status and Error Codes defined in components/hal_drv/bl602_hal/hal_spi.c
@@ -125,41 +118,41 @@ static void test_display_result(char *buf, int len, int argc, char **argv)
     printf("Rx Error:      0x%x\r\n", g_rx_error);
 }
 
-/// Switch on backlight. Should be done after `display_init`
+/// Command to switch on backlight. Should be done after `display_init`
 static void test_backlight_on(char *buf, int len, int argc, char **argv)
 {
     int rc = backlight_on();
     assert(rc == 0);
 }
 
-/// Switch off backlight. Should be done after `display_init`
+/// Command to switch off backlight. Should be done after `display_init`
 static void test_backlight_off(char *buf, int len, int argc, char **argv)
 {
     int rc = backlight_off();
     assert(rc == 0);
 }
 
-/// Init LVGL. Should be done after `display_init`
+/// Command to init LVGL. Should be done after `display_init`
 static void test_lvgl_init(char *buf, int len, int argc, char **argv)
 {
     lvgl_init();
 }
 
-/// Test LVGL. Should be done after `lvgl_init`
+/// Command to test LVGL. Should be done after `lvgl_init`
 static void test_lvgl_test(char *buf, int len, int argc, char **argv)
 {
     int rc = lvgl_test();
     assert(rc == 0);
 }
 
-/// Render LVGL. Should be done after `lvgl_test`
+/// Command to render LVGL. Should be done after `lvgl_test`
 static void test_lvgl_render(char *buf, int len, int argc, char **argv)
 {
     int rc = lvgl_render();
     assert(rc == 0);
 }
 
-/// Init display, init LVGL, test LVGL, render LVGL
+/// Command to init display, init LVGL, test LVGL, render LVGL
 static void test_a(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
     test_lvgl_init("", 0, 0, NULL);
@@ -167,13 +160,13 @@ static void test_a(char *buf, int len, int argc, char **argv) {
     test_lvgl_render("", 0, 0, NULL);
 }
 
-/// Init display, display image
+/// Command to init display, display image
 static void test_b(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
     test_display_image("", 0, 0, NULL);
 }
 
-// STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
+/// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_init",   "Init display",  test_display_init},
     {"display_image",  "Display image", test_display_image},
@@ -187,15 +180,16 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"b",              "Init display, display image", test_b},
 };
 
+/// Init the command-line interface
 int cli_init(void)
 {
-    // static command(s) do NOT need to call aos_cli_register_command(s) to register.
-    // However, calling aos_cli_register_command(s) here is OK but is of no effect as cmds_user are included in cmds list.
-    // XXX NOTE: Calling this *empty* function is necessary to make cmds_user in this file to be kept in the final link.
-    //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
-
     //  To run a command at startup, use this...
     //  test_b("", 0, 0, NULL);
 
     return 0;
+
+    // static command(s) do NOT need to call aos_cli_register_command(s) to register.
+    // However, calling aos_cli_register_command(s) here is OK but is of no effect as cmds_user are included in cmds list.
+    // XXX NOTE: Calling this *empty* function is necessary to make cmds_user in this file to be kept in the final link.
+    //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
 }

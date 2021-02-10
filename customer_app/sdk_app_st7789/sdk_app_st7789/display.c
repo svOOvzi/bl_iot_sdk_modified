@@ -181,14 +181,14 @@ int display_image(void) {
             //  How many bytes we will transmit.
             uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
 
-            //  Read the bytes from flash memory.
+            //  Read the bytes from flash ROM.
             uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
             printf("%lx: ", offset); console_dump(image_data + offset, len); printf("\r\n");
 
             //  Set the display window.
             int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
-            //   Memory Write (ST7789 Datasheet Page 202)
+            //   Memory Write: Write the bytes to display (ST7789 Datasheet Page 202)
             rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
             rc = write_data(image_data + offset, len); assert(rc == 0);
 
@@ -232,13 +232,17 @@ static int set_orientation(uint8_t orientation) {
     return 0;
 }
 
-/// Transmit ST7789 command
+/// Transmit ST7789 command and parameters. `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
+    //  Set Data / Command Pin to Low to tell ST7789 this is a command
     int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 0);
     assert(rc == 0);
 
+    //  Transmit the command byte
     rc = transmit_spi(&command, 1);
     assert(rc == 0);
+
+    //  Transmit the parameters as data bytes
     if (params != NULL && len > 0) {
         rc = write_data(params, len);
         assert(rc == 0);
@@ -248,9 +252,11 @@ int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
 
 /// Transmit ST7789 data
 int write_data(const uint8_t *data, uint16_t len) {
+    //  Set Data / Command Pin to High to tell ST7789 this is data
     int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 1);
     assert(rc == 0);
 
+    //  Transmit the data bytes
     rc = transmit_spi(data, len);
     assert(rc == 0);
     return 0;
@@ -277,7 +283,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     transfer.rx_buf = (uint32_t) rx_buf;  //  Receive Buffer
     transfer.len    = len;                //  How many bytes
 
-    //  Select the device
+    //  Select the SPI Peripheral (not used for ST7789)
     printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
     int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
     assert(rc == 0);
@@ -294,7 +300,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     //  hal_spi_transfer will wait for the SPI Transfer to complete before returning.
     //  Now that we're done with the SPI Transfer...
 
-    //  De-select the device
+    //  De-select the SPI Peripheral (not used for ST7789)
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
@@ -313,14 +319,21 @@ static int hard_reset(void) {
 
 /// Switch on backlight
 int backlight_on(void) {
+    //  Set the Backlight Pin to High
     printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
     int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
     assert(rc == 0);
     return 0;
+
+    //  Can we have multiple levels of backlight brightness?
+    //  Yes! Configure the Backlight Pin as a PWM Pin (instead of GPIO).
+    //  Set the PWM Duty Cycle to control the brightness.
+    //  See https://lupyuen.github.io/articles/led#from-gpio-to-pulse-width-modulation-pwm
 }
 
 /// Switch off backlight
 int backlight_off(void) {
+    //  Set the Backlight Pin to Low
     printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
     int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
@@ -329,11 +342,12 @@ int backlight_off(void) {
 
 /// Delay for the specified number of milliseconds
 static void delay_ms(uint32_t ms) {
-    //  TODO: Implement delay. For now we write to console.
+    //  TODO: Implement delay. For now we write to console, which also introduces a delay.
     printf("TODO Delay %d\r\n", ms);
 }
 
-//  Dump "len" number of bytes from "buffer" in hex format.
+/// Dump `len` number of bytes from `buffer` in hex format.
+/// If `len` is greater than 8, dump the first 8 bytes.
 static void console_dump(const uint8_t *buffer, unsigned int len) {
     if (buffer == NULL || len == 0) { return; }
 	for (int i = 0; i < (len > 8 ? 8 : len); i++) { printf("%02x ", buffer[i]); } 
