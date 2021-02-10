@@ -92,8 +92,8 @@ void lv_port_disp_init(void)
 
     /* Example for 1) */
     static lv_disp_buf_t disp_buf_1;
-    static lv_color_t buf1_1[LV_HOR_RES_MAX * 10];                      /*A buffer for 10 rows. TODO: Sync with rxbuf in display.c*/
-    lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * 10);   /*Initialize the display buffer*/
+    static lv_color_t buf1_1[LV_HOR_RES_MAX * BUFFER_ROWS];                      /*A buffer for 10 rows*/
+    lv_disp_buf_init(&disp_buf_1, buf1_1, NULL, LV_HOR_RES_MAX * BUFFER_ROWS);   /*Initialize the display buffer*/
 
     /* Example for 2) */
     // static lv_disp_buf_t disp_buf_2;
@@ -152,8 +152,8 @@ static void disp_init(void)
     /*You code here*/
 }
 
-//  ST7789 Commands. From https://github.com/lupyuen/st7735-lcd-batch-rs/blob/master/src/instruction.rs
-//  TODO: Move to display.c
+/// ST7789 Commands. From https://github.com/almindor/st7789/blob/master/src/instruction.rs
+/// TODO: Move to display.c
 #define RAMWR 0x2C
 
 /* Flush the content of the internal buffer the specific area on the display
@@ -168,7 +168,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
     //  Set the ST7789 display window
     int rc = set_window(area->x1, area->y1, area->x2, area->y2); assert(rc == 0);
 
-    //  Write Pixels (RAMWR): st7735_lcd::draw() → set_pixel()
+    //  Memory Write: Write the bytes to display (ST7789 Datasheet Page 202)
     //  TODO: Move to display.c
     int len = 
         ((area->x2 - area->x1) + 1) *  //  Width

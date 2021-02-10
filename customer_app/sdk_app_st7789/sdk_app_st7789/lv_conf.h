@@ -20,6 +20,9 @@
    Graphical settings
  *====================*/
 
+/// Number of rows in SPI Transmit and Receive Buffers
+#define BUFFER_ROWS             (10)
+
 /* Maximal horizontal and vertical resolution to support by the library.*/
 #define LV_HOR_RES_MAX          (240)
 #define LV_VER_RES_MAX          (240)

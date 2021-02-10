@@ -31,12 +31,9 @@
 /// SPI Device Instance. TODO: Move to demo.h
 extern spi_dev_t spi_device;
 
-/// Max number of SPI data bytes to be transmitted when displaying image
-#define BATCH_SIZE  256
-
 /// Screen Size
-#define ROW_COUNT 240
-#define COL_COUNT 240
+#define ROW_COUNT LV_VER_RES_MAX
+#define COL_COUNT LV_HOR_RES_MAX
 #define BYTES_PER_PIXEL 2
 
 /// ST7789 Colour Settings
@@ -87,9 +84,8 @@ static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 };
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-/// TODO: Sync with buf1_1 in lv_port_disp.c
-static uint8_t rx_buf[10 * 240 * 2];
+/// Contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+static uint8_t rx_buf[BUFFER_ROWS * COL_COUNT * 2];
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
@@ -166,41 +162,27 @@ int init_display(void) {
 /// Display image on ST7789 display controller. 
 /// Derived from https://github.com/lupyuen/pinetime-rust-mynewt/blob/main/logs/spi-non-blocking.log
 int display_image(void) {
+    //  Render each batch of 10 rows
     printf("Displaying image...\r\n");
+    for (uint8_t row = 0; row < ROW_COUNT; row += BUFFER_ROWS) {
+        uint8_t top    = row;
+        uint8_t bottom = (row + BUFFER_ROWS - 1) < ROW_COUNT 
+            ? (row + BUFFER_ROWS - 1) 
+            : (ROW_COUNT - 1);
+        uint8_t left   = 0;
+        uint8_t right  = COL_COUNT - 1;
 
-    //  Render each row of pixels.
-    for (uint8_t row = 0; row < ROW_COUNT; row++) {
-        uint8_t top = row;
-        uint8_t bottom = row;
-        uint8_t left = 0;
-        //  Screen Buffer: 240 * 240 * 2 / 1024 = 112.5 KB
-        //  Render a batch of columns in that row.
-        for (;;) {
-            if (left >= COL_COUNT) { break; }
+        //  Compute the offset and how many bytes we will transmit.
+        uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
+        uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
-            //  How many columns we will render in a batch.
-            uint16_t batch_columns = BATCH_SIZE / BYTES_PER_PIXEL;
-            uint16_t right = left + batch_columns - 1;
-            if (right >= COL_COUNT) { right = COL_COUNT - 1; }
+        //  Set the display window.
+        int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
-            //  How many bytes we will transmit.
-            uint16_t len = (right - left + 1) * BYTES_PER_PIXEL;
-
-            //  Read the bytes from flash ROM.
-            uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
-            printf("%lx: ", offset); console_dump(image_data + offset, len); printf("\r\n");
-
-            //  Set the display window.
-            int rc = set_window(left, top, right, bottom); assert(rc == 0);
-
-            //   Memory Write: Write the bytes to display (ST7789 Datasheet Page 202)
-            rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-            rc = write_data(image_data + offset, len); assert(rc == 0);
-
-            left = right + 1;
-        }
+        //  Memory Write: Write the bytes to display (ST7789 Datasheet Page 202)
+        rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
+        rc = write_data(image_data + offset, len); assert(rc == 0);
     }
-
     printf("Image displayed\r\n");
     return 0;
 }
@@ -344,11 +326,4 @@ int backlight_off(void) {
 static void delay_ms(uint32_t ms) {
     //  TODO: Implement delay. For now we write to console, which also introduces a delay.
     printf("TODO Delay %d\r\n", ms);
-}
-
-/// Dump `len` number of bytes from `buffer` in hex format.
-/// If `len` is greater than 8, dump the first 8 bytes.
-static void console_dump(const uint8_t *buffer, unsigned int len) {
-    if (buffer == NULL || len == 0) { return; }
-	for (int i = 0; i < (len > 8 ? 8 : len); i++) { printf("%02x ", buffer[i]); } 
 }
