@@ -49,14 +49,19 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 
+///////////////////////////////////////////////////////////////////////////////
+//  Defined in lv_port_disp.c
+
+/// Initialise the LVGL driver for ST7789
 void lv_port_disp_init(void);
 
+///////////////////////////////////////////////////////////////////////////////
 //  Defined in display.c
 
 /// Initialise the ST7789 display controller
 int init_display(void);
 
-/// Display image on ST7789 display controller.
+/// Display image on ST7789 display controller
 int display_image(void);
 
 /// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
@@ -74,6 +79,7 @@ int backlight_on(void);
 /// Switch off backlight
 int backlight_off(void);
 
+///////////////////////////////////////////////////////////////////////////////
 //  Defined in lvgl.c
 
 /// Init the LVGL library

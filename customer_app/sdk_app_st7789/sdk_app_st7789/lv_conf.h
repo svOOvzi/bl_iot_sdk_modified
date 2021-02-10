@@ -1,4 +1,5 @@
-//  Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/lv_conf.h
+//  LVGL Configuration. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/lv_conf.h
+//  Compare with lvgl/lvgl_conf_template.h to see modifications specific to BL602 and ST7789.
 /**
  * @file lv_conf.h
  * Configuration file for v7.10.1
@@ -20,7 +21,7 @@
    Graphical settings
  *====================*/
 
-/// Number of rows in SPI Transmit and Receive Buffers
+/// Number of rows in SPI Transmit and Receive Buffers. Used by display.c and lv_port_disp.c
 #define BUFFER_ROWS             (10)
 
 /* Maximal horizontal and vertical resolution to support by the library.*/

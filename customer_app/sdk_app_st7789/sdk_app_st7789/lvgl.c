@@ -22,6 +22,7 @@
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
 
+/// Set to true if LVGL has already been initialised
 static bool started = false;
 
 /// Init the LVGL library

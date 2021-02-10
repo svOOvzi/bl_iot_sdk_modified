@@ -25,7 +25,7 @@
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
-#include "lv_port_disp.h"
+#include "lv_port_disp.h"    //  For display and LVGL functions
 #include "demo.h"
 
 /// SPI Device Instance. TODO: Move to demo.h
