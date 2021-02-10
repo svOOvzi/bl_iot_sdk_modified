@@ -338,11 +338,11 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
     DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
 
-    ////  TODO: SPI Transfer may hang here, waiting for FreeRTOS Event Group 
-    ////  if it isn't notified by DMA Interrupt Handler.  To troubleshoot,
-    ////  comment out ALL lines below until end of function.
-    ////  Also comment out the second bl_gpio_output_set in hal_spi_transfer.
-    ////  And comment out the second bl_gpio_output_set in test_spi_transfer.
+    ////  TODO: To troubleshoot SPI Transfers that hang (like ST7789 at 4 MHz), change...
+    ////      portMAX_DELAY);
+    ////  To...
+    ////      100 / portTICK_PERIOD_MS);
+    ////  Which will change the SPI Timeout from "Wait Forever" to 100 milliseconds. Then check the Interrupt Counters.
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
                                      EVT_GROUP_SPI_DMA_TR,
                                      pdTRUE,
