@@ -101,7 +101,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         EVT_GROUP_SPI_DMA_TR,
         pdTRUE,
         pdTRUE,
-        //  Now we wait 100 max milliseconds.
+        //  Now we wait max 100 milliseconds.
         //  Previously we wait forever: portMAX_DELAY
         100 / portTICK_PERIOD_MS);
 */

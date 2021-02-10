@@ -32,9 +32,9 @@
 extern spi_dev_t spi_device;
 
 /// Screen Size
-#define ROW_COUNT LV_VER_RES_MAX
-#define COL_COUNT LV_HOR_RES_MAX
-#define BYTES_PER_PIXEL 2
+#define ROW_COUNT       LV_VER_RES_MAX        //  240 rows of pixels
+#define COL_COUNT       LV_HOR_RES_MAX        //  240 columns of pixels
+#define BYTES_PER_PIXEL (LV_COLOR_DEPTH / 8)  //  2 bytes per pixel (RGB565 colour)
 
 /// ST7789 Colour Settings
 #define INVERTED 1  //  Display colours are inverted
@@ -84,7 +84,11 @@ static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
 /// Contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-static uint8_t rx_buf[BUFFER_ROWS * COL_COUNT * 2];
+static uint8_t tx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+
+/// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
+/// Contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+static uint8_t rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
