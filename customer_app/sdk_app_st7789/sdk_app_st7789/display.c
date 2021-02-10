@@ -86,6 +86,11 @@ static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 #include "image.inc"
 };
 
+/// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
+/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+/// TODO: Sync with buf1_1 in lv_port_disp.c
+static uint8_t rx_buf[10 * 240 * 2];
+
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
@@ -261,11 +266,6 @@ int write_data(const uint8_t *data, uint16_t len) {
     assert(rc == 0);
     return 0;
 }
-
-/// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
-/// Should contain 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-/// TODO: Sync with buf1_1 in lv_port_disp.c
-static uint8_t rx_buf[10 * 240 * 2];
 
 /// Write to the SPI port
 static int transmit_spi(const uint8_t *data, uint16_t len) {
