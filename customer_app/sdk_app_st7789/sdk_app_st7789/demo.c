@@ -96,6 +96,16 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
+/* To run at max 4 MHz without hanging, edit function hal_spi_dma_trans in components/hal_drv/bl602_hal/hal_spi.c...
+    uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
+        EVT_GROUP_SPI_DMA_TR,
+        pdTRUE,
+        pdTRUE,
+        //  Now we wait 100 max milliseconds.
+        //  Previously we wait forever: portMAX_DELAY
+        100 / portTICK_PERIOD_MS);
+*/
+
 /// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
