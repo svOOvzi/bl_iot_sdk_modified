@@ -7,8 +7,7 @@
 void __assert_func(const char *file, int line,
 		   const char *func, const char *failedexpr)
 {
-////  TODO: We now show assertion failures in development. Uncomment #if ... #endif in production.
-////  #if 0
+#if 0
 	printf("assertion \"%s\" failed: file \"%s\", line %d%s%s\n",
 		 failedexpr, file, line, func ? ", function: " : "",
 		 func ? func : "");
@@ -16,7 +15,7 @@ void __assert_func(const char *file, int line,
 	/* Ensure that nothing runs after this */
 	while (1)
 		;
-////  #endif
+#endif
 }
 
 float strtof(const char *nptr, char **endptr)
