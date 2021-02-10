@@ -96,13 +96,13 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/* To run at max 4 MHz without hanging, edit function hal_spi_dma_trans in components/hal_drv/bl602_hal/hal_spi.c...
+/* To troubleshoot SPI Transfers that hang, edit function hal_spi_dma_trans in components/hal_drv/bl602_hal/hal_spi.c...
     uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
         EVT_GROUP_SPI_DMA_TR,
         pdTRUE,
         pdTRUE,
-        //  Now we wait max 100 milliseconds.
         //  Previously we wait forever: portMAX_DELAY
+        //  Now we wait max 100 milliseconds.
         100 / portTICK_PERIOD_MS);
 */
 
