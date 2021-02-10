@@ -75,7 +75,6 @@ static int hard_reset(void);
 static int set_orientation(uint8_t orientation);
 static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
-static void console_dump(const uint8_t *buffer, unsigned int len);
 
 /// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
 /// from PNG file https://github.com/lupyuen/pinetime-logo-loader/blob/master/logos/pine64-rainbow.png
