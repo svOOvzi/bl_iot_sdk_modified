@@ -77,7 +77,7 @@ int backlight_off(void);
 //  Defined in lvgl.c
 
 /// Init the LVGL library
-void lvgl_init(void);
+int lvgl_init(void);
 
 /// Render a Button Widget and a Label Widget
 int lvgl_test(void);

@@ -25,15 +25,16 @@
 static bool started = false;
 
 /// Init the LVGL library
-void lvgl_init(void) {   
+int lvgl_init(void) {   
     //  Assume that display controller has been initialised 
+    if (started) { return 0; }  //  Init only once
     printf("Init LVGL...\r\n");
-    assert(started == false);
 
     //  Init the LVGL display
     lv_init();
     lv_port_disp_init();
     started = true;
+    return 0;
 }
 
 /// Render a Button Widget and a Label Widget
