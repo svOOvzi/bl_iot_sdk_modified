@@ -80,7 +80,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
         3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        2 * 1000 * 1000,  //  SPI Frequency (2 MHz) (ST7789 hangs at 4 MHz)
+        4 * 1000 * 1000,  //  SPI Frequency (4 MHz, max speed)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         3,   //  (Yellow) SPI Clock Pin 
