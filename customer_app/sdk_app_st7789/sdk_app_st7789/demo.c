@@ -172,16 +172,22 @@ static void test_lvgl_render(char *buf, int len, int argc, char **argv)
 }
 
 /// Command to init display, display image
-static void test_a(char *buf, int len, int argc, char **argv) {
+static void test_1(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
     test_display_image("", 0, 0, NULL);
 }
 
 /// Command to init display, init LVGL, create LVGL widgets, render LVGL display
-static void test_b(char *buf, int len, int argc, char **argv) {
+static void test_2(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
     test_lvgl_init("", 0, 0, NULL);
     test_lvgl_create("", 0, 0, NULL);
+    test_lvgl_render("", 0, 0, NULL);
+}
+
+/// Command to update LVGL widgets, render LVGL display
+static void test_3(char *buf, int len, int argc, char **argv) {
+    test_lvgl_update("", 0, 0, NULL);
     test_lvgl_render("", 0, 0, NULL);
 }
 
@@ -196,8 +202,9 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
     {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
     {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
-    {"a",              "Init display, display image", test_a},
-    {"b",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_b},
+    {"1",              "Init display, display image", test_1},
+    {"2",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_2},
+    {"3",              "Update LVGL widgets, render LVGL display", test_3},
 };
 
 /// Init the command-line interface
