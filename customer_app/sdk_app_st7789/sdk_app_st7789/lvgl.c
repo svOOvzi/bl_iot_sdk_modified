@@ -22,40 +22,70 @@
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
 
-/// Set to true if LVGL has already been initialised
-static bool started = false;
+/// Set to true if LVGL has already been lvgl_initialised
+static bool lvgl_initialised = false;
+
+/// Set to true if LVGL widgets have been created
+static bool lvgl_created = false;
+
+/// Button Widget
+static lv_obj_t *btn = NULL;
+
+/// Label Widget
+static lv_obj_t *label = NULL;
 
 /// Init the LVGL library
 int lvgl_init(void) {   
-    //  Assume that display controller has been initialised 
-    assert(!started);  //  Init only once
+    //  Assume that display controller has been lvgl_initialised 
+    if (lvgl_initialised) { return 0; }  //  Init only once
+    lvgl_initialised = true;
     printf("Init LVGL...\r\n");
 
     //  Init the LVGL display
     lv_init();
     lv_port_disp_init();
-    started = true;
     return 0;
 }
 
-/// Render a Button Widget and a Label Widget
-int lvgl_test(void) {
-    printf("Test LVGL widgets...\r\n");
-    lv_obj_t *btn = lv_btn_create(lv_scr_act(), NULL);  //  Add a button the current screen
-    lv_obj_set_pos(btn, 10, 80);                        //  Set its position
-    lv_obj_set_size(btn, 220, 80);                      //  Set its size
+/// Create a Button Widget and a Label Widget
+int lvgl_create(void) {
+    assert(lvgl_initialised);        //  LVGL must have been initialised
+    if (lvgl_created) { return 0; }  //  Create widgets only once
+    lvgl_created = true;
+    printf("Create LVGL widgets...\r\n");
 
-    lv_obj_t *label = lv_label_create(btn, NULL);       //  Add a label to the button
-    lv_label_set_text(label, "BL602 LVGL");             //  Set the label text
+    btn = lv_btn_create(lv_scr_act(), NULL);  //  Add a button the current screen
+    lv_obj_set_pos(btn, 10, 80);              //  Set its position
+    lv_obj_set_size(btn, 220, 80);            //  Set its size
+
+    label = lv_label_create(btn, NULL);       //  Add a label to the button
+    lv_label_set_text(label, "BL602 LVGL");   //  Set the label text
+    return 0;
+}
+
+/// Update the Widgets
+int lvgl_update(void) {
+    assert(lvgl_created);  //  LVGL widgets must have been created
+    assert(label != NULL);
+    printf("Update LVGL widgets...\r\n");
+
+    //  Set the button label to a new message
+    static int counter = 1;
+    char msg[20]; 
+    snprintf(msg, sizeof(msg), "SO COOL! #%d", counter++);
+    lv_label_set_text(label, msg);
     return 0;
 }
 
 /// Render the LVGL display
 int lvgl_render(void) {
+    assert(lvgl_created);  //  LVGL widgets must have been created
     printf("Render LVGL display...\r\n");
-    //  Must tick at least 100 milliseconds to force LVGL to update display
+
+    //  Must tick at least 100 milliseconds to force LVGL to render display
     lv_tick_inc(100);
-    //  LVGL will flush our display driver
+
+    //  Call LVGL to render the display and flush our display driver
     lv_task_handler();
     return 0;
 }

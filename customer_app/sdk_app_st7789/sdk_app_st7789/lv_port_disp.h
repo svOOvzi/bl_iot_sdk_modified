@@ -90,8 +90,11 @@ int backlight_off(void);
 /// Init the LVGL library
 int lvgl_init(void);
 
-/// Render a Button Widget and a Label Widget
-int lvgl_test(void);
+/// Create a Button Widget and a Label Widget
+int lvgl_create(void);
+
+/// Update the Widgets
+int lvgl_update(void);
 
 /// Render the LVGL display
 int lvgl_render(void);

@@ -150,32 +150,39 @@ static void test_lvgl_init(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
-/// Command to test LVGL. Should be done after `lvgl_init`
-static void test_lvgl_test(char *buf, int len, int argc, char **argv)
+/// Command to create LVGL widgets. Should be done after `lvgl_init`
+static void test_lvgl_create(char *buf, int len, int argc, char **argv)
 {
-    int rc = lvgl_test();
+    int rc = lvgl_create();
     assert(rc == 0);
 }
 
-/// Command to render LVGL. Should be done after `lvgl_test`
+/// Command to update LVGL widgets. Should be done after `lvgl_create`
+static void test_lvgl_update(char *buf, int len, int argc, char **argv)
+{
+    int rc = lvgl_update();
+    assert(rc == 0);
+}
+
+/// Command to render LVGL display. Should be done after `lvgl_create`
 static void test_lvgl_render(char *buf, int len, int argc, char **argv)
 {
     int rc = lvgl_render();
     assert(rc == 0);
 }
 
-/// Command to init display, init LVGL, test LVGL, render LVGL
+/// Command to init display, display image
 static void test_a(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
-    test_lvgl_init("", 0, 0, NULL);
-    test_lvgl_test("", 0, 0, NULL);
-    test_lvgl_render("", 0, 0, NULL);
+    test_display_image("", 0, 0, NULL);
 }
 
-/// Command to init display, display image
+/// Command to init display, init LVGL, create LVGL widgets, render LVGL display
 static void test_b(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
-    test_display_image("", 0, 0, NULL);
+    test_lvgl_init("", 0, 0, NULL);
+    test_lvgl_create("", 0, 0, NULL);
+    test_lvgl_render("", 0, 0, NULL);
 }
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
@@ -185,11 +192,12 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_result", "Show result",   test_display_result},
     {"backlight_on",   "Backlight on",  test_backlight_on},
     {"backlight_off",  "Backlight off", test_backlight_off},
-    {"lvgl_init",      "Init LVGL",     test_lvgl_init},
-    {"lvgl_test",      "Test LVGL",     test_lvgl_test},
-    {"lvgl_render",    "Render LVGL",   test_lvgl_render},
-    {"a",              "Init display, init LVGL, test LVGL, render LVGL", test_a},
-    {"b",              "Init display, display image", test_b},
+    {"lvgl_init",      "Init LVGL",            test_lvgl_init},
+    {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
+    {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
+    {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
+    {"a",              "Init display, display image", test_a},
+    {"b",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_b},
 };
 
 /// Init the command-line interface
