@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  LVGL Interface for ST7789. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/lvgl.c
+//  LVGL User Interface. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/lvgl.c
 #include <stdio.h>
 #include <assert.h>
 #include "lvgl/lvgl.h"
