@@ -255,7 +255,7 @@ int write_data(const uint8_t *data, uint16_t len) {
     return 0;
 }
 
-/// Write to the SPI port
+/// Write to the SPI port. `data` is the array of bytes to be written. `len` is the number of bytes.
 static int transmit_spi(const uint8_t *data, uint16_t len) {
     assert(data != NULL);
     if (len == 0) { return 0; }
