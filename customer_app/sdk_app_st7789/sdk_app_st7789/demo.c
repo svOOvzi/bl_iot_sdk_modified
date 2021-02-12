@@ -81,7 +81,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
         3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
+        3 * 1000 * 1000,  //  SPI Frequency (3 MHz, reduce this in case of problems)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         3,   //  (Yellow) SPI Clock Pin 
@@ -211,7 +211,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
 int cli_init(void)
 {
     //  To run a command at startup, use this...
-    //  test_b("", 0, 0, NULL);
+    //  test_1("", 0, 0, NULL);
 
     return 0;
 
