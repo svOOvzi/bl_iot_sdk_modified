@@ -210,7 +210,7 @@ int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
     return 0;
 }
 
-/// Set the display orientation
+/// Set the display orientation: Portrait, Landscape, PortraitSwapped or LandscapeSwapped
 static int set_orientation(uint8_t orientation) {
     //  Memory Data Access Control (ST7789 Datasheet Page 215)
     if (RGB) {
