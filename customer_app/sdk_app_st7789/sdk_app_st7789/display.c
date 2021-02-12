@@ -160,6 +160,7 @@ int display_image(void) {
     //  Render each batch of 10 rows
     printf("Displaying image...\r\n");
     for (uint8_t row = 0; row < ROW_COUNT; row += BUFFER_ROWS) {
+        //  Compute the (left, top) and (right, bottom) coordinates of the 10-row window
         uint8_t top    = row;
         uint8_t bottom = (row + BUFFER_ROWS - 1) < ROW_COUNT 
             ? (row + BUFFER_ROWS - 1) 
@@ -167,14 +168,14 @@ int display_image(void) {
         uint8_t left   = 0;
         uint8_t right  = COL_COUNT - 1;
 
-        //  Compute the offset and how many bytes we will transmit.
+        //  Compute the image offset and how many bytes we will transmit
         uint32_t offset = ((top * COL_COUNT) + left) * BYTES_PER_PIXEL;
         uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
         //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
         memcpy(spi_tx_buf, image_data + offset, len);
 
-        //  Set the display window.
+        //  Set the display window
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
         //  Memory Write: Write the bytes from RAM to display (ST7789 Datasheet Page 202)
