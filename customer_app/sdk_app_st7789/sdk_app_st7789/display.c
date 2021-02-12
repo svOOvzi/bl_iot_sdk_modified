@@ -133,7 +133,7 @@ int init_display(void) {
 
     //  Normal Display Mode On (ST7789 Datasheet Page 187)
     rc = write_command(NORON, NULL, 0);  assert(rc == 0);
-    delay_ms(10);  //  Need to wait at least 200 milliseconds
+    delay_ms(10);  //  Need to wait at least 10 milliseconds
 
     //  Display Inversion: Invert the display colours (light becomes dark and vice versa) (ST7789 Datasheet Pages 188, 190)
     if (INVERTED) {
