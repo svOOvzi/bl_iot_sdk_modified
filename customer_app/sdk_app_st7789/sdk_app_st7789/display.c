@@ -62,8 +62,6 @@ extern spi_dev_t spi_device;
 #define MADCTL   0x36
 #define VSCAD    0x37
 #define COLMOD   0x3A
-#define PWCTR1   0xC0
-#define VCMOFSET 0xC5
 
 /// ST7789 Orientation. From https://github.com/almindor/st7789/blob/master/src/lib.rs#L42-L52
 #define Portrait         0x00  //  No inverting
