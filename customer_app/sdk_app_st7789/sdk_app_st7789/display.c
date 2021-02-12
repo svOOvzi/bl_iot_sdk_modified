@@ -129,12 +129,6 @@ int init_display(void) {
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
-    //  TODO: This is needed to fix the Fallen Lorry problem, 
-    //  although this command comes from ST7735, not ST7789.
-    //  https://twitter.com/MisterTechBlog/status/1359077419156598785?s=20
-    static const uint8_t PWCTR1_PARA[] = { 0xA2, 0x02, 0x84 };
-    rc = write_command(PWCTR1, PWCTR1_PARA, sizeof(PWCTR1_PARA));  assert(rc == 0);
-
     //  Vertical Scrolling Definition: 0 TSA, 320 VSA, 0 BSA (ST7789 Datasheet Page 208)
     static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
     rc = write_command(VSCRDER, VSCRDER_PARA, sizeof(VSCRDER_PARA));  assert(rc == 0);
@@ -150,8 +144,8 @@ int init_display(void) {
         rc = write_command(INVOFF, NULL, 0);  assert(rc == 0);
     }
 
-    //  Set orientation to Landscape or Portrait
-    rc = set_orientation(Landscape);  assert(rc == 0);
+    //  Set display orientation to Portrait
+    rc = set_orientation(Portrait);  assert(rc == 0);
 
     //  Interface Pixel Format: 16-bit RGB565 colour (ST7789 Datasheet Page 224)
     static const uint8_t COLMOD_PARA[] = { 0x55 };
