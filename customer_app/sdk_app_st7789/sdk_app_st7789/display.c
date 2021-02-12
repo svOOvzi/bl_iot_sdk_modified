@@ -225,7 +225,7 @@ static int set_orientation(uint8_t orientation) {
     return 0;
 }
 
-/// Transmit ST7789 command and parameters. `len` is the number of parameters.
+/// Transmit ST7789 command and parameters. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     //  Set Data / Command Pin to Low to tell ST7789 this is a command
     int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 0);
@@ -243,7 +243,7 @@ int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     return 0;
 }
 
-/// Transmit ST7789 data
+/// Transmit data to ST7789. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len) {
     //  Set Data / Command Pin to High to tell ST7789 this is data
     int rc = bl_gpio_output_set(DISPLAY_DC_PIN, 1);
