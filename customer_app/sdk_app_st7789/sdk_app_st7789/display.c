@@ -75,7 +75,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 
 /// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
-/// from PNG file https://github.com/lupyuen/pinetime-logo-loader/blob/master/logos/pine64-rainbow.png
+/// from PNG file https://github.com/lupyuen/lupyuen.github.io/blob/master/images/display-jewel.png
 static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 #include "image.inc"
 };
