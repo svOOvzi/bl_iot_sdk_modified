@@ -36,7 +36,7 @@ static lv_obj_t *label = NULL;
 
 /// Init the LVGL library
 int lvgl_init(void) {   
-    //  Assume that display controller has been lvgl_initialised 
+    //  Assume that display controller has been initialised 
     if (lvgl_initialised) { return 0; }  //  Init only once
     lvgl_initialised = true;
     printf("Init LVGL...\r\n");
