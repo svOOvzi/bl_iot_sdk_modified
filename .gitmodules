@@ -1,3 +1,6 @@
 [submodule "docs"]
 	path = docs
 	url = https://github.com/pine64/bl602-docs.git
+[submodule "customer_app/sdk_app_st7789/sdk_app_st7789/lvgl"]
+	path = customer_app/sdk_app_st7789/sdk_app_st7789/lvgl
+	url = https://github.com/lvgl/lvgl

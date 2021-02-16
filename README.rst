@@ -31,6 +31,8 @@ Changes
 
 - "master" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_spi/
 
+- "st7789" branch contains a new ST7789 SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/st7789/customer_app/sdk_app_st7789/
+
 BL602 SDK (Pine64 version)
 ==========================
 

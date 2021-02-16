@@ -39,6 +39,17 @@ COMPONENT_LIBRARY = lib$(COMPONENT_NAME).a
 # Source dirs a component has. Default to root directory of component.
 COMPONENT_SRCDIRS = .
 
+#### TODO: Add LVGL to build in a cleaner way
+COMPONENT_SRCDIRS += \
+	./lvgl/src/lv_core \
+	./lvgl/src/lv_draw \
+	./lvgl/src/lv_font \
+	./lvgl/src/lv_gpu  \
+	./lvgl/src/lv_hal  \
+	./lvgl/src/lv_misc   \
+	./lvgl/src/lv_themes \
+	./lvgl/src/lv_widgets
+
 # By default, include only the include/ dir.
 COMPONENT_ADD_INCLUDEDIRS = . include
 COMPONENT_ADD_LDFLAGS =

@@ -197,6 +197,19 @@ int cli_init(void)
     return 0;
 }
 
+/// TODO: We now show assertion failures in development.
+/// For production, comment out this function to use the system default,
+/// which loops forever without messages.
+void __assert_func(const char *file, int line, const char *func, const char *failedexpr)
+{
+    //  Show the assertion failure, file, line, function name
+	printf("Assertion Failed \"%s\": file \"%s\", line %d%s%s\r\n",
+        failedexpr, file, line, func ? ", function: " : "",
+        func ? func : "");
+	//  Loop forever, do not pass go, do not collect $200
+	for (;;) {}
+}
+
 #ifdef NOTUSED
 Testing BME280 SPI with Bus Pirate:
 (See http://dangerousprototypes.com/docs/SPI)
