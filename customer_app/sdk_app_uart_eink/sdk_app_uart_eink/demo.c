@@ -133,9 +133,11 @@ static void write_image_picture(void) {
 static void display_image(char *buf, int len, int argc, char **argv)
 {
     //  Verify size of image
+    if (sizeof(IMAGE_BLACK) != 2756) { printf("Error: IMAGE_BLACK has %d bytes, expecting 2756\r\n", sizeof(IMAGE_BLACK)); }
+    if (sizeof(IMAGE_RED)   != 2756) { printf("Error: IMAGE_RED has %d bytes, expecting 2756\r\n", sizeof(IMAGE_BLACK)); }
     assert(sizeof(IMAGE_BLACK) == 2756);
     assert(sizeof(IMAGE_RED)   == 2756);
-    
+
     //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
     int rc = bl_uart_init(
         UART_PORT,  //  UART Port 1
