@@ -53,10 +53,12 @@ void send_begin()
         if (ch > 0) { printf("%c", ch); }
         if (ch == 'c') { break; }
     }
+    printf("Received 'c'\r\n");
 
     //  Send 'a'
     int rc = bl_uart_data_send(UART_PORT, 'a');
     assert(rc == 0);
+    printf("Sent 'a'\r\n");
 
     //  Wait until 'b' is received
     for (;;) {
@@ -65,6 +67,12 @@ void send_begin()
         if (ch > 0) { printf("%c", ch); }
         if (ch == 'b') { break; }
     }
+    printf("Received 'b'\r\n");
+
+    //  Note that we're polling the UART Port, which is OK because we're
+    //  mostly transmitting data, and receiving little data. If we're
+    //  receiving lots of data, polling might lose some received data.
+    //  For such cases, use UART Interrupts or DMA.
 }
 
 static void uart_task(void *arg)
