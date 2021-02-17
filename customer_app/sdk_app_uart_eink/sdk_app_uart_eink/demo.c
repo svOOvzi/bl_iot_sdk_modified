@@ -106,6 +106,7 @@ static void send_data(const uint8_t* data, uint32_t data_len) {
 /// Send Black and Red Image Data to display
 static void write_image_picture(void) {
     //  Send Black Pixels to display in 13 chunks of 212 bytes
+    printf("Sending black pixels...\r\n");
     for (int i = 0; i < 13; i++) {
         //  Send a chunk of 212 bytes
         send_data(&IMAGE_BLACK[0 + i * 212], 212);
@@ -118,6 +119,7 @@ static void write_image_picture(void) {
     vTaskDelay(90 / portTICK_PERIOD_MS);
 
     //  Send Red Pixels to display in 13 chunks of 212 bytes
+    printf("Sending red pixels...\r\n");
     for (int i = 0; i < 13; i++) {
         //  Send a chunk of 212 bytes
         send_data(&IMAGE_RED[0 + i * 212], 212);
@@ -162,6 +164,9 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
 /// Init the command-line interface
 int cli_init(void)
 {
+    //  To run a command at startup, use this...
+    //  display_image("", 0, 0, NULL);
+
     return 0;
 }
 
