@@ -47,6 +47,7 @@
 /// Receive 'c', send 'a', receive 'b'
 void send_begin() 
 {
+    printf("Doing start transfer handshake...\r\n");
     //  Wait until 'c' is received
     int last_ch = 0;
     for (;;) {
@@ -58,7 +59,7 @@ void send_begin()
         if (ch == 'c') { break; }
         if (ch != last_ch) { printf("0x%02x ", ch); last_ch = ch; }
     }
-    printf("Received 'c'\r\n");
+    printf("\r\nReceived 'c'\r\n");
 
     //  Send 'a'
     int rc = bl_uart_data_send(UART_PORT, 'a');
@@ -75,7 +76,8 @@ void send_begin()
         if (ch == 'b') { break; }
         if (ch != last_ch) { printf("0x%02x ", ch); last_ch = ch; }
     }
-    printf("Received 'b'\r\n");
+    printf("\r\nReceived 'b'\r\n");
+    printf("Start transfer handshake OK\r\n");
 
     //  Note that we're polling the UART Port, which is OK because we're
     //  mostly transmitting data, and receiving little data. If we're
