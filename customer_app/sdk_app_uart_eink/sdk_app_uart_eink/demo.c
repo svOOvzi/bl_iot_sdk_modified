@@ -39,11 +39,11 @@
 #include <bl_uart.h>
 #include "demo.h"
 
-//  Use UART Port 1 (UART Port 0 is reserved for console)
+/// Use UART Port 1 (UART Port 0 is reserved for console)
 #define UART_PORT 1
 
-//  Do the Start Transfer Handshake with E-Ink Display:
-//  Receive 'c', send 'a', receive 'b'
+/// Do the Start Transfer Handshake with E-Ink Display:
+/// Receive 'c', send 'a', receive 'b'
 void send_begin() 
 {
     //  Wait until 'c' is received
@@ -75,6 +75,7 @@ void send_begin()
     //  For such cases, use UART Interrupts or DMA.
 }
 
+/// Task Function that will be run for this firmware
 static void uart_task(void *arg)
 {
     //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
@@ -92,9 +93,15 @@ static void uart_task(void *arg)
     send_begin();
 }
 
+/// Create a new FreeRTOS Task with 2 KB stack size
 void ci_loop_proc()
 {
-    aos_task_new("uart_task", uart_task, "", 0);
+    aos_task_new(
+        "uart_task",  //  Task Name
+        uart_task,    //  Task Function
+        "",           //  Task Parameter
+        2048          //  Stack Size
+    );
 }
 
 /// TODO: We now show assertion failures in development.
