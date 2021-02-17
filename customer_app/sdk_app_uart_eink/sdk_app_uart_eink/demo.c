@@ -52,11 +52,11 @@ void send_begin()
     for (;;) {
         //  Read one byte from UART Port, returns -1 if nothing read
         int ch = bl_uart_data_recv(UART_PORT);
-        if (ch > 0 && ch != last_ch) { printf("%c", ch); }
+        if (ch < 0) { continue; }  //  Loop until we receive something
 
         //  Stop when we receive 'c'
         if (ch == 'c') { break; }
-        last_ch = ch;
+        if (ch != last_ch) { printf("0x%02x ", ch); last_ch = ch; }
     }
     printf("Received 'c'\r\n");
 
@@ -69,11 +69,11 @@ void send_begin()
     for (;;) {
         //  Read one byte from UART Port, returns -1 if nothing read
         int ch = bl_uart_data_recv(UART_PORT);
-        if (ch > 0 && ch != last_ch) { printf("%c", ch); }
+        if (ch < 0) { continue; }  //  Loop until we receive something
 
         //  Stop when we receive 'b'
         if (ch == 'b') { break; }
-        last_ch = ch;
+        if (ch != last_ch) { printf("0x%02x ", ch); last_ch = ch; }
     }
     printf("Received 'b'\r\n");
 
@@ -89,8 +89,8 @@ static void display_image(char *buf, int len, int argc, char **argv)
     //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
     int rc = bl_uart_init(
         UART_PORT,  //  UART Port 1
-        4,          //  Tx Pin
-        3,          //  Rx Pin
+        4,          //  Tx Pin (Blue)
+        3,          //  Rx Pin (Yellow)
         255,        //  CTS Unused
         255,        //  UTS Unused
         230400      //  Buad Rate
