@@ -142,7 +142,11 @@ static void aos_loop_proc(void *pvParameters)
         aos_poll_read_fd(fd_console, aos_cli_event_cb_read_get(), (void*)0x12345678);
         _cli_init();
     }
-    ci_loop_proc();
+
+    //  Init the command-line interface
+    cli_init();
+
+    //  Start the command-line interface
     aos_loop_run();
 
     puts("------------------------------------------\r\n");

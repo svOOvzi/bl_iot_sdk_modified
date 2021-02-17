@@ -36,7 +36,8 @@
 #include <aos/yloop.h>
 #include <vfs.h>
 #include <utils_log.h>
-#include <bl_uart.h>
+#include <bl_uart.h>  //  For BL602 Low Level UART HAL
+#include <cli.h>      //  For STATIC_CLI_CMD_ATTRIBUTE
 #include "demo.h"
 
 /// Use UART Port 1 (UART Port 0 is reserved for console)
@@ -47,11 +48,15 @@
 void send_begin() 
 {
     //  Wait until 'c' is received
+    int last_ch = 0;
     for (;;) {
         //  Read one byte from UART Port, returns -1 if nothing read
         int ch = bl_uart_data_recv(UART_PORT);
-        if (ch > 0) { printf("%c", ch); }
+        if (ch > 0 && ch != last_ch) { printf("%c", ch); }
+
+        //  Stop when we receive 'c'
         if (ch == 'c') { break; }
+        last_ch = ch;
     }
     printf("Received 'c'\r\n");
 
@@ -64,8 +69,11 @@ void send_begin()
     for (;;) {
         //  Read one byte from UART Port, returns -1 if nothing read
         int ch = bl_uart_data_recv(UART_PORT);
-        if (ch > 0) { printf("%c", ch); }
+        if (ch > 0 && ch != last_ch) { printf("%c", ch); }
+
+        //  Stop when we receive 'b'
         if (ch == 'b') { break; }
+        last_ch = ch;
     }
     printf("Received 'b'\r\n");
 
@@ -75,8 +83,8 @@ void send_begin()
     //  For such cases, use UART Interrupts or DMA.
 }
 
-/// Task Function that will be run for this firmware
-static void uart_task(void *arg)
+/// Command to display image
+static void display_image(char *buf, int len, int argc, char **argv)
 {
     //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
     int rc = bl_uart_init(
@@ -91,17 +99,19 @@ static void uart_task(void *arg)
 
     //  Do the Start Transfer Handshake with E-Ink Display
     send_begin();
+
+    //  TODO: Send the display data
 }
 
-/// Create a new FreeRTOS Task with 2 KB stack size
-void ci_loop_proc()
+/// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
+const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
+    {"display_image",  "Display image", display_image},
+};
+
+/// Init the command-line interface
+int cli_init(void)
 {
-    aos_task_new(
-        "uart_task",  //  Task Name
-        uart_task,    //  Task Function
-        "",           //  Task Parameter
-        2048          //  Stack Size
-    );
+    return 0;
 }
 
 /// TODO: We now show assertion failures in development.
@@ -116,3 +126,13 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 	//  Loop forever, do not pass go, do not collect $200
 	for (;;) {}
 }
+
+#ifdef NOTUSED
+    /// Create a new FreeRTOS Task with 2 KB stack size
+    aos_task_new(
+        "uart_task",  //  Task Name
+        uart_task,    //  Task Function
+        "",           //  Task Parameter
+        2048          //  Stack Size
+    );
+#endif  //  NOTUSED
