@@ -104,7 +104,7 @@ static void send_data(const uint8_t* data, uint32_t data_len) {
 }
 
 /// Send Black and Red Image Data to display
-static void write_image_picture(void) {
+static void write_image_picture(void) {    
     //  Send Black Pixels to display in 13 chunks of 212 bytes
     printf("Sending black pixels...\r\n");
     for (int i = 0; i < 13; i++) {
@@ -132,6 +132,10 @@ static void write_image_picture(void) {
 /// Command to display image
 static void display_image(char *buf, int len, int argc, char **argv)
 {
+    //  Verify size of image
+    assert(sizeof(IMAGE_BLACK) == 2756);
+    assert(sizeof(IMAGE_RED)   == 2756);
+    
     //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
     int rc = bl_uart_init(
         UART_PORT,  //  UART Port 1
