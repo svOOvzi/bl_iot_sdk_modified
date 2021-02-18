@@ -2,4 +2,4 @@
 
 Demo Firmware for Grove E-Ink Display with UART Interface
 
-See https://wiki.seeedstudio.com/Grove-Triple_Color_E-Ink_Display_2_13/
+See the article ["PineCone BL602 Talks UART to Grove E-Ink Display"](https://lupyuen.github.io/articles/uart)

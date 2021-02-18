@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"PineCone BL602 Talks UART to Grove E-Ink Display" <https://lupyuen.github.io/articles/uart>`_
+
 - `"PineCone BL602 Blasting Pixels to ST7789 Display with LVGL Library" <https://lupyuen.github.io/articles/display>`_
 
 - `"PineCone BL602 talks SPI too!" <https://lupyuen.github.io/articles/spi>`_
