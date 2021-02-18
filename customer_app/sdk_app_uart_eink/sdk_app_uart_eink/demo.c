@@ -138,7 +138,7 @@ static void display_image(char *buf, int len, int argc, char **argv)
     assert(sizeof(IMAGE_BLACK) == 2756);
     assert(sizeof(IMAGE_RED)   == 2756);
 
-    //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 for Rx at 230.4 kbps
+    //  Init UART Port 1 with Tx Pin 4, Rx Pin 3 at 230.4 kbps
     int rc = bl_uart_init(
         UART_PORT,  //  UART Port 1
         4,          //  Tx Pin (Blue)
