@@ -144,8 +144,8 @@ static void display_image(char *buf, int len, int argc, char **argv)
         4,          //  Tx Pin (Blue)
         3,          //  Rx Pin (Yellow)
         255,        //  CTS Unused
-        255,        //  UTS Unused
-        230400      //  Buad Rate
+        255,        //  RTS Unused
+        230400      //  Baud Rate
     );
     assert(rc == 0);
 
