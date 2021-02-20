@@ -1,3 +1,4 @@
+//  Based on https://github.com/apache/mynewt-core/blob/master/hw/drivers/lora/sx1276/include/radio/radio.h
 /*!
  * \file      radio.h
  *

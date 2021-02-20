@@ -1,3 +1,4 @@
+//  Based on https://github.com/apache/mynewt-core/blob/master/hw/drivers/lora/sx1276/src/sx1276.c
 /*
  / _____)             _              | |
 ( (____  _____ ____ _| |_ _____  ____| |__
