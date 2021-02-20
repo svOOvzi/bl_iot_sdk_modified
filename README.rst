@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"PineCone BL602 Talks UART to Grove E-Ink Display" <https://lupyuen.github.io/articles/uart>`_
+
 - `"PineCone BL602 Blasting Pixels to ST7789 Display with LVGL Library" <https://lupyuen.github.io/articles/display>`_
 
 - `"PineCone BL602 talks SPI too!" <https://lupyuen.github.io/articles/spi>`_
@@ -34,6 +36,8 @@ Changes
 - "master" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_spi/
 
 - "master" branch contains a new Demo Firmware for ST7789 SPI Display + LVGL Graphics Library: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_st7789/
+
+- "eink" branch contains a new Demo Firmware for Grove E-Ink Display with UART Interface: https://github.com/lupyuen/bl_iot_sdk/blob/eink/customer_app/sdk_app_uart_eink/
 
 BL602 SDK (Pine64 version)
 ==========================
