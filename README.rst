@@ -41,6 +41,8 @@ Changes
 
 - "master" branch contains a new Demo Firmware for Grove E-Ink Display with UART Interface: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_uart_eink/
 
+- "lora" branch contains a new Demo Firmware for LoRa RFM96 with SPI Interface: https://github.com/lupyuen/bl_iot_sdk/blob/lora/customer_app/sdk_app_lora/
+
 BL602 SDK (Pine64 version)
 ==========================
 
