@@ -20,7 +20,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 
 extern DioIrqHandler *DioIrq[];
 
-#if MYNEWT_VAL(SX1276_HAS_ANT_SW)
+#if SX1276_HAS_ANT_SW
 /*!
  * Flag used to set the RF switch control pins in low power mode when the radio is not active.
  */
@@ -64,7 +64,7 @@ SX1276IoInit(void)
     struct hal_spi_settings spi_settings;
     int rc;
 
-#if MYNEWT_VAL(SX1276_HAS_ANT_SW)
+#if SX1276_HAS_ANT_SW
     rc = hal_gpio_init_out(SX1276_RXTX, 0);
     assert(rc == 0);
 #endif
@@ -163,13 +163,13 @@ SX1276GetPaSelect(uint32_t channel)
     uint8_t pacfg;
 
     if (channel < RF_MID_BAND_THRESH) {
-#if (MYNEWT_VAL(SX1276_LF_USE_PA_BOOST) == 1)
+#if (SX1276_LF_USE_PA_BOOST == 1)
         pacfg = RF_PACONFIG_PASELECT_PABOOST;
 #else
         pacfg = RF_PACONFIG_PASELECT_RFO;
 #endif
     } else {
-#if (MYNEWT_VAL(SX1276_HF_USE_PA_BOOST) == 1)
+#if (SX1276_HF_USE_PA_BOOST == 1)
         pacfg = RF_PACONFIG_PASELECT_PABOOST;
 #else
         pacfg = RF_PACONFIG_PASELECT_RFO;
@@ -179,7 +179,7 @@ SX1276GetPaSelect(uint32_t channel)
     return pacfg;
 }
 
-#if MYNEWT_VAL(SX1276_HAS_ANT_SW)
+#if SX1276_HAS_ANT_SW
 void SX1276SetAntSwLowPower( bool status )
 {
     if (RadioIsActive != status) {

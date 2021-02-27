@@ -75,7 +75,7 @@ void SX1276SetRfTxPower(int8_t power);
  */
 uint8_t SX1276GetPaSelect(uint32_t channel);
 
-#if MYNEWT_VAL(SX1276_HAS_ANT_SW)
+#if SX1276_HAS_ANT_SW
 /*!
  * \brief Set the RF Switch I/Os pins in Low Power mode
  *
