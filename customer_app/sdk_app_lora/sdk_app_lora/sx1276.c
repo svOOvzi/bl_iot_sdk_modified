@@ -16,15 +16,10 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include "os/mynewt.h"
-#include "os/os.h"
-#include "hal/hal_gpio.h"
-#include "hal/hal_spi.h"
-#include "bsp/bsp.h"
-#include "radio/radio.h"
+#include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
-#include "lora/utilities.h"
+#include "utilities.h"
 
 /*
  * Local types definition

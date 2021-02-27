@@ -16,8 +16,6 @@ Maintainer: Miguel Luis and Gregory Cristian
 #ifndef __SX1276_ARCH_H__
 #define __SX1276_ARCH_H__
 
-#include "hal/hal_gpio.h"
-
 #define RADIO_SPI_IDX               MYNEWT_VAL(SX1276_SPI_IDX)
 #define RADIO_NSS                   MYNEWT_VAL(SX1276_SPI_CS_PIN)
 

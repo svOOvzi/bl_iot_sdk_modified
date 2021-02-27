@@ -14,9 +14,7 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 Maintainer: Miguel Luis and Gregory Cristian
 */
 #include <assert.h>
-#include "hal/hal_spi.h"
-#include "bsp/bsp.h"
-#include "radio/radio.h"
+#include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
 

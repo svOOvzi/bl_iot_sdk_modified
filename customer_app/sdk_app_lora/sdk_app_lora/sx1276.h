@@ -17,7 +17,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define __SX1276_H__
 #include <stdint.h>
 #include <stdbool.h>
-#include "radio/radio.h"
+#include "radio.h"
 #include "sx1276Regs-Fsk.h"
 #include "sx1276Regs-LoRa.h"
 
