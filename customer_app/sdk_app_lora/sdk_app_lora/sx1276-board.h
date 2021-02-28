@@ -16,8 +16,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 #ifndef __SX1276_ARCH_H__
 #define __SX1276_ARCH_H__
 
-#define RADIO_SPI_IDX               MYNEWT_VAL(SX1276_SPI_IDX)
-#define RADIO_NSS                   MYNEWT_VAL(SX1276_SPI_CS_PIN)
+#define RADIO_SPI_IDX               SX1276_SPI_IDX
+#define RADIO_NSS                   SX1276_SPI_CS_PIN
 
 /*!
  * \brief Radio hardware registers initialization definition
