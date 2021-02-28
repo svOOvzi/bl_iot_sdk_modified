@@ -21,6 +21,16 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1276Regs-Fsk.h"
 #include "sx1276Regs-LoRa.h"
 
+//// TODO
+#define SX1276_SPI_IDX 0 //// TODO
+#define SX1276_SPI_CS_PIN 0 //// TODO
+#define SX1276_DIO0 0 //// TODO
+#define SX1276_DIO1 0 //// TODO
+#define SX1276_DIO2 0 //// TODO
+#define SX1276_DIO3 0 //// TODO
+#define SX1276_DIO4 0 //// TODO
+#define SX1276_DIO5 0 //// TODO
+
 /*!
  * Radio complete Wake-up Time with margin for temperature compensation
  */
