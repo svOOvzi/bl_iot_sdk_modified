@@ -296,3 +296,56 @@ SX1276RxIoIrqEnable(void)
     hal_gpio_irq_enable(SX1276_DIO2);
     hal_gpio_irq_enable(SX1276_DIO3);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//  GPIO Interrupt
+
+static int check_gpio_is_interrupt(int gpioPin)
+{
+    int bitcount = 0;
+    int reg_val = 0;
+
+    bitcount = 1 << gpioPin;
+    reg_val = *(int32_t *)(GLB_BASE + GPIP_INT_STATE_OFFSET);
+
+    if ((bitcount & reg_val) == bitcount) {
+        return 0;
+    }
+    return -1;
+}
+
+static int exec_gpio_handler(gpio_ctx_t *pstnode)
+{
+    bl_gpio_intmask(pstnode->gpioPin, 1);
+
+    if (pstnode->gpio_handler) {
+        pstnode->gpio_handler(pstnode);
+        return 0;
+    }
+
+    return -1;
+}
+
+static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
+{
+    int ret;
+
+    while (pstnode) {
+        ret = check_gpio_is_interrupt(pstnode->gpioPin);
+        if (ret == 0) {
+            exec_gpio_handler(pstnode);
+        }
+
+        pstnode = pstnode->next;
+    }
+    return;
+}
+
+void bl_gpio_register(gpio_ctx_t *pstnode)
+{
+    bl_gpio_intmask(pstnode->gpioPin, 1);
+    bl_set_gpio_intmod(pstnode->gpioPin, pstnode->intCtrlMod, pstnode->intTrgMod);
+    bl_irq_register_with_ctx(GPIO_INT0_IRQn, gpio_interrupt_entry, pstnode);
+    bl_gpio_intmask(pstnode->gpioPin, 0);
+    bl_irq_enable(GPIO_INT0_IRQn);
+}
