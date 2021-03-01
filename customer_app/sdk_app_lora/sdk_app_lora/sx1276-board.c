@@ -134,6 +134,7 @@ SX1276IoInit(void)
 #endif  //  NOTUSED
 }
 
+#ifdef TODO
 void
 SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
@@ -181,7 +182,9 @@ SX1276IoIrqInit(DioIrqHandler **irqHandlers)
         hal_gpio_irq_enable(SX1276_DIO5);
     }
 }
+#endif  //  TODO
 
+#ifdef TODO
 void
 SX1276IoDeInit( void )
 {
@@ -204,6 +207,7 @@ SX1276IoDeInit( void )
         hal_gpio_irq_release(SX1276_DIO5);
     }
 }
+#endif  //  TODO
 
 uint8_t
 SX1276GetPaSelect(uint32_t channel)
@@ -279,8 +283,7 @@ SX1276GetBoardTcxoWakeupTime(void)
     return 0;
 }
 
-#ifdef NOTUSED
-
+#ifdef TODO
 void
 SX1276RxIoIrqDisable(void)
 {
@@ -289,7 +292,9 @@ SX1276RxIoIrqDisable(void)
     hal_gpio_irq_disable(SX1276_DIO2);
     hal_gpio_irq_disable(SX1276_DIO3);
 }
+#endif  //  TODO
 
+#ifdef TODO
 void
 SX1276RxIoIrqEnable(void)
 {
@@ -298,13 +303,12 @@ SX1276RxIoIrqEnable(void)
     hal_gpio_irq_enable(SX1276_DIO2);
     hal_gpio_irq_enable(SX1276_DIO3);
 }
-
-#endif  //  NOTUSED
+#endif  //  TODO
 
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt
 
-#ifdef NOTUSED
+#ifdef TODO
 
 static int check_gpio_is_interrupt(int gpioPin)
 {
@@ -356,4 +360,4 @@ void bl_gpio_register(gpio_ctx_t *pstnode)
     bl_irq_enable(GPIO_INT0_IRQn);
 }
 
-#endif  //  NOTUSED
+#endif  //  TODO
