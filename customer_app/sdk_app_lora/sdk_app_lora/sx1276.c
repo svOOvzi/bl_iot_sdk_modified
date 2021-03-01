@@ -231,6 +231,7 @@ void os_cputime_timer_init(struct hal_timer *timer, void f(void *), void *arg) {
 /// Delay for the specified number of microseconds
 void os_cputime_delay_usecs(uint32_t microsecs) {
     //  TODO
+    printf("TODO: os_cputime_delay_usecs %u\r\n", microsecs);
 }
 
 void os_cputime_timer_stop(struct hal_timer *timer) {
