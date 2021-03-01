@@ -65,7 +65,7 @@ const struct Radio_s Radio =
 };
 
 /// SPI Port
-static spi_dev_t spi;
+spi_dev_t spi_device;
 
 void
 SX1276IoInit(void)
@@ -112,7 +112,7 @@ SX1276IoInit(void)
 
     //  Configure the SPI Port
     rc = spi_init(
-        &spi,           //  SPI Device
+        &spi_device,    //  SPI Device
         RADIO_SPI_IDX,  //  SPI Port
         0,              //  SPI Mode: 0 for Controller
         1,              //  TODO: Mode should be 0. SPI Polarity and Phase: 1 for (CPOL=0, CPHA=1)
