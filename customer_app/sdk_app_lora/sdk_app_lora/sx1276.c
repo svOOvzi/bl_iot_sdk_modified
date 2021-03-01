@@ -1184,14 +1184,30 @@ SX1276ReadRssi(RadioModems_t modem)
 void
 SX1276Reset(void)
 {
-    // Set RESET pin to 0
-    hal_gpio_init_out(SX1276_NRESET, 0);
+    //  Configure Reset pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = SX1276_NRESET;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure Reset pin as a GPIO Output Pin (instead of GPIO Input)
+    int rc = bl_gpio_enable_output(SX1276_NRESET, 0, 0);
+    assert(rc == 0);
+
+    //  Set Reset pin to Low
+    rc = bl_gpio_output_set(SX1276_NRESET, 1);
+    assert(rc == 0);
 
     // Wait 1 ms
     os_cputime_delay_usecs(1000);
 
-    // Configure RESET as input
-    hal_gpio_init_in(SX1276_NRESET, HAL_GPIO_PULL_NONE);
+    //  Configure Reset pin as a GPIO Input Pin, no pullup, no pulldown
+    rc = bl_gpio_enable_input(SX1276_NRESET, 0, 0);
+    assert(rc == 0);
 
     // Wait 6 ms
     os_cputime_delay_usecs(6000);
@@ -1522,7 +1538,10 @@ SX1276OnDio0Irq(void *unused)
         case MODEM_LORA:
             // Clear Irq
             SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_TXDONE);
-            // Intentional fall through
+            SX1276.Settings.State = RF_IDLE;
+            SX1276TxDone();
+            break;
+
         case MODEM_FSK:
         default:
             SX1276.Settings.State = RF_IDLE;
