@@ -64,10 +64,12 @@ const struct Radio_s Radio =
     .RxDisable = SX1276RxDisable
 };
 
+/// SPI Port
+static spi_dev_t spi;
+
 void
 SX1276IoInit(void)
 {
-    struct hal_spi_settings spi_settings;
     int rc;
 
 #if SX1276_HAS_ANT_SW
@@ -108,18 +110,28 @@ SX1276IoInit(void)
     rc = bl_gpio_output_set(RADIO_NSS, 1);
     assert(rc == 0);
 
-    hal_spi_disable(RADIO_SPI_IDX);
+    //  Configure the SPI Port
+    rc = spi_init(
+        &spi,           //  SPI Device
+        RADIO_SPI_IDX,  //  SPI Port
+        0,              //  SPI Mode: 0 for Controller
+        1,              //  TODO: Mode should be 0. SPI Polarity and Phase: 1 for (CPOL=0, CPHA=1)
+        SX1276_SPI_BAUDRATE,  //  SPI Frequency
+        2,   //  Transmit DMA Channel
+        3,   //  Receive DMA Channel
+        3,   //  SPI Clock Pin 
+        2,   //  Unused SPI Chip Select Pin
+        1,   //  SPI Serial Data In Pin  (formerly MISO)
+        4    //  SPI Serial Data Out Pin (formerly MOSI)
+    );
+    assert(rc == 0);
 
+#ifdef NOTUSED
     spi_settings.data_order = HAL_SPI_MSB_FIRST;
     spi_settings.data_mode = HAL_SPI_MODE0;
     spi_settings.baudrate = SX1276_SPI_BAUDRATE;
     spi_settings.word_size = HAL_SPI_WORD_SIZE_8BIT;
-
-    rc = hal_spi_config(RADIO_SPI_IDX, &spi_settings);
-    assert(rc == 0);
-
-    rc = hal_spi_enable(RADIO_SPI_IDX);
-    assert(rc == 0);
+#endif  //  NOTUSED
 }
 
 void
