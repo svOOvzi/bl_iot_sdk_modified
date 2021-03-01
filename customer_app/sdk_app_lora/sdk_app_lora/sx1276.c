@@ -243,7 +243,16 @@ void os_cputime_timer_relative(struct hal_timer *timer, uint32_t microsecs)  {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Other Functions
+//  SPI Functions
+
+/// Blocking call to send a value on the SPI. Returns the value received from the SPI Peripheral.
+uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
+    //  TODO
+    return 0; //// TODO
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Driver Functions
 
 double
 ceil(double d)
