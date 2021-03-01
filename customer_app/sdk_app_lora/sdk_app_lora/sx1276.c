@@ -210,6 +210,8 @@ DioIrqHandler *DioIrq[] = { SX1276OnDio0Irq, SX1276OnDio1Irq,
                             SX1276OnDio2Irq, SX1276OnDio3Irq,
                             SX1276OnDio4Irq, NULL };
 
+struct hal_timer {}; ////  TODO
+
 /*!
  * Tx and Rx timers
  */
@@ -218,6 +220,29 @@ struct hal_timer RxTimeoutTimer;
 struct hal_timer RxTimeoutSyncWord;
 
 static uint32_t rx_timeout_sync_delay = -1;
+
+///////////////////////////////////////////////////////////////////////////////
+//  Timer Functions
+
+void os_cputime_timer_init(struct hal_timer *timer, void f(void *), void *arg) {
+    //  TODO
+}
+
+/// Delay for the specified number of microseconds
+void os_cputime_delay_usecs(uint32_t microsecs) {
+    //  TODO
+}
+
+void os_cputime_timer_stop(struct hal_timer *timer) {
+    //  TODO
+}
+
+void os_cputime_timer_relative(struct hal_timer *timer, uint32_t microsecs)  {
+    //  TODO
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Other Functions
 
 double
 ceil(double d)
