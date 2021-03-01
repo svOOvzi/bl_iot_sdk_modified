@@ -71,7 +71,22 @@ SX1276IoInit(void)
     int rc;
 
 #if SX1276_HAS_ANT_SW
-    rc = hal_gpio_init_out(SX1276_RXTX, 0);
+    //  Configure RXTX pin as a GPIO Pin
+    GLB_GPIO_Type pins2[1];
+    pins2[0] = SX1276_RXTX;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins2,            //  Pins to be configured
+        sizeof(pins2) / sizeof(pins2[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure RXTX pin as a GPIO Output Pin (instead of GPIO Input)
+    rc = bl_gpio_enable_output(SX1276_RXTX, 0, 0);
+    assert(rc == 0);
+
+    //  Set RXTX pin to Low
+    rc = bl_gpio_output_set(SX1276_RXTX, 0);
     assert(rc == 0);
 #endif
 
@@ -80,7 +95,7 @@ SX1276IoInit(void)
     pins[0] = RADIO_NSS;
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(
         GPIO_FUN_SWGPIO,  //  Configure as GPIO 
-        pins,             //  Pins to be configured (Pin 14)
+        pins,             //  Pins to be configured
         sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
     );
     assert(rc2 == SUCCESS);    
