@@ -16,6 +16,11 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include <assert.h>
 #include <math.h>
 #include <string.h>
+#include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
+#include <hal/soc/spi.h>     //  For hal_spi_transfer
+#include <hal_spi.h>         //  For spi_init
+#include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -1257,14 +1262,14 @@ SX1276WriteBuffer(uint16_t addr, uint8_t *buffer, uint8_t size)
 {
     uint8_t i;
 
-    hal_gpio_write(RADIO_NSS, 0);
+    bl_gpio_output_set(RADIO_NSS, 0);
 
     hal_spi_tx_val(RADIO_SPI_IDX, addr | 0x80);
     for(i = 0; i < size; i++) {
         hal_spi_tx_val(RADIO_SPI_IDX, buffer[i]);
     }
 
-    hal_gpio_write(RADIO_NSS, 1);
+    bl_gpio_output_set(RADIO_NSS, 1);
 }
 
 void
@@ -1272,14 +1277,14 @@ SX1276ReadBuffer(uint16_t addr, uint8_t *buffer, uint8_t size)
 {
     uint8_t i;
 
-    hal_gpio_write(RADIO_NSS, 0);
+    bl_gpio_output_set(RADIO_NSS, 0);
 
     hal_spi_tx_val(RADIO_SPI_IDX, addr & 0x7f);
     for (i = 0; i < size; i++) {
         buffer[i] = hal_spi_tx_val(RADIO_SPI_IDX, 0);
     }
 
-    hal_gpio_write(RADIO_NSS, 1);
+    bl_gpio_output_set(RADIO_NSS, 1);
 }
 
 void

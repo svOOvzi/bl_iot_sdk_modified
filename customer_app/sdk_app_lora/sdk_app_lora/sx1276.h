@@ -24,6 +24,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 //// TODO
 #define SX1276_SPI_IDX 0 //// TODO
 #define SX1276_SPI_CS_PIN 0 //// TODO
+#define SX1276_NRESET 0 //// TODO
 #define SX1276_DIO0 0 //// TODO
 #define SX1276_DIO1 0 //// TODO
 #define SX1276_DIO2 0 //// TODO
