@@ -35,27 +35,20 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include <semphr.h>
 #include <cli.h>
 #include "radio.h"
-#include "loraping.h"
 #include "demo.h"
 
-#define USE_BAND_915
+#define USE_BAND_923
 
 #if defined(USE_BAND_433)
-
-#define RF_FREQUENCY               434000000 /* Hz */
-
+    #define RF_FREQUENCY               434000000 /* Hz */
 #elif defined(USE_BAND_780)
-
-#define RF_FREQUENCY               780000000 /* Hz */
-
+    #define RF_FREQUENCY               780000000 /* Hz */
 #elif defined(USE_BAND_868)
-
-#define RF_FREQUENCY               868000000 /* Hz */
-
+    #define RF_FREQUENCY               868000000 /* Hz */
 #elif defined(USE_BAND_915)
-
-#define RF_FREQUENCY               915000000 /* Hz */
-
+    #define RF_FREQUENCY               915000000 /* Hz */
+#elif defined(USE_BAND_923)
+    #define RF_FREQUENCY               923000000 /* Hz */
 #else
     #error "Please define a frequency band in the compiler options."
 #endif
