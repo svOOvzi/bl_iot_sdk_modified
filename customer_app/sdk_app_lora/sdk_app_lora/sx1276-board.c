@@ -13,7 +13,13 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 
 Maintainer: Miguel Luis and Gregory Cristian
 */
+#include <stddef.h>
 #include <assert.h>
+#include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
+#include <hal/soc/spi.h>     //  For hal_spi_transfer
+#include <hal_spi.h>         //  For spi_init
+#include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -69,14 +75,29 @@ SX1276IoInit(void)
     assert(rc == 0);
 #endif
 
-    rc = hal_gpio_init_out(RADIO_NSS, 1);
+    //  Configure Chip Select pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = RADIO_NSS;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured (Pin 14)
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure Chip Select pin as a GPIO Output Pin (instead of GPIO Input)
+    rc = bl_gpio_enable_output(RADIO_NSS, 0, 0);
+    assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate SX1276
+    rc = bl_gpio_output_set(RADIO_NSS, 1);
     assert(rc == 0);
 
     hal_spi_disable(RADIO_SPI_IDX);
 
     spi_settings.data_order = HAL_SPI_MSB_FIRST;
     spi_settings.data_mode = HAL_SPI_MODE0;
-    spi_settings.baudrate = MYNEWT_VAL(SX1276_SPI_BAUDRATE);
+    spi_settings.baudrate = SX1276_SPI_BAUDRATE;
     spi_settings.word_size = HAL_SPI_WORD_SIZE_8BIT;
 
     rc = hal_spi_config(RADIO_SPI_IDX, &spi_settings);

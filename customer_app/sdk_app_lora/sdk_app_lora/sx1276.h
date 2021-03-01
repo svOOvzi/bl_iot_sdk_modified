@@ -30,6 +30,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_DIO3 0 //// TODO
 #define SX1276_DIO4 0 //// TODO
 #define SX1276_DIO5 0 //// TODO
+#define SX1276_SPI_BAUDRATE 0 //// TODO
 
 /*!
  * Radio complete Wake-up Time with margin for temperature compensation
