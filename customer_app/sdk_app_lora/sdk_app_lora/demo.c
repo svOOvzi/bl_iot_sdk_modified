@@ -104,19 +104,22 @@ static struct os_event loraping_ev_rx = {
 };
 #endif  //  TODO
 
+/// Send a LoRa message. If is_ping is 0, send "PING". Otherwise send "PONG".
 static void send_once(int is_ping)
 {
-    int i;
-
+    //  Copy the "PING" or "PONG" message to the transmit buffer
     if (is_ping) {
         memcpy(loraping_buffer, loraping_ping_msg, 4);
     } else {
         memcpy(loraping_buffer, loraping_pong_msg, 4);
     }
-    for (i = 4; i < sizeof loraping_buffer; i++) {
+
+    //  Fill up the remaining space in the transmit buffer (64 bytes) with values 0, 1, 2, ...
+    for (int i = 4; i < sizeof loraping_buffer; i++) {
         loraping_buffer[i] = i - 4;
     }
 
+    //  Send the transmit buffer (64 bytes)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
 }
 
