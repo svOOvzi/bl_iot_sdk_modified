@@ -46,7 +46,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
 #define SX1276_NRESET      17  //  Reset Pin
 #define SX1276_DIO0        12  //  DIO0 Pin
-#define SX1276_DIO1        11  //  DIO0 Pin
+#define SX1276_DIO1        11  //  DIO1 Pin
 #define SX1276_DIO2         5  //  DIO2 Pin
 #define SX1276_DIO3         8  //  DIO3 Pin
 #define SX1276_DIO4         0  //  TODO: DIO4 Pin
