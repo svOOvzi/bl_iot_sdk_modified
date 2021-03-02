@@ -199,9 +199,15 @@ uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
 /// Read SX1276 / RF96 registers
 static void read_registers(char *buf, int len, int argc, char **argv)
 {
+    //  Init the SPI port
     SX1276IoInit();
+
+    //  Read and print the first 16 registers: 0 to 15
     for (uint16_t addr = 0; addr < 0x10; addr++) {
+        //  Read the register
         uint8_t val = SX1276Read(addr);
+
+        //  Print the register value
         printf("Register 0x%02x = 0x%02x\r\n", addr, val);
     }
 }
