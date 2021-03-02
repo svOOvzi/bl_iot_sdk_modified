@@ -19,18 +19,18 @@
  */
 
 #include <stdint.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "os/os.h"
-
-uint32_t
-timer_get_current_time(void)
+/// Return current time in microseconds
+uint32_t timer_get_current_time(void)
 {
-    /* Convert the OS time ticks to seconds, and then to us*/
-    return os_cputime_ticks_to_usecs(os_cputime_get32());
+    //  Convert ticks to milliseconds then microseconds
+    return xTaskGetTickCount() * portTICK_PERIOD_MS * 1000;
 }
 
-uint32_t
-timer_get_elapsed_time(uint32_t saved_time)
+/// Return elased time in microseconds
+uint32_t timer_get_elapsed_time(uint32_t saved_time)
 {
     return timer_get_current_time() - saved_time;
 }
