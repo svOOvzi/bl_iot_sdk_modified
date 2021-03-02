@@ -127,7 +127,7 @@ static void loraping_tx(void)
     if (loraping_rx_size == 0) {
         /* Timeout. */
     } else {
-        os_time_delay(1);
+        vTaskDelay(1);
         if (memcmp(loraping_buffer, loraping_pong_msg, 4) == 0) {
             loraping_stats.rx_ping++;
         } else if (memcmp(loraping_buffer, loraping_ping_msg, 4) == 0) {
@@ -193,7 +193,7 @@ static void on_rx_error(void)
     //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-int old_main(void)
+void test_lora(void)
 {
     RadioEvents_t radio_events;
 

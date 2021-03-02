@@ -25,9 +25,8 @@
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
-
-#include "console/console.h"
-#include "loraping.h"
+#include <stdio.h>
+#include "rxinfo.h"
 
 #define LORAPING_NUM_RXINFOS                10
 
@@ -107,17 +106,17 @@ loraping_rxinfo_print(void)
     loraping_rxinfo_avg(&avg, &pkt_loss);
 
     if (last->rxed) {
-        width = console_printf("[LAST] rssi=%-4d snr=%-4d",
+        width = printf("[LAST] rssi=%-4d snr=%-4d",
                                last->rssi, last->snr);
     } else {
-        width = console_printf("[LAST] TIMEOUT");
+        width = printf("[LAST] TIMEOUT");
     }
 
     for (; width < 48; width++) {
-        console_printf(" ");
+        printf(" ");
     }
 
-    console_printf("[AVG-%d] rssi=%-4d snr=%-4d pkt_loss=%d.%02d%%\n",
+    printf("[AVG-%d] rssi=%-4d snr=%-4d pkt_loss=%d.%02d%%\r\n",
                    LORAPING_NUM_RXINFOS, avg.rssi, avg.snr,
                    pkt_loss / 100, pkt_loss % 100);
 }
