@@ -104,7 +104,7 @@ static struct os_event loraping_ev_rx = {
 };
 #endif  //  TODO
 
-/// Send a LoRa message. If is_ping is 0, send "PING". Otherwise send "PONG".
+/// Send a LoRa message. If is_ping is 0, send "PONG". Otherwise send "PING".
 static void send_once(int is_ping)
 {
     //  Copy the "PING" or "PONG" message to the transmit buffer
@@ -272,7 +272,7 @@ static void init_driver(char *buf, int len, int argc, char **argv)
 /// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
 static void send_message(char *buf, int len, int argc, char **argv)
 {
-    //  Send the "ping" message
+    //  Send the "PING" message
     send_once(1);
 }
 
