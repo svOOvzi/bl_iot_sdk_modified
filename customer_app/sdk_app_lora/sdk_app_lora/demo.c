@@ -193,8 +193,21 @@ static void on_rx_error(void)
     //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-/// Test the LoRa SX1276 driver
-static void test_lora(char *buf, int len, int argc, char **argv)
+void SX1276IoInit(void);            //  Defined in sx1276-board.c
+uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
+
+/// Read SX1276 / RF96 registers
+static void read_registers(char *buf, int len, int argc, char **argv)
+{
+    SX1276IoInit();
+    for (uint16_t addr = 0; addr < 0x10; addr++) {
+        uint8_t val = SX1276Read(addr);
+        printf("Register 0x%02x = 0x%02x\r\n", addr, val);
+    }
+}
+
+/// Send a LoRa message
+static void send_message(char *buf, int len, int argc, char **argv)
 {
     RadioEvents_t radio_events;
 
@@ -238,6 +251,8 @@ static void test_lora(char *buf, int len, int argc, char **argv)
                       LORAPING_IQ_INVERSION_ON,
                       true);    /* Continuous receive mode. */
 
+    //  TODO: Send a LoRa message
+
     /* Immediately receive on start up. */
     //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
@@ -260,8 +275,9 @@ static void spi_result(char *buf, int len, int argc, char **argv)
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"test_lora",    "Test LoRa driver",    test_lora},
-    {"spi_result",   "Show SPI counters",   spi_result},
+    {"read_registers", "Read registers",      read_registers},
+    {"send_message",   "Send LoRa message",   send_message},
+    {"spi_result",     "Show SPI counters",   spi_result},
 };                                                                                   
 
 int cli_init(void)
