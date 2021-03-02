@@ -38,6 +38,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "rxinfo.h"
 #include "demo.h"
 
+//  TODO: We are using 923 MHz for Singapore. Change this for your region.
 #define USE_BAND_923
 
 #if defined(USE_BAND_433)
@@ -57,14 +58,14 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #define LORAPING_TX_OUTPUT_POWER            14        /* dBm */
 
 #define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
-                                                  /*  1: 250 kHz, */
-                                                  /*  2: 500 kHz, */
-                                                  /*  3: Reserved] */
+                                                      /*  1: 250 kHz, */
+                                                      /*  2: 500 kHz, */
+                                                      /*  3: Reserved] */
 #define LORAPING_SPREADING_FACTOR           7         /* [SF7..SF12] */
 #define LORAPING_CODINGRATE                 1         /* [1: 4/5, */
-                                                  /*  2: 4/6, */
-                                                  /*  3: 4/7, */
-                                                  /*  4: 4/8] */
+                                                      /*  2: 4/6, */
+                                                      /*  3: 4/7, */
+                                                      /*  4: 4/8] */
 #define LORAPING_PREAMBLE_LENGTH            8         /* Same for Tx and Rx */
 #define LORAPING_SYMBOL_TIMEOUT             5         /* Symbols */
 #define LORAPING_FIX_LENGTH_PAYLOAD_ON      false
@@ -215,47 +216,54 @@ static void read_registers(char *buf, int len, int argc, char **argv)
 /// Command to initialise the SX1276 / RF96 driver
 static void init_driver(char *buf, int len, int argc, char **argv)
 {
+    //  Set the LoRa event callbacks
     RadioEvents_t radio_events;
-
-    /* Radio initialization. */
     radio_events.TxDone = on_tx_done;
     radio_events.RxDone = on_rx_done;
     radio_events.TxTimeout = on_tx_timeout;
     radio_events.RxTimeout = on_rx_timeout;
     radio_events.RxError = on_rx_error;
 
+    //  Init the SPI Port and the LoRa Transceiver
     Radio.Init(&radio_events);
 
+    //  Set the LoRa Frequency
     Radio.SetChannel(RF_FREQUENCY);
 
-    Radio.SetTxConfig(MODEM_LORA,
-                      LORAPING_TX_OUTPUT_POWER,
-                      0,        /* Frequency deviation; unused with LoRa. */
-                      LORAPING_BANDWIDTH,
-                      LORAPING_SPREADING_FACTOR,
-                      LORAPING_CODINGRATE,
-                      LORAPING_PREAMBLE_LENGTH,
-                      LORAPING_FIX_LENGTH_PAYLOAD_ON,
-                      true,     /* CRC enabled. */
-                      0,        /* Frequency hopping disabled. */
-                      0,        /* Hop period; N/A. */
-                      LORAPING_IQ_INVERSION_ON,
-                      LORAPING_TX_TIMEOUT_MS);
+    //  Configure the LoRa Transceiver for transmitting messages
+    Radio.SetTxConfig(
+        MODEM_LORA,
+        LORAPING_TX_OUTPUT_POWER,
+        0,        /* Frequency deviation; unused with LoRa. */
+        LORAPING_BANDWIDTH,
+        LORAPING_SPREADING_FACTOR,
+        LORAPING_CODINGRATE,
+        LORAPING_PREAMBLE_LENGTH,
+        LORAPING_FIX_LENGTH_PAYLOAD_ON,
+        true,     /* CRC enabled. */
+        0,        /* Frequency hopping disabled. */
+        0,        /* Hop period; N/A. */
+        LORAPING_IQ_INVERSION_ON,
+        LORAPING_TX_TIMEOUT_MS
+    );
 
-    Radio.SetRxConfig(MODEM_LORA,
-                      LORAPING_BANDWIDTH,
-                      LORAPING_SPREADING_FACTOR,
-                      LORAPING_CODINGRATE,
-                      0,        /* AFC bandwisth; unused with LoRa. */
-                      LORAPING_PREAMBLE_LENGTH,
-                      LORAPING_SYMBOL_TIMEOUT,
-                      LORAPING_FIX_LENGTH_PAYLOAD_ON,
-                      0,        /* Fixed payload length; N/A. */
-                      true,     /* CRC enabled. */
-                      0,        /* Frequency hopping disabled. */
-                      0,        /* Hop period; N/A. */
-                      LORAPING_IQ_INVERSION_ON,
-                      true);    /* Continuous receive mode. */
+    //  Configure the LoRa Transceiver for receiving messages
+    Radio.SetRxConfig(
+        MODEM_LORA,
+        LORAPING_BANDWIDTH,
+        LORAPING_SPREADING_FACTOR,
+        LORAPING_CODINGRATE,
+        0,        /* AFC bandwisth; unused with LoRa. */
+        LORAPING_PREAMBLE_LENGTH,
+        LORAPING_SYMBOL_TIMEOUT,
+        LORAPING_FIX_LENGTH_PAYLOAD_ON,
+        0,        /* Fixed payload length; N/A. */
+        true,     /* CRC enabled. */
+        0,        /* Frequency hopping disabled. */
+        0,        /* Hop period; N/A. */
+        LORAPING_IQ_INVERSION_ON,
+        true
+    );    /* Continuous receive mode. */
 }
 
 /// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
@@ -580,5 +588,926 @@ Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
 recv all event group.
 Register 0x0f = 0x0a
 
+# 
+
+ˇStarting bl602 now....
+Booting BL602 Chip...
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ïó      ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó  ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó
+
+‚ñà‚ñà‚ïî‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ïê‚ïù ‚ñà‚ñà‚ïî‚ïê‚ñà‚ñà‚ñà‚ñà‚ïó‚ïö‚ïê‚ïê‚ïê‚ïê‚ñà‚ñà‚ïó
+
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ïë‚ñà‚ñà‚ïî‚ñà‚ñà‚ïë ‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù
+
+‚ñà‚ñà‚ïî‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ïë‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ïù
+
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó‚ïö‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ïö‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó
+
+‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù  ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù
+
+
+
+------------------------------------------------------------
+RISC-V Core Feature:RV32-ACFIMX
+Build Version: release_bl_iot_sdk_1.6.11-1-g66bb28da-dirty
+Build Date: Feb 20 2021
+Build Time: 16:38:09
+------------------------------------------------------------
+
+blog init set power on level 2, 2, 2.
+[IRQ] Clearing and Disable all the pending IRQ...
+[OS] Starting aos_loop_proc task...
+[OS] Starting OS Scheduler...
+=== 32 task inited
+====== bloop dump ======
+  bitmap_evt 0
+  bitmap_msg 0
+--->>> timer list:
+  32 task:
+    task[31] : SYS [built-in]
+      evt handler 0x2300c314, msg handler 0x2300c2e4, trigged cnt 0, bitmap async 0 sync 0, time consumed 0us acc 0ms, max 0us
+    task[30] : empty
+    task[29] : empty
+    task[28] : empty
+    task[27] : empty
+    task[26] : empty
+    task[25] : empty
+    task[24] : empty
+    task[23] : empty
+    task[22] : empty
+    task[21] : empty
+    task[20] : empty
+    task[19] : empty
+    task[18] : empty
+    task[17] : empty
+    task[16] : empty
+    task[15] : empty
+    task[14] : empty
+    task[13] : empty
+    task[12] : empty
+    task[11] : empty
+    task[10] : empty
+    task[09] : empty
+    task[08] : empty
+    task[07] : empty
+    task[06] : empty
+    task[05] : empty
+    task[04] : empty
+    task[03] : empty
+    task[02] : empty
+    task[01] : empty
+    task[00] : empty
+Init CLI with event Driven
+
+# help
+====Build-in Commands====
+====Support 4 cmds once, seperate by ; ====
+help                     : print this
+p                        : print memory
+m                        : modify memory
+echo                     : echo for command
+exit                     : close CLI
+devname                  : print device name
+sysver                   : system version
+reboot                   : reboot system
+poweroff                 : poweroff system
+reset                    : system reset
+time                     : system time
+ota                      : system ota
+ps                       : thread dump
+ls                       : file list
+hexdump                  : dump file
+cat                      : cat file
+
+====User Commands====
+read_registers           : Read registers
+send_message             : Send LoRa message
+spi_result               : Show SPI counters
+blogset                  : blog pri set level
+blogdump                 : blog info dump
+bl_sys_time_now          : sys time now
+
+# read_registers
+port0 eventloop init = 42010760
+[HAL] [SPI] Init :
+port=0, mode=0, polar_phase = 1, freq=200000, tx_dma_ch=2, rx_dma_ch=3, pin_clk=3, pin_cs=2, pin_mosi=1, pin_miso=4
+set rwspeed = 200000
+hal_gpio_init: cs:2, clk:3, mosi:1, miso: 4
+hal_gpio_init: SPI controller mode
+hal_spi_init.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x00 = 0x00
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x01 = 0x09
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x02 = 0x1a
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x03 = 0x0b
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x04 = 0x00
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x05 = 0x52
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x06 = 0x6c
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x07 = 0x80
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x08 = 0x00
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x09 = 0x4f
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0a = 0x09
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0b = 0x2b
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0c = 0x20
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0d = 0x08
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0e = 0x02
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+Register 0x0f = 0x0a
+
+# help
+====Build-in Commands====
+====Support 4 cmds once, seperate by ; ====
+help                     : print this
+p                        : print memory
+m                        : modify memory
+echo                     : echo for command
+exit                     : close CLI
+devname                  : print device name
+sysver                   : system version
+reboot                   : reboot system
+poweroff                 : poweroff system
+reset                    : system reset
+time                     : system time
+ota                      : system ota
+ps                       : thread dump
+ls                       : file list
+hexdump                  : dump file
+cat                      : cat file
+
+====User Commands====
+init_driver              : Init LoRa driver
+send_message             : Send LoRa message
+read_registers           : Read registers
+spi_result              : Show SPI counters
+blogset                  : blog pri set level
+blogdump                 : blog info dump
+bl_sys_time_now          : sys time now
+
+# init_driver
+port0 eventloop init = 42010760
+[HAL] [SPI] Init :
+port=0, mode=0, polar_phase = 1, freq=200000, tx_dma_ch=2, rx_dma_ch=3, pin_clk=3, pin_cs=2, pin_mosi=1, pin_miso=4
+set rwspeed = 200000
+hal_gpio_init: cs:2, clk:3, mosi:1, miso: 4
+hal_gpio_init: SPI controller mode
+hal_spi_init.
+TODO: os_cputime_delay_usecs 1000
+TODO: os_cputime_delay_usecs 6000
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_tranfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a28, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x400a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i=1
+recv all event group.
+hal_spi_transfer = 1
+transfer xfer[0].len = 1
+Tx DMA src=0x4200cc58, dest=0x4000a288, size=1, si=1, di=0, i=1
+Rx DMA src=0x4000a28c, dest=0x4200cc54, size=1, si=0, di=1, i
 # 
 #endif  //  NOTUSED
