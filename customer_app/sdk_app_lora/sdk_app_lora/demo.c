@@ -212,8 +212,8 @@ static void read_registers(char *buf, int len, int argc, char **argv)
     }
 }
 
-/// Send a LoRa message
-static void send_message(char *buf, int len, int argc, char **argv)
+/// Command to initialise the SX1276 / RF96 driver
+static void init_driver(char *buf, int len, int argc, char **argv)
 {
     RadioEvents_t radio_events;
 
@@ -256,14 +256,16 @@ static void send_message(char *buf, int len, int argc, char **argv)
                       0,        /* Hop period; N/A. */
                       LORAPING_IQ_INVERSION_ON,
                       true);    /* Continuous receive mode. */
-
-    //  TODO: Send a LoRa message
-
-    /* Immediately receive on start up. */
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
 
-/// Show the SPI data received and the interrupt counters
+/// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
+static void send_message(char *buf, int len, int argc, char **argv)
+{
+    //  Send the "ping" message
+    send_once(1);
+}
+
+/// Show the SPI interrupt counters, status and error codes
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
     //  Show the Interrupt Counters, Status and Error Codes defined in components/hal_drv/bl602_hal/hal_spi.c
@@ -279,20 +281,21 @@ static void spi_result(char *buf, int len, int argc, char **argv)
     printf("Rx Error:      0x%x\r\n", g_rx_error);
 }
 
-// STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
+/// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"read_registers", "Read registers",      read_registers},
+    {"init_driver",    "Init LoRa driver",    init_driver},
     {"send_message",   "Send LoRa message",   send_message},
+    {"read_registers", "Read registers",      read_registers},
     {"spi_result",     "Show SPI counters",   spi_result},
 };                                                                                   
 
+/// Init the command-line interface
 int cli_init(void)
 {
-    // static command(s) do NOT need to call aos_cli_register_command(s) to register.
-    // However, calling aos_cli_register_command(s) here is OK but is of no effect as cmds_user are included in cmds list.
-    // XXX NOTE: Calling this *empty* function is necessary to make cmds_user in this file to be kept in the final link.
-    //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
-    return 0;
+   //  To run a command at startup, do this...
+   //  init_driver("", 0, 0, NULL);
+   //  send_message("", 0, 0, NULL);
+   return 0;
 }
 
 /// TODO: We now show assertion failures in development.
