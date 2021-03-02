@@ -193,7 +193,8 @@ static void on_rx_error(void)
     //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-void test_lora(void)
+/// Test the LoRa SX1276 driver
+static void test_lora(char *buf, int len, int argc, char **argv)
 {
     RadioEvents_t radio_events;
 
@@ -236,6 +237,7 @@ void test_lora(void)
                       0,        /* Hop period; N/A. */
                       LORAPING_IQ_INVERSION_ON,
                       true);    /* Continuous receive mode. */
+
     /* Immediately receive on start up. */
     //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
@@ -258,6 +260,7 @@ static void spi_result(char *buf, int len, int argc, char **argv)
 
 // STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
+    {"test_lora",    "Test LoRa driver",    test_lora},
     {"spi_result",   "Show SPI counters",   spi_result},
 };                                                                                   
 
