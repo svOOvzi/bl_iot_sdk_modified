@@ -67,8 +67,7 @@ const struct Radio_s Radio =
 /// SPI Port
 spi_dev_t spi_device;
 
-void
-SX1276IoInit(void)
+void SX1276IoInit(void)
 {
     int rc;
 
@@ -134,10 +133,9 @@ SX1276IoInit(void)
 #endif  //  NOTUSED
 }
 
-#ifdef TODO
-void
-SX1276IoIrqInit(DioIrqHandler **irqHandlers)
+void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
+#ifdef TODO
     int rc;
 
     if (irqHandlers[0] != NULL) {
@@ -181,13 +179,12 @@ SX1276IoIrqInit(DioIrqHandler **irqHandlers)
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO5);
     }
-}
 #endif  //  TODO
+}
 
-#ifdef TODO
-void
-SX1276IoDeInit( void )
+void SX1276IoDeInit( void )
 {
+#ifdef TODO
     if (DioIrq[0] != NULL) {
         hal_gpio_irq_release(SX1276_DIO0);
     }
@@ -206,11 +203,10 @@ SX1276IoDeInit( void )
     if (DioIrq[5] != NULL) {
         hal_gpio_irq_release(SX1276_DIO5);
     }
-}
 #endif  //  TODO
+}
 
-uint8_t
-SX1276GetPaSelect(uint32_t channel)
+uint8_t SX1276GetPaSelect(uint32_t channel)
 {
     uint8_t pacfg;
 
@@ -270,40 +266,36 @@ SX1276SetAntSw(uint8_t rxTx)
 }
 #endif
 
-bool
-SX1276CheckRfFrequency(uint32_t frequency)
+bool SX1276CheckRfFrequency(uint32_t frequency)
 {
     // Implement check. Currently all frequencies are supported
     return true;
 }
 
-uint32_t
-SX1276GetBoardTcxoWakeupTime(void)
+uint32_t SX1276GetBoardTcxoWakeupTime(void)
 {
     return 0;
 }
 
-#ifdef TODO
-void
-SX1276RxIoIrqDisable(void)
+void SX1276RxIoIrqDisable(void)
 {
+#ifdef TODO
     hal_gpio_irq_disable(SX1276_DIO0);
     hal_gpio_irq_disable(SX1276_DIO1);
     hal_gpio_irq_disable(SX1276_DIO2);
     hal_gpio_irq_disable(SX1276_DIO3);
-}
 #endif  //  TODO
+}
 
-#ifdef TODO
-void
-SX1276RxIoIrqEnable(void)
+void SX1276RxIoIrqEnable(void)
 {
+#ifdef TODO
     hal_gpio_irq_enable(SX1276_DIO0);
     hal_gpio_irq_enable(SX1276_DIO1);
     hal_gpio_irq_enable(SX1276_DIO2);
     hal_gpio_irq_enable(SX1276_DIO3);
-}
 #endif  //  TODO
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt
