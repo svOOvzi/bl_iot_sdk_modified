@@ -114,7 +114,10 @@ void SX1276IoInit(void)
         &spi_device,    //  SPI Device
         RADIO_SPI_IDX,  //  SPI Port
         0,              //  SPI Mode: 0 for Controller
-        1,              //  TODO: Mode should be 0. SPI Polarity and Phase: 1 for (CPOL=0, CPHA=1)
+        //  TODO: Due to a quirk in BL602 SPI, we must set
+        //  SPI Polarity-Phase to 1 (CPOL=0, CPHA=1).
+        //  But actually Polarity-Phase for SX1276 should be 0 (CPOL=0, CPHA=0). 
+        1,                    //  SPI Polarity-Phase
         SX1276_SPI_BAUDRATE,  //  SPI Frequency
         2,                    //  Transmit DMA Channel
         3,                    //  Receive DMA Channel
