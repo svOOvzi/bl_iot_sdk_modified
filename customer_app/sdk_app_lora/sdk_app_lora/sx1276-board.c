@@ -116,12 +116,12 @@ void SX1276IoInit(void)
         0,              //  SPI Mode: 0 for Controller
         1,              //  TODO: Mode should be 0. SPI Polarity and Phase: 1 for (CPOL=0, CPHA=1)
         SX1276_SPI_BAUDRATE,  //  SPI Frequency
-        2,   //  Transmit DMA Channel
-        3,   //  Receive DMA Channel
-        3,   //  SPI Clock Pin 
-        2,   //  Unused SPI Chip Select Pin
-        1,   //  SPI Serial Data In Pin  (formerly MISO)
-        4    //  SPI Serial Data Out Pin (formerly MOSI)
+        2,                    //  Transmit DMA Channel
+        3,                    //  Receive DMA Channel
+        SX1276_SPI_CLK_PIN,   //  SPI Clock Pin 
+        SX1276_SPI_CS_OLD,    //  Unused SPI Chip Select Pin
+        SX1276_SPI_SDI_PIN,   //  SPI Serial Data In Pin  (formerly MISO)
+        SX1276_SPI_SDO_PIN    //  SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 

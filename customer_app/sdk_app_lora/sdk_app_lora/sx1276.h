@@ -21,17 +21,37 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1276Regs-Fsk.h"
 #include "sx1276Regs-LoRa.h"
 
-//// TODO
-#define SX1276_SPI_IDX 0 //// TODO
-#define SX1276_SPI_CS_PIN 0 //// TODO
-#define SX1276_NRESET 0 //// TODO
-#define SX1276_DIO0 0 //// TODO
-#define SX1276_DIO1 0 //// TODO
-#define SX1276_DIO2 0 //// TODO
-#define SX1276_DIO3 0 //// TODO
-#define SX1276_DIO4 0 //// TODO
-#define SX1276_DIO5 0 //// TODO
-#define SX1276_SPI_BAUDRATE 0 //// TODO
+/* Connect BL602 to SX1276 / RF96 LoRa Transceiver
+| BL602 Pin     | LoRa SPI            | Wire Colour 
+|:--------------|:--------------------|:-------------------
+| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green
+| __`GPIO 2`__  | Do Not Connect      | 
+| __`GPIO 3`__  | `SCK`               | Yellow 
+| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
+| __`GPIO 5`__  | `D2`                | ???
+| __`GPIO 8`__  | `D3`                | ???
+| __`GPIO 11`__ | `D1`                | Dark Green
+| __`GPIO 12`__ | `D0`                | Purple
+| __`GPIO 14`__ | `NSS`               | Orange
+| __`GPIO 17`__ | `RST`               | White
+| __`3V3`__     | `3.3V`              | Red
+| __`GND`__     | `GND`               | Black
+*/
+
+#define SX1276_SPI_IDX      0  //  SPI Port 0
+#define SX1276_SPI_SDI_PIN  1  //  SPI Serial Data In Pin  (formerly MISO)
+#define SX1276_SPI_SDO_PIN  4  //  SPI Serial Data Out Pin (formerly MOSI)
+#define SX1276_SPI_CLK_PIN  3  //  SPI Clock Pin
+#define SX1276_SPI_CS_PIN  14  //  SPI Chip Select Pin
+#define SX1276_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
+#define SX1276_NRESET      17  //  Reset Pin
+#define SX1276_DIO0        12  //  DIO0 Pin
+#define SX1276_DIO1        11  //  DIO0 Pin
+#define SX1276_DIO2         5  //  DIO2 Pin
+#define SX1276_DIO3         8  //  DIO3 Pin
+#define SX1276_DIO4         0  //  TODO: DIO4 Pin
+#define SX1276_DIO5         0  //  TODO: DIO5 Pin
+#define SX1276_SPI_BAUDRATE (200 * 1000)  //  SPI Frequency (200 kHz)
 
 /*!
  * Radio complete Wake-up Time with margin for temperature compensation
