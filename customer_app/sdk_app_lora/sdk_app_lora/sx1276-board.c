@@ -129,6 +129,7 @@ void SX1276IoInit(void)
     assert(rc == 0);
 
 #ifdef NOTUSED
+    //  SX1276 SPI Settings for Mynewt OS
     spi_settings.data_order = HAL_SPI_MSB_FIRST;
     spi_settings.data_mode = HAL_SPI_MODE0;
     spi_settings.baudrate = SX1276_SPI_BAUDRATE;
