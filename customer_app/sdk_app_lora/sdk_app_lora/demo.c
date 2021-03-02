@@ -35,6 +35,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include <semphr.h>
 #include <cli.h>
 #include "radio.h"
+#include "rxinfo.h"
 #include "demo.h"
 
 #define USE_BAND_923
@@ -90,18 +91,19 @@ struct {
     int tx_success;
 } loraping_stats;
 
-static void loraping_tx(struct os_event *ev);
-static void loraping_rx(struct os_event *ev);
+static void loraping_tx(void);
+static void loraping_rx(void);
 
+#ifdef TODO
 static struct os_event loraping_ev_tx = {
     .ev_cb = loraping_tx,
 };
 static struct os_event loraping_ev_rx = {
     .ev_cb = loraping_rx,
 };
+#endif  //  TODO
 
-static void
-send_once(int is_ping)
+static void send_once(int is_ping)
 {
     int i;
 
@@ -117,8 +119,7 @@ send_once(int is_ping)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
 }
 
-static void
-loraping_tx(struct os_event *ev)
+static void loraping_tx(void)
 {
     /* Print information about last rx attempt. */
     loraping_rxinfo_print();
@@ -146,78 +147,55 @@ loraping_tx(struct os_event *ev)
     send_once(loraping_is_master);
 }
 
-static void
-loraping_rx(struct os_event *ev)
+static void loraping_rx(void)
 {
     Radio.Rx(LORAPING_RX_TIMEOUT_MS);
 }
 
-static void
-on_tx_done(void)
+static void on_tx_done(void)
 {
     loraping_stats.tx_success++;
     Radio.Sleep();
-
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
 
-static void
-on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
+static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
     Radio.Sleep();
-
     if (size > sizeof loraping_buffer) {
         size = sizeof loraping_buffer;
     }
-
     loraping_rx_size = size;
     memcpy(loraping_buffer, payload, size);
-
     loraping_rxinfo_rxed(rssi, snr);
-
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-static void
-on_tx_timeout(void)
+static void on_tx_timeout(void)
 {
     Radio.Sleep();
-
     loraping_stats.tx_timeout++;
-
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
 
-static void
-on_rx_timeout(void)
+static void on_rx_timeout(void)
 {
     Radio.Sleep();
-
     loraping_stats.rx_timeout++;
     loraping_rxinfo_timeout();
-
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-static void
-on_rx_error(void)
+static void on_rx_error(void)
 {
     loraping_stats.rx_error++;
     Radio.Sleep();
-
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
 }
 
-int
-old_main(void)
+int old_main(void)
 {
     RadioEvents_t radio_events;
-
-#ifdef ARCH_sim
-    mcu_sim_parse_args(argc, argv);
-#endif
-
-    sysinit();
 
     /* Radio initialization. */
     radio_events.TxDone = on_tx_done;
@@ -258,16 +236,8 @@ old_main(void)
                       0,        /* Hop period; N/A. */
                       LORAPING_IQ_INVERSION_ON,
                       true);    /* Continuous receive mode. */
-
     /* Immediately receive on start up. */
-    os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
-
-    /*
-     * As the last thing, process events from default event queue.
-     */
-    while (1) {
-        os_eventq_run(os_eventq_dflt_get());
-    }
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
 }
 
 /// Show the SPI data received and the interrupt counters
