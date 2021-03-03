@@ -51,7 +51,9 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_DIO3         8  //  DIO3 Pin
 #define SX1276_DIO4         0  //  TODO: DIO4 Pin
 #define SX1276_DIO5         0  //  TODO: DIO5 Pin
-#define SX1276_SPI_BAUDRATE (200 * 1000)  //  SPI Frequency (200 kHz)
+#define SX1276_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
+#define SX1276_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
+#define SX1276_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
 
 /*!
  * Radio complete Wake-up Time with margin for temperature compensation
