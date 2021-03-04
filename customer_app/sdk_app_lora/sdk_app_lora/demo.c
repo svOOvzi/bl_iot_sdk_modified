@@ -74,7 +74,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 
 #define LORAPING_TX_TIMEOUT_MS              3000    /* ms */
 #define LORAPING_RX_TIMEOUT_MS              1000    /* ms */
-#define LORAPING_BUFFER_SIZE                64
+#define LORAPING_BUFFER_SIZE                64      /* LoRa message size */
 
 const uint8_t loraping_ping_msg[] = "PING";  //  We send a "PING" message
 const uint8_t loraping_pong_msg[] = "PONG";  //  We expect a "PONG" response
