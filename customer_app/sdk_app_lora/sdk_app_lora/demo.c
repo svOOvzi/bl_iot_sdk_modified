@@ -38,7 +38,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "rxinfo.h"
 #include "demo.h"
 
-//  TODO: We are using 923 MHz for Singapore. Change this for your region.
+/// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
 #define USE_BAND_923
 
 #if defined(USE_BAND_433)
@@ -55,6 +55,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
     #error "Please define a frequency band in the compiler options."
 #endif
 
+/// LoRa Parameters
 #define LORAPING_TX_OUTPUT_POWER            14        /* dBm */
 
 #define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
@@ -75,13 +76,13 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #define LORAPING_RX_TIMEOUT_MS              1000    /* ms */
 #define LORAPING_BUFFER_SIZE                64
 
-const uint8_t loraping_ping_msg[] = "PING";
-const uint8_t loraping_pong_msg[] = "PONG";
+const uint8_t loraping_ping_msg[] = "PING";  //  We send a "PING" message
+const uint8_t loraping_pong_msg[] = "PONG";  //  We expect a "PONG" response
 
-static uint8_t loraping_buffer[LORAPING_BUFFER_SIZE];
+static uint8_t loraping_buffer[LORAPING_BUFFER_SIZE];  //  64-byte buffer for our LoRa messages
 static int loraping_rx_size;
-static int loraping_is_master = 1;
 
+/// LoRa Statistics
 struct {
     int rx_timeout;
     int rx_ping;
@@ -92,113 +93,15 @@ struct {
     int tx_success;
 } loraping_stats;
 
-static void loraping_tx(void);
-static void loraping_rx(void);
-
-#ifdef TODO
-static struct os_event loraping_ev_tx = {
-    .ev_cb = loraping_tx,
-};
-static struct os_event loraping_ev_rx = {
-    .ev_cb = loraping_rx,
-};
-#endif  //  TODO
-
-/// Send a LoRa message. If is_ping is 0, send "PONG". Otherwise send "PING".
-static void send_once(int is_ping)
-{
-    //  Copy the "PING" or "PONG" message to the transmit buffer
-    if (is_ping) {
-        memcpy(loraping_buffer, loraping_ping_msg, 4);
-    } else {
-        memcpy(loraping_buffer, loraping_pong_msg, 4);
-    }
-
-    //  Fill up the remaining space in the transmit buffer (64 bytes) with values 0, 1, 2, ...
-    for (int i = 4; i < sizeof loraping_buffer; i++) {
-        loraping_buffer[i] = i - 4;
-    }
-
-    //  Send the transmit buffer (64 bytes)
-    Radio.Send(loraping_buffer, sizeof loraping_buffer);
-}
-
-static void loraping_tx(void)
-{
-    /* Print information about last rx attempt. */
-    loraping_rxinfo_print();
-
-    if (loraping_rx_size == 0) {
-        /* Timeout. */
-    } else {
-        vTaskDelay(1);
-        if (memcmp(loraping_buffer, loraping_pong_msg, 4) == 0) {
-            loraping_stats.rx_ping++;
-        } else if (memcmp(loraping_buffer, loraping_ping_msg, 4) == 0) {
-            loraping_stats.rx_pong++;
-
-            /* A master already exists.  Become a slave. */
-            loraping_is_master = 0;
-        } else {
-            /* Valid reception but neither a PING nor a PONG message. */
-            loraping_stats.rx_other++;
-            /* Set device as master and start again. */
-            loraping_is_master = 1;
-        }
-    }
-
-    loraping_rx_size = 0;
-    send_once(loraping_is_master);
-}
-
-static void loraping_rx(void)
-{
-    Radio.Rx(LORAPING_RX_TIMEOUT_MS);
-}
-
-static void on_tx_done(void)
-{
-    loraping_stats.tx_success++;
-    Radio.Sleep();
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
-}
-
-static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
-{
-    Radio.Sleep();
-    if (size > sizeof loraping_buffer) {
-        size = sizeof loraping_buffer;
-    }
-    loraping_rx_size = size;
-    memcpy(loraping_buffer, payload, size);
-    loraping_rxinfo_rxed(rssi, snr);
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
-}
-
-static void on_tx_timeout(void)
-{
-    Radio.Sleep();
-    loraping_stats.tx_timeout++;
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
-}
-
-static void on_rx_timeout(void)
-{
-    Radio.Sleep();
-    loraping_stats.rx_timeout++;
-    loraping_rxinfo_timeout();
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
-}
-
-static void on_rx_error(void)
-{
-    loraping_stats.rx_error++;
-    Radio.Sleep();
-    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
-}
-
 void SX1276IoInit(void);            //  Defined in sx1276-board.c
 uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
+
+static void send_once(int is_ping);
+static void on_tx_done(void);
+static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
+static void on_tx_timeout(void);
+static void on_rx_timeout(void);
+static void on_rx_error(void);
 
 /// Read SX1276 / RF96 registers
 static void read_registers(char *buf, int len, int argc, char **argv)
@@ -219,13 +122,13 @@ static void read_registers(char *buf, int len, int argc, char **argv)
 /// Command to initialise the SX1276 / RF96 driver
 static void init_driver(char *buf, int len, int argc, char **argv)
 {
-    //  Set the LoRa event callbacks
+    //  Set the LoRa Callback Functions
     RadioEvents_t radio_events;
-    radio_events.TxDone = on_tx_done;
-    radio_events.RxDone = on_rx_done;
+    radio_events.TxDone    = on_tx_done;
+    radio_events.RxDone    = on_rx_done;
     radio_events.TxTimeout = on_tx_timeout;
     radio_events.RxTimeout = on_rx_timeout;
-    radio_events.RxError = on_rx_error;
+    radio_events.RxError   = on_rx_error;
 
     //  Init the SPI Port and the LoRa Transceiver
     Radio.Init(&radio_events);
@@ -276,6 +179,25 @@ static void send_message(char *buf, int len, int argc, char **argv)
     send_once(1);
 }
 
+/// Send a LoRa message. If is_ping is 0, send "PONG". Otherwise send "PING".
+static void send_once(int is_ping)
+{
+    //  Copy the "PING" or "PONG" message to the transmit buffer
+    if (is_ping) {
+        memcpy(loraping_buffer, loraping_ping_msg, 4);
+    } else {
+        memcpy(loraping_buffer, loraping_pong_msg, 4);
+    }
+
+    //  Fill up the remaining space in the transmit buffer (64 bytes) with values 0, 1, 2, ...
+    for (int i = 4; i < sizeof loraping_buffer; i++) {
+        loraping_buffer[i] = i - 4;
+    }
+
+    //  Send the transmit buffer (64 bytes)
+    Radio.Send(loraping_buffer, sizeof loraping_buffer);
+}
+
 /// Show the SPI interrupt counters, status and error codes
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
@@ -321,6 +243,98 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 	//  Loop forever, do not pass go, do not collect $200
 	for (;;) {}
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//  Unused Functions: They will be needed when we receive LoRa messages
+
+/// Callback Function that is called when our LoRa message has been transmitted
+static void on_tx_done(void)
+{
+    loraping_stats.tx_success++;
+    Radio.Sleep();
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
+}
+
+/// Callback Function that is called when a LoRa message has been received
+static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
+{
+    Radio.Sleep();
+    if (size > sizeof loraping_buffer) {
+        size = sizeof loraping_buffer;
+    }
+    loraping_rx_size = size;
+    memcpy(loraping_buffer, payload, size);
+    loraping_rxinfo_rxed(rssi, snr);
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+}
+
+/// Callback Function that is called when our LoRa message couldn't be transmitted due to timeout
+static void on_tx_timeout(void)
+{
+    Radio.Sleep();
+    loraping_stats.tx_timeout++;
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_rx);
+}
+
+/// Callback Function that is called when no LoRa messages could be received due to timeout
+static void on_rx_timeout(void)
+{
+    Radio.Sleep();
+    loraping_stats.rx_timeout++;
+    loraping_rxinfo_timeout();
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+}
+
+/// Callback Function that is called when we couldn't receive a LoRa message due to error
+static void on_rx_error(void)
+{
+    loraping_stats.rx_error++;
+    Radio.Sleep();
+    //  TODO: os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
+}
+
+#ifdef TODO  //  Needed only for receiving LoRa messages
+static int loraping_is_master = 1;  //  1 if we should send "PING", else we reply "PONG"
+#endif  //  TODO
+
+#ifdef TODO  //  Needed only for receiving LoRa messages
+/// Transmit a "PING" or "PONG" LoRa message
+static void loraping_tx(void)
+{
+    /* Print information about last rx attempt. */
+    loraping_rxinfo_print();
+
+    if (loraping_rx_size == 0) {
+        /* Timeout. */
+    } else {
+        vTaskDelay(1);
+        if (memcmp(loraping_buffer, loraping_pong_msg, 4) == 0) {
+            loraping_stats.rx_ping++;
+        } else if (memcmp(loraping_buffer, loraping_ping_msg, 4) == 0) {
+            loraping_stats.rx_pong++;
+
+            /* A master already exists.  Become a slave. */
+            loraping_is_master = 0;
+        } else {
+            /* Valid reception but neither a PING nor a PONG message. */
+            loraping_stats.rx_other++;
+            /* Set device as master and start again. */
+            loraping_is_master = 1;
+        }
+    }
+
+    loraping_rx_size = 0;
+    send_once(loraping_is_master);
+}
+#endif  //  TODO
+
+#ifdef TODO  //  Needed only for receiving LoRa messages
+/// Receive a "PING" or "PONG" LoRa message
+static void loraping_rx(void)
+{
+    Radio.Rx(LORAPING_RX_TIMEOUT_MS);
+}
+#endif  //  TODO
 
 #ifdef NOTUSED
 Output Log:
