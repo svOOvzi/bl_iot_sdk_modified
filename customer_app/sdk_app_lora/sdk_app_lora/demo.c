@@ -140,15 +140,15 @@ static void init_driver(char *buf, int len, int argc, char **argv)
     Radio.SetTxConfig(
         MODEM_LORA,
         LORAPING_TX_OUTPUT_POWER,
-        0,        /* Frequency deviation; unused with LoRa. */
+        0,        //  Frequency deviation: Unused with LoRa
         LORAPING_BANDWIDTH,
         LORAPING_SPREADING_FACTOR,
         LORAPING_CODINGRATE,
         LORAPING_PREAMBLE_LENGTH,
         LORAPING_FIX_LENGTH_PAYLOAD_ON,
-        true,     /* CRC enabled. */
-        0,        /* Frequency hopping disabled. */
-        0,        /* Hop period; N/A. */
+        true,     //  CRC enabled
+        0,        //  Frequency hopping disabled
+        0,        //  Hop period: N/A
         LORAPING_IQ_INVERSION_ON,
         LORAPING_TX_TIMEOUT_MS
     );
@@ -159,17 +159,17 @@ static void init_driver(char *buf, int len, int argc, char **argv)
         LORAPING_BANDWIDTH,
         LORAPING_SPREADING_FACTOR,
         LORAPING_CODINGRATE,
-        0,        /* AFC bandwisth; unused with LoRa. */
+        0,        //  AFC bandwidth: Unused with LoRa
         LORAPING_PREAMBLE_LENGTH,
         LORAPING_SYMBOL_TIMEOUT,
         LORAPING_FIX_LENGTH_PAYLOAD_ON,
-        0,        /* Fixed payload length; N/A. */
-        true,     /* CRC enabled. */
-        0,        /* Frequency hopping disabled. */
-        0,        /* Hop period; N/A. */
+        0,        //  Fixed payload length: N/A
+        true,     //  CRC enabled
+        0,        //  Frequency hopping disabled
+        0,        //  Hop period: N/A
         LORAPING_IQ_INVERSION_ON,
-        true
-    );    /* Continuous receive mode. */
+        true      //  Continuous receive mode
+    );    
 }
 
 /// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
