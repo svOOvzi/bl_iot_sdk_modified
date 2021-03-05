@@ -302,7 +302,7 @@ void SX1276RxIoIrqEnable(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//  GPIO Interrupt
+//  GPIO Interrupt: This code will be needed in future to handle GPIO interrupts
 
 #ifdef TODO
 
