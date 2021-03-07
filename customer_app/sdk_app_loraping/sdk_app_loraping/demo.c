@@ -34,8 +34,11 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include <task.h>
 #include <semphr.h>
 #include <cli.h>
+#include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "radio.h"
 #include "rxinfo.h"
+#include "sx1276.h"
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -222,13 +225,53 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"spi_result",     "Show SPI counters",   spi_result},
 };                                                                                   
 
-/// Init the command-line interface
+/// At startup, init the LoRa driver and send LoRa messages in a loop, at 10-second intervals
 int cli_init(void)
 {
-   //  To run a command at startup, do this...
-   //  init_driver("", 0, 0, NULL);
-   //  send_message("", 0, 0, NULL);
-   return 0;
+    //  Configure Blue LED pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = SX1276_LED;  //  Pin number
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure Blue LED pin as a GPIO Output Pin (instead of GPIO Input)
+    int rc = bl_gpio_enable_output(SX1276_LED, 0, 0);
+    assert(rc == 0);
+
+    //  Set Blue LED pin to High, to turn the LED off
+    rc = bl_gpio_output_set(SX1276_LED, 1);
+    assert(rc == 0);
+
+    //  Init the LoRa driver
+    init_driver("", 0, 0, NULL);
+
+    //  Loop forever sending messages
+    for (;;) {
+        //  Wait 10 seconds
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
+
+        //  Send the "PING" message
+        send_message("", 0, 0, NULL);
+
+        //  Flip the Blue LED on and off
+        static int blink = 0;
+        blink = (blink + 1) % 2;
+        if (blink == 0) {
+            //  Set Blue LED pin to High, to turn the LED off
+            rc = bl_gpio_output_set(SX1276_LED, 1);
+            assert(rc == 0);
+        } else {
+            //  Set Blue LED pin to Low, to turn the LED on
+            rc = bl_gpio_output_set(SX1276_LED, 0);
+            assert(rc == 0);
+        }
+    }
+
+    return 0;
 }
 
 /// TODO: We now show assertion failures in development.
