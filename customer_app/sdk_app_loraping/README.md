@@ -2,4 +2,4 @@
 
 Demo Firmware for LoRa Ping
 
-See https://lupyuen.github.io/articles/lora
+See https://lupyuen.github.io/articles/wisblock
