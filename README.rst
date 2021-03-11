@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"RAKwireless WisBlock talks LoRa with PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/wisblock>`_
+
 - `"Connect PineCone BL602 to LoRa Transceiver" <https://lupyuen.github.io/articles/lora>`_
 
 - `"The RISC-V BL602 Book" <https://lupyuen.github.io/articles/book>`_
@@ -45,7 +47,7 @@ Changes
 
 - "master" branch contains a new Demo Firmware for LoRa SX1276 / RF96 with SPI Interface: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lora/
 
-- "loraping" branch contains a new Demo Firmware for LoRa Ping: https://github.com/lupyuen/bl_iot_sdk/blob/loraping/customer_app/sdk_app_loraping/
+- "master" branch contains a new Demo Firmware for LoRa Ping: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_loraping/
 
 BL602 SDK (Pine64 version)
 ==========================
