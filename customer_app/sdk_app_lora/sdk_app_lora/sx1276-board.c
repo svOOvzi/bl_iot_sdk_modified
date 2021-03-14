@@ -304,6 +304,7 @@ void SX1276RxIoIrqEnable(void)
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
+/// TODO: Register Interrupt Handler for GPIO
 void bl_gpio_register(gpio_ctx_t *pstnode)
 {
     bl_gpio_intmask(pstnode->gpioPin, 1);
@@ -313,6 +314,7 @@ void bl_gpio_register(gpio_ctx_t *pstnode)
     bl_irq_enable(GPIO_INT0_IRQn);
 }
 
+/// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received
 static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
 {
     int ret;
@@ -328,6 +330,7 @@ static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
     return;
 }
 
+/// TODO: Forward the received LoRa Packet to Application Task
 static int exec_gpio_handler(gpio_ctx_t *pstnode)
 {
     bl_gpio_intmask(pstnode->gpioPin, 1);
@@ -340,6 +343,7 @@ static int exec_gpio_handler(gpio_ctx_t *pstnode)
     return -1;
 }
 
+/// TODO: Check whether GPIO Interrupt should be handled
 static int check_gpio_is_interrupt(int gpioPin)
 {
     int bitcount = 0;
