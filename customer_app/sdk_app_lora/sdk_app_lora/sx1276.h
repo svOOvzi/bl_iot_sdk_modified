@@ -25,13 +25,10 @@ Maintainer: Miguel Luis and Gregory Cristian
 | BL602 Pin     | LoRa SPI            | Wire Colour 
 |:--------------|:--------------------|:-------------------
 | __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green
-| __`GPIO 2`__  | Do Not Connect      | 
+| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
 | __`GPIO 3`__  | `SCK`               | Yellow 
 | __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `D2`                | ???
-| __`GPIO 8`__  | `D3`                | ???
-| __`GPIO 11`__ | `D1`                | Dark Green
-| __`GPIO 12`__ | `D0`                | Purple
+| __`GPIO 11`__ | Do Not Connect      | (Blue LED)
 | __`GPIO 14`__ | `NSS`               | Orange
 | __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
@@ -45,12 +42,13 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_SPI_CS_PIN  14  //  SPI Chip Select Pin
 #define SX1276_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
 #define SX1276_NRESET      17  //  Reset Pin
-#define SX1276_DIO0        12  //  DIO0 Pin
-#define SX1276_DIO1        11  //  DIO1 Pin
-#define SX1276_DIO2         5  //  DIO2 Pin
-#define SX1276_DIO3         8  //  DIO3 Pin
+#define SX1276_DIO0         0  //  TODO: DIO0 Pin
+#define SX1276_DIO1         0  //  TODO: DIO1 Pin
+#define SX1276_DIO2         0  //  TODO: DIO2 Pin
+#define SX1276_DIO3         0  //  TODO: DIO3 Pin
 #define SX1276_DIO4         0  //  TODO: DIO4 Pin
 #define SX1276_DIO5         0  //  TODO: DIO5 Pin
+#define SX1276_LED         11  //  Blue LED, will blink during transmission
 #define SX1276_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 #define SX1276_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
 #define SX1276_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
