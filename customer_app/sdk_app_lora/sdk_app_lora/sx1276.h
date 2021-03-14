@@ -49,8 +49,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_DIO1         8  //  DIO1: Trigger for Sync Timeout
 #define SX1276_DIO2        11  //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
 #define SX1276_DIO3        12  //  DIO3: Trigger for CAD Done
-#define SX1276_DIO4_UNUSED  0  //  DIO4: Unused
-#define SX1276_DIO5_UNUSED  0  //  DIO5: Unused
+#define SX1276_DIO4_UNUSED  0  //  DIO4: Unused (FSK only)
+#define SX1276_DIO5_UNUSED  0  //  DIO5: Unused (FSK only)
 #define SX1276_LED          0  //  LED, will blink during transmission
 #define SX1276_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 #define SX1276_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
