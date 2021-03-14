@@ -28,12 +28,12 @@ Maintainer: Miguel Luis and Gregory Cristian
 | __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
 | __`GPIO 3`__  | `SCK`               | Yellow 
 | __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `DIO0`              | ???
-| __`GPIO 8`__  | `DIO1`              | ???
-| __`GPIO 11`__ | `DIO2`              | ???
-| __`GPIO 12`__ | `DIO3`              | ???
-| __`GPIO 14`__ | `NSS`               | Orange
-| __`GPIO 17`__ | `RST`               | White
+| __`GPIO 5`__  | `DIO0`              | Purple
+| __`GPIO 8`__  | `DIO1`              | Dark Green
+| __`GPIO 11`__ | `DIO2`              | Orange 1
+| __`GPIO 12`__ | `DIO3`              | White 1
+| __`GPIO 14`__ | `NSS`               | Orange 2
+| __`GPIO 17`__ | `RST`               | White 2
 | __`3V3`__     | `3.3V`              | Red
 | __`GND`__     | `GND`               | Black
 */
