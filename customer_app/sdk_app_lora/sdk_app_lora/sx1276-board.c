@@ -144,42 +144,42 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 
     if (irqHandlers[0] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO0, irqHandlers[0], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO0);
     }
 
     if (irqHandlers[1] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO1, irqHandlers[1], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO1);
     }
 
     if (irqHandlers[2] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO2, irqHandlers[2], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO2);
     }
 
     if (irqHandlers[3] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO3, irqHandlers[3], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO3);
     }
 
     if (irqHandlers[4] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO4, irqHandlers[4], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO4);
     }
 
     if (irqHandlers[5] != NULL) {
         rc = hal_gpio_irq_init(SX1276_DIO5, irqHandlers[5], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
         assert(rc == 0);
         hal_gpio_irq_enable(SX1276_DIO5);
     }
@@ -305,27 +305,30 @@ void SX1276RxIoIrqEnable(void)
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
 /// Register Interrupt Handler for GPIO
-void bl_gpio_register(gpio_ctx_t *pstnode)
+void bl_gpio_register(
+    uint8_t gpioPin,     //  GPIO Pin Number
+    uint8_t intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
+    uint8_t intTrgMod)   //  GPIO Interrupt Trigger Mode (see below)
 {
     //  Disable GPIO Interrupt
-    bl_gpio_intmask(pstnode->gpioPin, 1);
+    bl_gpio_intmask(gpioPin, 1);
 
     //  Configure GPIO Pin for GPIO Interrupt
     bl_set_gpio_intmod(
-        pstnode->gpioPin,     //  GPIO Pin Number
-        pstnode->intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
-        pstnode->intTrgMod    //  GPIO Interrupt Trigger Mode (see below)
+        gpioPin,     //  GPIO Pin Number
+        intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
+        intTrgMod    //  GPIO Interrupt Trigger Mode (see below)
     );
 
     //  Register Interrupt Handler for GPIO Interrupt
     bl_irq_register_with_ctx(
         GPIO_INT0_IRQn,         //  GPIO Interrupt
         gpio_interrupt_entry,   //  Interrupt Handler
-        pstnode                 //  Parameter for Interrupt Handler
+        gpioPin                 //  Parameter for Interrupt Handler
     );
 
     //  Enable GPIO Interrupt
-    bl_gpio_intmask(pstnode->gpioPin, 0);
+    bl_gpio_intmask(gpioPin, 0);
     bl_irq_enable(GPIO_INT0_IRQn);
 }
 
@@ -339,29 +342,28 @@ void bl_gpio_register(gpio_ctx_t *pstnode)
 //  GLB_GPIO_INT_TRIG_NEG_LEVEL: GPIO negative edge level trigger (32k 3T)
 //  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
 
-/// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received
-static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
+/// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received.
+static void gpio_interrupt_entry(
+    uint8_t gpioPin)  //  GPIO Pin Number
 {
-    int ret;
-
-    while (pstnode) {
-        ret = check_gpio_is_interrupt(pstnode->gpioPin);
-        if (ret == 0) {
-            exec_gpio_handler(pstnode);
-        }
-
-        pstnode = pstnode->next;
+    int ret = check_gpio_is_interrupt(gpioPin);
+    if (ret == 0) {
+        exec_gpio_handler(gpioPin);
     }
-    return;
 }
 
 /// TODO: Forward the received LoRa Packet to Application Task
-static int exec_gpio_handler(gpio_ctx_t *pstnode)
+static int exec_gpio_handler(
+    uint8_t gpioPin)  //  GPIO Pin Number
 {
-    bl_gpio_intmask(pstnode->gpioPin, 1);
+    //  Disable GPIO Interrupt
+    bl_gpio_intmask(gpioPin, 1);
 
     if (pstnode->gpio_handler) {
         pstnode->gpio_handler(pstnode);
+
+        //  Enable GPIO Interrupt
+        bl_gpio_intmask(gpioPin, 0);
         return 0;
     }
 
@@ -369,7 +371,8 @@ static int exec_gpio_handler(gpio_ctx_t *pstnode)
 }
 
 /// TODO: Check whether GPIO Interrupt should be handled
-static int check_gpio_is_interrupt(int gpioPin)
+static int check_gpio_is_interrupt(
+    uint8_t gpioPin)  //  GPIO Pin Number
 {
     int bitcount = 0;
     int reg_val = 0;
