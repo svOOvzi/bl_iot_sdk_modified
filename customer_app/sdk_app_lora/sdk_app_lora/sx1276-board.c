@@ -310,6 +310,8 @@ void bl_gpio_register(
     uint8_t intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
     uint8_t intTrgMod)   //  GPIO Interrupt Trigger Mode (see below)
 {
+    //  TODO: Configure pin for GPIO Input
+    
     //  Disable GPIO Interrupt
     bl_gpio_intmask(gpioPin, 1);
 
