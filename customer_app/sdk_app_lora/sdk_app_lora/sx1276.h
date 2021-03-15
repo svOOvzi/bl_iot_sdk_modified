@@ -24,12 +24,12 @@ Maintainer: Miguel Luis and Gregory Cristian
 /* Connect BL602 to SX1276 / RF96 LoRa Transceiver
 | BL602 Pin     | LoRa SPI            | Wire Colour 
 |:--------------|:--------------------|:-------------------
+| __`GPIO 0`__  | `DIO1`              | Dark Green
 | __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green
 | __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
 | __`GPIO 3`__  | `SCK`               | Yellow 
 | __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
 | __`GPIO 5`__  | `DIO0`              | Purple
-| __`GPIO 8`__  | `DIO1`              | Dark Green
 | __`GPIO 11`__ | `DIO2`              | Orange 1
 | __`GPIO 12`__ | `DIO3`              | White 1
 | __`GPIO 14`__ | `NSS`               | Orange 2
@@ -46,12 +46,11 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
 #define SX1276_NRESET      17  //  Reset Pin
 #define SX1276_DIO0         5  //  DIO0: Trigger for Packet Received
-#define SX1276_DIO1         8  //  DIO1: Trigger for Sync Timeout
+#define SX1276_DIO1         0  //  DIO1: Trigger for Sync Timeout
 #define SX1276_DIO2        11  //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
 #define SX1276_DIO3        12  //  DIO3: Trigger for CAD Done
 #define SX1276_DIO4_UNUSED  0  //  DIO4: Unused (FSK only)
 #define SX1276_DIO5_UNUSED  0  //  DIO5: Unused (FSK only)
-#define SX1276_LED          0  //  LED, will blink during transmission
 #define SX1276_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 #define SX1276_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
 #define SX1276_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
