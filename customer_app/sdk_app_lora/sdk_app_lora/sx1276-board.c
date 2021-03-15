@@ -304,15 +304,40 @@ void SX1276RxIoIrqEnable(void)
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
-/// TODO: Register Interrupt Handler for GPIO
+/// Register Interrupt Handler for GPIO
 void bl_gpio_register(gpio_ctx_t *pstnode)
 {
+    //   Disable GPIO Interrupt
     bl_gpio_intmask(pstnode->gpioPin, 1);
-    bl_set_gpio_intmod(pstnode->gpioPin, pstnode->intCtrlMod, pstnode->intTrgMod);
-    bl_irq_register_with_ctx(GPIO_INT0_IRQn, gpio_interrupt_entry, pstnode);
+
+    //  Configure GPIO Pin for GPIO Interrupt
+    bl_set_gpio_intmod(
+        pstnode->gpioPin,     //  GPIO Pin Number
+        pstnode->intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
+        pstnode->intTrgMod    //  GPIO Interrupt Trigger Mode (see below)
+    );
+
+    //  Register Interrupt Handler for GPIO Interrupt
+    bl_irq_register_with_ctx(
+        GPIO_INT0_IRQn,         //  GPIO Interrupt
+        gpio_interrupt_entry,   //  Interrupt Handler
+        pstnode                 //  Parameter for Interrupt Handler
+    );
+
+    //  Enable GPIO Interrupt
     bl_gpio_intmask(pstnode->gpioPin, 0);
     bl_irq_enable(GPIO_INT0_IRQn);
 }
+
+//  GPIO Interrupt Control Modes:
+//  GLB_GPIO_INT_CONTROL_SYNC:  GPIO interrupt sync mode
+//  GLB_GPIO_INT_CONTROL_ASYNC: GPIO interrupt async mode
+
+//  GPIO Interrupt Trigger Modes:
+//  GLB_GPIO_INT_TRIG_NEG_PULSE: GPIO negative edge pulse trigger
+//  GLB_GPIO_INT_TRIG_POS_PULSE: GPIO positive edge pulse trigger
+//  GLB_GPIO_INT_TRIG_NEG_LEVEL: GPIO negative edge level trigger (32k 3T)
+//  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
 
 /// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received
 static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
