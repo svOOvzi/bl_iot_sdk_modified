@@ -307,7 +307,7 @@ void SX1276RxIoIrqEnable(void)
 /// Register Interrupt Handler for GPIO
 void bl_gpio_register(gpio_ctx_t *pstnode)
 {
-    //   Disable GPIO Interrupt
+    //  Disable GPIO Interrupt
     bl_gpio_intmask(pstnode->gpioPin, 1);
 
     //  Configure GPIO Pin for GPIO Interrupt
