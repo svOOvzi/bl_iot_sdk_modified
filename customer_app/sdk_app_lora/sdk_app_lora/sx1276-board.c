@@ -308,10 +308,28 @@ void SX1276RxIoIrqEnable(void)
 void bl_gpio_register(
     uint8_t gpioPin,     //  GPIO Pin Number
     uint8_t intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
-    uint8_t intTrgMod)   //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t intTrgMod,   //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t pullup,      //  1 for pullup, 0 for no pullup
+    uint8_t pulldown)    //  1 for pulldown, 0 for no pulldown
 {
-    //  TODO: Configure pin for GPIO Input
-    
+    //  Configure pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = gpioPin;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure pin as a GPIO Input Pin
+    int rc = bl_gpio_enable_input(
+        gpioPin,  //  GPIO Pin Number
+        pullup,   //  1 for pullup, 0 for no pullup
+        pulldown  //  1 for pulldown, 0 for no pulldown
+    );
+    assert(rc == 0);
+
     //  Disable GPIO Interrupt
     bl_gpio_intmask(gpioPin, 1);
 
