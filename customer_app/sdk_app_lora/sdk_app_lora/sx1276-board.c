@@ -330,6 +330,7 @@ static int register_gpio_handler(
     uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
 {
     //  TODO: Use callout to invoke handler
+    printf("Register Handler: GPIO %d\r\n", (int) gpioPin);
 
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];

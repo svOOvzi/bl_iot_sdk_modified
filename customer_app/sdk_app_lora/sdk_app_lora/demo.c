@@ -97,6 +97,7 @@ void SX1276IoInit(void);            //  Defined in sx1276-board.c
 uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
 
 static void send_once(int is_ping);
+static void loraping_rx(void);
 static void on_tx_done(void);
 static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
 static void on_tx_timeout(void);
@@ -198,6 +199,20 @@ static void send_once(int is_ping)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
 }
 
+/// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
+static void receive_message(char *buf, int len, int argc, char **argv)
+{
+    //  Receive a "PING" or "PONG" LoRa message
+    loraping_rx();
+}
+
+/// Receive a "PING" or "PONG" LoRa message
+static void loraping_rx(void)
+{
+    //  Receive a LoRa message
+    Radio.Rx(LORAPING_RX_TIMEOUT_MS);
+}
+
 /// Show the SPI interrupt counters, status and error codes
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
@@ -225,10 +240,11 @@ static void spi_result(char *buf, int len, int argc, char **argv)
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"init_driver",    "Init LoRa driver",    init_driver},
-    {"send_message",   "Send LoRa message",   send_message},
-    {"read_registers", "Read registers",      read_registers},
-    {"spi_result",     "Show SPI counters",   spi_result},
+    {"init_driver",      "Init LoRa driver",       init_driver},
+    {"send_message",     "Send LoRa message",      send_message},
+    {"receive_message",  "Receive LoRa message",   receive_message},
+    {"read_registers",   "Read registers",         read_registers},
+    {"spi_result",       "Show SPI counters",      spi_result},
 };                                                                                   
 
 /// Init the command-line interface
@@ -337,10 +353,3 @@ static void loraping_tx(void)
 }
 #endif  //  TODO
 
-#ifdef TODO  //  Needed only for receiving LoRa messages
-/// Receive a "PING" or "PONG" LoRa message
-static void loraping_rx(void)
-{
-    Radio.Rx(LORAPING_RX_TIMEOUT_MS);
-}
-#endif  //  TODO
