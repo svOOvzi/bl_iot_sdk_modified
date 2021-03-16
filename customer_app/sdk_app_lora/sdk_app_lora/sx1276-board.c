@@ -319,6 +319,7 @@ static int check_gpio_is_interrupt(
     uint8_t gpioPin);  //  GPIO Pin Number
 
 /// Register Interrupt Handler for GPIO. Return 0 if successful.
+/// Based on bl_gpio_register in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static int register_gpio_handler(
     uint8_t gpioPin,         //  GPIO Pin Number
     DioIrqHandler *handler,  //  GPIO Handler Function
