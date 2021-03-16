@@ -19,10 +19,14 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl_irq.h>          //  For bl_irq_register_with_ctx
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
+
+/// From https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c#L39
+#define GPIP_INT_STATE_OFFSET    (0x1a8)
 
 /// Register Interrupt Handler for GPIO. Return 0 if successful.
 static int register_gpio_handler(
@@ -308,7 +312,7 @@ void SX1276RxIoIrqEnable(void)
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
 static void gpio_interrupt_entry(
-    uint8_t gpioPin);  //  GPIO Pin Number
+    void *gpioPin);  //  GPIO Pin Number
 static int exec_gpio_handler(
     uint8_t gpioPin);  //  GPIO Pin Number
 static int check_gpio_is_interrupt(
@@ -357,7 +361,7 @@ static int register_gpio_handler(
     bl_irq_register_with_ctx(
         GPIO_INT0_IRQn,         //  GPIO Interrupt
         gpio_interrupt_entry,   //  Interrupt Handler
-        gpioPin                 //  Parameter for Interrupt Handler
+        (void *) (int) gpioPin  //  Parameter for Interrupt Handler
     );
 
     //  Enable GPIO Interrupt
@@ -377,9 +381,11 @@ static int register_gpio_handler(
 //  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
 
 /// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received.
+/// Based on https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static void gpio_interrupt_entry(
-    uint8_t gpioPin)  //  GPIO Pin Number
+    void *gpioPin0)  //  GPIO Pin Number
 {
+    uint8_t gpioPin = (uint8_t) (int) gpioPin0;
     int ret = check_gpio_is_interrupt(gpioPin);
     if (ret == 0) {
         exec_gpio_handler(gpioPin);
@@ -393,20 +399,21 @@ static int exec_gpio_handler(
     //  Disable GPIO Interrupt
     bl_gpio_intmask(gpioPin, 1);
 
+#ifdef TODO
     //  TODO: Find handler for the GPIO Interrupt
     if (pstnode->gpio_handler) {
         //  TODO: Use callout to invoke handler
         pstnode->gpio_handler(pstnode);
-
-        //  Enable GPIO Interrupt
-        bl_gpio_intmask(gpioPin, 0);
-        return 0;
     }
+#endif  //  TODO
 
-    return -1;
+    //  Enable GPIO Interrupt
+    bl_gpio_intmask(gpioPin, 0);
+    return 0;
 }
 
-/// TODO: Check whether interrupt is a GPIO Interrupt
+/// TODO: Check whether interrupt is a GPIO Interrupt.
+/// From https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static int check_gpio_is_interrupt(
     uint8_t gpioPin)  //  GPIO Pin Number
 {
