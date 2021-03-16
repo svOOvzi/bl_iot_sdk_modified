@@ -294,6 +294,7 @@ uint32_t SX1276GetBoardTcxoWakeupTime(void)
 /// Disable GPIO Interrupts for DIO0 to DIO3
 void SX1276RxIoIrqDisable(void)
 {
+    printf("SX1276 disable interrupts\r\n");
     if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 1); }
     if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 1); }
     if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 1); }
@@ -303,6 +304,7 @@ void SX1276RxIoIrqDisable(void)
 /// Enable GPIO Interrupts for DIO0 to DIO3
 void SX1276RxIoIrqEnable(void)
 {
+    printf("SX1276 enable interrupts\r\n");
     if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 0); }
     if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 0); }
     if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 0); }
@@ -330,7 +332,7 @@ static int register_gpio_handler(
     uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
 {
     //  TODO: Use callout to invoke handler
-    printf("Register Handler: GPIO %d\r\n", (int) gpioPin);
+    printf("SX1276 register handler: GPIO %d\r\n", (int) gpioPin);
 
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
