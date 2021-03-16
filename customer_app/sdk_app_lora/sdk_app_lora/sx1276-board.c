@@ -24,6 +24,15 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1276.h"
 #include "sx1276-board.h"
 
+/// Register Interrupt Handler for GPIO. Return 0 if successful.
+static int register_gpio_handler(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler,  //  GPIO Handler Function
+    uint8_t intCtrlMod,      //  GPIO Interrupt Control Mode (see below)
+    uint8_t intTrgMod,       //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t pullup,          //  1 for pullup, 0 for no pullup
+    uint8_t pulldown);       //  1 for pulldown, 0 for no pulldown
+
 extern DioIrqHandler *DioIrq[];
 
 #if SX1276_HAS_ANT_SW
@@ -127,65 +136,59 @@ void SX1276IoInit(void)
         SX1276_SPI_SDO_PIN    //  SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
-
-#ifdef NOTUSED
-    //  SX1276 SPI Settings for Mynewt OS
-    spi_settings.data_order = HAL_SPI_MSB_FIRST;
-    spi_settings.data_mode = HAL_SPI_MODE0;
-    spi_settings.baudrate = SX1276_SPI_BAUDRATE;
-    spi_settings.word_size = HAL_SPI_WORD_SIZE_8BIT;
-#endif  //  NOTUSED
 }
 
+/// Register GPIO Interrupt Handlers for DIO0 to DIO5
 void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
-#ifdef TODO
     int rc;
 
-    if (irqHandlers[0] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO0, irqHandlers[0], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO0: Trigger for Packet Received
+    if (SX1276_DIO0 >= 0 && irqHandlers[0] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO0, irqHandlers[0], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO0);
     }
 
-    if (irqHandlers[1] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO1, irqHandlers[1], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO1: Trigger for Sync Timeout
+    if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO1);
     }
 
-    if (irqHandlers[2] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO2, irqHandlers[2], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+    if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO2);
     }
 
-    if (irqHandlers[3] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO3, irqHandlers[3], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO3: Trigger for CAD Done.
+    //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
+    //  is in use, by scanning very quickly for the LoRa Packet Preamble.
+    if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO3);
     }
 
-    if (irqHandlers[4] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO4, irqHandlers[4], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO4: Unused (FSK only)
+    if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO4);
     }
 
-    if (irqHandlers[5] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO5, irqHandlers[5], NULL,
-                               GLB_GPIO_INT_TRIG_POS_PULSE, HAL_GPIO_PULL_NONE);
+    //  DIO5: Unused (FSK only)
+    if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_SYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO5);
     }
-#endif  //  TODO
 }
 
+/// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
 void SX1276IoDeInit( void )
 {
 #ifdef TODO
@@ -281,36 +284,35 @@ uint32_t SX1276GetBoardTcxoWakeupTime(void)
     return 0;
 }
 
+/// Disable GPIO Interrupts for DIO0 to DIO3
 void SX1276RxIoIrqDisable(void)
 {
-#ifdef TODO
-    hal_gpio_irq_disable(SX1276_DIO0);
-    hal_gpio_irq_disable(SX1276_DIO1);
-    hal_gpio_irq_disable(SX1276_DIO2);
-    hal_gpio_irq_disable(SX1276_DIO3);
-#endif  //  TODO
+    if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 1); }
+    if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 1); }
+    if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 1); }
+    if (SX1276_DIO3 >= 0) { bl_gpio_intmask(SX1276_DIO3, 1); }
 }
 
+/// Enable GPIO Interrupts for DIO0 to DIO3
 void SX1276RxIoIrqEnable(void)
 {
-#ifdef TODO
-    hal_gpio_irq_enable(SX1276_DIO0);
-    hal_gpio_irq_enable(SX1276_DIO1);
-    hal_gpio_irq_enable(SX1276_DIO2);
-    hal_gpio_irq_enable(SX1276_DIO3);
-#endif  //  TODO
+    if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 0); }
+    if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 0); }
+    if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 0); }
+    if (SX1276_DIO3 >= 0) { bl_gpio_intmask(SX1276_DIO3, 0); }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
-/// Register Interrupt Handler for GPIO
-void bl_gpio_register(
-    uint8_t gpioPin,     //  GPIO Pin Number
-    uint8_t intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
-    uint8_t intTrgMod,   //  GPIO Interrupt Trigger Mode (see below)
-    uint8_t pullup,      //  1 for pullup, 0 for no pullup
-    uint8_t pulldown)    //  1 for pulldown, 0 for no pulldown
+/// Register Interrupt Handler for GPIO. Return 0 if successful.
+static int register_gpio_handler(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler,  //  GPIO Handler Function
+    uint8_t intCtrlMod,      //  GPIO Interrupt Control Mode (see below)
+    uint8_t intTrgMod,       //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t pullup,          //  1 for pullup, 0 for no pullup
+    uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
 {
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
@@ -350,6 +352,7 @@ void bl_gpio_register(
     //  Enable GPIO Interrupt
     bl_gpio_intmask(gpioPin, 0);
     bl_irq_enable(GPIO_INT0_IRQn);
+    return 0;
 }
 
 //  GPIO Interrupt Control Modes:
@@ -390,7 +393,7 @@ static int exec_gpio_handler(
     return -1;
 }
 
-/// TODO: Check whether GPIO Interrupt should be handled
+/// TODO: Check whether interrupt is a GPIO Interrupt
 static int check_gpio_is_interrupt(
     uint8_t gpioPin)  //  GPIO Pin Number
 {
