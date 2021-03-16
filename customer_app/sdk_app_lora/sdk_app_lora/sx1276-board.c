@@ -314,6 +314,8 @@ static int register_gpio_handler(
     uint8_t pullup,          //  1 for pullup, 0 for no pullup
     uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
 {
+    //  TODO: Use callout to invoke handler
+
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
     pins[0] = gpioPin;
@@ -382,7 +384,9 @@ static int exec_gpio_handler(
     //  Disable GPIO Interrupt
     bl_gpio_intmask(gpioPin, 1);
 
+    //  TODO: Find handler for the GPIO Interrupt
     if (pstnode->gpio_handler) {
+        //  TODO: Use callout to invoke handler
         pstnode->gpio_handler(pstnode);
 
         //  Enable GPIO Interrupt
