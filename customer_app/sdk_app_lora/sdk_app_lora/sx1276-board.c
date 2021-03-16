@@ -142,28 +142,29 @@ void SX1276IoInit(void)
     assert(rc == 0);
 }
 
-/// Register GPIO Interrupt Handlers for DIO0 to DIO5
+/// Register GPIO Interrupt Handlers for DIO0 to DIO5.
+/// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
     int rc;
 
     //  DIO0: Trigger for Packet Received
     if (SX1276_DIO0 >= 0 && irqHandlers[0] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO0, irqHandlers[0], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO0, irqHandlers[0], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
 
     //  DIO1: Trigger for Sync Timeout
     if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
 
     //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
     if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
@@ -172,21 +173,21 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
     //  is in use, by scanning very quickly for the LoRa Packet Preamble.
     if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
 
     //  DIO4: Unused (FSK only)
     if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
 
     //  DIO5: Unused (FSK only)
     if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_SYNC,
+        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
@@ -374,12 +375,14 @@ static int register_gpio_handler(
 //  GPIO Interrupt Control Modes:
 //  GLB_GPIO_INT_CONTROL_SYNC:  GPIO interrupt sync mode
 //  GLB_GPIO_INT_CONTROL_ASYNC: GPIO interrupt async mode
+//  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 
 //  GPIO Interrupt Trigger Modes:
 //  GLB_GPIO_INT_TRIG_NEG_PULSE: GPIO negative edge pulse trigger
 //  GLB_GPIO_INT_TRIG_POS_PULSE: GPIO positive edge pulse trigger
 //  GLB_GPIO_INT_TRIG_NEG_LEVEL: GPIO negative edge level trigger (32k 3T)
 //  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
+//  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 
 /// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received.
 /// Based on https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
