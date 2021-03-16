@@ -213,6 +213,7 @@ void SX1276IoDeInit( void )
 #endif  //  TODO
 }
 
+/// Get the Power Amplifier configuration
 uint8_t SX1276GetPaSelect(uint32_t channel)
 {
     uint8_t pacfg;
@@ -273,6 +274,7 @@ SX1276SetAntSw(uint8_t rxTx)
 }
 #endif
 
+/// Checks if the given RF frequency is supported by the hardware
 bool SX1276CheckRfFrequency(uint32_t frequency)
 {
     // Implement check. Currently all frequencies are supported
@@ -304,6 +306,13 @@ void SX1276RxIoIrqEnable(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
+
+static void gpio_interrupt_entry(
+    uint8_t gpioPin);  //  GPIO Pin Number
+static int exec_gpio_handler(
+    uint8_t gpioPin);  //  GPIO Pin Number
+static int check_gpio_is_interrupt(
+    uint8_t gpioPin);  //  GPIO Pin Number
 
 /// Register Interrupt Handler for GPIO. Return 0 if successful.
 static int register_gpio_handler(
