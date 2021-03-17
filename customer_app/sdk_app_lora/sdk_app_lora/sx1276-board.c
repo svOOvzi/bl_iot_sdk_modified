@@ -400,7 +400,7 @@ static void gpio_interrupt_entry(
 }
 
 /// Interrupt Counters
-int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter;
+int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
 
 /// TODO: Forward the received LoRa Packet to Application Task
 static int exec_gpio_handler(
@@ -416,6 +416,7 @@ static int exec_gpio_handler(
     else if (SX1276_DIO3 >= 0 && gpioPin == (uint8_t) SX1276_DIO3) { g_dio3_counter++; }
     else if (SX1276_DIO4 >= 0 && gpioPin == (uint8_t) SX1276_DIO4) { g_dio4_counter++; }
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
+    else { g_nodio_counter++; }
 
 #ifdef TODO
     //  TODO: Find handler for the GPIO Interrupt

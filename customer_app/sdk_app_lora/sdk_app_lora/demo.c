@@ -217,13 +217,14 @@ static void loraping_rx(void)
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
     //  SX1276 Interrupt Counters defined in sx1276-board.c
-    extern int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter;
+    extern int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
     printf("DIO0 Interrupts: %d\r\n",   g_dio0_counter);
     printf("DIO1 Interrupts: %d\r\n",   g_dio1_counter);
     printf("DIO2 Interrupts: %d\r\n",   g_dio2_counter);
     printf("DIO3 Interrupts: %d\r\n",   g_dio3_counter);
     printf("DIO4 Interrupts: %d\r\n",   g_dio4_counter);
     printf("DIO5 Interrupts: %d\r\n",   g_dio5_counter);
+    printf("Unknown Int:     %d\r\n",   g_nodio_counter);
 
     //  Show the Interrupt Counters, Status and Error Codes defined in components/hal_drv/bl602_hal/hal_spi.c
     extern int g_tx_counter, g_rx_counter;
