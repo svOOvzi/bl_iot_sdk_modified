@@ -387,7 +387,7 @@ static int register_gpio_handler(
 //  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
 //  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 
-/// TODO: Interrupt Handler for GPIO, triggered when LoRa Packet is received.
+/// Interrupt Handler for GPIO, triggered when LoRa Packet is received.
 /// Based on https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static void gpio_interrupt_entry(
     void *gpioPin0)  //  GPIO Pin Number
@@ -402,7 +402,7 @@ static void gpio_interrupt_entry(
 /// Interrupt Counters
 int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
 
-/// TODO: Forward the received LoRa Packet to Application Task
+/// Handle GPIO Interrupt
 static int exec_gpio_handler(
     uint8_t gpioPin)  //  GPIO Pin Number
 {
@@ -432,7 +432,7 @@ static int exec_gpio_handler(
     return 0;
 }
 
-/// TODO: Check whether interrupt is a GPIO Interrupt.
+/// Check whether interrupt is a GPIO Interrupt.
 /// From https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static int check_gpio_is_interrupt(
     uint8_t gpioPin)  //  GPIO Pin Number
