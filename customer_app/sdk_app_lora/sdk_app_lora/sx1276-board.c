@@ -426,11 +426,11 @@ static int exec_gpio_handler(
     }
 #endif  //  TODO
 
-    //  After 2 interrupts, we suppress interrupts to troubleshoot the 
+    //  After 1 interrupt, we suppress interrupts to troubleshoot the 
     //  hanging upon receiving a LoRa Packet.
     //  TODO: Always enable interrupts
     if (g_dio0_counter + g_dio1_counter + g_dio2_counter + g_dio3_counter
-        + g_dio4_counter + g_dio5_counter + g_nodio_counter < 2) {
+        + g_dio4_counter + g_dio5_counter + g_nodio_counter < 1) {
         //  Enable GPIO Interrupt 
         bl_gpio_intmask(gpioPin, 0);
     }
