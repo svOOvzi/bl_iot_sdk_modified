@@ -155,6 +155,7 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
         assert(rc == 0);
     }
 
+#ifdef TODO
     //  DIO1: Trigger for Sync Timeout
     if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
         rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
@@ -191,6 +192,7 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
             GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
         assert(rc == 0);
     }
+#endif  //  TODO
 }
 
 /// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
