@@ -426,8 +426,9 @@ static int exec_gpio_handler(
     }
 #endif  //  TODO
 
-    //  Enable GPIO Interrupt
-    bl_gpio_intmask(gpioPin, 0);
+    //  TODO: Enable GPIO Interrupt. We disable interrupts now
+    //  to troubleshoot the hanging upon receiving a LoRa Packet.
+    //  bl_gpio_intmask(gpioPin, 0);
     return 0;
 }
 
