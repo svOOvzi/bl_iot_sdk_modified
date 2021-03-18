@@ -420,13 +420,13 @@ static int exec_gpio_handler(
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
     else { g_nodio_counter++; }
 
-#ifdef TODO
+#ifdef NOTUSED
     //  TODO: Find handler for the GPIO Interrupt
     if (pstnode->gpio_handler) {
-        //  TODO: Use callout to invoke handler
+        //  TODO: Invoke handler in the Application Task, not in the Interrupt Context
         pstnode->gpio_handler(pstnode);
     }
-#endif  //  TODO
+#endif
 
     //  After 1 interrupt, we suppress interrupts to troubleshoot the 
     //  hanging upon receiving a LoRa Packet.
