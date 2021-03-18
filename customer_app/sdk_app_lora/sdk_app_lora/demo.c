@@ -300,7 +300,7 @@ static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr
 
     //  Dump the contents of the received packet
     for (int i = 0; i < loraping_rx_size; i++) {
-        printf("%02x  ", loraping_buffer[i]);
+        printf("%02x ", loraping_buffer[i]);
     }
     printf("\r\n");
 

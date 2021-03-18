@@ -155,7 +155,7 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
         assert(rc == 0);
     }
 
-#ifdef TODO  //  This causes hanging, to be fixed
+#ifdef TODO  //  Multiple GPIO Interrupts causes hanging, to be fixed
     //  DIO1: Trigger for Sync Timeout
     if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
         rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
