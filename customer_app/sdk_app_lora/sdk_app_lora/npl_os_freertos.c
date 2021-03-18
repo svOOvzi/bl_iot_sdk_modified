@@ -26,8 +26,11 @@
 static inline bool
 in_isr(void)
 {
-    /* XXX hw specific! */
-    return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
+    //  Return true if we are inside an Interrupt Handler
+    return xPortIsInsideInterrupt();
+
+    ////  Previously Arm-Specific: 
+    ////  return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
 struct ble_npl_event *
