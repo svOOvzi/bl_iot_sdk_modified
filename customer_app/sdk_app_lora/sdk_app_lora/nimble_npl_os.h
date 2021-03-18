@@ -282,14 +282,14 @@ ble_npl_hw_set_isr(int irqn, void (*addr)(void))
 static inline uint32_t
 ble_npl_hw_enter_critical(void)
 {
-    vPortEnterCritical();
+    taskENTER_CRITICAL();  ////  Previously vPortEnterCritical();
     return 0;
 }
 
 static inline void
 ble_npl_hw_exit_critical(uint32_t ctx)
 {
-    vPortExitCritical();
+    taskEXIT_CRITICAL();  ////  Previously vPortExitCritical();
 
 }
 

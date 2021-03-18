@@ -116,7 +116,7 @@ npl_freertos_eventq_remove(struct ble_npl_eventq *evq,
 
         portYIELD_FROM_ISR(woken);
     } else {
-        vPortEnterCritical();
+        taskENTER_CRITICAL();  ////  Previously vPortEnterCritical();
 
         count = uxQueueMessagesWaiting(evq->q);
         for (i = 0; i < count; i++) {
@@ -131,7 +131,7 @@ npl_freertos_eventq_remove(struct ble_npl_eventq *evq,
             assert(ret == pdPASS);
         }
 
-        vPortExitCritical();
+        taskEXIT_CRITICAL();  ////  vPortExitCritical();
     }
 
     ev->queued = 0;
