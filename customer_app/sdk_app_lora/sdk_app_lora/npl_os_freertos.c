@@ -1,3 +1,4 @@
+//  NimBLE Porting Layer. Based on https://github.com/apache/mynewt-nimble/blob/master/porting/npl/freertos/src/npl_os_freertos.c
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +21,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
-#include "nimble/nimble_npl.h"
+#include "nimble_npl.h"
 
 static inline bool
 in_isr(void)

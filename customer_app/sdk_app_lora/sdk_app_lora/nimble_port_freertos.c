@@ -1,3 +1,4 @@
+//  NimBLE Porting Layer. Based on https://github.com/apache/mynewt-nimble/blob/master/porting/npl/freertos/src/nimble_port_freertos.c
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +21,7 @@
 #include <stddef.h>
 #include "FreeRTOS.h"
 #include "task.h"
-#include "nimble/nimble_port.h"
+#include "nimble_port.h"
 
 #if NIMBLE_CFG_CONTROLLER
 static TaskHandle_t ll_task_h;

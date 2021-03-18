@@ -1,3 +1,4 @@
+//  NimBLE Porting Layer. Based on https://github.com/apache/mynewt-nimble/blob/master/porting/npl/freertos/include/nimble/npl_freertos.h
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

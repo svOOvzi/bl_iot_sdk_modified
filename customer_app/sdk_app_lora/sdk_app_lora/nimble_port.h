@@ -1,4 +1,4 @@
-//  NimBLE Porting Layer. Based on https://github.com/apache/mynewt-nimble/blob/master/porting/npl/freertos/include/nimble/nimble_port_freertos.h
+//  NimBLE Porting Layer. Based on https://github.com/apache/mynewt-nimble/blob/master/porting/nimble/include/nimble/nimble_port.h
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,8 +18,8 @@
  * under the License.
  */
 
-#ifndef _NIMBLE_PORT_FREERTOS_H
-#define _NIMBLE_PORT_FREERTOS_H
+#ifndef _NIMBLE_PORT_H
+#define _NIMBLE_PORT_H
 
 #include "nimble_npl.h"
 
@@ -27,10 +27,18 @@
 extern "C" {
 #endif
 
-void nimble_port_freertos_init(TaskFunction_t host_task_fn);
+void nimble_port_init(void);
+
+void nimble_port_run(void);
+
+struct ble_npl_eventq *nimble_port_get_dflt_eventq(void);
+
+#if NIMBLE_CFG_CONTROLLER
+void nimble_port_ll_task_func(void *arg);
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _NIMBLE_PORT_FREERTOS_H */
+#endif /* _NIMBLE_PORT_H */
