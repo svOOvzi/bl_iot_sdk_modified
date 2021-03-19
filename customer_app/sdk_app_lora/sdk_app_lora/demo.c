@@ -244,8 +244,8 @@ static struct ble_npl_eventq event_queue;
 /// Event to be added to the Event Queue
 static struct ble_npl_event event;
 
-static void dequeue_task_callback();
-static void handle_event();
+static void task_callback(void *arg);
+static void handle_event(struct ble_npl_event *ev);
 
 /// Command to create a FreeRTOS Task with NimBLE Porting Layer
 static void create_task(char *buf, int len, int argc, char **argv) {
@@ -260,7 +260,7 @@ static void create_task(char *buf, int len, int argc, char **argv) {
     );
 
     //  Create a FreeRTOS Task to process the Event Queue
-    nimble_port_freertos_init(dequeue_task_callback);
+    nimble_port_freertos_init(task_callback);
 }
 
 /// Command to enqueue an Event into the Event Queue with NimBLE Porting Layer
@@ -270,7 +270,7 @@ static void put_event(char *buf, int len, int argc, char **argv) {
 }
 
 /// Task Function to dequeue Events from the Event Queue and process them
-static void dequeue_task_callback() {
+static void task_callback(void *arg) {
     //  Loop forever handling Events from the Event Queue
     for (;;) {
         //  Get the next Event from the Event Queue
@@ -288,7 +288,7 @@ static void dequeue_task_callback() {
 }
 
 /// Handle an Event
-static void handle_event() {
+static void handle_event(struct ble_npl_event *ev) {
     printf("Handle an event\r\n");
 }
 
