@@ -266,14 +266,20 @@ static void put_event(char *buf, int len, int argc, char **argv) {
 
 /// Task Function to dequeue Events from an Event Queue
 static void dequeue_task_callback() {
-    //  Get the next Event from the Event Queue
-    ble_npl_eventq_get(struct ble_npl_eventq *evq, ble_npl_time_t tmo);
+    //  Loop forever handling Events
+    for (;;) {
+        //  Get the next Event from the Event Queue
+        struct ble_npl_event *ev = ble_npl_eventq_get(&event_queue, 1000);
 
-    //  Remove the Event from the Event Queue
-    ble_npl_eventq_remove(struct ble_npl_eventq *evq, struct ble_npl_event *ev);
+        //  If no Event, wait for next Event
+        if (ev == NULL) { continue; }
 
-    //  Trigger the Event Function
-    ble_npl_event_run(struct ble_npl_event *ev);
+        //  Remove the Event from the Event Queue
+        ble_npl_eventq_remove(&event_queue, ev);
+
+        //  Trigger the Event Function
+        ble_npl_event_run(ev);
+    }
 }
 
 /// Handle an Event
