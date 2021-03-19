@@ -274,9 +274,12 @@ static void task_callback(void *arg) {
     //  Loop forever handling Events from the Event Queue
     for (;;) {
         //  Get the next Event from the Event Queue
-        struct ble_npl_event *ev = ble_npl_eventq_get(&event_queue, 1000);
+        struct ble_npl_event *ev = ble_npl_eventq_get(
+            &event_queue,  //  Event Queue
+            1000           //  Timeout in 1,000 ticks
+        );
 
-        //  If no Event, wait for next Event
+        //  If no Event due to timeout, wait for next Event
         if (ev == NULL) { continue; }
 
         //  Remove the Event from the Event Queue
