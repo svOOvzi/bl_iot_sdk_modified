@@ -269,7 +269,7 @@ static void put_event(char *buf, int len, int argc, char **argv) {
     ble_npl_eventq_put(&event_queue, &event);
 }
 
-/// Task Function to dequeue Events from the Event Queue and process them
+/// Task Function that dequeues Events from the Event Queue and processes the Events
 static void task_callback(void *arg) {
     //  Loop forever handling Events from the Event Queue
     for (;;) {
@@ -282,7 +282,7 @@ static void task_callback(void *arg) {
         //  Remove the Event from the Event Queue
         ble_npl_eventq_remove(&event_queue, ev);
 
-        //  Trigger the Event Function
+        //  Trigger the Event Handler Function (handle_event)
         ble_npl_event_run(ev);
     }
 }
