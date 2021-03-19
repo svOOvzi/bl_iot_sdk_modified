@@ -21,6 +21,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl_irq.h>          //  For bl_irq_register_with_ctx
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (multitasking functions)
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -420,13 +421,13 @@ static int exec_gpio_handler(
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
     else { g_nodio_counter++; }
 
-#ifdef NOTUSED
-    //  TODO: Find handler for the GPIO Interrupt
-    if (pstnode->gpio_handler) {
-        //  TODO: Invoke handler in the Application Task, not in the Interrupt Context
-        pstnode->gpio_handler(pstnode);
-    }
-#endif
+    //  TODO: Find Event Handler for the GPIO Interrupt
+    extern struct ble_npl_eventq event_queue;  //  Event Queue
+    extern struct ble_npl_event event;         //  Event to be added to queue
+    
+    //  TODO: Use Event Queue to invoke handler in the Application Task, 
+    //  not in the Interrupt Context
+    ble_npl_eventq_put(&event_queue, &event);
 
     //  After 1 interrupt, we suppress interrupts to troubleshoot the 
     //  hanging upon receiving a LoRa Packet.

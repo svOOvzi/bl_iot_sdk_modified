@@ -37,7 +37,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "radio.h"
 #include "rxinfo.h"
 #include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
-#include "nimble_port_freertos.h"   //  For NimBLE Porting Layer (multitasking functions)
+#include "nimble_port_freertos.h"   //  For nimble_port_freertos_init
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -239,10 +239,10 @@ static void spi_result(char *buf, int len, int argc, char **argv)
 //  Multitasking Commands (based on NimBLE Porting Layer)
 
 /// Event Queue containing Events to be processed
-static struct ble_npl_eventq event_queue;
+struct ble_npl_eventq event_queue;
 
 /// Event to be added to the Event Queue
-static struct ble_npl_event event;
+struct ble_npl_event event;
 
 static void task_callback(void *arg);
 static void handle_event(struct ble_npl_event *ev);
