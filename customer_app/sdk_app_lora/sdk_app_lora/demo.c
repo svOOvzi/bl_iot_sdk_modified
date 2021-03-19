@@ -36,6 +36,8 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include <cli.h>
 #include "radio.h"
 #include "rxinfo.h"
+#include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
+#include "nimble_port_freertos.h"   //  For NimBLE Porting Layer (multitasking functions)
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -242,6 +244,9 @@ static struct ble_npl_eventq event_queue;
 /// Event to be added to the Event Queue
 static struct ble_npl_event event;
 
+static void dequeue_task_callback();
+static void handle_event();
+
 /// Command to create a FreeRTOS Task with NimBLE Porting Layer
 static void create_task(char *buf, int len, int argc, char **argv) {
     //  Init the Event Queue
@@ -258,15 +263,15 @@ static void create_task(char *buf, int len, int argc, char **argv) {
     nimble_port_freertos_init(dequeue_task_callback);
 }
 
-/// Command to enqueue an Event into an Event Queue with NimBLE Porting Layer
+/// Command to enqueue an Event into the Event Queue with NimBLE Porting Layer
 static void put_event(char *buf, int len, int argc, char **argv) {
     //  Add the Event to the Event Queue
     ble_npl_eventq_put(&event_queue, &event);
 }
 
-/// Task Function to dequeue Events from an Event Queue
+/// Task Function to dequeue Events from the Event Queue and process them
 static void dequeue_task_callback() {
-    //  Loop forever handling Events
+    //  Loop forever handling Events from the Event Queue
     for (;;) {
         //  Get the next Event from the Event Queue
         struct ble_npl_event *ev = ble_npl_eventq_get(&event_queue, 1000);
