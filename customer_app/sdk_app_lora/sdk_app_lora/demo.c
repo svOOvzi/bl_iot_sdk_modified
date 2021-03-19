@@ -93,9 +93,11 @@ struct {
     int tx_success;
 } loraping_stats;
 
+///////////////////////////////////////////////////////////////////////////////
+//  LoRa Commands
+
 void SX1276IoInit(void);            //  Defined in sx1276-board.c
 uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
-
 static void send_once(int is_ping);
 static void on_tx_done(void);
 static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
@@ -205,7 +207,7 @@ static void receive_message(char *buf, int len, int argc, char **argv)
     Radio.Rx(LORAPING_RX_TIMEOUT_MS);
 }
 
-/// Show the SPI interrupt counters, status and error codes
+/// Show the interrupt counters, status and error codes
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
     //  SX1276 Interrupt Counters defined in sx1276-board.c
@@ -231,6 +233,57 @@ static void spi_result(char *buf, int len, int argc, char **argv)
     printf("Rx Error:        0x%x\r\n", g_rx_error);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//  Multitasking Commands (based on NimBLE Porting Layer)
+
+/// Event Queue containing Events to be processed
+static struct ble_npl_eventq event_queue;
+
+/// Event to be added to the Event Queue
+static struct ble_npl_event event;
+
+/// Command to create a FreeRTOS Task with NimBLE Porting Layer
+static void create_task(char *buf, int len, int argc, char **argv) {
+    //  Init the Event Queue
+    ble_npl_eventq_init(&event_queue);
+
+    //  Init the Event
+    ble_npl_event_init(
+        &event,        //  Event
+        handle_event,  //  Event Handler Function
+        NULL           //  Argument to be passed to Event Handler
+    );
+
+    //  Create a FreeRTOS Task to process the Event Queue
+    nimble_port_freertos_init(dequeue_task_callback);
+}
+
+/// Command to enqueue an Event into an Event Queue with NimBLE Porting Layer
+static void put_event(char *buf, int len, int argc, char **argv) {
+    //  Add the Event to the Event Queue
+    ble_npl_eventq_put(&event_queue, &event);
+}
+
+/// Task Function to dequeue Events from an Event Queue
+static void dequeue_task_callback() {
+    //  Get the next Event from the Event Queue
+    ble_npl_eventq_get(struct ble_npl_eventq *evq, ble_npl_time_t tmo);
+
+    //  Remove the Event from the Event Queue
+    ble_npl_eventq_remove(struct ble_npl_eventq *evq, struct ble_npl_event *ev);
+
+    //  Trigger the Event Function
+    ble_npl_event_run(struct ble_npl_event *ev);
+}
+
+/// Handle an Event
+static void handle_event() {
+    printf("Handle an event\r\n");
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Command Line Interface
+
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"init_driver",      "Init LoRa driver",       init_driver},
@@ -238,6 +291,8 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
+    {"create_task",      "Create a task",          create_task},
+    {"put_event",        "Add an event",           put_event},
 };                                                                                   
 
 /// Init the command-line interface
