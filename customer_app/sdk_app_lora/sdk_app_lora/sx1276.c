@@ -102,32 +102,32 @@ void SX1276SetOpMode(uint8_t opMode);
 /*!
  * \brief DIO 0 IRQ callback
  */
-void SX1276OnDio0Irq(void *unused);
+void SX1276OnDio0Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 1 IRQ callback
  */
-void SX1276OnDio1Irq(void *unused);
+void SX1276OnDio1Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 2 IRQ callback
  */
-void SX1276OnDio2Irq(void *unused);
+void SX1276OnDio2Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 3 IRQ callback
  */
-void SX1276OnDio3Irq(void *unused);
+void SX1276OnDio3Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 4 IRQ callback
  */
-void SX1276OnDio4Irq(void *unused);
+void SX1276OnDio4Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 5 IRQ callback
  */
-void SX1276OnDio5Irq(void *unused);
+void SX1276OnDio5Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief Tx & Rx timeout timer callback
@@ -1005,7 +1005,7 @@ SX1276SetRx(uint32_t timeout)
 {
     //  Clear the event group
     //  TODO: xEventGroupClearBits(arg->spi_dma_event_group, EVT_GROUP_SPI_DMA_TR);
-    
+
     bool rxcontinuous = false;
 
     switch (SX1276.Settings.Modem) {
@@ -1470,7 +1470,7 @@ SX1276OnTimeoutIrq(void *unused)
 }
 
 void
-SX1276OnDio0Irq(void *unused)
+SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
     int8_t snr;
     int16_t rssi;
@@ -1633,7 +1633,7 @@ SX1276OnDio0Irq(void *unused)
 }
 
 void
-SX1276OnDio1Irq(void *unused)
+SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
@@ -1693,7 +1693,7 @@ SX1276OnDio1Irq(void *unused)
 }
 
 void
-SX1276OnDio2Irq(void *unused)
+SX1276OnDio2Irq(struct ble_npl_event *ev)
 {
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
@@ -1751,7 +1751,7 @@ SX1276OnDio2Irq(void *unused)
 }
 
 void
-SX1276OnDio3Irq(void *unused)
+SX1276OnDio3Irq(struct ble_npl_event *ev)
 {
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
@@ -1777,7 +1777,7 @@ SX1276OnDio3Irq(void *unused)
 }
 
 void
-SX1276OnDio4Irq(void *unused)
+SX1276OnDio4Irq(struct ble_npl_event *ev)
 {
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
@@ -1793,7 +1793,7 @@ SX1276OnDio4Irq(void *unused)
 }
 
 void
-SX1276OnDio5Irq(void *unused)
+SX1276OnDio5Irq(struct ble_npl_event *ev)
 {
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:

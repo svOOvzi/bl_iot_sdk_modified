@@ -162,10 +162,12 @@ typedef struct SX1276_s
     RadioSettings_t Settings;
 }SX1276_t;
 
+struct ble_npl_event;
+
 /*!
  * Hardware IO IRQ callback function definition
  */
-typedef void (DioIrqHandler)(void *arg);
+typedef void (DioIrqHandler)(struct ble_npl_event *ev);
 
 /*!
  * SX1276 definitions
