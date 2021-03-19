@@ -317,6 +317,17 @@ void SX1276RxIoIrqEnable(void)
 ///////////////////////////////////////////////////////////////////////////////
 //  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
 
+/// Maximum number of GPIO Pins that can be configured for interrupts
+#define MAX_GPIO_INTERRUPTS 6  //  DIO0 to DIO5
+
+/// Array of GPIO Pins that have been configured for interrupts.
+/// gpio_interrupts[i] corresponds to gpio_events[i].
+static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
+
+/// Array of Events for the GPIO Interrupts.
+/// gpio_interrupts[i] corresponds to gpio_events[i].
+static struct ble_npl_event gpio_events[MAX_GPIO_INTERRUPTS];
+
 static void gpio_interrupt_entry(
     void *gpioPin);  //  GPIO Pin Number
 static int exec_gpio_handler(
@@ -334,8 +345,16 @@ static int register_gpio_handler(
     uint8_t pullup,          //  1 for pullup, 0 for no pullup
     uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
 {
-    //  TODO: Use callout to invoke handler
     printf("SX1276 register handler: GPIO %d\r\n", (int) gpioPin);
+
+    //  Init the Event that will invoke the handler for the GPIO Interrupt
+    //  TODO: Handle multiple GPIO Pins
+    gpio_interrupts[0] = gpioPin;  //  TODO: Handle multiple GPIO Pins
+    ble_npl_event_init(   //  Init the Event for...
+        &gpio_events[0],  //  Event. TODO:  Handle multiple GPIO Pins
+        handler,          //  Event Handler Function
+        NULL              //  Argument to be passed to Event Handler
+    );
 
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
@@ -421,13 +440,15 @@ static int exec_gpio_handler(
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
     else { g_nodio_counter++; }
 
-    //  TODO: Find Event Handler for the GPIO Interrupt
-    extern struct ble_npl_eventq event_queue;  //  Event Queue
-    extern struct ble_npl_event event;         //  Event to be added to queue
+    //  Find Event Handler for the GPIO Interrupt
+    extern struct ble_npl_eventq event_queue;    //  Event Queue
+    struct ble_npl_event *ev = &gpio_events[0];  //  TODO: Handle multiple GPIO Pins
     
-    //  TODO: Use Event Queue to invoke handler in the Application Task, 
+    //  Use Event Queue to invoke Event Handler in the Application Task, 
     //  not in the Interrupt Context
-    ble_npl_eventq_put(&event_queue, &event);
+    if (ev != NULL && ev->fn != NULL) {
+        ble_npl_eventq_put(&event_queue, ev);
+    }
 
     //  After 1 interrupt, we suppress interrupts to troubleshoot the 
     //  hanging upon receiving a LoRa Packet.
