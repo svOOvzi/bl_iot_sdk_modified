@@ -364,7 +364,9 @@ SX1276Init(RadioEvents_t *events)
 
     ////  We copy the Event Callbacks from "events", because
     ////  "events" may be stored on the stack
+    assert(events != NULL);
     memcpy(&RadioEvents, events, sizeof(RadioEvents));
+
     ////  Previously: RadioEvents = events;
 
     // Initialize driver timeout timers. NOTE: assumes timer configured.
