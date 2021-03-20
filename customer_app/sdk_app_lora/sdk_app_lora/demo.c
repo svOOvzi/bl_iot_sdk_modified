@@ -292,7 +292,7 @@ static void task_callback(void *arg) {
 
 /// Handle an Event
 static void handle_event(struct ble_npl_event *ev) {
-    printf("Handle an event\r\n");
+    printf("\r\nHandle an event\r\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -352,7 +352,7 @@ static void on_tx_done(void)
 /// Callback Function that is called when a LoRa message has been received
 static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("Rx done: ");
+    printf("Rx done: \r\n");
 
     //  Switch the LoRa Transceiver to low power, sleep mode
     Radio.Sleep();

@@ -315,6 +315,7 @@ round(double d)
 static void
 SX1276RxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
+    printf("Rx done\r\n");
     if ((RadioEvents != NULL) && (RadioEvents->RxDone != NULL)) {
         RadioEvents->RxDone(payload, size, rssi, snr);
     }
@@ -1472,6 +1473,7 @@ SX1276OnTimeoutIrq(void *unused)
 void
 SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
+    printf("\r\nHandle DIO0\r\n");
     int8_t snr;
     int16_t rssi;
     volatile uint8_t irqFlags = 0;
