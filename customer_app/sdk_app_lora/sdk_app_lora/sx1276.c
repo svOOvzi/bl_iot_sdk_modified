@@ -187,7 +187,8 @@ const FskBandwidth_t FskBandwidths[] =
 /*!
  * Radio callbacks variable
  */
-static RadioEvents_t *RadioEvents;
+static RadioEvents_t RadioEvents;  ////  Stores a copy of the callbacks
+////  Previously: static RadioEvents_t *RadioEvents;
 
 /*!
  * Reception buffer
@@ -315,41 +316,41 @@ round(double d)
 static void
 SX1276RxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("Rx done\r\n");
-    if ((RadioEvents != NULL) && (RadioEvents->RxDone != NULL)) {
-        RadioEvents->RxDone(payload, size, rssi, snr);
+    printf("Rx done: RadioEvents.RxDone=%p\r\n", RadioEvents.RxDone);
+    if (RadioEvents.RxDone != NULL) {
+        RadioEvents.RxDone(payload, size, rssi, snr);
     }
 }
 
 static void
 SX1276RxError(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->RxError != NULL)) {
-        RadioEvents->RxError();
+    if (RadioEvents.RxError != NULL) {
+        RadioEvents.RxError();
     }
 }
 
 static void
 SX1276RxTimeout(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->RxTimeout != NULL)) {
-        RadioEvents->RxTimeout();
+    if (RadioEvents.RxTimeout != NULL) {
+        RadioEvents.RxTimeout();
     }
 }
 
 static void
 SX1276TxDone(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->TxDone != NULL)) {
-        RadioEvents->TxDone();
+    if (RadioEvents.TxDone != NULL) {
+        RadioEvents.TxDone();
     }
 }
 
 static void
 SX1276TxTimeout(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->TxTimeout != NULL)) {
-        RadioEvents->TxTimeout();
+    if (RadioEvents.TxTimeout != NULL) {
+        RadioEvents.TxTimeout();
     }
 }
 
@@ -361,7 +362,10 @@ SX1276Init(RadioEvents_t *events)
 {
     uint8_t i;
 
-    RadioEvents = events;
+    ////  We copy the Event Callbacks from "events", because
+    ////  "events" may be stored on the stack
+    memcpy(&RadioEvents, events, sizeof(RadioEvents));
+    ////  Previously: RadioEvents = events;
 
     // Initialize driver timeout timers. NOTE: assumes timer configured.
     os_cputime_timer_init(&TxTimeoutTimer, SX1276OnTimeoutIrq, NULL);
@@ -1473,6 +1477,9 @@ SX1276OnTimeoutIrq(void *unused)
 void
 SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nHandle DIO0\r\n");
     int8_t snr;
     int16_t rssi;
@@ -1637,6 +1644,10 @@ SX1276OnDio0Irq(struct ble_npl_event *ev)
 void
 SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nHandle DIO1\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1697,6 +1708,10 @@ SX1276OnDio1Irq(struct ble_npl_event *ev)
 void
 SX1276OnDio2Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nHandle DIO2\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1720,8 +1735,8 @@ SX1276OnDio2Irq(struct ble_npl_event *ev)
                 // Clear Irq
                 SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_FHSSCHANGEDCHANNEL);
 
-                if ((RadioEvents != NULL) && (RadioEvents->FhssChangeChannel != NULL)) {
-                    RadioEvents->FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
+                if (RadioEvents.FhssChangeChannel != NULL) {
+                    RadioEvents.FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
                 }
             }
             break;
@@ -1738,8 +1753,8 @@ SX1276OnDio2Irq(struct ble_npl_event *ev)
                 // Clear Irq
                 SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_FHSSCHANGEDCHANNEL);
 
-                if ((RadioEvents != NULL) && (RadioEvents->FhssChangeChannel != NULL)) {
-                    RadioEvents->FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
+                if (RadioEvents.FhssChangeChannel != NULL) {
+                    RadioEvents.FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
                 }
             }
             break;
@@ -1755,6 +1770,10 @@ SX1276OnDio2Irq(struct ble_npl_event *ev)
 void
 SX1276OnDio3Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nHandle DIO3\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
@@ -1762,14 +1781,14 @@ SX1276OnDio3Irq(struct ble_npl_event *ev)
         if ((SX1276Read(REG_LR_IRQFLAGS) & RFLR_IRQFLAGS_CADDETECTED) == RFLR_IRQFLAGS_CADDETECTED) {
             // Clear Irq
             SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_CADDETECTED | RFLR_IRQFLAGS_CADDONE);
-            if ((RadioEvents != NULL) && (RadioEvents->CadDone != NULL)) {
-                RadioEvents->CadDone(true);
+            if (RadioEvents.CadDone != NULL) {
+                RadioEvents.CadDone(true);
             }
         } else {
             // Clear Irq
             SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_CADDONE);
-            if ((RadioEvents != NULL) && (RadioEvents->CadDone != NULL)) {
-                RadioEvents->CadDone(false);
+            if (RadioEvents.CadDone != NULL) {
+                RadioEvents.CadDone(false);
             }
         }
         break;
@@ -1781,6 +1800,10 @@ SX1276OnDio3Irq(struct ble_npl_event *ev)
 void
 SX1276OnDio4Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nHandle DIO4\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         if (SX1276.Settings.FskPacketHandler.PreambleDetected == false) {
@@ -1797,6 +1820,10 @@ SX1276OnDio4Irq(struct ble_npl_event *ev)
 void
 SX1276OnDio5Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nHandle DIO5\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
