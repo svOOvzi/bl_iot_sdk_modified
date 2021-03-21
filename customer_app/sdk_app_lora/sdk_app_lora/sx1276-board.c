@@ -156,20 +156,19 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
         assert(rc == 0);
     }
 
-#ifdef TODO  //  Multiple GPIO Interrupts causes hanging, to be fixed
     //  DIO1: Trigger for Sync Timeout
-    if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-        assert(rc == 0);
-    }
+    // if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
+    //     rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
+    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+    //     assert(rc == 0);
+    // }
 
     //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
-    if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-        assert(rc == 0);
-    }
+    // if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
+    //     rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
+    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+    //     assert(rc == 0);
+    // }
 
     //  DIO3: Trigger for CAD Done.
     //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
@@ -181,19 +180,18 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     }
 
     //  DIO4: Unused (FSK only)
-    if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-        assert(rc == 0);
-    }
+    // if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
+    //     rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
+    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+    //     assert(rc == 0);
+    // }
 
     //  DIO5: Unused (FSK only)
-    if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-        assert(rc == 0);
-    }
-#endif  //  TODO
+    // if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
+    //     rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
+    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+    //     assert(rc == 0);
+    // }
 }
 
 /// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
@@ -428,8 +426,12 @@ int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_count
 static int exec_gpio_handler(
     uint8_t gpioPin)  //  GPIO Pin Number
 {
-    //  Disable GPIO Interrupt
+    //  Disable GPIO Interrupt for the pin
     bl_gpio_intmask(gpioPin, 1);
+
+    //  Clear the GPIO Interrupt Status for the pin
+    GLB_Clr_GPIO_IntStatus(gpioPin);
+    ////bl_gpio_int_clear(gpioPin, 1);
 
     //  Increment the Interrupt Counters
     if (SX1276_DIO0 >= 0 && gpioPin == (uint8_t) SX1276_DIO0) { g_dio0_counter++; }
@@ -440,23 +442,25 @@ static int exec_gpio_handler(
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
     else { g_nodio_counter++; }
 
+#ifdef TODO  //  Commented out while we test multiple GPIO interrupts
     //  Find Event Handler for the GPIO Interrupt
-    extern struct ble_npl_eventq event_queue;    //  Event Queue
     struct ble_npl_event *ev = &gpio_events[0];  //  TODO: Handle multiple GPIO Pins
     
     //  Use Event Queue to invoke Event Handler in the Application Task, 
     //  not in the Interrupt Context
     if (ev != NULL && ev->fn != NULL) {
+        extern struct ble_npl_eventq event_queue;  //  TODO: Move Event Queue to header file
         ble_npl_eventq_put(&event_queue, ev);
     }
+#endif  //  TODO
 
     //  After 1 interrupt, we suppress interrupts to troubleshoot the 
     //  hanging upon receiving a LoRa Packet.
     //  TODO: Always enable interrupts
     if (g_dio0_counter + g_dio1_counter + g_dio2_counter + g_dio3_counter
         + g_dio4_counter + g_dio5_counter + g_nodio_counter < 1) {
-        //  Enable GPIO Interrupt 
-        bl_gpio_intmask(gpioPin, 0);
+        //  Enable GPIO Interrupt for the pin
+        //  TODO: bl_gpio_intmask(gpioPin, 0);
     }
     return 0;
 }
