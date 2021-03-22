@@ -154,18 +154,18 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     }
 
     //  DIO1: Trigger for Sync Timeout
-    // if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
-    //     rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
-    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-    //     assert(rc == 0);
-    // }
+    if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        assert(rc == 0);
+    }
 
     //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
-    // if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
-    //     rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
-    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-    //     assert(rc == 0);
-    // }
+    if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        assert(rc == 0);
+    }
 
     //  DIO3: Trigger for CAD Done.
     //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
@@ -177,23 +177,23 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     }
 
     //  DIO4: Unused (FSK only)
-    // if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
-    //     rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
-    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-    //     assert(rc == 0);
-    // }
+    if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        assert(rc == 0);
+    }
 
     //  DIO5: Unused (FSK only)
-    // if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
-    //     rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
-    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-    //     assert(rc == 0);
-    // }
+    if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
+        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
+            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        assert(rc == 0);
+    }
 
-    //  Register Interrupt Handler for GPIO Interrupt
+    //  Register Common Interrupt Handler for GPIO Interrupt
     bl_irq_register_with_ctx(
         GPIO_INT0_IRQn,         //  GPIO Interrupt
-        handle_gpio_interrupt,   //  Interrupt Handler
+        handle_gpio_interrupt,  //  Interrupt Handler
         NULL                    //  Argument for Interrupt Handler
     );
 
@@ -248,45 +248,6 @@ uint8_t SX1276GetPaSelect(uint32_t channel)
     return pacfg;
 }
 
-#if SX1276_HAS_ANT_SW
-void SX1276SetAntSwLowPower( bool status )
-{
-    if (RadioIsActive != status) {
-        RadioIsActive = status;
-
-        if (status == false) {
-            SX1276AntSwInit( );
-        } else {
-            SX1276AntSwDeInit( );
-        }
-    }
-}
-
-void
-SX1276AntSwInit(void)
-{
-    // Consider turning off GPIO pins for low power. They are always on right
-    // now. GPIOTE library uses 0.5uA max when on, typical 0.1uA.
-}
-
-void
-SX1276AntSwDeInit(void)
-{
-    // Consider this for low power - ie turning off GPIO pins
-}
-
-void
-SX1276SetAntSw(uint8_t rxTx)
-{
-    // 1: TX, 0: RX
-    if (rxTx != 0) {
-        hal_gpio_write(SX1276_RXTX, 1);
-    } else {
-        hal_gpio_write(SX1276_RXTX, 0);
-    }
-}
-#endif
-
 /// Checks if the given RF frequency is supported by the hardware
 bool SX1276CheckRfFrequency(uint32_t frequency)
 {
@@ -320,7 +281,7 @@ void SX1276RxIoIrqEnable(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet
+//  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet and other conditions
 
 /// Maximum number of GPIO Pins that can be configured for interrupts
 #define MAX_GPIO_INTERRUPTS 6  //  DIO0 to DIO5
@@ -459,3 +420,48 @@ static int enqueue_interrupt_event(
     //  TODO: bl_gpio_intmask(gpioPin, 0);
     return 0;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//  Antenna Switch (Unused)
+
+#if SX1276_HAS_ANT_SW
+void SX1276AntSwInit(void);
+void SX1276AntSwDeInit(void);
+
+void SX1276SetAntSwLowPower( bool status )
+{
+    if (RadioIsActive != status) {
+        RadioIsActive = status;
+
+        if (status == false) {
+            SX1276AntSwInit( );
+        } else {
+            SX1276AntSwDeInit( );
+        }
+    }
+}
+
+void
+SX1276AntSwInit(void)
+{
+    // Consider turning off GPIO pins for low power. They are always on right
+    // now. GPIOTE library uses 0.5uA max when on, typical 0.1uA.
+}
+
+void
+SX1276AntSwDeInit(void)
+{
+    // Consider this for low power - ie turning off GPIO pins
+}
+
+void
+SX1276SetAntSw(uint8_t rxTx)
+{
+    // 1: TX, 0: RX
+    if (rxTx != 0) {
+        hal_gpio_write(SX1276_RXTX, 1);
+    } else {
+        hal_gpio_write(SX1276_RXTX, 0);
+    }
+}
+#endif  //  SX1276_HAS_ANT_SW
