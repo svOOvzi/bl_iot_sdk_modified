@@ -123,7 +123,8 @@ static void read_registers(char *buf, int len, int argc, char **argv)
     }
 }
 
-/// Command to initialise the SX1276 / RF96 driver
+/// Command to initialise the SX1276 / RF96 driver.
+/// Assume that create_task has been called to init the Event Queue.
 static void init_driver(char *buf, int len, int argc, char **argv)
 {
     //  Set the LoRa Callback Functions
@@ -203,6 +204,7 @@ static void send_once(int is_ping)
 }
 
 /// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
+/// Assume that create_task has been called to init the Event Queue.
 static void receive_message(char *buf, int len, int argc, char **argv)
 {
     //  Receive a LoRa message within the timeout period
@@ -300,13 +302,13 @@ static void handle_event(struct ble_npl_event *ev) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
+    {"create_task",      "Create a task",          create_task},
+    {"put_event",        "Add an event",           put_event},
     {"init_driver",      "Init LoRa driver",       init_driver},
     {"send_message",     "Send LoRa message",      send_message},
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
-    {"create_task",      "Create a task",          create_task},
-    {"put_event",        "Add an event",           put_event},
 };                                                                                   
 
 /// Init the command-line interface
