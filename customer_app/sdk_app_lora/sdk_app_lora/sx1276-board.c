@@ -80,6 +80,7 @@ spi_dev_t spi_device;
 
 void SX1276IoInit(void)
 {
+    printf("SX1276 init\r\n");
     int rc;
 
 #if SX1276_HAS_ANT_SW
@@ -144,6 +145,7 @@ void SX1276IoInit(void)
 /// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
+    printf("SX1276 interrupt init\r\n");
     int rc;
 
     //  DIO0: Trigger for Packet Received
@@ -204,6 +206,7 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 /// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
 void SX1276IoDeInit( void )
 {
+    printf("TODO: SX1276 interrupt deinit\r\n");
 #ifdef TODO
     if (DioIrq[0] != NULL) {
         hal_gpio_irq_release(SX1276_DIO0);
@@ -294,7 +297,8 @@ static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
 /// gpio_interrupts[i] corresponds to gpio_events[i].
 static struct ble_npl_event gpio_events[MAX_GPIO_INTERRUPTS];
 
-static int enqueue_interrupt_event(uint8_t gpioPin);
+static int init_interrupt_event(uint8_t gpioPin, DioIrqHandler *handler);
+static int enqueue_interrupt_event(uint8_t gpioPin, struct ble_npl_event *event);
 
 /// Register Interrupt Handler for GPIO. Return 0 if successful.
 /// Based on bl_gpio_register in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
@@ -309,13 +313,11 @@ static int register_gpio_handler(
     printf("SX1276 register handler: GPIO %d\r\n", (int) gpioPin);
 
     //  Init the Event that will invoke the handler for the GPIO Interrupt
-    //  TODO: Handle multiple GPIO Pins
-    gpio_interrupts[0] = gpioPin;  //  TODO: Handle multiple GPIO Pins
-    ble_npl_event_init(   //  Init the Event for...
-        &gpio_events[0],  //  Event. TODO:  Handle multiple GPIO Pins
-        handler,          //  Event Handler Function
-        NULL              //  Argument to be passed to Event Handler
+    int rc = init_interrupt_event(
+        gpioPin,  //  GPIO Pin Number
+        handler   //  GPIO Handler Function that will be triggered by the Event
     );
+    assert(rc == 0);
 
     //  Configure pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
@@ -328,7 +330,7 @@ static int register_gpio_handler(
     assert(rc2 == SUCCESS);    
 
     //  Configure pin as a GPIO Input Pin
-    int rc = bl_gpio_enable_input(
+    rc = bl_gpio_enable_input(
         gpioPin,  //  GPIO Pin Number
         pullup,   //  1 for pullup, 0 for no pullup
         pulldown  //  1 for pulldown, 0 for no pulldown
@@ -367,18 +369,25 @@ static int register_gpio_handler(
 /// https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c#L151-L164
 static void handle_gpio_interrupt(void *arg)
 {
-    //  Check all GPIO Pins connected to DIO0 to DIO5
-    //  TODO: Skip the unused GPIO Pins
-    for (GLB_GPIO_Type gpioPin = 0; gpioPin <= 12; gpioPin++) {
+    //  Check all GPIO Interrupt Events defined
+    for (int i = 0; i < MAX_GPIO_INTERRUPTS; i++) {
+        struct ble_npl_event *ev = &gpio_events[i];
+
+        //  If the Event is unused, skip it
+        if (ev->fn == NULL) { continue; }
+
+        //  Get the GPIO Pin Number for the Event
+        GLB_GPIO_Type gpioPin = gpio_interrupts[i];
+
         //  Get the Interrupt Status of the GPIO Pin
         BL_Sts_Type status = GLB_Get_GPIO_IntStatus(gpioPin);
 
         //  If the GPIO Pin has triggered an interrupt...
         if (status == SET) {
             //  Forward the GPIO Interrupt to the Application Task to process
-            enqueue_interrupt_event(gpioPin);
+            enqueue_interrupt_event(gpioPin, ev);
         }
-    } 
+    }
 }
 
 /// Interrupt Counters
@@ -386,7 +395,8 @@ int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_count
 
 /// Enqueue the GPIO Interrupt to an Event Queue for the Application Task to process
 static int enqueue_interrupt_event(
-    uint8_t gpioPin)  //  GPIO Pin Number
+    uint8_t gpioPin,              //  GPIO Pin Number
+    struct ble_npl_event *event)  //  Event for the GPIO Interrupt
 {
     //  Disable GPIO Interrupt for the pin
     bl_gpio_intmask(gpioPin, 1);
@@ -405,20 +415,46 @@ static int enqueue_interrupt_event(
     else { g_nodio_counter++; }
 
 #ifdef TODO  //  Commented out while we test multiple GPIO interrupts
-    //  Find Event Handler for the GPIO Interrupt
-    struct ble_npl_event *ev = &gpio_events[0];  //  TODO: Handle multiple GPIO Pins
-    
     //  Use Event Queue to invoke Event Handler in the Application Task, 
     //  not in the Interrupt Context
-    if (ev != NULL && ev->fn != NULL) {
+    if (event != NULL && event->fn != NULL) {
         extern struct ble_npl_eventq event_queue;  //  TODO: Move Event Queue to header file
-        ble_npl_eventq_put(&event_queue, ev);
+        ble_npl_eventq_put(&event_queue, event);
     }
 #endif  //  TODO
 
     //  Enable GPIO Interrupt for the pin
     //  TODO: bl_gpio_intmask(gpioPin, 0);
     return 0;
+}
+
+//  Init the Event that will the Interrupt Handler will invoke to process the GPIO Interrupt
+static int init_interrupt_event(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler)  //  GPIO Handler Function
+{
+    //  Find an unused Event with null handler and set it
+    for (int i = 0; i < MAX_GPIO_INTERRUPTS; i++) {
+        struct ble_npl_event *ev = &gpio_events[i];
+
+        //  If the Event is used, skip it
+        if (ev->fn != NULL) { continue; }
+
+        //  Set the Event handler
+        ble_npl_event_init(   //  Init the Event for...
+            ev,               //  Event
+            handler,          //  Event Handler Function
+            NULL              //  Argument to be passed to Event Handler
+        );
+
+        //  Set the GPIO Pin Number for the Event
+        gpio_interrupts[i] = gpioPin;
+        return 0;
+    }
+
+    //  No unused Events found, should increase MAX_GPIO_INTERRUPTS
+    assert(false);
+    return -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
