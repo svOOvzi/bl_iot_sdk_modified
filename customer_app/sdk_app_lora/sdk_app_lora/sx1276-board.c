@@ -419,14 +419,12 @@ static int enqueue_interrupt_event(
     else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
     else { g_nodio_counter++; }
 
-#ifdef TODO  //  Commented out while we test multiple GPIO interrupts
     //  Use Event Queue to invoke Event Handler in the Application Task, 
     //  not in the Interrupt Context
     if (event != NULL && event->fn != NULL) {
         extern struct ble_npl_eventq event_queue;  //  TODO: Move Event Queue to header file
         ble_npl_eventq_put(&event_queue, event);
     }
-#endif  //  TODO
 
     //  Enable GPIO Interrupt for the pin
     bl_gpio_intmask(gpioPin, 0);
