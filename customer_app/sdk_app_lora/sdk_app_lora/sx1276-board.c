@@ -408,8 +408,7 @@ static int enqueue_interrupt_event(
     bl_gpio_intmask(gpioPin, 1);
 
     //  Clear the GPIO Interrupt Status for the pin
-    GLB_Clr_GPIO_IntStatus(gpioPin);
-    ////bl_gpio_int_clear(gpioPin, 1);
+    bl_gpio_int_clear(gpioPin, SET);
 
     //  Increment the Interrupt Counters
     if (SX1276_DIO0 >= 0 && gpioPin == (uint8_t) SX1276_DIO0) { g_dio0_counter++; }
@@ -430,7 +429,7 @@ static int enqueue_interrupt_event(
 #endif  //  TODO
 
     //  Enable GPIO Interrupt for the pin
-    //  TODO: bl_gpio_intmask(gpioPin, 0);
+    bl_gpio_intmask(gpioPin, 0);
     return 0;
 }
 
