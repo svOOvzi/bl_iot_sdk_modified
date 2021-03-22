@@ -402,8 +402,8 @@ static int register_gpio_handler(
 //  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 
 /// Interrupt Handler for GPIO Pins DIO0 to DIO5. Triggered by SX1276 when LoRa Packet is received 
-/// and for other conditions.
-/// Based on https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
+/// and for other conditions.  Based on gpio_interrupt_entry in
+/// https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c#L151-L164
 static void handle_gpio_interrupt(void *arg)
 {
     //  Check all GPIO Pins connected to DIO0 to DIO5
