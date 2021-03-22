@@ -33,7 +33,7 @@ static int register_gpio_handler(
     uint8_t intTrgMod,       //  GPIO Interrupt Trigger Mode (see below)
     uint8_t pullup,          //  1 for pullup, 0 for no pullup
     uint8_t pulldown);       //  1 for pulldown, 0 for no pulldown
-static void gpio_interrupt_entry(void *arg);
+static void handle_gpio_interrupt(void *arg);
 
 extern DioIrqHandler *DioIrq[];
 
@@ -193,7 +193,7 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     //  Register Interrupt Handler for GPIO Interrupt
     bl_irq_register_with_ctx(
         GPIO_INT0_IRQn,         //  GPIO Interrupt
-        gpio_interrupt_entry,   //  Interrupt Handler
+        handle_gpio_interrupt,   //  Interrupt Handler
         NULL                    //  Argument for Interrupt Handler
     );
 
@@ -333,7 +333,7 @@ static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
 /// gpio_interrupts[i] corresponds to gpio_events[i].
 static struct ble_npl_event gpio_events[MAX_GPIO_INTERRUPTS];
 
-static int handle_gpio_interrupt(uint8_t gpioPin);
+static int enqueue_interrupt_event(uint8_t gpioPin);
 
 /// Register Interrupt Handler for GPIO. Return 0 if successful.
 /// Based on bl_gpio_register in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
@@ -404,16 +404,18 @@ static int register_gpio_handler(
 /// Interrupt Handler for GPIO Pins DIO0 to DIO5. Triggered by SX1276 when LoRa Packet is received 
 /// and for other conditions.
 /// Based on https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
-static void gpio_interrupt_entry(void *arg)
+static void handle_gpio_interrupt(void *arg)
 {
-    //  TODO: Check all GPIO Pins connected to DIO0 to DIO5
+    //  Check all GPIO Pins connected to DIO0 to DIO5
+    //  TODO: Skip the unused GPIO Pins
     for (GLB_GPIO_Type gpioPin = 0; gpioPin <= 12; gpioPin++) {
-        //  Get the GPIO Pin status
+        //  Get the Interrupt Status of the GPIO Pin
         BL_Sts_Type status = GLB_Get_GPIO_IntStatus(gpioPin);
+
         //  If the GPIO Pin has triggered an interrupt...
         if (status == SET) {
-            //  Handle the GPIO Interrupt
-            handle_gpio_interrupt(gpioPin);
+            //  Forward the GPIO Interrupt to the Application Task to process
+            enqueue_interrupt_event(gpioPin);
         }
     } 
 }
@@ -421,8 +423,8 @@ static void gpio_interrupt_entry(void *arg)
 /// Interrupt Counters
 int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
 
-/// Handle GPIO Interrupt
-static int handle_gpio_interrupt(
+/// Enqueue the GPIO Interrupt to an Event Queue for the Application Task to process
+static int enqueue_interrupt_event(
     uint8_t gpioPin)  //  GPIO Pin Number
 {
     //  Disable GPIO Interrupt for the pin
