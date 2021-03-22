@@ -289,13 +289,15 @@ void SX1276RxIoIrqEnable(void)
 /// Maximum number of GPIO Pins that can be configured for interrupts
 #define MAX_GPIO_INTERRUPTS 6  //  DIO0 to DIO5
 
-/// Array of GPIO Pins that have been configured for interrupts.
-/// gpio_interrupts[i] corresponds to gpio_events[i].
-static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
-
 /// Array of Events for the GPIO Interrupts.
-/// gpio_interrupts[i] corresponds to gpio_events[i].
+/// The Events will be triggered to forward the GPIO Interrupt to the Application Task.
+/// gpio_events[i] corresponds to gpio_interrupts[i].
 static struct ble_npl_event gpio_events[MAX_GPIO_INTERRUPTS];
+
+/// Array of GPIO Pin Numbers that have been configured for interrupts.
+/// We shall lookup this array to find the GPIO Pin Number for each GPIO Interrupt Event.
+/// gpio_events[i] corresponds to gpio_interrupts[i].
+static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
 
 static int init_interrupt_event(uint8_t gpioPin, DioIrqHandler *handler);
 static int enqueue_interrupt_event(uint8_t gpioPin, struct ble_npl_event *event);
@@ -369,8 +371,9 @@ static int register_gpio_handler(
 /// https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c#L151-L164
 static void handle_gpio_interrupt(void *arg)
 {
-    //  Check all GPIO Interrupt Events defined
+    //  Check all GPIO Interrupt Events
     for (int i = 0; i < MAX_GPIO_INTERRUPTS; i++) {
+        //  Get the GPIO Interrupt Event
         struct ble_npl_event *ev = &gpio_events[i];
 
         //  If the Event is unused, skip it
@@ -385,7 +388,10 @@ static void handle_gpio_interrupt(void *arg)
         //  If the GPIO Pin has triggered an interrupt...
         if (status == SET) {
             //  Forward the GPIO Interrupt to the Application Task to process
-            enqueue_interrupt_event(gpioPin, ev);
+            enqueue_interrupt_event(
+                gpioPin,  //  GPIO Pin Number
+                ev        //  Event that will be enqueued for the Application Task
+            );
         }
     }
 }
@@ -396,7 +402,7 @@ int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_count
 /// Enqueue the GPIO Interrupt to an Event Queue for the Application Task to process
 static int enqueue_interrupt_event(
     uint8_t gpioPin,              //  GPIO Pin Number
-    struct ble_npl_event *event)  //  Event for the GPIO Interrupt
+    struct ble_npl_event *event)  //  Event that will be enqueued for the Application Task
 {
     //  Disable GPIO Interrupt for the pin
     bl_gpio_intmask(gpioPin, 1);
