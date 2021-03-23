@@ -172,11 +172,11 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     //  DIO3: Trigger for CAD Done.
     //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
     //  is in use, by scanning very quickly for the LoRa Packet Preamble.
-    if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
-        assert(rc == 0);
-    }
+    // if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
+    //     rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_ASYNC,
+    //         GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+    //     assert(rc == 0);
+    // }
 
     //  DIO4: Unused (FSK only)
     if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {

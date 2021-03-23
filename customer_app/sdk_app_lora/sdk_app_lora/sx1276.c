@@ -1420,6 +1420,7 @@ SX1276SetMaxPayloadLength(RadioModems_t modem, uint8_t max)
 void
 SX1276SetPublicNetwork(bool enable)
 {
+    printf("\r\nSX1276 %s public network\r\n", enable ? "enable" : "disable");
     SX1276SetModem(MODEM_LORA);
     SX1276.Settings.LoRa.PublicNetwork = enable;
     if (enable == true) {
@@ -1440,6 +1441,7 @@ SX1276GetWakeupTime(void)
 void
 SX1276OnTimeoutIrq(void *unused)
 {
+    printf("\r\nSX1276 timeout\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         if (SX1276.Settings.Modem == MODEM_FSK) {
@@ -1476,13 +1478,13 @@ SX1276OnTimeoutIrq(void *unused)
     }
 }
 
-void
-SX1276OnDio0Irq(struct ble_npl_event *ev)
+/// DIO0: Trigger for Packet Received
+void SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO0\r\n");
+    printf("\r\nSX1276 DIO0: Packet received\r\n");
     int8_t snr;
     int16_t rssi;
     volatile uint8_t irqFlags = 0;
@@ -1643,13 +1645,13 @@ SX1276OnDio0Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276OnDio1Irq(struct ble_npl_event *ev)
+/// DIO1: Trigger for Sync Timeout
+void SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO1\r\n");
+    printf("\r\nSX1276 DIO1: Sync timeout\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1707,13 +1709,13 @@ SX1276OnDio1Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276OnDio2Irq(struct ble_npl_event *ev)
+/// DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+void SX1276OnDio2Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO2\r\n");
+    printf("\r\nSX1276 DIO2: Change channel\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1769,13 +1771,15 @@ SX1276OnDio2Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276OnDio3Irq(struct ble_npl_event *ev)
+/// DIO3: Trigger for CAD Done.
+/// CAD = Channel Activity Detection. We detect whether a Radio Channel 
+/// is in use, by scanning very quickly for the LoRa Packet Preamble.
+void SX1276OnDio3Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO3\r\n");
+    printf("\r\nSX1276 DIO3: Channel activity detection\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
@@ -1799,13 +1803,13 @@ SX1276OnDio3Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276OnDio4Irq(struct ble_npl_event *ev)
+/// DIO4: Unused (FSK only)
+void SX1276OnDio4Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO4\r\n");
+    printf("\r\nSX1276 DIO4: Unused\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         if (SX1276.Settings.FskPacketHandler.PreambleDetected == false) {
@@ -1819,13 +1823,13 @@ SX1276OnDio4Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276OnDio5Irq(struct ble_npl_event *ev)
+/// DIO5: Unused (FSK only)
+void SX1276OnDio5Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nHandle DIO5\r\n");
+    printf("\r\nSX1276 DIO5: Unused\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
@@ -1836,9 +1840,9 @@ SX1276OnDio5Irq(struct ble_npl_event *ev)
     }
 }
 
-void
-SX1276RxDisable(void)
+void SX1276RxDisable(void)
 {
+    printf("\r\nSX1276 Rx disabled\r\n");
     if (SX1276.Settings.Modem == MODEM_LORA) {
         /* Disable GPIO interrupts */
         SX1276RxIoIrqDisable();
