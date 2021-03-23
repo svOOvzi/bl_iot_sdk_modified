@@ -408,7 +408,7 @@ static int enqueue_interrupt_event(
     bl_gpio_intmask(gpioPin, 1);
 
     //  Note: DO NOT Clear the GPIO Interrupt Status for the pin!
-    //  This will prevent the next GPIO Interrupt from getting triggered.
+    //  This will suppress subsequent GPIO Interrupts!
     //  bl_gpio_int_clear(gpioPin, SET);
 
     //  Increment the Interrupt Counters
