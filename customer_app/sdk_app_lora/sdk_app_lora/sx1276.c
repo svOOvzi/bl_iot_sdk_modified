@@ -1762,8 +1762,6 @@ void SX1276OnDio2Irq(struct ble_npl_event *ev)
     }
 }
 
-void dump_stack(void); ////
-
 /// DIO3: Trigger for CAD Done.
 /// CAD = Channel Activity Detection. We detect whether a Radio Channel 
 /// is in use, by scanning very quickly for the LoRa Packet Preamble.
@@ -1773,7 +1771,6 @@ void SX1276OnDio3Irq(struct ble_npl_event *ev)
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO3: Channel activity detection\r\n");
-    printf("Background Task Stack:\r\n"); dump_stack(); ////
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;

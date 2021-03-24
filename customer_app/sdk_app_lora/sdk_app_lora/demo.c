@@ -106,7 +106,6 @@ static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr
 static void on_tx_timeout(void);
 static void on_rx_timeout(void);
 static void on_rx_error(void);
-void dump_stack(void); ////
 
 /// Read SX1276 / RF96 registers
 static void read_registers(char *buf, int len, int argc, char **argv)
@@ -177,8 +176,6 @@ static void init_driver(char *buf, int len, int argc, char **argv)
         LORAPING_IQ_INVERSION_ON,
         true      //  Continuous receive mode
     );    
-
-    printf("Foreground Task Stack:\r\n"); dump_stack(); ////
 }
 
 /// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
