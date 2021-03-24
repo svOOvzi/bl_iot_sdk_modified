@@ -130,6 +130,7 @@ static void init_driver(char *buf, int len, int argc, char **argv)
 {
     //  Set the LoRa Callback Functions
     RadioEvents_t radio_events;
+    memset(&radio_events, 0, sizeof(radio_events));  //  Must init radio_events to null, because radio_events lives on stack!
     radio_events.TxDone    = on_tx_done;
     radio_events.RxDone    = on_rx_done;
     radio_events.TxTimeout = on_tx_timeout;
@@ -479,7 +480,7 @@ void dump_stack(void)
 
     //  Dump the stack, starting at Stack Frame Pointer - 1
     printf("=== stack start ===\r\n");
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 128; i++) {
         uintptr_t *ra = (uintptr_t *)*(unsigned long *)(fp - 1);
         printf("@ %p: %p\r\n", fp - 1, ra);
         fp++;

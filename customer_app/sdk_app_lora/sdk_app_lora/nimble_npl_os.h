@@ -113,6 +113,8 @@ ble_npl_eventq_remove(struct ble_npl_eventq *evq, struct ble_npl_event *ev)
 static inline void
 ble_npl_event_run(struct ble_npl_event *ev)
 {
+    assert(ev != NULL); ////
+    assert(ev->fn != NULL); ////
     ev->fn(ev);
 }
 
