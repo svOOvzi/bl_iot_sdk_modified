@@ -391,9 +391,6 @@ SX1276Init(RadioEvents_t *events)
     SX1276SetModem(MODEM_FSK);
 
     SX1276.Settings.State = RF_IDLE;
-
-    //  Create the Event Group for DMA Interrupt Handler to notify Foreground Task
-    //  TODO: g_hal_buf->hwspi[port].spi_dma_event_group = xEventGroupCreate();
 }
 
 RadioState_t
@@ -927,9 +924,6 @@ SX1276GetTimeOnAir(RadioModems_t modem, uint8_t pktLen)
 void
 SX1276Send(uint8_t *buffer, uint8_t size)
 {
-    //  Clear the event group
-    //  TODO: xEventGroupClearBits(arg->spi_dma_event_group, EVT_GROUP_SPI_DMA_TR);
-
     uint32_t txTimeout = 0;
 
     switch (SX1276.Settings.Modem) {
@@ -1010,9 +1004,6 @@ SX1276SetStby(void)
 void
 SX1276SetRx(uint32_t timeout)
 {
-    //  Clear the event group
-    //  TODO: xEventGroupClearBits(arg->spi_dma_event_group, EVT_GROUP_SPI_DMA_TR);
-
     bool rxcontinuous = false;
 
     switch (SX1276.Settings.Modem) {
@@ -1771,6 +1762,8 @@ void SX1276OnDio2Irq(struct ble_npl_event *ev)
     }
 }
 
+void dump_stack(void); ////
+
 /// DIO3: Trigger for CAD Done.
 /// CAD = Channel Activity Detection. We detect whether a Radio Channel 
 /// is in use, by scanning very quickly for the LoRa Packet Preamble.
@@ -1780,6 +1773,7 @@ void SX1276OnDio3Irq(struct ble_npl_event *ev)
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO3: Channel activity detection\r\n");
+    printf("Background Task Stack:\r\n"); dump_stack(); ////
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;

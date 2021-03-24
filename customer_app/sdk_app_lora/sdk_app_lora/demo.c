@@ -106,6 +106,7 @@ static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr
 static void on_tx_timeout(void);
 static void on_rx_timeout(void);
 static void on_rx_error(void);
+void dump_stack(void); ////
 
 /// Read SX1276 / RF96 registers
 static void read_registers(char *buf, int len, int argc, char **argv)
@@ -175,6 +176,8 @@ static void init_driver(char *buf, int len, int argc, char **argv)
         LORAPING_IQ_INVERSION_ON,
         true      //  Continuous receive mode
     );    
+
+    printf("Foreground Task Stack:\r\n"); dump_stack(); ////
 }
 
 /// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
@@ -459,6 +462,28 @@ static void loraping_tx(void)
     send_once(loraping_is_master);
 }
 #endif  //  TODO
+
+///////////////////////////////////////////////////////////////////////////////
+//  Dump Stack
+
+/// Dump the current stack
+void dump_stack(void)
+{
+    //  Must be first line of function
+    uintptr_t *fp;
+
+    //  Fetch the Frame Pointer
+    __asm__("add %0, x0, fp" : "=r"(fp));
+
+    //  Dump the stack
+    printf("=== stack start ===\r\n");
+    for (int i = 0; i < 16; i++) {
+        uintptr_t *ra = (uintptr_t *)*(unsigned long *)(fp);
+        printf("@ %p: %p\r\n", fp, ra);
+        fp -= 4;
+    }
+    printf("=== stack end ===\r\n\r\n");
+}
 
 #ifdef NOTUSED
 Output Log:
