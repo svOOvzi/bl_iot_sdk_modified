@@ -469,10 +469,11 @@ static void loraping_tx(void)
 /// Dump the current stack
 void dump_stack(void)
 {
-    //  Must be first line of function
+    //  For getting the Stack Frame Pointer. Must be first line of function.
     uintptr_t *fp;
 
-    //  Fetch the Frame Pointer
+    //  Fetch the Stack Frame Pointer. Based on backtrace_riscv from
+    //  https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/bl602/freertos_riscv_ram/panic/panic_c.c#L76-L99
     __asm__("add %0, x0, fp" : "=r"(fp));
 
     //  Dump the stack
