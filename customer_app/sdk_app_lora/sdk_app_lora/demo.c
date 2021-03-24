@@ -477,10 +477,10 @@ void dump_stack(void)
 
     //  Dump the stack
     printf("=== stack start ===\r\n");
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 32; i++) {
         uintptr_t *ra = (uintptr_t *)*(unsigned long *)(fp);
         printf("@ %p: %p\r\n", fp, ra);
-        fp -= 4;
+        fp--;
     }
     printf("=== stack end ===\r\n\r\n");
 }
