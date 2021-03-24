@@ -488,43 +488,141 @@ void dump_stack(void)
 #ifdef NOTUSED
 Output Log:
 
+# help
+====Build-in Commands====
+====Support 4 cmds once, seperate by ; ====
+help                     : print this
+p                        : print memory
+m                        : modify memory
+echo                     : echo for command
+exit                     : close CLI
+devname                  : print device name
+sysver                   : system version
+reboot                   : reboot system
+poweroff                 : poweroff system
+reset                    : system reset
+time                     : system time
+ota                      : system ota
+ps                       : thread dump
+ls                       : file list
+hexdump                  : dump file
+cat                      : cat file
+
+====User Commands====
+create_task              : Create a task
+put_event                : Add an event
+init_driver              : Init LoRa driver
+send_message             : Send LoRa message
+receive_message          : Receive LoRa message
+read_registers           : Read registers
+spi_result               : Show SPI counters
+blogset                  : blog pri set level
+blogdump                 : blog info dump
+bl_sys_time_now          : sys time now
+
+# create_task
+
 # init_driver
+SX1276 init
+SX1276 interrupt init
 SX1276 register handler: GPIO 11
+SX1276 register handler: GPIO 0
+SX1276 register handler: GPIO 5
+SX1276 register handler: GPIO 12
 TODO: os_cputime_delay_usecs 1000
 TODO: os_cputime_delay_usecs 6000
+
+# 
+SX1276 DIO3: Channel activity detection
 
 # spi_result
 DIO0 Interrupts: 0
 DIO1 Interrupts: 0
 DIO2 Interrupts: 0
-DIO3 Interrupts: 0
+DIO3 Interrupts: 1
 DIO4 Interrupts: 0
 DIO5 Interrupts: 0
 Unknown Int:     0
-Tx Interrupts:   236
+Tx Interrupts:   248
 Tx Status:       0x0
 Tx Term Count:   0x0
 Tx Error:        0x0
-Rx Interrupts:   236
+Rx Interrupts:   248
 Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
 
 # receive_message
 
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca6
+Rx done: 
+48 65 6c 6c 6f 
+
 # spi_result
 DIO0 Interrupts: 1
 DIO1 Interrupts: 0
 DIO2 Interrupts: 0
-DIO3 Interrupts: 0
+DIO3 Interrupts: 1
 DIO4 Interrupts: 0
 DIO5 Interrupts: 0
 Unknown Int:     0
-Tx Interrupts:   264
+Tx Interrupts:   300
 Tx Status:       0x0
 Tx Term Count:   0x0
 Tx Error:        0x0
-Rx Interrupts:   264
+Rx Interrupts:   300
+Rx Status:       0x0
+Rx Term Count:   0x0
+Rx Error:        0x0
+
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca6
+Rx done: 
+48 65 6c 6c 6f 
+
+# spi_result
+DIO0 Interrupts: 2
+DIO1 Interrupts: 0
+DIO2 Interrupts: 0
+DIO3 Interrupts: 1
+DIO4 Interrupts: 0
+DIO5 Interrupts: 0
+Unknown Int:     0
+Tx Interrupts:   352
+Tx Status:       0x0
+Tx Term Count:   0x0
+Tx Error:        0x0
+Rx Interrupts:   352
+Rx Status:       0x0
+Rx Term Count:   0x0
+Rx Error:        0x0
+
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca6
+Rx done: 
+48 65 6c 6c 6f 
+
+# spi_result
+DIO0 Interrupts: 3
+DIO1 Interrupts: 0
+DIO2 Interrupts: 0
+DIO3 Interrupts: 1
+DIO4 Interrupts: 0
+DIO5 Interrupts: 0
+Unknown Int:     0
+Tx Interrupts:   404
+Tx Status:       0x0
+Tx Term Count:   0x0
+Tx Error:        0x0
+Rx Interrupts:   404
 Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
