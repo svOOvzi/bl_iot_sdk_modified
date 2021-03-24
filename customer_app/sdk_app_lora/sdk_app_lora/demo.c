@@ -475,13 +475,14 @@ void dump_stack(void)
     //  Fetch the Stack Frame Pointer. Based on backtrace_riscv from
     //  https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/bl602/freertos_riscv_ram/panic/panic_c.c#L76-L99
     __asm__("add %0, x0, fp" : "=r"(fp));
+    printf("dump_stack: frame pointer=%p\r\n", fp);
 
-    //  Dump the stack
+    //  Dump the stack, starting at Stack Frame Pointer - 1
     printf("=== stack start ===\r\n");
-    for (int i = 0; i < 32; i++) {
-        uintptr_t *ra = (uintptr_t *)*(unsigned long *)(fp);
-        printf("@ %p: %p\r\n", fp, ra);
-        fp--;
+    for (int i = 0; i < 64; i++) {
+        uintptr_t *ra = (uintptr_t *)*(unsigned long *)(fp - 1);
+        printf("@ %p: %p\r\n", fp - 1, ra);
+        fp++;
     }
     printf("=== stack end ===\r\n\r\n");
 }
