@@ -248,7 +248,7 @@ void os_cputime_timer_stop(
 /// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
 void os_cputime_timer_relative(
     struct hal_timer *timer,  //  Pointer to timer. Cannot be NULL.
-    uint32_t microsecs)       //  The number of usecs from now at which the timer will expire.
+    uint32_t microsecs)       //  The number of microseconds from now at which the timer will expire.
 {
     //  TODO: Implement with Callout Functions from NimBLE Porting Layer
 }
