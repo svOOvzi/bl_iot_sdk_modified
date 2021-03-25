@@ -527,30 +527,13 @@ SX1276 init
 SX1276 interrupt init
 SX1276 register handler: GPIO 11
 SX1276 register handler: GPIO 0
-SX1276 register handler: GPIO 5
+SX126 register handler: GPIO 5
 SX1276 register handler: GPIO 12
 TODO: os_cputime_delay_usecs 1000
 TODO: os_cputime_delay_usecs 6000
 
 # 
 SX1276 DIO3: Channel activity detection
-
-# spi_result
-DIO0 Interrupts: 0
-DIO1 Interrupts: 0
-DIO2 Interrupts: 0
-DIO3 Interrupts: 1
-DIO4 Interrupts: 0
-DIO5 Interrupts: 0
-Unknown Int:     0
-Tx Interrupts:   248
-Tx Status:       0x0
-Tx Term Count:   0x0
-Tx Error:        0x0
-Rx Interrupts:   248
-Rx Status:       0x0
-Rx Term Count:   0x0
-Rx Error:        0x0
 
 # receive_message
 
@@ -568,11 +551,11 @@ DIO3 Interrupts: 1
 DIO4 Interrupts: 0
 DIO5 Interrupts: 0
 Unknown Int:     0
-Tx Interrupts:   300
+Tx Interrupts:   302
 Tx Status:       0x0
 Tx Term Count:   0x0
 Tx Error:        0x0
-Rx Interrupts:   300
+Rx Interrupts:   302
 Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
@@ -593,11 +576,11 @@ DIO3 Interrupts: 1
 DIO4 Interrupts: 0
 DIO5 Interrupts: 0
 Unknown Int:     0
-Tx Interrupts:   352
+Tx Interrupts:   354
 Tx Status:       0x0
 Tx Term Count:   0x0
 Tx Error:        0x0
-Rx Interrupts:   352
+Rx Interrupts:   354
 Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
@@ -618,11 +601,36 @@ DIO3 Interrupts: 1
 DIO4 Interrupts: 0
 DIO5 Interrupts: 0
 Unknown Int:     0
-Tx Interrupts:   404
+Tx Interrupts:   406
 Tx Status:       0x0
 Tx Term Count:   0x0
 Tx Error:        0x0
-Rx Interrupts:   404
+Rx Interrupts:   406
+Rx Status:       0x0
+Rx Term Count:   0x0
+Rx Error:        0x0
+
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca6
+Rx done: 
+48 65 6c 6c 6f 
+
+# spi_result
+DIO0 Interrupts: 4
+DIO1 Interrupts: 0
+DIO2 Interrupts: 0
+DIO3 Interrupts: 1
+DIO4 Interrupts: 0
+DIO5 Interrupts: 0
+Unknown Int:     0
+Tx Interrupts:   458
+Tx Status:       0x0
+Tx Term Count:   0x0
+Tx Error:        0x0
+Rx Interrupts:   458
 Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
