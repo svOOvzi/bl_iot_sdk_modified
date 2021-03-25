@@ -211,7 +211,8 @@ DioIrqHandler *DioIrq[] = { SX1276OnDio0Irq, SX1276OnDio1Irq,
                             SX1276OnDio2Irq, SX1276OnDio3Irq,
                             SX1276OnDio4Irq, NULL };
 
-struct hal_timer {}; ////  TODO
+/// TODO: Implement timer with NimBLE Porting Layer
+struct hal_timer {};
 
 /*!
  * Tx and Rx timers
@@ -225,22 +226,40 @@ static uint32_t rx_timeout_sync_delay = -1;
 ///////////////////////////////////////////////////////////////////////////////
 //  Timer Functions
 
-void os_cputime_timer_init(struct hal_timer *timer, void f(void *), void *arg) {
-    //  TODO
+/// Initialise a timer. Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_init
+void os_cputime_timer_init(
+    struct hal_timer *timer,  //  The timer to initialize. Cannot be NULL.
+    void f(void *),           //  The timer callback function. Cannot be NULL.
+    void *arg)                //  Pointer to data object to pass to timer.
+{
+    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
 }
 
-/// Delay for the specified number of microseconds
-void os_cputime_delay_usecs(uint32_t microsecs) {
-    //  TODO
+/// Stops a timer from running.  Can be called even if timer is not running.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_stop
+void os_cputime_timer_stop(
+    struct hal_timer *timer)  //  Pointer to cputimer to stop. Cannot be NULL.
+{
+    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
+}
+
+/// Sets a cpu timer that will expire ‘usecs’ microseconds from the current cputime.
+/// NOTE: This must be called when the timer is stopped.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
+void os_cputime_timer_relative(
+    struct hal_timer *timer,  //  Pointer to timer. Cannot be NULL.
+    uint32_t microsecs)       //  The number of usecs from now at which the timer will expire.
+{
+    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
+}
+
+/// Wait until ‘usecs’ microseconds has elapsed. This is a blocking delay.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_delay_usecs
+void os_cputime_delay_usecs(
+    uint32_t microsecs)  //  The number of microseconds to wait.
+{
+    //  TODO: Implement with Timer Functions from NimBLE Porting Layer
     printf("TODO: os_cputime_delay_usecs %u\r\n", microsecs);
-}
-
-void os_cputime_timer_stop(struct hal_timer *timer) {
-    //  TODO
-}
-
-void os_cputime_timer_relative(struct hal_timer *timer, uint32_t microsecs)  {
-    //  TODO
 }
 
 ///////////////////////////////////////////////////////////////////////////////
