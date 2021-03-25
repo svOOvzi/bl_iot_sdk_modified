@@ -243,7 +243,7 @@ void os_cputime_timer_stop(
     //  TODO: Implement with Callout Functions from NimBLE Porting Layer
 }
 
-/// Sets a cpu timer that will expire ‘usecs’ microseconds from the current cputime.
+/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
 /// NOTE: This must be called when the timer is stopped.
 /// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
 void os_cputime_timer_relative(
