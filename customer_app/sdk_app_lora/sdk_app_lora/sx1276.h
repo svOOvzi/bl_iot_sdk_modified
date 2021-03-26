@@ -25,13 +25,13 @@ Maintainer: Miguel Luis and Gregory Cristian
 | BL602 Pin     | LoRa SPI            | Wire Colour 
 |:--------------|:--------------------|:-------------------
 | __`GPIO 0`__  | `DIO1`              | Dark Green
-| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green
+| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
 | __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
-| __`GPIO 3`__  | `SCK`               | Yellow 
-| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `DIO2`              | Orange 1
-| __`GPIO 11`__ | `DIO0`              | Red
-| __`GPIO 12`__ | `DIO3`              | White 1
+| __`GPIO 3`__  | `SCK`               | Yellow (Top)
+| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
+| __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
+| __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
+| __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
 | __`GPIO 14`__ | `NSS`               | Orange 2
 | __`GPIO 17`__ | `RST`               | White 2
 | __`3V3`__     | `3.3V`              | Red
