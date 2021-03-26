@@ -1493,13 +1493,17 @@ SX1276GetWakeupTime(void)
     return SX1276GetBoardTcxoWakeupTime( ) + RADIO_WAKEUP_TIME;
 }
 
-/// Callback Function for Transmit and Receive Timeout
+/// Callback Function for Transmit, Receive and Sync Timeout
 void SX1276OnTimeoutIrq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nSX1276 timeout\r\n");
+    printf("\r\nSX1276 %s timeout\r\n",
+        (ev == &TxTimeoutTimer.ev) ? "receive" :  //  Identify the timeout
+        (ev == &RxTimeoutTimer.ev) ? "transmit" :
+        (ev == &RxTimeoutSyncWord.ev) ? "sync" :
+        "unknown");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         if (SX1276.Settings.Modem == MODEM_FSK) {
