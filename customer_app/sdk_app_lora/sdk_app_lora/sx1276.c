@@ -1500,8 +1500,8 @@ void SX1276OnTimeoutIrq(struct ble_npl_event *ev)
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 %s timeout\r\n",
-        (ev == &TxTimeoutTimer.ev) ? "receive" :  //  Identify the timeout
-        (ev == &RxTimeoutTimer.ev) ? "transmit" :
+        (ev == &TxTimeoutTimer.ev) ? "transmit" :  //  Identify the timeout
+        (ev == &RxTimeoutTimer.ev) ? "receive" :
         (ev == &RxTimeoutSyncWord.ev) ? "sync" :
         "unknown");
     switch (SX1276.Settings.State) {
