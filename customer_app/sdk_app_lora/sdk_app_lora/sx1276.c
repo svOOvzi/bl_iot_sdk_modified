@@ -21,6 +21,7 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -132,7 +133,7 @@ void SX1276OnDio5Irq(struct ble_npl_event *ev);
 /*!
  * \brief Tx & Rx timeout timer callback
  */
-void SX1276OnTimeoutIrq(void *unused);
+void SX1276OnTimeoutIrq(struct ble_npl_event *ev);
 
 /*
  * Private global constants
@@ -211,15 +212,12 @@ DioIrqHandler *DioIrq[] = { SX1276OnDio0Irq, SX1276OnDio1Irq,
                             SX1276OnDio2Irq, SX1276OnDio3Irq,
                             SX1276OnDio4Irq, NULL };
 
-/// TODO: Implement timer with NimBLE Porting Layer
-struct hal_timer {};
-
 /*!
- * Tx and Rx timers
+ * Tx and Rx Callout Timers
  */
-struct hal_timer TxTimeoutTimer;
-struct hal_timer RxTimeoutTimer;
-struct hal_timer RxTimeoutSyncWord;
+struct ble_npl_callout TxTimeoutTimer;
+struct ble_npl_callout RxTimeoutTimer;
+struct ble_npl_callout RxTimeoutSyncWord;
 
 static uint32_t rx_timeout_sync_delay = -1;
 
@@ -228,29 +226,66 @@ static uint32_t rx_timeout_sync_delay = -1;
 
 /// Initialise a timer. Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_init
 void os_cputime_timer_init(
-    struct hal_timer *timer,  //  The timer to initialize. Cannot be NULL.
-    void f(void *),           //  The timer callback function. Cannot be NULL.
-    void *arg)                //  Pointer to data object to pass to timer.
+    struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
+    ble_npl_event_fn *f,            //  The timer callback function. Cannot be NULL.
+    void *arg)                      //  Pointer to data object to pass to timer.
 {
-    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+    assert(f != NULL);
+
+    //  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
+    extern struct ble_npl_eventq event_queue;
+
+    //  Init the Callout Timer with the Callback Function
+    ble_npl_callout_init(
+        timer,         //  Callout Timer
+        &event_queue,  //  Event Queue that will handle the Callout upon timeout
+        f,             //  Callback Function
+        arg            //  Argument to be passed to Callback Function
+    );
 }
 
 /// Stops a timer from running.  Can be called even if timer is not running.
 /// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_stop
 void os_cputime_timer_stop(
-    struct hal_timer *timer)  //  Pointer to cputimer to stop. Cannot be NULL.
+    struct ble_npl_callout *timer)  //  Pointer to timer to stop. Cannot be NULL.
 {
-    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+
+    //  If Callout Timer is still running...
+    if (ble_npl_callout_is_active(timer)) {
+        //  Stop the Callout Timer
+        ble_npl_callout_stop(timer);
+    }
 }
 
 /// Sets a timer that will expire ‘usecs’ microseconds from the current time.
 /// NOTE: This must be called when the timer is stopped.
 /// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
 void os_cputime_timer_relative(
-    struct hal_timer *timer,  //  Pointer to timer. Cannot be NULL.
-    uint32_t microsecs)       //  The number of microseconds from now at which the timer will expire.
+    struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
+    uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
 {
-    //  TODO: Implement with Callout Functions from NimBLE Porting Layer
+    //  Implement with Callout Functions from NimBLE Porting Layer.
+    //  Assume that Callout Timer has been stopped.
+    assert(timer != NULL);
+
+    //  Convert microseconds to ticks
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsecs / 1000  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Trigger the Callout Timer after the elapsed ticks
+    ble_npl_error_t rc = ble_npl_callout_reset(
+        timer,  //  Callout Timer
+        ticks   //  Number of ticks
+    );
+    assert(rc == 0);
 }
 
 /// Wait until ‘usecs’ microseconds has elapsed. This is a blocking delay.
@@ -258,8 +293,17 @@ void os_cputime_timer_relative(
 void os_cputime_delay_usecs(
     uint32_t microsecs)  //  The number of microseconds to wait.
 {
-    //  TODO: Implement with Timer Functions from NimBLE Porting Layer
-    printf("TODO: os_cputime_delay_usecs %u\r\n", microsecs);
+    //  Implement with Timer Functions from NimBLE Porting Layer.
+    //  Convert microseconds to ticks.
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsecs / 1000  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Wait for the ticks
+    ble_npl_time_delay(ticks);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1449,9 +1493,12 @@ SX1276GetWakeupTime(void)
     return SX1276GetBoardTcxoWakeupTime( ) + RADIO_WAKEUP_TIME;
 }
 
-void
-SX1276OnTimeoutIrq(void *unused)
+/// Callback Function for Transmit and Receive Timeout
+void SX1276OnTimeoutIrq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 timeout\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
@@ -1492,7 +1539,7 @@ SX1276OnTimeoutIrq(void *unused)
 /// DIO0: Trigger for Packet Received
 void SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO0: Packet received\r\n");
@@ -1659,7 +1706,7 @@ void SX1276OnDio0Irq(struct ble_npl_event *ev)
 /// DIO1: Trigger for Sync Timeout
 void SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO1: Sync timeout\r\n");
@@ -1723,7 +1770,7 @@ void SX1276OnDio1Irq(struct ble_npl_event *ev)
 /// DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
 void SX1276OnDio2Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO2: Change channel\r\n");
@@ -1787,7 +1834,7 @@ void SX1276OnDio2Irq(struct ble_npl_event *ev)
 /// is in use, by scanning very quickly for the LoRa Packet Preamble.
 void SX1276OnDio3Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO3: Channel activity detection\r\n");
@@ -1817,7 +1864,7 @@ void SX1276OnDio3Irq(struct ble_npl_event *ev)
 /// DIO4: Unused (FSK only)
 void SX1276OnDio4Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO4: Unused\r\n");
@@ -1837,7 +1884,7 @@ void SX1276OnDio4Irq(struct ble_npl_event *ev)
 /// DIO5: Unused (FSK only)
 void SX1276OnDio5Irq(struct ble_npl_event *ev)
 {
-    ////  This handler runs in the context of the FreeRTOS Application Task.
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
     printf("\r\nSX1276 DIO5: Unused\r\n");
