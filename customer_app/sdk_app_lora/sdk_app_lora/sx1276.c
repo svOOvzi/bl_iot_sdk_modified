@@ -277,6 +277,7 @@ static uint8_t spi_rx_buf[1];
 /// Blocking call to send a value on the SPI. Returns the value received from the SPI Peripheral.
 /// Assume that we are sending and receiving 8-bit values on SPI.
 /// Assume Chip Select Pin has already been set to Low by caller.
+/// TODO: We should combine multiple SPI DMA Requests, instead of handling one byte at a time
 uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
     //  Populate the transmit buffer
     spi_tx_buf[0] = val;
