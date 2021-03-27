@@ -635,5 +635,45 @@ Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
 
+# receive_message
+
 # 
+SX1276 receive timeout
+Rx timeout
+
+# receive_message
+
+# 
+SX1276 receive timeout
+Rx timeout
+
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca8
+Rx done: 
+48 65 6c 6c 6f 
+
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca8
+Rx done: 
+48 65 6c 6c 6f 
+
+# send_message
+
+# 
+SX1276 DIO0: Packet received
+Tx done
+
+# 
+# send_message
+
+# 
+SX1276 DIO0: Packet received
+Tx done
+
 #endif  //  NOTUSED
