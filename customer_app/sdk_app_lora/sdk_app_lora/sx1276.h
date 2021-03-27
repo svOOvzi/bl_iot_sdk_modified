@@ -22,7 +22,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1276Regs-LoRa.h"
 
 /* Connect BL602 to SX1276 / RF96 LoRa Transceiver
-| BL602 Pin     | LoRa SPI            | Wire Colour 
+| BL602 Pin     | SX1276 / RF96 Pin   | Wire Colour 
 |:--------------|:--------------------|:-------------------
 | __`GPIO 0`__  | `DIO1`              | Dark Green
 | __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
@@ -32,8 +32,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 | __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
 | __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
 | __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
-| __`GPIO 14`__ | `NSS`               | Orange 2
-| __`GPIO 17`__ | `RST`               | White 2
+| __`GPIO 14`__ | `NSS`               | Orange
+| __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
 | __`GND`__     | `GND`               | Black
 */
