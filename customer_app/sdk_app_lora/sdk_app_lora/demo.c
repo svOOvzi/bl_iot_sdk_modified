@@ -635,12 +635,118 @@ Rx Status:       0x0
 Rx Term Count:   0x0
 Rx Error:        0x0
 
+With Timer:
+
+# reboot
+reboot
+ˇStarting bl602 now....
+Booting BL602 Chip...
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ïó      ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó  ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó
+
+‚ñà‚ñà‚ïî‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ïê‚ïù ‚ñà‚ñà‚ïî‚ïê‚ñà‚ñà‚ñà‚ñà‚ïó‚ïö‚ïê‚ïê‚ïê‚ïê‚ñà‚ñà‚ïó
+
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó ‚ñà‚ñà‚ïë‚ñà‚ñà‚ïî‚ñà‚ñà‚ïë ‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù
+
+‚ñà‚ñà‚ïî‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ïë     ‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ñà‚ñà‚ïó‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ïë‚ñà‚ñà‚ïî‚ïê‚ïê‚ïê‚ïù
+
+‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó‚ïö‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ïö‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïî‚ïù‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ñà‚ïó
+
+‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù  ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù ‚ïö‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïù
+
+
+
+------------------------------------------------------------
+RISC-V Core Feature:RV32-ACFIMX
+Build Version: release_bl_iot_sdk_1.6.11-1-g66bb28da-dirty
+Build Date: Mar 24 2021
+Build Time: 14:27:33
+------------------------------------------------------------
+
+blog init set power on level 2, 2, 2.
+[IRQ] Clearing and Disable all the pending IRQ...
+[OS] Starting aos_loop_proc task...
+[OS] Starting OS Scheduler...
+=== 32 task inited
+====== bloop dump ======
+  bitmap_evt 0
+  bitmap_msg 0
+--->>> timer list:
+  32 task:
+    task[31] : SYS [built-in]
+      evt handler 0x2300e5fe, msg handler 0x2300e5c8, trigged cnt 0, bitmap async 0 sync 0, time consumed 0us acc 0ms, max 0us
+    task[30] : empty
+    task[29] : empty
+    task[28] : empty
+    task[27] : empty
+    task[26] : empty
+    task[25] : empty
+    task[24] : empty
+    task[23] : empty
+    task[22] : empty
+    task[21] : empty
+    task[20] : empty
+    task[19] : empty
+    task[18] : empty
+    task[17] : empty
+    task[16] : empty
+    task[15] : empty
+    task[14] : empty
+    task[13] : empty
+    task[12] : empty
+    task[11] : empty
+    task[10] : empty
+    task[09] : empty
+    task[08] : empty
+    task[07] : empty
+    task[06] : empty
+    task[05] : empty
+    task[04] : empty
+    task[03] : empty
+    task[02] : empty
+    task[01] : empty
+    task[00] : empty
+Init CLI with event Driven
+
+# 
+# create_task
+
+# init_driver
+SX1276 init
+SX1276 interrupt init
+SX1276 register handler: GPIO 11
+SX1276 register handler: GPIO 0
+SX1276 register handler: GPIO 5
+SX1276 register handler: GPIO 12
+
+SX1276 DIO3: Channel a
+# ctivity detection
+
+# 
 # receive_message
 
 # 
 SX1276 receive timeout
 Rx timeout
 
+# 
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca8
+Rx done: 
+48 65 6c 6c 6f 
+
+# 
+# receive_message
+
+# 
+SX1276 DIO0: Packet received
+Rx done: RadioEvents.RxDone=0x23000ca8
+Rx done: 
+48 65 6c 6c 6f 
+
+# 
 # receive_message
 
 # 
@@ -654,26 +760,4 @@ SX1276 DIO0: Packet received
 Rx done: RadioEvents.RxDone=0x23000ca8
 Rx done: 
 48 65 6c 6c 6f 
-
-# receive_message
-
-# 
-SX1276 DIO0: Packet received
-Rx done: RadioEvents.RxDone=0x23000ca8
-Rx done: 
-48 65 6c 6c 6f 
-
-# send_message
-
-# 
-SX1276 DIO0: Packet received
-Tx done
-
-# 
-# send_message
-
-# 
-SX1276 DIO0: Packet received
-Tx done
-
 #endif  //  NOTUSED
