@@ -148,24 +148,42 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     printf("SX1276 interrupt init\r\n");
     int rc;
 
-    //  DIO0: Trigger for Packet Received
+    //  DIO0: Trigger for Packet Received and Packet Transmitted
     if (SX1276_DIO0 >= 0 && irqHandlers[0] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO0, irqHandlers[0], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO0,                  //  GPIO Pin Number
+            irqHandlers[0],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 
-    //  DIO1: Trigger for Sync Timeout
+    //  DIO1: Trigger for Receive Timeout (Single Receive Mode only)
     if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO1, irqHandlers[1], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO1,                  //  GPIO Pin Number
+            irqHandlers[1],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High 
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 
     //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
     if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO2, irqHandlers[2], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO2,                  //  GPIO Pin Number
+            irqHandlers[2],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 
@@ -173,22 +191,40 @@ void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
     //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
     //  is in use, by scanning very quickly for the LoRa Packet Preamble.
     if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO3, irqHandlers[3], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO3,                  //  GPIO Pin Number
+            irqHandlers[3],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 
     //  DIO4: Unused (FSK only)
     if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO4, irqHandlers[4], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO4,                  //  GPIO Pin Number
+            irqHandlers[4],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 
     //  DIO5: Unused (FSK only)
     if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
-        rc = register_gpio_handler(SX1276_DIO5, irqHandlers[5], GLB_GPIO_INT_CONTROL_ASYNC,
-            GLB_GPIO_INT_TRIG_POS_PULSE, 0, 0);
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO5,                  //  GPIO Pin Number
+            irqHandlers[5],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
     }
 

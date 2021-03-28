@@ -1540,13 +1540,13 @@ void SX1276OnTimeoutIrq(struct ble_npl_event *ev)
     }
 }
 
-/// DIO0: Trigger for Packet Received
+/// DIO0: Trigger for Packet Received and Packet Transmitted
 void SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nSX1276 DIO0: Packet received\r\n");
+    printf("\r\nSX1276 DIO0: Packet received / transmitted\r\n");
     int8_t snr;
     int16_t rssi;
     volatile uint8_t irqFlags = 0;
@@ -1707,13 +1707,13 @@ void SX1276OnDio0Irq(struct ble_npl_event *ev)
     }
 }
 
-/// DIO1: Trigger for Sync Timeout
+/// DIO1: Trigger for Receive Timeout (Single Receive Mode only)
 void SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
     ////  This handler runs in the context of the FreeRTOS Background Application Task.
     ////  Previously this handler ran in the Interrupt Context.
     ////  So we are safe to call printf and SPI Functions now.
-    printf("\r\nSX1276 DIO1: Sync timeout\r\n");
+    printf("\r\nSX1276 DIO1: Receive timeout\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
