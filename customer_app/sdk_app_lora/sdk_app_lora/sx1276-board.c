@@ -338,7 +338,8 @@ static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
 static int init_interrupt_event(uint8_t gpioPin, DioIrqHandler *handler);
 static int enqueue_interrupt_event(uint8_t gpioPin, struct ble_npl_event *event);
 
-/// Register Interrupt Handler for GPIO. Return 0 if successful.
+/// Register Handler Function for GPIO. Return 0 if successful.
+/// GPIO Handler Function will run in the context of the Application Task, not the Interrupt Handler.
 /// Based on bl_gpio_register in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
 static int register_gpio_handler(
     uint8_t gpioPin,         //  GPIO Pin Number
