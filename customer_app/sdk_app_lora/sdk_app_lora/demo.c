@@ -353,7 +353,11 @@ static void on_tx_done(void)
 }
 
 /// Callback Function that is called when a LoRa message has been received
-static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
+static void on_rx_done(
+    uint8_t *payload,  //  Buffer containing received LoRa message
+    uint16_t size,     //  Size of the LoRa message
+    int16_t rssi,      //  Signal strength
+    int8_t snr)        //  Signal To Noise ratio
 {
     printf("Rx done: \r\n");
 
