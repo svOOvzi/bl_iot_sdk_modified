@@ -36,3 +36,8 @@ CONFIG_BT_PERIPHERAL:=1
 CONFIG_BT_STACK_CLI:=1
 CONFIG_BT_WIFIPROV_SERVER:=1
 CONFIG_WIFI:=0
+
+# Show Stack Trace when we hit a RISC-V Exception, 
+# by enabling the Stack Frame Pointer.
+# After setting this flag, do "make clean ; make"
+CONFIG_ENABLE_FP:=1

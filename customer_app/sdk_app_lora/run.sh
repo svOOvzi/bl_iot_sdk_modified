@@ -35,7 +35,7 @@ cp build_out/$APP_NAME.bin $BLFLASH_PATH
 #  Flash the firmware
 pushd $BLFLASH_PATH
 cargo run flash $APP_NAME.bin \
-    --port /dev/tty.usbserial-1420 \
+    --port /dev/tty.usbserial-14* \
     --initial-baud-rate 230400 \
     --baud-rate 230400
 sleep 5

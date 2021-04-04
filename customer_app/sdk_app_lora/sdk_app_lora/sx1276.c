@@ -21,6 +21,7 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -102,37 +103,37 @@ void SX1276SetOpMode(uint8_t opMode);
 /*!
  * \brief DIO 0 IRQ callback
  */
-void SX1276OnDio0Irq(void *unused);
+void SX1276OnDio0Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 1 IRQ callback
  */
-void SX1276OnDio1Irq(void *unused);
+void SX1276OnDio1Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 2 IRQ callback
  */
-void SX1276OnDio2Irq(void *unused);
+void SX1276OnDio2Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 3 IRQ callback
  */
-void SX1276OnDio3Irq(void *unused);
+void SX1276OnDio3Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 4 IRQ callback
  */
-void SX1276OnDio4Irq(void *unused);
+void SX1276OnDio4Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief DIO 5 IRQ callback
  */
-void SX1276OnDio5Irq(void *unused);
+void SX1276OnDio5Irq(struct ble_npl_event *ev);
 
 /*!
  * \brief Tx & Rx timeout timer callback
  */
-void SX1276OnTimeoutIrq(void *unused);
+void SX1276OnTimeoutIrq(struct ble_npl_event *ev);
 
 /*
  * Private global constants
@@ -187,7 +188,8 @@ const FskBandwidth_t FskBandwidths[] =
 /*!
  * Radio callbacks variable
  */
-static RadioEvents_t *RadioEvents;
+static RadioEvents_t RadioEvents;  ////  Stores a copy of the callbacks
+////  Previously: static RadioEvents_t *RadioEvents;
 
 /*!
  * Reception buffer
@@ -210,36 +212,98 @@ DioIrqHandler *DioIrq[] = { SX1276OnDio0Irq, SX1276OnDio1Irq,
                             SX1276OnDio2Irq, SX1276OnDio3Irq,
                             SX1276OnDio4Irq, NULL };
 
-struct hal_timer {}; ////  TODO
-
 /*!
- * Tx and Rx timers
+ * Tx and Rx Callout Timers
  */
-struct hal_timer TxTimeoutTimer;
-struct hal_timer RxTimeoutTimer;
-struct hal_timer RxTimeoutSyncWord;
+struct ble_npl_callout TxTimeoutTimer;
+struct ble_npl_callout RxTimeoutTimer;
+struct ble_npl_callout RxTimeoutSyncWord;
 
 static uint32_t rx_timeout_sync_delay = -1;
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Timer Functions
 
-void os_cputime_timer_init(struct hal_timer *timer, void f(void *), void *arg) {
-    //  TODO
+/// Initialise a timer. Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_init
+void os_cputime_timer_init(
+    struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
+    ble_npl_event_fn *f,            //  The timer callback function. Cannot be NULL.
+    void *arg)                      //  Pointer to data object to pass to timer.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+    assert(f != NULL);
+
+    //  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
+    extern struct ble_npl_eventq event_queue;
+
+    //  Init the Callout Timer with the Callback Function
+    ble_npl_callout_init(
+        timer,         //  Callout Timer
+        &event_queue,  //  Event Queue that will handle the Callout upon timeout
+        f,             //  Callback Function
+        arg            //  Argument to be passed to Callback Function
+    );
 }
 
-/// Delay for the specified number of microseconds
-void os_cputime_delay_usecs(uint32_t microsecs) {
-    //  TODO
-    printf("TODO: os_cputime_delay_usecs %u\r\n", microsecs);
+/// Stops a timer from running.  Can be called even if timer is not running.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_stop
+void os_cputime_timer_stop(
+    struct ble_npl_callout *timer)  //  Pointer to timer to stop. Cannot be NULL.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+
+    //  If Callout Timer is still running...
+    if (ble_npl_callout_is_active(timer)) {
+        //  Stop the Callout Timer
+        ble_npl_callout_stop(timer);
+    }
 }
 
-void os_cputime_timer_stop(struct hal_timer *timer) {
-    //  TODO
+/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
+/// NOTE: This must be called when the timer is stopped.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
+void os_cputime_timer_relative(
+    struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
+    uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer.
+    //  Assume that Callout Timer has been stopped.
+    assert(timer != NULL);
+
+    //  Convert microseconds to ticks
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsecs / 1000  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Trigger the Callout Timer after the elapsed ticks
+    ble_npl_error_t rc = ble_npl_callout_reset(
+        timer,  //  Callout Timer
+        ticks   //  Number of ticks
+    );
+    assert(rc == 0);
 }
 
-void os_cputime_timer_relative(struct hal_timer *timer, uint32_t microsecs)  {
-    //  TODO
+/// Wait until ‘usecs’ microseconds has elapsed. This is a blocking delay.
+/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_delay_usecs
+void os_cputime_delay_usecs(
+    uint32_t microsecs)  //  The number of microseconds to wait.
+{
+    //  Implement with Timer Functions from NimBLE Porting Layer.
+    //  Convert microseconds to ticks.
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsecs / 1000  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Wait for the ticks
+    ble_npl_time_delay(ticks);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -257,6 +321,7 @@ static uint8_t spi_rx_buf[1];
 /// Blocking call to send a value on the SPI. Returns the value received from the SPI Peripheral.
 /// Assume that we are sending and receiving 8-bit values on SPI.
 /// Assume Chip Select Pin has already been set to Low by caller.
+/// TODO: We should combine multiple SPI DMA Requests, instead of handling one byte at a time
 uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
     //  Populate the transmit buffer
     spi_tx_buf[0] = val;
@@ -315,40 +380,41 @@ round(double d)
 static void
 SX1276RxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->RxDone != NULL)) {
-        RadioEvents->RxDone(payload, size, rssi, snr);
+    printf("Rx done: RadioEvents.RxDone=%p\r\n", RadioEvents.RxDone);
+    if (RadioEvents.RxDone != NULL) {
+        RadioEvents.RxDone(payload, size, rssi, snr);
     }
 }
 
 static void
 SX1276RxError(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->RxError != NULL)) {
-        RadioEvents->RxError();
+    if (RadioEvents.RxError != NULL) {
+        RadioEvents.RxError();
     }
 }
 
 static void
 SX1276RxTimeout(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->RxTimeout != NULL)) {
-        RadioEvents->RxTimeout();
+    if (RadioEvents.RxTimeout != NULL) {
+        RadioEvents.RxTimeout();
     }
 }
 
 static void
 SX1276TxDone(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->TxDone != NULL)) {
-        RadioEvents->TxDone();
+    if (RadioEvents.TxDone != NULL) {
+        RadioEvents.TxDone();
     }
 }
 
 static void
 SX1276TxTimeout(void)
 {
-    if ((RadioEvents != NULL) && (RadioEvents->TxTimeout != NULL)) {
-        RadioEvents->TxTimeout();
+    if (RadioEvents.TxTimeout != NULL) {
+        RadioEvents.TxTimeout();
     }
 }
 
@@ -360,7 +426,12 @@ SX1276Init(RadioEvents_t *events)
 {
     uint8_t i;
 
-    RadioEvents = events;
+    ////  We copy the Event Callbacks from "events", because
+    ////  "events" may be stored on the stack
+    assert(events != NULL);
+    memcpy(&RadioEvents, events, sizeof(RadioEvents));
+
+    ////  Previously: RadioEvents = events;
 
     // Initialize driver timeout timers. NOTE: assumes timer configured.
     os_cputime_timer_init(&TxTimeoutTimer, SX1276OnTimeoutIrq, NULL);
@@ -1404,6 +1475,7 @@ SX1276SetMaxPayloadLength(RadioModems_t modem, uint8_t max)
 void
 SX1276SetPublicNetwork(bool enable)
 {
+    printf("\r\nSX1276 %s public network\r\n", enable ? "enable" : "disable");
     SX1276SetModem(MODEM_LORA);
     SX1276.Settings.LoRa.PublicNetwork = enable;
     if (enable == true) {
@@ -1421,9 +1493,17 @@ SX1276GetWakeupTime(void)
     return SX1276GetBoardTcxoWakeupTime( ) + RADIO_WAKEUP_TIME;
 }
 
-void
-SX1276OnTimeoutIrq(void *unused)
+/// Callback Function for Transmit, Receive and Sync Timeout
+void SX1276OnTimeoutIrq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 %s timeout\r\n",
+        (ev == &TxTimeoutTimer.ev) ? "transmit" :  //  Identify the timeout
+        (ev == &RxTimeoutTimer.ev) ? "receive" :
+        (ev == &RxTimeoutSyncWord.ev) ? "sync" :
+        "unknown");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         if (SX1276.Settings.Modem == MODEM_FSK) {
@@ -1460,9 +1540,13 @@ SX1276OnTimeoutIrq(void *unused)
     }
 }
 
-void
-SX1276OnDio0Irq(void *unused)
+/// DIO0: Trigger for Packet Received and Packet Transmitted
+void SX1276OnDio0Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO0: Packet received / transmitted\r\n");
     int8_t snr;
     int16_t rssi;
     volatile uint8_t irqFlags = 0;
@@ -1623,9 +1707,13 @@ SX1276OnDio0Irq(void *unused)
     }
 }
 
-void
-SX1276OnDio1Irq(void *unused)
+/// DIO1: Trigger for Receive Timeout (Single Receive Mode only)
+void SX1276OnDio1Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO1: Receive timeout\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1683,9 +1771,13 @@ SX1276OnDio1Irq(void *unused)
     }
 }
 
-void
-SX1276OnDio2Irq(void *unused)
+/// DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+void SX1276OnDio2Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO2: Change channel\r\n");
     switch (SX1276.Settings.State) {
     case RF_RX_RUNNING:
         switch (SX1276.Settings.Modem) {
@@ -1709,8 +1801,8 @@ SX1276OnDio2Irq(void *unused)
                 // Clear Irq
                 SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_FHSSCHANGEDCHANNEL);
 
-                if ((RadioEvents != NULL) && (RadioEvents->FhssChangeChannel != NULL)) {
-                    RadioEvents->FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
+                if (RadioEvents.FhssChangeChannel != NULL) {
+                    RadioEvents.FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
                 }
             }
             break;
@@ -1727,8 +1819,8 @@ SX1276OnDio2Irq(void *unused)
                 // Clear Irq
                 SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_FHSSCHANGEDCHANNEL);
 
-                if ((RadioEvents != NULL) && (RadioEvents->FhssChangeChannel != NULL)) {
-                    RadioEvents->FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
+                if (RadioEvents.FhssChangeChannel != NULL) {
+                    RadioEvents.FhssChangeChannel((SX1276Read(REG_LR_HOPCHANNEL) & RFLR_HOPCHANNEL_CHANNEL_MASK));
                 }
             }
             break;
@@ -1741,9 +1833,15 @@ SX1276OnDio2Irq(void *unused)
     }
 }
 
-void
-SX1276OnDio3Irq(void *unused)
+/// DIO3: Trigger for CAD Done.
+/// CAD = Channel Activity Detection. We detect whether a Radio Channel 
+/// is in use, by scanning very quickly for the LoRa Packet Preamble.
+void SX1276OnDio3Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO3: Channel activity detection\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
@@ -1751,14 +1849,14 @@ SX1276OnDio3Irq(void *unused)
         if ((SX1276Read(REG_LR_IRQFLAGS) & RFLR_IRQFLAGS_CADDETECTED) == RFLR_IRQFLAGS_CADDETECTED) {
             // Clear Irq
             SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_CADDETECTED | RFLR_IRQFLAGS_CADDONE);
-            if ((RadioEvents != NULL) && (RadioEvents->CadDone != NULL)) {
-                RadioEvents->CadDone(true);
+            if (RadioEvents.CadDone != NULL) {
+                RadioEvents.CadDone(true);
             }
         } else {
             // Clear Irq
             SX1276Write(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_CADDONE);
-            if ((RadioEvents != NULL) && (RadioEvents->CadDone != NULL)) {
-                RadioEvents->CadDone(false);
+            if (RadioEvents.CadDone != NULL) {
+                RadioEvents.CadDone(false);
             }
         }
         break;
@@ -1767,9 +1865,13 @@ SX1276OnDio3Irq(void *unused)
     }
 }
 
-void
-SX1276OnDio4Irq(void *unused)
+/// DIO4: Unused (FSK only)
+void SX1276OnDio4Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO4: Unused\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         if (SX1276.Settings.FskPacketHandler.PreambleDetected == false) {
@@ -1783,9 +1885,13 @@ SX1276OnDio4Irq(void *unused)
     }
 }
 
-void
-SX1276OnDio5Irq(void *unused)
+/// DIO5: Unused (FSK only)
+void SX1276OnDio5Irq(struct ble_npl_event *ev)
 {
+    ////  This handler runs in the context of the FreeRTOS Background Application Task.
+    ////  Previously this handler ran in the Interrupt Context.
+    ////  So we are safe to call printf and SPI Functions now.
+    printf("\r\nSX1276 DIO5: Unused\r\n");
     switch (SX1276.Settings.Modem) {
     case MODEM_FSK:
         break;
@@ -1796,9 +1902,9 @@ SX1276OnDio5Irq(void *unused)
     }
 }
 
-void
-SX1276RxDisable(void)
+void SX1276RxDisable(void)
 {
+    printf("\r\nSX1276 Rx disabled\r\n");
     if (SX1276.Settings.Modem == MODEM_LORA) {
         /* Disable GPIO interrupts */
         SX1276RxIoIrqDisable();

@@ -22,16 +22,16 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1276Regs-LoRa.h"
 
 /* Connect BL602 to SX1276 / RF96 LoRa Transceiver
-| BL602 Pin     | LoRa SPI            | Wire Colour 
+| BL602 Pin     | SX1276 / RF96 Pin   | Wire Colour 
 |:--------------|:--------------------|:-------------------
-| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green
-| __`GPIO 2`__  | Do Not Connect      | 
-| __`GPIO 3`__  | `SCK`               | Yellow 
-| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `D2`                | ???
-| __`GPIO 8`__  | `D3`                | ???
-| __`GPIO 11`__ | `D1`                | Dark Green
-| __`GPIO 12`__ | `D0`                | Purple
+| __`GPIO 0`__  | `DIO1`              | Dark Green
+| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
+| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
+| __`GPIO 3`__  | `SCK`               | Yellow (Top)
+| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
+| __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
+| __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
+| __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
 | __`GPIO 14`__ | `NSS`               | Orange
 | __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
@@ -45,15 +45,18 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define SX1276_SPI_CS_PIN  14  //  SPI Chip Select Pin
 #define SX1276_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
 #define SX1276_NRESET      17  //  Reset Pin
-#define SX1276_DIO0        12  //  DIO0 Pin
-#define SX1276_DIO1        11  //  DIO1 Pin
-#define SX1276_DIO2         5  //  DIO2 Pin
-#define SX1276_DIO3         8  //  DIO3 Pin
-#define SX1276_DIO4         0  //  TODO: DIO4 Pin
-#define SX1276_DIO5         0  //  TODO: DIO5 Pin
+#define SX1276_DIO0        11  //  DIO0: Trigger for Packet Received
+#define SX1276_DIO1         0  //  DIO1: Trigger for Sync Timeout
+#define SX1276_DIO2         5  //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+#define SX1276_DIO3        12  //  DIO3: Trigger for CAD Done
+#define SX1276_DIO4        -1  //  DIO4: Unused (FSK only)
+#define SX1276_DIO5        -1  //  DIO5: Unused (FSK only)
 #define SX1276_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 #define SX1276_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
 #define SX1276_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
+
+//  CAD = Channel Activity Detection. We detect whether a Radio Channel 
+//  is in use, by scanning very quickly for the LoRa Packet Preamble.
 
 /*!
  * Radio complete Wake-up Time with margin for temperature compensation
@@ -159,10 +162,12 @@ typedef struct SX1276_s
     RadioSettings_t Settings;
 }SX1276_t;
 
+struct ble_npl_event;
+
 /*!
  * Hardware IO IRQ callback function definition
  */
-typedef void (DioIrqHandler)(void *arg);
+typedef void (DioIrqHandler)(struct ble_npl_event *ev);
 
 /*!
  * SX1276 definitions

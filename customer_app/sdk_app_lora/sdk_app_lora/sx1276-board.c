@@ -19,10 +19,21 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
+#include <bl_irq.h>          //  For bl_irq_register_with_ctx
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (multitasking functions)
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
+
+static int register_gpio_handler(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler,  //  GPIO Handler Function
+    uint8_t intCtrlMod,      //  GPIO Interrupt Control Mode (see below)
+    uint8_t intTrgMod,       //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t pullup,          //  1 for pullup, 0 for no pullup
+    uint8_t pulldown);       //  1 for pulldown, 0 for no pulldown
+static void handle_gpio_interrupt(void *arg);
 
 extern DioIrqHandler *DioIrq[];
 
@@ -69,6 +80,7 @@ spi_dev_t spi_device;
 
 void SX1276IoInit(void)
 {
+    printf("SX1276 init\r\n");
     int rc;
 
 #if SX1276_HAS_ANT_SW
@@ -127,67 +139,110 @@ void SX1276IoInit(void)
         SX1276_SPI_SDO_PIN    //  SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
-
-#ifdef NOTUSED
-    //  SX1276 SPI Settings for Mynewt OS
-    spi_settings.data_order = HAL_SPI_MSB_FIRST;
-    spi_settings.data_mode = HAL_SPI_MODE0;
-    spi_settings.baudrate = SX1276_SPI_BAUDRATE;
-    spi_settings.word_size = HAL_SPI_WORD_SIZE_8BIT;
-#endif  //  NOTUSED
 }
 
+/// Register GPIO Interrupt Handlers for DIO0 to DIO5.
+/// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 void SX1276IoIrqInit(DioIrqHandler **irqHandlers)
 {
-#ifdef TODO
+    printf("SX1276 interrupt init\r\n");
     int rc;
 
-    if (irqHandlers[0] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO0, irqHandlers[0], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO0: Trigger for Packet Received and Packet Transmitted
+    if (SX1276_DIO0 >= 0 && irqHandlers[0] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO0,                  //  GPIO Pin Number
+            irqHandlers[0],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO0);
     }
 
-    if (irqHandlers[1] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO1, irqHandlers[1], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO1: Trigger for Receive Timeout (Single Receive Mode only)
+    if (SX1276_DIO1 >= 0 && irqHandlers[1] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO1,                  //  GPIO Pin Number
+            irqHandlers[1],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High 
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO1);
     }
 
-    if (irqHandlers[2] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO2, irqHandlers[2], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+    if (SX1276_DIO2 >= 0 && irqHandlers[2] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO2,                  //  GPIO Pin Number
+            irqHandlers[2],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO2);
     }
 
-    if (irqHandlers[3] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO3, irqHandlers[3], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO3: Trigger for CAD Done.
+    //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
+    //  is in use, by scanning very quickly for the LoRa Packet Preamble.
+    if (SX1276_DIO3 >= 0 && irqHandlers[3] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO3,                  //  GPIO Pin Number
+            irqHandlers[3],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO3);
     }
 
-    if (irqHandlers[4] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO4, irqHandlers[4], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO4: Unused (FSK only)
+    if (SX1276_DIO4 >= 0 && irqHandlers[4] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO4,                  //  GPIO Pin Number
+            irqHandlers[4],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO4);
     }
 
-    if (irqHandlers[5] != NULL) {
-        rc = hal_gpio_irq_init(SX1276_DIO5, irqHandlers[5], NULL,
-                               HAL_GPIO_TRIG_RISING, HAL_GPIO_PULL_NONE);
+    //  DIO5: Unused (FSK only)
+    if (SX1276_DIO5 >= 0 && irqHandlers[5] != NULL) {
+        rc = register_gpio_handler(       //  Register GPIO Handler...
+            SX1276_DIO5,                  //  GPIO Pin Number
+            irqHandlers[5],               //  GPIO Handler Function
+            GLB_GPIO_INT_CONTROL_ASYNC,   //  Async Control Mode
+            GLB_GPIO_INT_TRIG_POS_PULSE,  //  Trigger when GPIO level shifts from Low to High
+            0,                            //  No pullup
+            0                             //  No pulldown
+        );
         assert(rc == 0);
-        hal_gpio_irq_enable(SX1276_DIO5);
     }
-#endif  //  TODO
+
+    //  Register Common Interrupt Handler for GPIO Interrupt
+    bl_irq_register_with_ctx(
+        GPIO_INT0_IRQn,         //  GPIO Interrupt
+        handle_gpio_interrupt,  //  Interrupt Handler
+        NULL                    //  Argument for Interrupt Handler
+    );
+
+    //  Enable GPIO Interrupt
+    bl_irq_enable(GPIO_INT0_IRQn);
 }
 
+/// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
 void SX1276IoDeInit( void )
 {
+    printf("TODO: SX1276 interrupt deinit\r\n");
 #ifdef TODO
     if (DioIrq[0] != NULL) {
         hal_gpio_irq_release(SX1276_DIO0);
@@ -210,6 +265,7 @@ void SX1276IoDeInit( void )
 #endif  //  TODO
 }
 
+/// Get the Power Amplifier configuration
 uint8_t SX1276GetPaSelect(uint32_t channel)
 {
     uint8_t pacfg;
@@ -231,7 +287,224 @@ uint8_t SX1276GetPaSelect(uint32_t channel)
     return pacfg;
 }
 
+/// Checks if the given RF frequency is supported by the hardware
+bool SX1276CheckRfFrequency(uint32_t frequency)
+{
+    // Implement check. Currently all frequencies are supported
+    return true;
+}
+
+uint32_t SX1276GetBoardTcxoWakeupTime(void)
+{
+    return 0;
+}
+
+/// Disable GPIO Interrupts for DIO0 to DIO3
+void SX1276RxIoIrqDisable(void)
+{
+    printf("SX1276 disable interrupts\r\n");
+    if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 1); }
+    if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 1); }
+    if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 1); }
+    if (SX1276_DIO3 >= 0) { bl_gpio_intmask(SX1276_DIO3, 1); }
+}
+
+/// Enable GPIO Interrupts for DIO0 to DIO3
+void SX1276RxIoIrqEnable(void)
+{
+    printf("SX1276 enable interrupts\r\n");
+    if (SX1276_DIO0 >= 0) { bl_gpio_intmask(SX1276_DIO0, 0); }
+    if (SX1276_DIO1 >= 0) { bl_gpio_intmask(SX1276_DIO1, 0); }
+    if (SX1276_DIO2 >= 0) { bl_gpio_intmask(SX1276_DIO2, 0); }
+    if (SX1276_DIO3 >= 0) { bl_gpio_intmask(SX1276_DIO3, 0); }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  GPIO Interrupt: Handle GPIO Interrupt triggered by received LoRa Packet and other conditions
+
+/// Maximum number of GPIO Pins that can be configured for interrupts
+#define MAX_GPIO_INTERRUPTS 6  //  DIO0 to DIO5
+
+/// Array of Events for the GPIO Interrupts.
+/// The Events will be triggered to forward the GPIO Interrupt to the Application Task.
+/// gpio_events[i] corresponds to gpio_interrupts[i].
+static struct ble_npl_event gpio_events[MAX_GPIO_INTERRUPTS];
+
+/// Array of GPIO Pin Numbers that have been configured for interrupts.
+/// We shall lookup this array to find the GPIO Pin Number for each GPIO Interrupt Event.
+/// gpio_events[i] corresponds to gpio_interrupts[i].
+static uint8_t gpio_interrupts[MAX_GPIO_INTERRUPTS];
+
+static int init_interrupt_event(uint8_t gpioPin, DioIrqHandler *handler);
+static int enqueue_interrupt_event(uint8_t gpioPin, struct ble_npl_event *event);
+
+/// Register Handler Function for GPIO. Return 0 if successful.
+/// GPIO Handler Function will run in the context of the Application Task, not the Interrupt Handler.
+/// Based on bl_gpio_register in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c
+static int register_gpio_handler(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler,  //  GPIO Handler Function
+    uint8_t intCtrlMod,      //  GPIO Interrupt Control Mode (see below)
+    uint8_t intTrgMod,       //  GPIO Interrupt Trigger Mode (see below)
+    uint8_t pullup,          //  1 for pullup, 0 for no pullup
+    uint8_t pulldown)        //  1 for pulldown, 0 for no pulldown
+{
+    printf("SX1276 register handler: GPIO %d\r\n", (int) gpioPin);
+
+    //  Init the Event that will invoke the handler for the GPIO Interrupt
+    int rc = init_interrupt_event(
+        gpioPin,  //  GPIO Pin Number
+        handler   //  GPIO Handler Function that will be triggered by the Event
+    );
+    assert(rc == 0);
+
+    //  Configure pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = gpioPin;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure pin as a GPIO Input Pin
+    rc = bl_gpio_enable_input(
+        gpioPin,  //  GPIO Pin Number
+        pullup,   //  1 for pullup, 0 for no pullup
+        pulldown  //  1 for pulldown, 0 for no pulldown
+    );
+    assert(rc == 0);
+
+    //  Disable GPIO Interrupt for the pin
+    bl_gpio_intmask(gpioPin, 1);
+
+    //  Configure GPIO Pin for GPIO Interrupt
+    bl_set_gpio_intmod(
+        gpioPin,     //  GPIO Pin Number
+        intCtrlMod,  //  GPIO Interrupt Control Mode (see below)
+        intTrgMod    //  GPIO Interrupt Trigger Mode (see below)
+    );
+
+    //  Enable GPIO Interrupt for the pin
+    bl_gpio_intmask(gpioPin, 0);
+    return 0;
+}
+
+//  GPIO Interrupt Control Modes:
+//  GLB_GPIO_INT_CONTROL_SYNC:  GPIO interrupt sync mode
+//  GLB_GPIO_INT_CONTROL_ASYNC: GPIO interrupt async mode
+//  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
+
+//  GPIO Interrupt Trigger Modes:
+//  GLB_GPIO_INT_TRIG_NEG_PULSE: GPIO negative edge pulse trigger
+//  GLB_GPIO_INT_TRIG_POS_PULSE: GPIO positive edge pulse trigger
+//  GLB_GPIO_INT_TRIG_NEG_LEVEL: GPIO negative edge level trigger (32k 3T)
+//  GLB_GPIO_INT_TRIG_POS_LEVEL: GPIO positive edge level trigger (32k 3T)
+//  See hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
+
+/// Interrupt Handler for GPIO Pins DIO0 to DIO5. Triggered by SX1276 when LoRa Packet is received 
+/// and for other conditions.  Based on gpio_interrupt_entry in
+/// https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/bl_gpio.c#L151-L164
+static void handle_gpio_interrupt(void *arg)
+{
+    //  Check all GPIO Interrupt Events
+    for (int i = 0; i < MAX_GPIO_INTERRUPTS; i++) {
+        //  Get the GPIO Interrupt Event
+        struct ble_npl_event *ev = &gpio_events[i];
+
+        //  If the Event is unused, skip it
+        if (ev->fn == NULL) { continue; }
+
+        //  Get the GPIO Pin Number for the Event
+        GLB_GPIO_Type gpioPin = gpio_interrupts[i];
+
+        //  Get the Interrupt Status of the GPIO Pin
+        BL_Sts_Type status = GLB_Get_GPIO_IntStatus(gpioPin);
+
+        //  If the GPIO Pin has triggered an interrupt...
+        if (status == SET) {
+            //  Forward the GPIO Interrupt to the Application Task to process
+            enqueue_interrupt_event(
+                gpioPin,  //  GPIO Pin Number
+                ev        //  Event that will be enqueued for the Application Task
+            );
+        }
+    }
+}
+
+/// Interrupt Counters
+int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
+
+/// Enqueue the GPIO Interrupt to an Event Queue for the Application Task to process
+static int enqueue_interrupt_event(
+    uint8_t gpioPin,              //  GPIO Pin Number
+    struct ble_npl_event *event)  //  Event that will be enqueued for the Application Task
+{
+    //  Disable GPIO Interrupt for the pin
+    bl_gpio_intmask(gpioPin, 1);
+
+    //  Note: DO NOT Clear the GPIO Interrupt Status for the pin!
+    //  This will suppress subsequent GPIO Interrupts!
+    //  bl_gpio_int_clear(gpioPin, SET);
+
+    //  Increment the Interrupt Counters
+    if (SX1276_DIO0 >= 0 && gpioPin == (uint8_t) SX1276_DIO0) { g_dio0_counter++; }
+    else if (SX1276_DIO1 >= 0 && gpioPin == (uint8_t) SX1276_DIO1) { g_dio1_counter++; }
+    else if (SX1276_DIO2 >= 0 && gpioPin == (uint8_t) SX1276_DIO2) { g_dio2_counter++; }
+    else if (SX1276_DIO3 >= 0 && gpioPin == (uint8_t) SX1276_DIO3) { g_dio3_counter++; }
+    else if (SX1276_DIO4 >= 0 && gpioPin == (uint8_t) SX1276_DIO4) { g_dio4_counter++; }
+    else if (SX1276_DIO5 >= 0 && gpioPin == (uint8_t) SX1276_DIO5) { g_dio5_counter++; }
+    else { g_nodio_counter++; }
+
+    //  Use Event Queue to invoke Event Handler in the Application Task, 
+    //  not in the Interrupt Context
+    if (event != NULL && event->fn != NULL) {
+        extern struct ble_npl_eventq event_queue;  //  TODO: Move Event Queue to header file
+        ble_npl_eventq_put(&event_queue, event);
+    }
+
+    //  Enable GPIO Interrupt for the pin
+    bl_gpio_intmask(gpioPin, 0);
+    return 0;
+}
+
+//  Init the Event that will the Interrupt Handler will invoke to process the GPIO Interrupt
+static int init_interrupt_event(
+    uint8_t gpioPin,         //  GPIO Pin Number
+    DioIrqHandler *handler)  //  GPIO Handler Function
+{
+    //  Find an unused Event with null handler and set it
+    for (int i = 0; i < MAX_GPIO_INTERRUPTS; i++) {
+        struct ble_npl_event *ev = &gpio_events[i];
+
+        //  If the Event is used, skip it
+        if (ev->fn != NULL) { continue; }
+
+        //  Set the Event handler
+        ble_npl_event_init(   //  Init the Event for...
+            ev,               //  Event
+            handler,          //  Event Handler Function
+            NULL              //  Argument to be passed to Event Handler
+        );
+
+        //  Set the GPIO Pin Number for the Event
+        gpio_interrupts[i] = gpioPin;
+        return 0;
+    }
+
+    //  No unused Events found, should increase MAX_GPIO_INTERRUPTS
+    assert(false);
+    return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Antenna Switch (Unused)
+
 #if SX1276_HAS_ANT_SW
+void SX1276AntSwInit(void);
+void SX1276AntSwDeInit(void);
+
 void SX1276SetAntSwLowPower( bool status )
 {
     if (RadioIsActive != status) {
@@ -268,92 +541,4 @@ SX1276SetAntSw(uint8_t rxTx)
         hal_gpio_write(SX1276_RXTX, 0);
     }
 }
-#endif
-
-bool SX1276CheckRfFrequency(uint32_t frequency)
-{
-    // Implement check. Currently all frequencies are supported
-    return true;
-}
-
-uint32_t SX1276GetBoardTcxoWakeupTime(void)
-{
-    return 0;
-}
-
-void SX1276RxIoIrqDisable(void)
-{
-#ifdef TODO
-    hal_gpio_irq_disable(SX1276_DIO0);
-    hal_gpio_irq_disable(SX1276_DIO1);
-    hal_gpio_irq_disable(SX1276_DIO2);
-    hal_gpio_irq_disable(SX1276_DIO3);
-#endif  //  TODO
-}
-
-void SX1276RxIoIrqEnable(void)
-{
-#ifdef TODO
-    hal_gpio_irq_enable(SX1276_DIO0);
-    hal_gpio_irq_enable(SX1276_DIO1);
-    hal_gpio_irq_enable(SX1276_DIO2);
-    hal_gpio_irq_enable(SX1276_DIO3);
-#endif  //  TODO
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  GPIO Interrupt: This code will be needed in future to handle GPIO interrupts
-
-#ifdef TODO
-
-static int check_gpio_is_interrupt(int gpioPin)
-{
-    int bitcount = 0;
-    int reg_val = 0;
-
-    bitcount = 1 << gpioPin;
-    reg_val = *(int32_t *)(GLB_BASE + GPIP_INT_STATE_OFFSET);
-
-    if ((bitcount & reg_val) == bitcount) {
-        return 0;
-    }
-    return -1;
-}
-
-static int exec_gpio_handler(gpio_ctx_t *pstnode)
-{
-    bl_gpio_intmask(pstnode->gpioPin, 1);
-
-    if (pstnode->gpio_handler) {
-        pstnode->gpio_handler(pstnode);
-        return 0;
-    }
-
-    return -1;
-}
-
-static void gpio_interrupt_entry(gpio_ctx_t *pstnode)
-{
-    int ret;
-
-    while (pstnode) {
-        ret = check_gpio_is_interrupt(pstnode->gpioPin);
-        if (ret == 0) {
-            exec_gpio_handler(pstnode);
-        }
-
-        pstnode = pstnode->next;
-    }
-    return;
-}
-
-void bl_gpio_register(gpio_ctx_t *pstnode)
-{
-    bl_gpio_intmask(pstnode->gpioPin, 1);
-    bl_set_gpio_intmod(pstnode->gpioPin, pstnode->intCtrlMod, pstnode->intTrgMod);
-    bl_irq_register_with_ctx(GPIO_INT0_IRQn, gpio_interrupt_entry, pstnode);
-    bl_gpio_intmask(pstnode->gpioPin, 0);
-    bl_irq_enable(GPIO_INT0_IRQn);
-}
-
-#endif  //  TODO
+#endif  //  SX1276_HAS_ANT_SW
