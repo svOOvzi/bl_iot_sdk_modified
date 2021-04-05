@@ -53,7 +53,7 @@ Changes
 
 - "master" branch contains a modified LoRa Firmware that receives LoRa packets: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lora/
 
-- "lib" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/lib/components/3rdparty
+- "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty
 
 BL602 SDK (Pine64 version)
 ==========================
