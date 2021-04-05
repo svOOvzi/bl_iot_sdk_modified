@@ -55,6 +55,8 @@ Changes
 
 - "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty
 
+- "lorawan" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/lorawan/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/lorawan/customer_app/sdk_app_lorawan/
+
 BL602 SDK (Pine64 version)
 ==========================
 
