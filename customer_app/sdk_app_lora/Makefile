@@ -18,6 +18,8 @@ $(info ****** Please SET BL60X_SDK_PATH ******)
 $(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
+# Include these components
+COMPONENTS_LORA    := lora-sx1276 nimble-porting-layer
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
 COMPONENTS_BLE     := 
@@ -27,6 +29,7 @@ INCLUDE_COMPONENTS += easyflash4
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
+INCLUDE_COMPONENTS += $(COMPONENTS_LORA)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
 
 include $(BL60X_SDK_PATH)/make_scripts_riscv/project.mk
