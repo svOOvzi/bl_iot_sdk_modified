@@ -19,7 +19,7 @@ $(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
 # Include these components
-COMPONENTS_LORA    := lora-sx1276 nimble-porting-layer
+COMPONENTS_LORA    := lora-sx1276 nimble-porting-layer lorawan
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
 COMPONENTS_BLE     := 

@@ -19,10 +19,12 @@
 #
 -->
 
-# loramac-node
+# LoRaWAN Driver
 
-This is a Mynewt port of the Semtech LoRaWAN endpoint stack.  This package depends on two drivers:
-    * loramac-net radio - Facilitates communication with a particular type of LoRa modem.  This package exports the Radio_s definition containing the function pointers required by this stack.
-    * loramac-net board - Contains MCU or BSP specific definition needed for handling interrupts triggered by the LoRa radio.
+Semtech LoRaWAN endpoint stack, ported from Apache Mynewt OS...
 
-Sample drivers of both types can be found at: @apache-mynewt-core/hw/drivers/loramc-node.
+https://github.com/apache/mynewt-core/tree/master/net/lora/node
+
+Read the article...
+
+https://lupyuen.github.io/articles/lorawan
