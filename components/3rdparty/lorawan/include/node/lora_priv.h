@@ -21,7 +21,6 @@
 #define H_LORA_PRIV_
 
 #include "node/mac/LoRaMac.h"
-#include "os/mynewt.h"
 #include "node/lora.h"
 #include "node/lora_band.h"
 

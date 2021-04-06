@@ -263,7 +263,7 @@ extern lora_link_chk_cb lora_link_chk_cb_func;
  * LORA_APP_AUTO_JOIN is set to 0. If LORA_APP_AUTO_JOIN is set to 1,
  * joining will be handled by the stack and not the application.
  */
-#if !MYNEWT_VAL(LORA_APP_AUTO_JOIN)
+#if !LORA_APP_AUTO_JOIN
 /**
  *  Join a lora network. When called this function will attempt to join
  *  if the end device is not already joined. Join status (success, failure)

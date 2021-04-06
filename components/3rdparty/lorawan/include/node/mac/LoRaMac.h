@@ -51,7 +51,7 @@
 // Includes board dependent definitions such as channels frequencies
 #include "node/utilities.h"
 #include "node/lora_band.h"
-#include "radio/radio.h"
+#include "radio.h"
 
 struct lora_pkt_info;
 

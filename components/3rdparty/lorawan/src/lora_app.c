@@ -22,7 +22,7 @@
 #include "node/lora_priv.h"
 
 /* XXX: for now, auto-join not supported */
-#if MYNEWT_VAL(LORA_APP_AUTO_JOIN)
+#if LORA_APP_AUTO_JOIN
 #error "Auto-joining not supported"
 #endif
 
@@ -403,7 +403,7 @@ lora_app_mcps_confirm(struct os_mbuf *om)
     assert(rc == 0);
 }
 
-#if !MYNEWT_VAL(LORA_APP_AUTO_JOIN)
+#if !LORA_APP_AUTO_JOIN
 /* XXX: personalization? */
 /**
  *  Join a lora network. When called this function will attempt to join
