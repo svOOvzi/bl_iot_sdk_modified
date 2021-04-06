@@ -9,6 +9,10 @@ PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
 #CONFIG_TOOLPREFIX :=
 
+# Define the GCC compiler options
+# Set LoRa Region to 1 (AS923). See components/3rdparty/lorawan/include/node/lora_band.h
+CFLAGS += -DCONFIG_LORA_NODE_REGION=1
+
 -include ./proj_config.mk
 
 ifeq ($(origin BL60X_SDK_PATH), undefined)
