@@ -18,7 +18,6 @@
  */
 
 #include <assert.h>
-#include "os/mynewt.h"
 #include "node/lora.h"
 #include "node/lora_priv.h"
 

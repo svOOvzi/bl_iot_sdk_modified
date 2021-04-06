@@ -20,8 +20,6 @@
 #ifndef H_LORA_
 #define H_LORA_
 
-#include "stats/stats.h"
-#include "os/mynewt.h"
 #include "node/mac/LoRaMac.h"
 
 STATS_SECT_START(lora_mac_stats)

@@ -20,8 +20,6 @@
 #ifndef H_LORA_BAND_
 #define H_LORA_BAND_
 
-#include "os/mynewt.h"
-
 /* These definitions are required to include the code for a given region */
 #undef REGION_AS923
 #undef REGION_AU915

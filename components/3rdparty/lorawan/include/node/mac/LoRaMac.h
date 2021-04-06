@@ -50,7 +50,6 @@
 
 // Includes board dependent definitions such as channels frequencies
 #include "node/utilities.h"
-#include "os/mynewt.h"
 #include "node/lora_band.h"
 #include "radio/radio.h"
 
