@@ -10,8 +10,12 @@ export PROJECT_PATH PROJECT_BOARD
 #CONFIG_TOOLPREFIX :=
 
 # Define the GCC compiler options
+
 # Set LoRa Region to 1 (AS923). See components/3rdparty/lorawan/include/node/lora_band.h
 CFLAGS += -DCONFIG_LORA_NODE_REGION=1
+
+# Do not auto-join the LoRaWAN Network
+CFLAGS += -DLORA_APP_AUTO_JOIN=0
 
 -include ./proj_config.mk
 
