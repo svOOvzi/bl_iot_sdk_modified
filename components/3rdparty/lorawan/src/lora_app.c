@@ -48,13 +48,13 @@ struct os_mqueue lora_node_app_rx_q;
 struct os_mqueue lora_node_app_txd_q;
 
 /* Lora app event queue pointer */
-static struct os_eventq *lora_node_app_evq;
+static struct ble_npl_eventq *lora_node_app_evq;
 
 /* Join and link check callbacks and events */
 lora_join_cb lora_join_cb_func;
 lora_link_chk_cb lora_link_chk_cb_func;
-struct os_event lora_app_join_ev;
-struct os_event lora_app_link_chk_ev;
+struct ble_npl_event lora_app_join_ev;
+struct ble_npl_event lora_app_link_chk_ev;
 
 struct lora_app_join_ev_obj
 {
@@ -76,7 +76,7 @@ static int lora_app_port_receive(struct os_mbuf *om);
 static int lora_app_port_txd(struct os_mbuf *om);
 
 /* Get the lora app event queue. */
-static struct os_eventq *
+static struct ble_npl_eventq *
 lora_node_app_evq_get(void)
 {
     return lora_node_app_evq;
@@ -471,22 +471,22 @@ lora_app_set_link_check_cb(lora_link_chk_cb link_chk_cb)
 }
 
 void
-lora_app_join_ev_cb(struct os_event *ev)
+lora_app_join_ev_cb(struct ble_npl_event *ev)
 {
     struct lora_app_join_ev_obj *evdata;
 
-    evdata = (struct lora_app_join_ev_obj *)ev->ev_arg;
+    evdata = (struct lora_app_join_ev_obj *)ev->arg;
     if (lora_join_cb_func) {
         lora_join_cb_func(evdata->status, evdata->attempts);
     }
 }
 
 void
-lora_app_link_chk_ev_cb(struct os_event *ev)
+lora_app_link_chk_ev_cb(struct ble_npl_event *ev)
 {
     struct lora_app_link_chk_ev_obj *evdata;
 
-    evdata = (struct lora_app_link_chk_ev_obj *)ev->ev_arg;
+    evdata = (struct lora_app_link_chk_ev_obj *)ev->arg;
     if (lora_link_chk_cb_func) {
         lora_link_chk_cb_func(evdata->status, evdata->num_gw,
                               evdata->demod_margin);
@@ -505,7 +505,7 @@ lora_app_join_confirm(LoRaMacEventInfoStatus_t status, uint8_t attempts)
 {
     lora_app_join_ev_data.status = status;
     lora_app_join_ev_data.attempts = attempts;
-    os_eventq_put(lora_node_app_evq, &lora_app_join_ev);
+    ble_npl_eventq_put(lora_node_app_evq, &lora_app_join_ev);
 }
 
 /**
@@ -524,20 +524,24 @@ lora_app_link_chk_confirm(LoRaMacEventInfoStatus_t status, uint8_t num_gw,
     lora_app_link_chk_ev_data.status = status;
     lora_app_link_chk_ev_data.num_gw = num_gw;
     lora_app_link_chk_ev_data.demod_margin = demod_margin;
-    os_eventq_put(lora_node_app_evq, &lora_app_link_chk_ev);
+    ble_npl_eventq_put(lora_node_app_evq, &lora_app_link_chk_ev);
 }
 
 void
 lora_app_init(void)
 {
+    //  Event Queue containing Events to be processed, defined in customer_app/sdk_app_lorawan/sdk_app_lorawan/demo.c.
+    //  TODO: Move to header file.
+    extern struct ble_npl_eventq event_queue;
+
     /* For now, the lora app event queue is the default event queue */
-    lora_node_app_evq = os_eventq_dflt_get();
+    lora_node_app_evq = &event_queue;
 
     /* Init join and link check events */
-    lora_app_join_ev.ev_arg = &lora_app_join_ev_data;
-    lora_app_join_ev.ev_cb = lora_app_join_ev_cb;
-    lora_app_link_chk_ev.ev_arg = &lora_app_link_chk_ev_data;
-    lora_app_link_chk_ev.ev_cb = lora_app_link_chk_ev_cb;
+    lora_app_join_ev.arg = &lora_app_join_ev_data;
+    lora_app_join_ev.fn = lora_app_join_ev_cb;
+    lora_app_link_chk_ev.arg = &lora_app_link_chk_ev_data;
+    lora_app_link_chk_ev.fn = lora_app_link_chk_ev_cb;
 
     /* Set up receive queue and event */
     os_mqueue_init(&lora_node_app_rx_q, lora_node_proc_app_rxd_event, NULL);

@@ -20,6 +20,7 @@
 #ifndef H_LORA_PRIV_
 #define H_LORA_PRIV_
 
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "node/mac/LoRaMac.h"
 #include "node/lora.h"
 #include "node/lora_band.h"
@@ -125,16 +126,16 @@ struct lora_mac_obj
     LoRaMacRxSlot_t rx_slot;
 
     /* Task event queue */
-    struct os_eventq lm_evq;
+    struct ble_npl_eventq lm_evq;
 
     /* Transmit queue */
     struct os_mqueue lm_txq;
 
     /* Join event */
-    struct os_event lm_join_ev;
+    struct ble_npl_event lm_join_ev;
 
     /* Link check event */
-    struct os_event lm_link_chk_ev;
+    struct ble_npl_event lm_link_chk_ev;
 
 #define LORA_DELTA_SHIFT        3
 #define LORA_AVG_SHIFT	        4
@@ -144,7 +145,7 @@ struct lora_mac_obj
 
     /* TODO: this is temporary until we figure out a better way to deal */
     /* Transmit queue timer */
-    struct os_callout lm_txq_timer;
+    struct ble_npl_callout lm_txq_timer;
 
     /*
      * Pointer to the lora packet information of the packet being currently
