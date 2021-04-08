@@ -98,7 +98,7 @@ lora_app_port_find_open(uint8_t port)
     struct lora_app_port *lap;
 
     lap = NULL;
-    for (i = 0; i < MYNEWT_VAL(LORA_APP_NUM_PORTS); ++i) {
+    for (i = 0; i < LORA_APP_NUM_PORTS; ++i) {
         if ((lora_app_ports[i].opened != 0) &&
             (lora_app_ports[i].port_num == port)) {
             lap = &lora_app_ports[i];
@@ -173,7 +173,7 @@ lora_app_port_open(uint8_t port, lora_txd_func txd_cb, lora_rxd_func rxd_cb)
 
     /* Make sure port is not opened */
     avail = -1;
-    for (i = 0; i < MYNEWT_VAL(LORA_APP_NUM_PORTS); ++i) {
+    for (i = 0; i < LORA_APP_NUM_PORTS; ++i) {
         /* If port not opened, remember first available */
         if (lora_app_ports[i].opened == 0) {
             if (avail < 0) {
