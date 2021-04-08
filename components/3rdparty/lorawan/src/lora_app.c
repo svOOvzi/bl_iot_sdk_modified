@@ -41,7 +41,7 @@ struct lora_app_port
 };
 
 /* Port memory */
-static struct lora_app_port lora_app_ports[MYNEWT_VAL(LORA_APP_NUM_PORTS)];
+static struct lora_app_port lora_app_ports[LORA_APP_NUM_PORTS];
 
 /* Lora APP Receive queue and event */
 struct os_mqueue lora_node_app_rx_q;
