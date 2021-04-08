@@ -19,12 +19,22 @@
 #
 -->
 
-# LoRaWAN Driver
+# BL602 LoRaWAN Driver
 
-Semtech LoRaWAN endpoint stack, ported from Apache Mynewt OS...
+Semtech LoRaWAN endpoint stack, ported to BL602 from Apache Mynewt OS...
 
 https://github.com/apache/mynewt-core/tree/master/net/lora/node
 
-Read the article...
+Follow the updates in this Twitter Thread...
+
+https://twitter.com/MisterTechBlog/status/1379926160377851910
+
+Read the (upcoming) article...
 
 https://lupyuen.github.io/articles/lorawan
+
+Why do we need a LoRaWAN Driver for BL602? See this...
+
+https://lupyuen.github.io/articles/lora2
+
+![BL602 LoRaWAN Driver](https://lupyuen.github.io/images/lorawan-driver.png)
