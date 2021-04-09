@@ -60,7 +60,7 @@ uint8_t g_lora_app_key[LORA_KEY_LEN];
 uint8_t g_lora_node_last_tx_mac_cmd;
 
 /* Used for LoRaMacInitialization(); */
-#if !MYNEWT_VAL(LORA_NODE_CLI)
+#if !(LORA_NODE_CLI)
     LoRaMacCallback_t lora_cb;
 #endif
 
@@ -156,7 +156,7 @@ lora_node_mtu(void)
     return -1;
 }
 
-#if !MYNEWT_VAL(LORA_NODE_CLI)
+#if !(LORA_NODE_CLI)
 static void
 lora_node_reset_txq_timer(void)
 {
@@ -407,7 +407,7 @@ lora_mac_task(void *arg)
 }
 #endif
 
-#if !MYNEWT_VAL(LORA_APP_AUTO_JOIN)
+#if !(LORA_APP_AUTO_JOIN)
 /**
  * Called to check if this device is joined to a network.
  *
@@ -477,7 +477,7 @@ lora_node_link_check(void)
     return rc;
 }
 
-#if !MYNEWT_VAL(LORA_NODE_CLI)
+#if !(LORA_NODE_CLI)
 static void
 lora_mac_join_event(struct os_event *ev)
 {
@@ -632,7 +632,7 @@ void
 lora_node_init(void)
 {
     int rc;
-#if !MYNEWT_VAL(LORA_NODE_CLI)
+#if !(LORA_NODE_CLI)
     LoRaMacStatus_t lms;
 #endif
 
@@ -642,13 +642,13 @@ lora_node_init(void)
         STATS_NAME_INIT_PARMS(lora_mac_stats), "lora_mac");
     SYSINIT_PANIC_ASSERT(rc == 0);
 
-#if MYNEWT_VAL(LORA_NODE_CLI)
+#if (LORA_NODE_CLI)
     lora_cli_init();
 #else
     /* Init app */
     lora_app_init();
 
-#if MYNEWT_VAL(LORA_NODE_LOG_CLI) == 1
+#if (LORA_NODE_LOG_CLI) == 1
     lora_cli_init();
 #endif
 
@@ -661,7 +661,7 @@ lora_node_init(void)
 
     /* Create the mac task */
     os_task_init(&g_lora_mac_task, "loramac", lora_mac_task, NULL,
-                 MYNEWT_VAL(LORA_MAC_PRIO), OS_WAIT_FOREVER, g_lora_mac_stack,
+                 (LORA_MAC_PRIO), OS_WAIT_FOREVER, g_lora_mac_stack,
                  LORA_MAC_STACK_SIZE);
 
     /* Initialize join event */
@@ -689,7 +689,7 @@ void lora_enter_low_power(void)
 {
     if (!low_power_active) {
         low_power_active = true;
-        hal_timer_deinit(MYNEWT_VAL(LORA_MAC_TIMER_NUM));
+        hal_timer_deinit((LORA_MAC_TIMER_NUM));
         lora_node_log(LORA_NODE_LOG_LP_ENTER, 0, 0, 0);
     }
 }

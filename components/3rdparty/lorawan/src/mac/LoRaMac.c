@@ -42,10 +42,10 @@
 #include "node/lora_priv.h"
 #include "lora/utilities.h"
 
-#if MYNEWT_VAL(LORA_MAC_TIMER_NUM) == -1
+#if (LORA_MAC_TIMER_NUM) == -1
 #error "Must define a Lora MAC timer number"
 #else
-#define LORA_MAC_TIMER_NUM    MYNEWT_VAL(LORA_MAC_TIMER_NUM)
+#define LORA_MAC_TIMER_NUM    (LORA_MAC_TIMER_NUM)
 #endif
 
 /* The lora mac timer counts in 1 usec increments */
@@ -727,7 +727,7 @@ lora_mac_join_req_tx_fail(void)
         LoRaMacState |= LORAMAC_TX_DELAYED;
         os_cputime_timer_stop(&TxDelayedTimer);
         os_cputime_timer_relative(&TxDelayedTimer,
-            randr(0, MYNEWT_VAL(LORA_JOIN_REQ_RAND_DELAY * 1000)));
+            randr(0, (LORA_JOIN_REQ_RAND_DELAY * 1000)));
     }
 }
 
@@ -2404,7 +2404,7 @@ LoRaMacInitialization(LoRaMacCallback_t *callbacks, LoRaMacRegion_t region)
     PhyParam_t phyParam;
 
     /* XXX: note that we used to use the LORA_NODE_DEFAULT_DATARATE here
-     * See if we should still use it or change that mynewt_val. The code
+     * See if we should still use it or change that . The code
      * below just uses the PHY default data upon init. I think this needs
      * more thought. We could always just change the default rate with a
      * MIB call I suspect (after initialization).
@@ -2538,7 +2538,7 @@ LoRaMacInitialization(LoRaMacCallback_t *callbacks, LoRaMacRegion_t region)
     // Random seed initialization
     //srand1( Radio.Random( ) );
 
-#if MYNEWT_VAL(LORA_NODE_PUBLIC_NWK)
+#if (LORA_NODE_PUBLIC_NWK)
     LM_F_IS_PUBLIC_NWK() = 1;
     Radio.SetPublicNetwork(true);
 #else
