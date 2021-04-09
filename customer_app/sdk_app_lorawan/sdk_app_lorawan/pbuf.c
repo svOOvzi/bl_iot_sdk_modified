@@ -9,7 +9,7 @@
 #include "demo.h"
 
 /// Test pbuf Packet Buffer from LWIP
-void test_pbuf(char *buf0, int len, int argc, char **argv)
+void test_pbuf(char *buf0, int len0, int argc, char **argv)
 {
 	//  Init LWIP Buffer Pool
 	lwip_init();
@@ -25,11 +25,21 @@ void test_pbuf(char *buf0, int len, int argc, char **argv)
 	uint8_t payload[3] = { 0x01, 0x02, 0x03 };
 	memcpy(buf->payload, payload, sizeof(payload));
 
+	//  Dump the pbuf
+	printf("Packet buffer addr=%p, payload=%p\r\n", buf, buf->payload);
+
 	//  Dump the header
+    printf("Packet buffer header: \r\n");
+	int len = ((void *) buf->payload) - ((void *) buf);
+	uint8_t *p = (uint8_t *) buf;
+    for (int i = 0; i < len; i++) {
+        printf("%02x ", p[i]);
+    }
+    printf("\r\n");
 
 	//  Dump the payload
     printf("Packet buffer payload: \r\n");
-	uint8_t *p = buf->payload;
+	p = buf->payload;
     for (int i = 0; i < buf->len; i++) {
         printf("%02x ", p[i]);
     }
