@@ -11,18 +11,24 @@
 /// Test pbuf Packet Buffer from LWIP
 void test_pbuf(char *buf0, int len0, int argc, char **argv)
 {
+	//  Payload to be set
+	uint8_t payload[3] = { 0x01, 0x02, 0x03 };
+
 	//  Init LWIP Buffer Pool
 	lwip_init();
 
 	//  Create a pbuf Packet Buffer
-	struct pbuf *buf = pbuf_alloc(PBUF_TRANSPORT, 3, PBUF_RAM);
+	struct pbuf *buf = pbuf_alloc(
+		PBUF_TRANSPORT,   //  Buffer will include UDP Transport Header
+		sizeof(payload),  //  Payload size
+		PBUF_RAM          //  Allocate a single block of RAM
+	);                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
 	assert(buf != NULL);
 
 	//  Set header in the pbuf
 	uint8_t header[3] = { 0x11, 0x22, 0x33 };
 
 	//  Set payload in the pbuf
-	uint8_t payload[3] = { 0x01, 0x02, 0x03 };
 	memcpy(buf->payload, payload, sizeof(payload));
 
 	//  Dump the pbuf
