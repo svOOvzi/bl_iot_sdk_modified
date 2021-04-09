@@ -1,4 +1,38 @@
-//  Lightweight IP Stack pbuf test. Based on https://github.com/willemwouters/ESP8266/wiki/UDP-Client---LWIP-Stack
+//  Lightweight IP Stack pbuf test. Based on 
+//  https://github.com/willemwouters/ESP8266/wiki/UDP-Client---LWIP-Stack
+//  https://github.com/willemwouters/ESP8266/wiki/UDP-Server---LWIP-Stack
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include "lwip/init.h"
+#include "lwip/pbuf.h"
+
+/// Test pbuf Packet Buffer from LWIP
+void test_pbuf(char *buf0, int len, int argc, char **argv)
+{
+	//  Init LWIP Buffer Pool
+	lwip_init();
+
+	//  Create a pbuf Packet Buffer
+	struct pbuf *buf = pbuf_alloc(PBUF_TRANSPORT, 3, PBUF_RAM);
+	assert(buf != NULL);
+
+	//  Set header in the pbuf
+	char header[3] = { 0x11, 0x22, 0x33 };
+
+	//  Set payload in the pbuf
+	char payload[3] = { 0x01, 0x02, 0x03 };
+	memcpy(buf->payload, payload, sizeof(payload));
+
+	//  Dump the header
+
+	//  Dump the payload
+	int payload_len = buf->len;
+	char *pusrdata = buf->payload;
+
+	//  Free the pbuf
+	pbuf_free(buf);
+}
 
 /*
 	lwip_init();
@@ -9,8 +43,6 @@
 	udp_sendto(pcb, b, IP_ADDR_BROADCAST, 9090);
 	pbuf_free(b);
 */
-
-//  Based on https://github.com/willemwouters/ESP8266/wiki/UDP-Server---LWIP-Stack
 
 /*
 	#include "lwipopts.h"
