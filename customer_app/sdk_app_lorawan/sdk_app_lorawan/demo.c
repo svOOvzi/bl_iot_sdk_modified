@@ -310,6 +310,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
+    {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},
 };                                                                                   
 
 /// Init the command-line interface

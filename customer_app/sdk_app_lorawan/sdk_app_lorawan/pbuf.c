@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "lwip/init.h"
-#include "lwip/pbuf.h"
+#include "lwip/init.h"  //  For Lightweight IP Stack Init
+#include "lwip/pbuf.h"  //  For Lightweight IP Stack pbuf 
+#include "demo.h"
 
 /// Test pbuf Packet Buffer from LWIP
 void test_pbuf(char *buf0, int len, int argc, char **argv)
@@ -18,17 +19,21 @@ void test_pbuf(char *buf0, int len, int argc, char **argv)
 	assert(buf != NULL);
 
 	//  Set header in the pbuf
-	char header[3] = { 0x11, 0x22, 0x33 };
+	uint8_t header[3] = { 0x11, 0x22, 0x33 };
 
 	//  Set payload in the pbuf
-	char payload[3] = { 0x01, 0x02, 0x03 };
+	uint8_t payload[3] = { 0x01, 0x02, 0x03 };
 	memcpy(buf->payload, payload, sizeof(payload));
 
 	//  Dump the header
 
 	//  Dump the payload
-	int payload_len = buf->len;
-	char *pusrdata = buf->payload;
+    printf("Packet buffer payload: \r\n");
+	uint8_t *p = buf->payload;
+    for (int i = 0; i < buf->len; i++) {
+        printf("%02x ", p[i]);
+    }
+    printf("\r\n");
 
 	//  Free the pbuf
 	pbuf_free(buf);
