@@ -32,11 +32,18 @@ void test_pbuf(char *buf0, int len0, int argc, char **argv)
 	memcpy(buf->payload, payload, sizeof(payload));
 
 	//  Dump the pbuf
-	int header_len = ((void *) buf->payload) - ((void *) buf);
-	printf("Packet buffer addr=%p, payload=%p, header_len=%d\r\n", buf, buf->payload, header_len);
+	printf("Before Header: Packet buffer addr=%p, payload=%p, len=%d, tot_len=%d\r\n", buf, buf->payload, buf->len, buf->tot_len);
+
+	//  Make room for the header. payload will shift back 3 bytes, len and tot_len will increase by 3.
+	u8_t rc = pbuf_header(buf, sizeof(header));
+	assert(rc == 0);
+
+	//  Dump the pbuf
+	printf("After Header: Packet buffer addr=%p, payload=%p, len=%d, tot_len=%d\r\n", buf, buf->payload, buf->len, buf->tot_len);
 
 	//  Dump the header
     printf("Packet buffer header\r\n");
+	int header_len = ((void *) buf->payload) - ((void *) buf);
 	uint8_t *p = (uint8_t *) buf;
     for (int i = 0; i < header_len; i++) {
         printf("%02x ", p[i]);
