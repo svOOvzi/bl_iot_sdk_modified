@@ -32,13 +32,13 @@ void test_pbuf(char *buf0, int len0, int argc, char **argv)
 	memcpy(buf->payload, payload, sizeof(payload));
 
 	//  Dump the pbuf
-	printf("Packet buffer addr=%p, payload=%p\r\n", buf, buf->payload);
+	int header_len = ((void *) buf->payload) - ((void *) buf);
+	printf("Packet buffer addr=%p, payload=%p, header_len=%d\r\n", buf, buf->payload, header_len);
 
 	//  Dump the header
-    printf("Packet buffer header: \r\n");
-	int len = ((void *) buf->payload) - ((void *) buf);
+    printf("Packet buffer header\r\n");
 	uint8_t *p = (uint8_t *) buf;
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < header_len; i++) {
         printf("%02x ", p[i]);
     }
     printf("\r\n");
