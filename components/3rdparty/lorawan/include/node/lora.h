@@ -191,8 +191,8 @@ struct lora_pkt_info
     };
 };
 
-/* Allocate a packet for lora transmission. This returns a packet header mbuf */
-struct pbuf *lora_pkt_alloc(void);
+/* Allocate a packet for lora transmission. This returns a pbuf with packet header */
+struct pbuf *lora_pkt_alloc(uint16_t length);  //  Payload length of packet, excluding header
 
 /* Port API */
 typedef void (*lora_txd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
@@ -320,6 +320,11 @@ int lora_app_set_join_cb(lora_join_cb join_cb);
  * @return int
  */
 int lora_app_set_link_check_cb(lora_link_chk_cb link_chk_cb);
+
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,    //  pbuf Packet Buffer
+    size_t header_size);  //  Size of header
 
 /* Lora app return codes */
 #define LORA_APP_STATUS_OK              (0)

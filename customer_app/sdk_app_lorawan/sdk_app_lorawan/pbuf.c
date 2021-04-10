@@ -25,7 +25,7 @@ void test_pbuf(char *buf0, int len0, int argc, char **argv)
 
     //  Allocate a pbuf Packet Buffer
     struct pbuf *buf = pbuf_alloc(
-        PBUF_TRANSPORT,   //  Buffer will include UDP Transport Header
+        PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
         sizeof(payload),  //  Payload size
         PBUF_RAM          //  Allocate a single block of RAM
     );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
@@ -115,7 +115,7 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
 
     //  Allocate a pbuf Packet Buffer
     struct pbuf *buf = pbuf_alloc(
-        PBUF_TRANSPORT,   //  Buffer will include UDP Transport Header
+        PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
         sizeof(payload),  //  Payload size
         PBUF_RAM          //  Allocate a single block of RAM
     );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient

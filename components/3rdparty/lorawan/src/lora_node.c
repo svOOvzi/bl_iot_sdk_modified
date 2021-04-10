@@ -120,15 +120,20 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 }
 #endif  /* if defined(LORA_NODE_DEBUG_LOG) */
 
-/* Allocate a packet for lora transmission. This returns a packet header mbuf */
+/* Allocate a packet for lora transmission. This returns a pbuf with packet header */
 struct pbuf *
-lora_pkt_alloc(void)
+lora_pkt_alloc(uint16_t length)  //  Payload length of packet, excluding header
 {
-    struct pbuf *p;
-
-    /* XXX: For now just allocate 255 bytes */
-    p = os_msys_get_pkthdr(255, sizeof(struct lora_pkt_info));
-    return p;
+    //  TODO: Init LWIP
+    //  We assume that LWIP has been initialised
+    //  Allocate a pbuf Packet Buffer
+    struct pbuf *buf = pbuf_alloc(
+        PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
+        length,           //  Payload size
+        PBUF_RAM          //  Allocate a single block of RAM
+    );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
+    assert(buf != NULL);
+    return buf;
 }
 
 /**
