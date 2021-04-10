@@ -18,6 +18,7 @@
  */
 
 #include <assert.h>
+#include "lwip/pbuf.h"  //  For Lightweight IP Stack pbuf 
 #include "node/lora.h"
 #include "node/lora_priv.h"
 
@@ -72,8 +73,8 @@ struct lora_app_link_chk_ev_obj
 static struct lora_app_link_chk_ev_obj lora_app_link_chk_ev_data;
 
 /* Internal protos */
-static int lora_app_port_receive(struct os_mbuf *om);
-static int lora_app_port_txd(struct os_mbuf *om);
+static int lora_app_port_receive(struct pbuf *om);
+static int lora_app_port_txd(struct pbuf *om);
 
 /* Get the lora app event queue. */
 static struct ble_npl_eventq *
@@ -118,7 +119,7 @@ lora_app_port_find_open(uint8_t port)
 static void
 lora_node_proc_app_rxd_event(struct os_event *ev)
 {
-    struct os_mbuf *om;
+    struct pbuf *om;
 
     /* Go through packet queue and call rx callback for all */
     while ((om = os_mqueue_get(&lora_node_app_rx_q)) != NULL) {
@@ -135,7 +136,7 @@ lora_node_proc_app_rxd_event(struct os_event *ev)
 static void
 lora_node_proc_app_txd_event(struct os_event *ev)
 {
-    struct os_mbuf *om;
+    struct pbuf *om;
 
     /* Go through packet queue and call rx callback for all */
     while ((om = os_mqueue_get(&lora_node_app_txd_q)) != NULL) {
@@ -269,7 +270,7 @@ lora_app_port_cfg(uint8_t port, uint8_t retries)
  * @return int A return code from set of lora return codes
  */
 int
-lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct os_mbuf *om)
+lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct pbuf *om)
 {
     int rc;
     struct lora_app_port *lap;
@@ -324,7 +325,7 @@ lora_app_mtu(void)
  * @return int A return code from set of lora return codes
  */
 static int
-lora_app_port_receive(struct os_mbuf *om)
+lora_app_port_receive(struct pbuf *om)
 {
     int rc;
     struct lora_app_port *lap;
@@ -354,7 +355,7 @@ lora_app_port_receive(struct os_mbuf *om)
  * @return int A return code from set of lora return codes
  */
 static int
-lora_app_port_txd(struct os_mbuf *om)
+lora_app_port_txd(struct pbuf *om)
 {
     int rc;
     struct lora_app_port *lap;
@@ -380,7 +381,7 @@ lora_app_port_txd(struct os_mbuf *om)
  * @param om Pointer to received packet
  */
 void
-lora_app_mcps_indicate(struct os_mbuf *om)
+lora_app_mcps_indicate(struct pbuf *om)
 {
     int rc;
 
@@ -395,7 +396,7 @@ lora_app_mcps_indicate(struct os_mbuf *om)
  * @param om Pointer to transmitted packet
  */
 void
-lora_app_mcps_confirm(struct os_mbuf *om)
+lora_app_mcps_confirm(struct pbuf *om)
 {
     int rc;
 

@@ -31,16 +31,13 @@
 
 #include <string.h>
 #include <assert.h>
-#include "os/mynewt.h"
-#include "os/os.h"
 #include "node/lora.h"
 #include "node/utilities.h"
 #include "node/mac/LoRaMacCrypto.h"
 #include "node/mac/LoRaMac.h"
 #include "node/mac/LoRaMacTest.h"
-#include "hal/hal_timer.h"
 #include "node/lora_priv.h"
-#include "lora/utilities.h"
+////#include "lora/utilities.h"
 
 #if (LORA_MAC_TIMER_NUM) == -1
 #error "Must define a Lora MAC timer number"
@@ -451,7 +448,7 @@ static void ProcessMacCommands(uint8_t *payload, uint8_t macIndex, uint8_t comma
  * \retval status          Status of the operation.
  */
 
-LoRaMacStatus_t Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct os_mbuf *m);
+LoRaMacStatus_t Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *m);
 
 /*!
  * \brief LoRaMAC layer frame buffer initialization
@@ -464,7 +461,7 @@ LoRaMacStatus_t Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct os_mbuf *m);
  * \retval status          Status of the operation.
  */
 LoRaMacStatus_t PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl,
-                             uint8_t fPort, struct os_mbuf *om);
+                             uint8_t fPort, struct pbuf *om);
 
 /*
  * \brief Schedules the frame according to the duty cycle
@@ -1910,7 +1907,7 @@ ProcessMacCommands(uint8_t *payload, uint8_t macIndex, uint8_t commandsSize,
 }
 
 LoRaMacStatus_t
-Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct os_mbuf *om)
+Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *om)
 {
     LoRaMacFrameCtrl_t fCtrl;
     LoRaMacStatus_t status = LORAMAC_STATUS_PARAMETER_INVALID;
@@ -2131,7 +2128,7 @@ ResetMacParameters(void)
 
 LoRaMacStatus_t
 PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
-             struct os_mbuf *om)
+             struct pbuf *om)
 {
     AdrNextParams_t adrNext;
     GetPhyParams_t getPhy;
@@ -3116,7 +3113,7 @@ LoRaMacMlmeRequest(MlmeReq_t *mlmeRequest)
 }
 
 LoRaMacStatus_t
-LoRaMacMcpsRequest(struct os_mbuf *om, struct lora_pkt_info *txi)
+LoRaMacMcpsRequest(struct pbuf *om, struct lora_pkt_info *txi)
 {
     LoRaMacStatus_t status;
     GetPhyParams_t getPhy;

@@ -54,6 +54,7 @@
 #include "radio.h"
 
 struct lora_pkt_info;
+struct pbuf;
 
 /*!
  * Check the Mac layer state every MAC_STATE_CHECK_TIMEOUT in ms
@@ -1705,7 +1706,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t *mlmeRequest );
  *          \ref LORAMAC_STATUS_DEVICE_OFF.
  */
 LoRaMacStatus_t
-LoRaMacMcpsRequest(struct os_mbuf *om, struct lora_pkt_info *txi);
+LoRaMacMcpsRequest(struct pbuf *om, struct lora_pkt_info *txi);
 
 /*!
  * \brief   lora_mac_tx_state

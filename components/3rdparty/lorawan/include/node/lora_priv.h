@@ -160,7 +160,7 @@ struct lora_mac_obj
     struct lora_pkt_info txpkt;
 
     /* Pointer to current transmit mbuf. Can be NULL and still txing */
-    struct os_mbuf *cur_tx_mbuf;
+    struct pbuf *cur_tx_mbuf;
 
     /*!
      * Retransmission timer. This is used for confirmed frames on both class
@@ -206,13 +206,13 @@ extern struct lora_mac_obj g_lora_mac_data;
 void lora_cli_init(void);
 void lora_app_init(void);
 
-struct os_mbuf;
-void lora_app_mcps_indicate(struct os_mbuf *om);
-void lora_app_mcps_confirm(struct os_mbuf *om);
+struct pbuf;
+void lora_app_mcps_indicate(struct pbuf *om);
+void lora_app_mcps_confirm(struct pbuf *om);
 void lora_app_join_confirm(LoRaMacEventInfoStatus_t status, uint8_t attempts);
 void lora_app_link_chk_confirm(LoRaMacEventInfoStatus_t status, uint8_t num_gw,
                                uint8_t demod_margin);
-void lora_node_mcps_request(struct os_mbuf *om);
+void lora_node_mcps_request(struct pbuf *om);
 void lora_node_mac_mcps_indicate(void);
 int lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
                    uint8_t trials);

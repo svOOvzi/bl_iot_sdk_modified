@@ -17,14 +17,9 @@
  * under the License.
  */
 
-#include "os/mynewt.h"
-
 #if (LORA_NODE_CLI) || (LORA_NODE_LOG_CLI)
 #include <inttypes.h>
 #include <string.h>
-#include "shell/shell.h"
-#include "console/console.h"
-#include "parse/parse.h"
 #include "node/lora_priv.h"
 #endif
 

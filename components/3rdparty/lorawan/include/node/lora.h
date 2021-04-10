@@ -192,20 +192,20 @@ struct lora_pkt_info
 };
 
 /* Allocate a packet for lora transmission. This returns a packet header mbuf */
-struct os_mbuf *lora_pkt_alloc(void);
+struct pbuf *lora_pkt_alloc(void);
 
 /* Given a pointer to a packet header mbuf chain, obtain pointer to lora info */
 #define LORA_PKT_INFO_PTR(om)            \
-    (struct lora_pkt_info *)((uint8_t *)om + sizeof(struct os_mbuf) + \
+    (struct lora_pkt_info *)((uint8_t *)om + sizeof(struct pbuf) + \
                             sizeof(struct os_mbuf_pkthdr))
 
 /* Port API */
 typedef void (*lora_txd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
-                              Mcps_t pkt_type, struct os_mbuf *om);
+                              Mcps_t pkt_type, struct pbuf *om);
 
 /* Received data callback. Mbuf must be freed by this function */
 typedef void (*lora_rxd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
-                              Mcps_t pkt_type, struct os_mbuf *om);
+                              Mcps_t pkt_type, struct pbuf *om);
 
 /**
  * Open a lora application port. This function will allocate a lora port, set
@@ -249,7 +249,7 @@ int lora_app_port_cfg(uint8_t port, uint8_t retries);
  *
  * @return int A return code from set of lora return codes
  */
-int lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct os_mbuf *om);
+int lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct pbuf *om);
 
 /* Join callback proto */
 typedef void (*lora_join_cb)(LoRaMacEventInfoStatus_t status, uint8_t attempts);

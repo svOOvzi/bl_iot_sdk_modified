@@ -18,11 +18,11 @@
  */
 
 #include <string.h>
-#include "os/mynewt.h"
 #include "node/lora.h"
 #include "node/lora_priv.h"
 #include "node/lora_band.h"
 
+#ifdef NOTUSED  //  We don't support stats
 STATS_SECT_DECL(lora_mac_stats) lora_mac_stats;
 STATS_NAME_START(lora_mac_stats)
     STATS_NAME(lora_mac_stats, join_req_tx)
@@ -46,6 +46,7 @@ STATS_NAME_START(lora_mac_stats)
     STATS_NAME(lora_mac_stats, no_bufs)
     STATS_NAME(lora_mac_stats, already_joined)
 STATS_NAME_END(lora_mac_stats)
+#endif  //  NOTUSED
 
 /* Device EUI */
 uint8_t g_lora_dev_eui[LORA_EUI_LEN];
@@ -113,10 +114,10 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 #endif  /* if defined(LORA_NODE_DEBUG_LOG) */
 
 /* Allocate a packet for lora transmission. This returns a packet header mbuf */
-struct os_mbuf *
+struct pbuf *
 lora_pkt_alloc(void)
 {
-    struct os_mbuf *p;
+    struct pbuf *p;
 
     /* XXX: For now just allocate 255 bytes */
     p = os_msys_get_pkthdr(255, sizeof(struct lora_pkt_info));
@@ -129,7 +130,7 @@ lora_pkt_alloc(void)
  * @param om Pointer to transmit packet
  */
 void
-lora_node_mcps_request(struct os_mbuf *om)
+lora_node_mcps_request(struct pbuf *om)
 {
     int rc;
 
@@ -199,7 +200,7 @@ void
 lora_node_mac_mcps_indicate(void)
 {
     int rc;
-    struct os_mbuf *om;
+    struct pbuf *om;
     struct lora_pkt_info *lpkt;
 
     /*
@@ -251,7 +252,7 @@ lora_mac_proc_tx_q_event(struct os_event *ev)
     LoRaMacEventInfoStatus_t evstatus;
     LoRaMacTxInfo_t txinfo;
     struct lora_pkt_info *lpkt;
-    struct os_mbuf *om;
+    struct pbuf *om;
     struct os_mbuf_pkthdr *mp;
 
     /* Stop the transmit callback because something was just queued */
@@ -665,11 +666,11 @@ lora_node_init(void)
                  LORA_MAC_STACK_SIZE);
 
     /* Initialize join event */
-    g_lora_mac_data.lm_join_ev.ev_cb = lora_mac_join_event;
-    g_lora_mac_data.lm_join_ev.ev_arg = &g_lm_join_ev_arg;
+    g_lora_mac_data.lm_join_ev.fn = lora_mac_join_event;
+    g_lora_mac_data.lm_join_ev.arg = &g_lm_join_ev_arg;
 
     /* Initialize link check event */
-    g_lora_mac_data.lm_link_chk_ev.ev_cb = lora_mac_link_chk_event;
+    g_lora_mac_data.lm_link_chk_ev.fn = lora_mac_link_chk_event;
 
     /* Initialize the transmit queue timer */
     os_callout_init(&g_lora_mac_data.lm_txq_timer,
