@@ -178,7 +178,7 @@ lora_node_reset_txq_timer(void)
 void
 lora_node_chk_txq(void)
 {
-    os_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
+    ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
 }
 
 bool
@@ -252,7 +252,7 @@ lora_node_get_batt_status(void)
  * @param ev Pointer to transmit enqueue event
  */
 static void
-lora_mac_proc_tx_q_event(struct os_event *ev)
+lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
 {
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t evstatus;
@@ -394,7 +394,7 @@ proc_txq_om_done:
 }
 
 static void
-lora_mac_txq_timer_cb(struct os_event *ev)
+lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 {
     lora_mac_proc_tx_q_event(NULL);
 }
@@ -409,7 +409,7 @@ lora_mac_task(void *arg)
 {
     /* Process events */
     while (1) {
-        os_eventq_run(&g_lora_mac_data.lm_evq);
+        ble_npl_event_run(&g_lora_mac_data.lm_evq);
     }
 }
 #endif
@@ -458,7 +458,7 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
         g_lm_join_ev_arg.app_eui = app_eui;
         g_lm_join_ev_arg.app_key = app_key;
         g_lm_join_ev_arg.trials = trials;
-        os_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
+        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
         rc = LORA_APP_STATUS_OK;
     }
 
@@ -477,7 +477,7 @@ lora_node_link_check(void)
 
     rc = lora_node_chk_if_joined();
     if (rc == LORA_APP_STATUS_ALREADY_JOINED) {
-        os_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
+        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
         rc = LORA_APP_STATUS_OK;
     }
 
@@ -486,7 +486,7 @@ lora_node_link_check(void)
 
 #if !(LORA_NODE_CLI)
 static void
-lora_mac_join_event(struct os_event *ev)
+lora_mac_join_event(struct ble_npl_event *ev)
 {
     MlmeReq_t mlmeReq;
     LoRaMacStatus_t rc;
@@ -530,7 +530,7 @@ lora_mac_join_event(struct os_event *ev)
  * @param ev
  */
 static void
-lora_mac_link_chk_event(struct os_event *ev)
+lora_mac_link_chk_event(struct ble_npl_event *ev)
 {
     MlmeReq_t mlmeReq;
     LoRaMacStatus_t rc;
@@ -629,7 +629,7 @@ lora_node_link_qual(int16_t *rssi, int16_t *snr)
     }
 }
 
-struct os_eventq *
+struct ble_npl_eventq *
 lora_node_mac_evq_get(void)
 {
     return &g_lora_mac_data.lm_evq;
@@ -661,7 +661,7 @@ lora_node_init(void)
 
     /*--- MAC INIT ---*/
     /* Initialize eventq */
-    os_eventq_init(&g_lora_mac_data.lm_evq);
+    ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
 
     /* Set up transmit done queue and event */
     os_mqueue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);

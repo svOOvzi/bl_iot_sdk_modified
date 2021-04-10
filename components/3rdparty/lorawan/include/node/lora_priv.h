@@ -218,7 +218,7 @@ int lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
                    uint8_t trials);
 int lora_node_link_check(void);
 int lora_node_mtu(void);
-struct os_eventq *lora_node_mac_evq_get(void);
+struct ble_npl_eventq *lora_node_mac_evq_get(void);
 void lora_node_chk_txq(void);
 bool lora_node_txq_empty(void);
 bool lora_mac_srv_ack_requested(void);
