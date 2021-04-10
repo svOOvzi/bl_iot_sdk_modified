@@ -168,7 +168,7 @@ static void
 lora_node_reset_txq_timer(void)
 {
     /* XXX: For now, just reset timer to fire off in one second */
-    os_callout_reset(&g_lora_mac_data.lm_txq_timer, OS_TICKS_PER_SEC);
+    ble_npl_callout_reset(&g_lora_mac_data.lm_txq_timer, OS_TICKS_PER_SEC);
 }
 
 /**
@@ -262,7 +262,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
     struct os_mbuf_pkthdr *mp;
 
     /* Stop the transmit callback because something was just queued */
-    os_callout_stop(&g_lora_mac_data.lm_txq_timer);
+    ble_npl_callout_stop(&g_lora_mac_data.lm_txq_timer);
 
     /* If busy just leave */
     if (lora_mac_tx_state() == LORAMAC_STATUS_BUSY) {
@@ -679,7 +679,7 @@ lora_node_init(void)
     g_lora_mac_data.lm_link_chk_ev.fn = lora_mac_link_chk_event;
 
     /* Initialize the transmit queue timer */
-    os_callout_init(&g_lora_mac_data.lm_txq_timer,
+    ble_npl_callout_init(&g_lora_mac_data.lm_txq_timer,
                     &g_lora_mac_data.lm_evq, lora_mac_txq_timer_cb, NULL);
 
     /* Initialize the LoRa mac */
