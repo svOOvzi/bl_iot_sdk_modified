@@ -229,7 +229,7 @@ lora_node_mac_mcps_indicate(void)
         }
 
         /* Set lora packet info */
-        lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+        lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
         memcpy(lpkt, &g_lora_mac_data.rxpkt, sizeof(struct lora_pkt_info));
         lora_app_mcps_indicate(om);
     } else {
@@ -323,7 +323,7 @@ send_empty_msg:
 send_from_txq:
             om = os_mqueue_get(&g_lora_mac_data.lm_txq);
             assert(om != NULL);
-            lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+            lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
             g_lora_mac_data.curtx = lpkt;
             g_lora_node_last_tx_mac_cmd = 0;
         }

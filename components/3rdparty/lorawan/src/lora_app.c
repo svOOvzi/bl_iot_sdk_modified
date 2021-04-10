@@ -289,7 +289,7 @@ lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct pbuf *om)
     lap = lora_app_port_find_open(port);
     if (lap) {
         /* Set packet information required by MAC */
-        lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+        lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
         lpkt->port = port;
         lpkt->pkt_type = pkt_type;
         lpkt->txdinfo.retries = lap->retries;
@@ -330,7 +330,7 @@ lora_app_port_receive(struct pbuf *om)
     struct lora_app_port *lap;
     struct lora_pkt_info *lpkt;
 
-    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+    lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
     lap = lora_app_port_find_open(lpkt->port);
     if (lap) {
         lap->rxd_cb(lpkt->port, lpkt->status, lpkt->pkt_type, om);
@@ -360,7 +360,7 @@ lora_app_port_txd(struct pbuf *om)
     struct lora_app_port *lap;
     struct lora_pkt_info *lpkt;
 
-    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+    lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
     lap = lora_app_port_find_open(lpkt->port);
     if (lap) {
         lap->txd_cb(lpkt->port, lpkt->status, lpkt->pkt_type, om);

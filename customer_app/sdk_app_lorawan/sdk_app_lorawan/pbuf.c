@@ -20,6 +20,7 @@ void test_pbuf(char *buf0, int len0, int argc, char **argv)
     uint8_t payload[5] = { 0x01, 0x02, 0x03, 0x04, 0x05 };
 
     //  Init LWIP Buffer Pool
+    //  TODO: Move this to startup function
     lwip_init();
 
     //  Allocate a pbuf Packet Buffer
@@ -109,6 +110,7 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
     for (int i = 0; i < sizeof(payload); i++) { payload[i] = i; }
 
     //  Init LWIP Buffer Pool
+    //  TODO: Move this to startup function
     lwip_init();
 
     //  Allocate a pbuf Packet Buffer
@@ -123,7 +125,7 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
     printf("Before Shift: Packet buffer addr=%p, payload=%p, len=%d, tot_len=%d\r\n", buf, buf->payload, buf->len, buf->tot_len);
 
     //  Shift the pbuf payload pointer BACKWARD 
-    //  to accommodate the header (3 bytes).
+    //  to accommodate the header (20 bytes).
     u8_t rc = pbuf_add_header(buf, sizeof(header));
     assert(rc == 0);
     printf("After Shift:  Packet buffer addr=%p, payload=%p, len=%d, tot_len=%d\r\n", buf, buf->payload, buf->len, buf->tot_len);
@@ -134,7 +136,7 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
     memcpy(buf->payload, header, sizeof(header));
 
     //  Shift the pbuf payload pointer FORWARD 
-    //  to skip the header (3 bytes).
+    //  to skip the header (20 bytes).
     rc = pbuf_remove_header(buf, sizeof(header));
     assert(rc == 0);
     printf("Undo Shift:   Packet buffer addr=%p, payload=%p, len=%d, tot_len=%d\r\n", buf, buf->payload, buf->len, buf->tot_len);
@@ -148,7 +150,7 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
     //  by shifting the payload pointer.
     printf("Dumping header and payload...\r\n");
 
-    //  Shift the pbuf payload pointer BACKWARD (3 bytes)
+    //  Shift the pbuf payload pointer BACKWARD (20 bytes)
     //  to locate the header.
     rc = pbuf_add_header(buf, sizeof(header));
     assert(rc == 0);
@@ -156,14 +158,14 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
     //  Dump the header
     printf("Packet buffer header: \r\n");
     uint8_t *p = buf->payload;   //  Get the header
-    int len = sizeof(header);  //  Header is always fixed size
+    int len = sizeof(header);    //  Header is always fixed size
     for (int i = 0; i < len; i++) {
         printf("%02x ", p[i]);
     }
     printf("\r\n");
     //  Should show the header: 0x11, 0x22, 0x33
 
-    //  Shift the pbuf payload pointer FORWARD (3 bytes)
+    //  Shift the pbuf payload pointer FORWARD (20 bytes)
     //  to locate the payload.
     rc = pbuf_remove_header(buf, sizeof(header));
     assert(rc == 0);
@@ -180,6 +182,28 @@ void test_pbuf2(char *buf0, int len0, int argc, char **argv)
 
     //  Free the pbuf
     pbuf_free(buf);
+}
+
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,    //  pbuf Packet Buffer
+    size_t header_size)  //  Size of header
+{
+    assert(buf != NULL);
+
+    //  Shift the pbuf payload pointer BACKWARD
+    //  to locate the header.
+    rc = pbuf_add_header(buf, header_size);
+    assert(rc == 0);
+
+    //  Payload now points to the header
+    void *header = buf->payload;
+
+    //  Shift the pbuf payload pointer FORWARD
+    //  to locate the payload.
+    rc = pbuf_remove_header(buf, header_size);
+    assert(rc == 0);
+    return header;
 }
 
 #ifdef NOTUSED
