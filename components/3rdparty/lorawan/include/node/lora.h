@@ -22,7 +22,7 @@
 
 #include "node/mac/LoRaMac.h"
 
-#ifdef TODO  //  No statistics for now
+#ifdef NOTUSED  //  We don't support statistics
 STATS_SECT_START(lora_mac_stats)
     STATS_SECT_ENTRY(join_req_tx)
     STATS_SECT_ENTRY(join_accept_rx)
@@ -55,7 +55,7 @@ STATS_SECT_START(lora_stats)
     STATS_SECT_ENTRY(tx_timeout)
 STATS_SECT_END
 extern STATS_SECT_DECL(lora_stats) lora_stats;
-#endif  //  TODO
+#endif  //  NOTUSED
 
 /* XXX: for now. Maybe have api to set these? */
 #define LORA_EUI_LEN        (8)
