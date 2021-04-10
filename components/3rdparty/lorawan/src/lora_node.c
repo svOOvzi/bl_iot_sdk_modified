@@ -716,3 +716,25 @@ void lora_exit_low_power(void)
         lora_config_peripherals();
     }
 }
+
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,    //  pbuf Packet Buffer
+    size_t header_size)  //  Size of header
+{
+    assert(buf != NULL);
+
+    //  Shift the pbuf payload pointer BACKWARD
+    //  to locate the header.
+    rc = pbuf_add_header(buf, header_size);
+    assert(rc == 0);
+
+    //  Payload now points to the header
+    void *header = buf->payload;
+
+    //  Shift the pbuf payload pointer FORWARD
+    //  to locate the payload.
+    rc = pbuf_remove_header(buf, header_size);
+    assert(rc == 0);
+    return header;
+}
