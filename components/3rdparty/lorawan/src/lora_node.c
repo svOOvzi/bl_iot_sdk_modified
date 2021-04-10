@@ -731,6 +731,7 @@ void *get_pbuf_header(
 
     //  Payload now points to the header
     void *header = buf->payload;
+    assert(header != NULL);
 
     //  Shift the pbuf payload pointer FORWARD
     //  to locate the payload.
