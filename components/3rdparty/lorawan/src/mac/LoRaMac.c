@@ -219,15 +219,15 @@ static const uint8_t
 g_lora_mac_cmd_lens[LORA_MAC_MAX_MAC_CMD_CID + 1] = {0, 0, 1, 2, 1, 2, 3, 2, 1};
 
 /* Radio events */
-struct os_event g_lora_mac_radio_tx_timeout_event;
-struct os_event g_lora_mac_radio_tx_event;
-struct os_event g_lora_mac_radio_rx_event;
-struct os_event g_lora_mac_radio_rx_err_event;
-struct os_event g_lora_mac_radio_rx_timeout_event;
-struct os_event g_lora_mac_rtx_timeout_event;
-struct os_event g_lora_mac_rx_win1_event;
-struct os_event g_lora_mac_rx_win2_event;
-struct os_event g_lora_mac_tx_delay_timeout_event;
+struct ble_npl_event g_lora_mac_radio_tx_timeout_event;
+struct ble_npl_event g_lora_mac_radio_tx_event;
+struct ble_npl_event g_lora_mac_radio_rx_event;
+struct ble_npl_event g_lora_mac_radio_rx_err_event;
+struct ble_npl_event g_lora_mac_radio_rx_timeout_event;
+struct ble_npl_event g_lora_mac_rtx_timeout_event;
+struct ble_npl_event g_lora_mac_rx_win1_event;
+struct ble_npl_event g_lora_mac_rx_win2_event;
+struct ble_npl_event g_lora_mac_tx_delay_timeout_event;
 
 static void lora_mac_rx_on_window2(void);
 static uint8_t lora_mac_extract_mac_cmds(uint8_t max_cmd_bytes, uint8_t *buf);
@@ -1519,7 +1519,7 @@ lora_mac_process_rx_win2_timeout(struct os_event *ev)
      * a receive done event will be enqueued but not processed.
      */
     if ((Radio.GetStatus() == RF_IDLE) &&
-        (g_lora_mac_radio_rx_event.ev_queued == 0)) {
+        (g_lora_mac_radio_rx_event.queued == 0)) {
         lora_mac_rx_on_window2();
     }
 }
@@ -2517,15 +2517,15 @@ LoRaMacInitialization(LoRaMacCallback_t *callbacks, LoRaMacRegion_t region)
                      NULL);
 
     /* Init MAC radio events */
-    g_lora_mac_radio_tx_timeout_event.ev_cb = lora_mac_process_radio_tx_timeout;
-    g_lora_mac_radio_tx_event.ev_cb = lora_mac_process_radio_tx;
-    g_lora_mac_radio_rx_event.ev_cb = lora_mac_process_radio_rx;
-    g_lora_mac_radio_rx_timeout_event.ev_cb = lora_mac_process_radio_rx_timeout;
-    g_lora_mac_radio_rx_err_event.ev_cb = lora_mac_process_radio_rx_err;
-    g_lora_mac_rtx_timeout_event.ev_cb = lora_mac_process_rtx_timeout;
-    g_lora_mac_rx_win1_event.ev_cb = lora_mac_process_rx_win1_timeout;
-    g_lora_mac_rx_win2_event.ev_cb = lora_mac_process_rx_win2_timeout;
-    g_lora_mac_tx_delay_timeout_event.ev_cb = lora_mac_process_tx_delay_timeout;
+    g_lora_mac_radio_tx_timeout_event.fn = lora_mac_process_radio_tx_timeout;
+    g_lora_mac_radio_tx_event.fn = lora_mac_process_radio_tx;
+    g_lora_mac_radio_rx_event.fn = lora_mac_process_radio_rx;
+    g_lora_mac_radio_rx_timeout_event.fn = lora_mac_process_radio_rx_timeout;
+    g_lora_mac_radio_rx_err_event.fn = lora_mac_process_radio_rx_err;
+    g_lora_mac_rtx_timeout_event.fn = lora_mac_process_rtx_timeout;
+    g_lora_mac_rx_win1_event.fn = lora_mac_process_rx_win1_timeout;
+    g_lora_mac_rx_win2_event.fn = lora_mac_process_rx_win2_timeout;
+    g_lora_mac_tx_delay_timeout_event.fn = lora_mac_process_tx_delay_timeout;
 
     // Initialize Radio driver
     RadioEvents.TxDone = OnRadioTxDone;
