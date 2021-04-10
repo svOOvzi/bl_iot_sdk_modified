@@ -18,6 +18,7 @@
  */
 
 #include <string.h>
+#include "lwip/pbuf.h"  //  For Lightweight IP Stack pbuf 
 #include "node/lora.h"
 #include "node/lora_priv.h"
 #include "node/lora_band.h"
