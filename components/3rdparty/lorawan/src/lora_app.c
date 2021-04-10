@@ -117,7 +117,7 @@ lora_app_port_find_open(uint8_t port)
  * @param ev Pointer to event.
  */
 static void
-lora_node_proc_app_rxd_event(struct os_event *ev)
+lora_node_proc_app_rxd_event(struct ble_npl_event *ev)
 {
     struct pbuf *om;
 
@@ -134,7 +134,7 @@ lora_node_proc_app_rxd_event(struct os_event *ev)
  * @param ev Pointer to event.
  */
 static void
-lora_node_proc_app_txd_event(struct os_event *ev)
+lora_node_proc_app_txd_event(struct ble_npl_event *ev)
 {
     struct pbuf *om;
 
