@@ -39,6 +39,9 @@
 #include "node/lora_priv.h"
 ////#include "lora/utilities.h"
 
+//  We don't support statistics
+#define STATS_INC(x,y)
+
 #if (LORA_MAC_TIMER_NUM) == -1
 #error "Must define a Lora MAC timer number"
 #else

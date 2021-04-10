@@ -22,6 +22,12 @@
 #include "node/lora_priv.h"
 #include "node/lora_band.h"
 
+//  We don't support stats
+#define STATS_INC(x,y)
+#define STATS_HDR(x) 0
+#define STATS_SIZE_INIT_PARMS(x,y) 0
+#define STATS_NAME_INIT_PARMS(x) 0
+
 #ifdef NOTUSED  //  We don't support stats
 STATS_SECT_DECL(lora_mac_stats) lora_mac_stats;
 STATS_NAME_START(lora_mac_stats)
