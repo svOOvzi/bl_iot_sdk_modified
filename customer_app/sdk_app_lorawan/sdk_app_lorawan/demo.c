@@ -311,6 +311,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
     {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},
+    {"test_pbuf2",       "Test LWIP pbuf (large)", test_pbuf2},
 };                                                                                   
 
 /// Init the command-line interface

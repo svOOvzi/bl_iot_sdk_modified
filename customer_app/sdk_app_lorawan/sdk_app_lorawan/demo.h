@@ -33,7 +33,9 @@
 int cli_init(void);
 
 /// Test pbuf Packet Buffer from LWIP. Defined in pbuf.c
-void test_pbuf(char *buf0, int len, int argc, char **argv);
+void test_pbuf(char *buf0, int len0, int argc, char **argv);
+
+/// Same as test_pbuf, but with actual LoRaWAN Header and Payload sizes. Defined in pbuf.c
+void test_pbuf2(char *buf0, int len0, int argc, char **argv);
 
 #endif
-
