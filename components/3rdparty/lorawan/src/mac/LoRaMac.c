@@ -2154,7 +2154,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
     if (om == NULL) {
         bufsize = 0;
     } else {
-        bufsize = OS_MBUF_PKTLEN(om);
+        bufsize = om->len;
         assert(bufsize > 0);
     }
 
@@ -2260,7 +2260,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
 
                 /* Set the port and copy in the application payload */
                 LoRaMacBuffer[hdrlen++] = port;
-                os_mbuf_copydata(om, 0, pyld_len, LoRaMacBuffer + hdrlen);
+                pbuf_copydata(om, 0, pyld_len, LoRaMacBuffer + hdrlen);
             } else {
                 if (MacCommandsBufferIndex > 0) {
                     port = 0;
@@ -2338,7 +2338,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
             break;
         case FRAME_TYPE_PROPRIETARY:
             if ((om != NULL) && (pyld_len > 0)) {
-                os_mbuf_copydata(om, 0, pyld_len, LoRaMacBuffer + hdrlen);
+                pbuf_copydata(om, 0, pyld_len, LoRaMacBuffer + hdrlen);
                 LoRaMacBufferPktLen = hdrlen + pyld_len;
             }
             break;

@@ -194,11 +194,6 @@ struct lora_pkt_info
 /* Allocate a packet for lora transmission. This returns a packet header mbuf */
 struct pbuf *lora_pkt_alloc(void);
 
-/* Given a pointer to a packet header mbuf chain, obtain pointer to lora info */
-#define LORA_PKT_INFO_PTR(om)            \
-    (struct lora_pkt_info *)((uint8_t *)om + sizeof(struct pbuf) + \
-                            sizeof(struct os_mbuf_pkthdr))
-
 /* Port API */
 typedef void (*lora_txd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
                               Mcps_t pkt_type, struct pbuf *om);

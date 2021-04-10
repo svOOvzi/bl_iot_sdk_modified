@@ -140,7 +140,7 @@ lora_node_mcps_request(struct pbuf *om)
 {
     int rc;
 
-    lora_node_log(LORA_NODE_LOG_APP_TX, 0, OS_MBUF_PKTLEN(om), (uint32_t)om);
+    lora_node_log(LORA_NODE_LOG_APP_TX, 0, om->len, (uint32_t)om);
     rc = os_mqueue_put(&g_lora_mac_data.lm_txq, &g_lora_mac_data.lm_evq, om);
     assert(rc == 0);
 }
@@ -221,15 +221,15 @@ lora_node_mac_mcps_indicate(void)
     om = lora_pkt_alloc();
     if (om) {
         /* Copy data into mbuf */
-        rc = os_mbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
+        rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
                               g_lora_mac_data.rxbufsize);
         if (rc) {
-            os_mbuf_free_chain(om);
+            pbuf_free(om);
             return;
         }
 
         /* Set lora packet info */
-        lpkt = LORA_PKT_INFO_PTR(om);
+        lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
         memcpy(lpkt, &g_lora_mac_data.rxpkt, sizeof(struct lora_pkt_info));
         lora_app_mcps_indicate(om);
     } else {
@@ -323,7 +323,7 @@ send_empty_msg:
 send_from_txq:
             om = os_mqueue_get(&g_lora_mac_data.lm_txq);
             assert(om != NULL);
-            lpkt = LORA_PKT_INFO_PTR(om);
+            lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
             g_lora_mac_data.curtx = lpkt;
             g_lora_node_last_tx_mac_cmd = 0;
         }

@@ -277,10 +277,9 @@ lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct pbuf *om)
     struct lora_pkt_info *lpkt;
 
     /* If no buffer to send, fine. */
-    if ((om == NULL) || (OS_MBUF_PKTLEN(om) == 0)) {
+    if ((om == NULL) || (om->len == 0)) {
         return LORA_APP_STATUS_INVALID_PARAM;
     }
-    assert(OS_MBUF_USRHDR_LEN(om) >= sizeof(struct lora_pkt_info));
 
     /* Check valid packet type. Only confirmed and unconfirmed for now. */
     if ((pkt_type != MCPS_UNCONFIRMED) && (pkt_type != MCPS_CONFIRMED)) {
@@ -290,7 +289,7 @@ lora_app_port_send(uint8_t port, Mcps_t pkt_type, struct pbuf *om)
     lap = lora_app_port_find_open(port);
     if (lap) {
         /* Set packet information required by MAC */
-        lpkt = LORA_PKT_INFO_PTR(om);
+        lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
         lpkt->port = port;
         lpkt->pkt_type = pkt_type;
         lpkt->txdinfo.retries = lap->retries;
@@ -331,13 +330,13 @@ lora_app_port_receive(struct pbuf *om)
     struct lora_app_port *lap;
     struct lora_pkt_info *lpkt;
 
-    lpkt = LORA_PKT_INFO_PTR(om);
+    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
     lap = lora_app_port_find_open(lpkt->port);
     if (lap) {
         lap->rxd_cb(lpkt->port, lpkt->status, lpkt->pkt_type, om);
         rc = LORA_APP_STATUS_OK;
     } else {
-        os_mbuf_free_chain(om);
+        pbuf_free(om);
         rc = LORA_APP_STATUS_NO_PORT;
     }
 
@@ -361,13 +360,13 @@ lora_app_port_txd(struct pbuf *om)
     struct lora_app_port *lap;
     struct lora_pkt_info *lpkt;
 
-    lpkt = LORA_PKT_INFO_PTR(om);
+    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
     lap = lora_app_port_find_open(lpkt->port);
     if (lap) {
         lap->txd_cb(lpkt->port, lpkt->status, lpkt->pkt_type, om);
         rc = LORA_APP_STATUS_OK;
     } else {
-        os_mbuf_free_chain(om);
+        pbuf_free(om);
         rc = LORA_APP_STATUS_NO_PORT;
     }
 
