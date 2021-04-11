@@ -191,7 +191,7 @@ bool
 lora_node_txq_empty(void)
 {
     bool rc;
-    struct os_mbuf_pkthdr *mp;
+    struct pbuf *mp;
 
     mp = STAILQ_FIRST(&g_lora_mac_data.lm_txq.mq_head);
     if (mp == NULL) {
@@ -265,7 +265,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
     LoRaMacTxInfo_t txinfo;
     struct lora_pkt_info *lpkt;
     struct pbuf *om;
-    struct os_mbuf_pkthdr *mp;
+    struct pbuf *mp;
 
     /* Stop the transmit callback because something was just queued */
     ble_npl_callout_stop(&g_lora_mac_data.lm_txq_timer);
