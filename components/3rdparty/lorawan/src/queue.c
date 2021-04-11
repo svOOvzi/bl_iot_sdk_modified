@@ -18,6 +18,9 @@
  * under the License.
  */
 
+#include "lwip/pbuf.h"   //  For Lightweight IP Stack pbuf 
+#include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
+
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of mbufs that ties to a
  * particular task's event queue.  pbuf_queues form a helper API around a common
@@ -28,17 +31,17 @@
  * will be posted to the task's mbuf queue.
  *
  * @param mq                    The pbuf_queue to initialize
- * @param ev_cb                 The callback to associate with the mqeueue
- *                                  event.  Typically, this callback pulls each
- *                                  packet off the pbuf_queue and processes them.
+ * @param ev_cb                 The callback to associate with the pbuf_queue
+ *                              event.  Typically, this callback pulls each
+ *                              packet off the pbuf_queue and processes them.
  * @param arg                   The argument to associate with the pbuf_queue event.
  *
  * @return                      0 on success, non-zero on failure.
  */
 int
-pbuf_queue_init(struct pbuf_queue *mq, os_event_fn *ev_cb, void *arg)
+pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
 {
-    struct os_event *ev;
+    struct ble_npl_event *ev;
 
     STAILQ_INIT(&mq->mq_head);
 
@@ -91,7 +94,7 @@ pbuf_queue_get(struct pbuf_queue *mq)
  * @return 0 on success, non-zero on failure.
  */
 int
-pbuf_queue_put(struct pbuf_queue *mq, struct os_eventq *evq, struct pbuf *m)
+pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
 {
     struct pbuf *mp;
     os_sr_t sr;
@@ -111,7 +114,7 @@ pbuf_queue_put(struct pbuf_queue *mq, struct os_eventq *evq, struct pbuf *m)
 
     /* Only post an event to the queue if its specified */
     if (evq) {
-        os_eventq_put(evq, &mq->mq_ev);
+        ble_npl_eventq_put(evq, &mq->mq_ev);
     }
 
     return (0);
