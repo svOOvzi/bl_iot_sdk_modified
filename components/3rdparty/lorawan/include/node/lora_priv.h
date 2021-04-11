@@ -129,7 +129,7 @@ struct lora_mac_obj
     struct ble_npl_eventq lm_evq;
 
     /* Transmit queue */
-    struct os_mqueue lm_txq;
+    struct pbuf_queue lm_txq;
 
     /* Join event */
     struct ble_npl_event lm_join_ev;

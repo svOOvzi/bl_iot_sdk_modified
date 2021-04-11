@@ -45,8 +45,8 @@ struct lora_app_port
 static struct lora_app_port lora_app_ports[LORA_APP_NUM_PORTS];
 
 /* Lora APP Receive queue and event */
-struct os_mqueue lora_node_app_rx_q;
-struct os_mqueue lora_node_app_txd_q;
+struct pbuf_queue lora_node_app_rx_q;
+struct pbuf_queue lora_node_app_txd_q;
 
 /* Lora app event queue pointer */
 static struct ble_npl_eventq *lora_node_app_evq;
@@ -122,7 +122,7 @@ lora_node_proc_app_rxd_event(struct ble_npl_event *ev)
     struct pbuf *om;
 
     /* Go through packet queue and call rx callback for all */
-    while ((om = os_mqueue_get(&lora_node_app_rx_q)) != NULL) {
+    while ((om = pbuf_queue_get(&lora_node_app_rx_q)) != NULL) {
         lora_app_port_receive(om);
     }
 }
@@ -139,7 +139,7 @@ lora_node_proc_app_txd_event(struct ble_npl_event *ev)
     struct pbuf *om;
 
     /* Go through packet queue and call rx callback for all */
-    while ((om = os_mqueue_get(&lora_node_app_txd_q)) != NULL) {
+    while ((om = pbuf_queue_get(&lora_node_app_txd_q)) != NULL) {
         lora_app_port_txd(om);
     }
 }
@@ -384,7 +384,7 @@ lora_app_mcps_indicate(struct pbuf *om)
 {
     int rc;
 
-    rc = os_mqueue_put(&lora_node_app_rx_q, lora_node_app_evq_get(), om);
+    rc = pbuf_queue_put(&lora_node_app_rx_q, lora_node_app_evq_get(), om);
     assert(rc == 0);
 }
 
@@ -399,7 +399,7 @@ lora_app_mcps_confirm(struct pbuf *om)
 {
     int rc;
 
-    rc = os_mqueue_put(&lora_node_app_txd_q, lora_node_app_evq_get(), om);
+    rc = pbuf_queue_put(&lora_node_app_txd_q, lora_node_app_evq_get(), om);
     assert(rc == 0);
 }
 
@@ -544,8 +544,8 @@ lora_app_init(void)
     lora_app_link_chk_ev.fn = lora_app_link_chk_ev_cb;
 
     /* Set up receive queue and event */
-    os_mqueue_init(&lora_node_app_rx_q, lora_node_proc_app_rxd_event, NULL);
+    pbuf_queue_init(&lora_node_app_rx_q, lora_node_proc_app_rxd_event, NULL);
 
     /* Set up transmit done queue and event */
-    os_mqueue_init(&lora_node_app_txd_q, lora_node_proc_app_txd_event, NULL);
+    pbuf_queue_init(&lora_node_app_txd_q, lora_node_proc_app_txd_event, NULL);
 }

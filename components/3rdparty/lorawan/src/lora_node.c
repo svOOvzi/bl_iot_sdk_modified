@@ -147,7 +147,7 @@ lora_node_mcps_request(struct pbuf *om)
     int rc;
 
     lora_node_log(LORA_NODE_LOG_APP_TX, 0, om->len, (uint32_t)om);
-    rc = os_mqueue_put(&g_lora_mac_data.lm_txq, &g_lora_mac_data.lm_evq, om);
+    rc = pbuf_queue_put(&g_lora_mac_data.lm_txq, &g_lora_mac_data.lm_evq, om);
     assert(rc == 0);
 }
 
@@ -327,7 +327,7 @@ send_empty_msg:
             rc = LORAMAC_STATUS_OK;
         } else {
 send_from_txq:
-            om = os_mqueue_get(&g_lora_mac_data.lm_txq);
+            om = pbuf_queue_get(&g_lora_mac_data.lm_txq);
             assert(om != NULL);
             lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
             g_lora_mac_data.curtx = lpkt;
@@ -670,7 +670,7 @@ lora_node_init(void)
     ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
 
     /* Set up transmit done queue and event */
-    os_mqueue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);
+    pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);
 
     /* Create the mac task */
     os_task_init(&g_lora_mac_task, "loramac", lora_mac_task, NULL,
