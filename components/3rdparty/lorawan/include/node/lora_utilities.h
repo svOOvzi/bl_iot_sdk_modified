@@ -20,8 +20,8 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#ifndef __UTILITIES_H__
-#define __UTILITIES_H__
+#ifndef __LORA_UTILITIES_H__
+#define __LORA_UTILITIES_H__
 
 #include <stdint.h>
 #include <string.h>
@@ -126,4 +126,4 @@ TimerTime_t TimerGetCurrentTime( void );
  */
 TimerTime_t TimerGetElapsedTime( TimerTime_t savedTime );
 
-#endif // __UTILITIES_H__
+#endif // __LORA_UTILITIES_H__
