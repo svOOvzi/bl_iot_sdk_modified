@@ -1,4 +1,5 @@
-//  Packet Buffer Queue. Based on mqueue (Mbuf Queue) from Mynewt OS.
+//  Packet Buffer Queue. Based on mqueue (Mbuf Queue) from Mynewt OS:
+//  https://github.com/apache/mynewt-core/blob/master/kernel/os/src/os_mbuf.c
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,13 +23,13 @@
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
 
 /**
- * Initializes a pbuf_queue.  A pbuf_queue is a queue of mbufs that ties to a
+ * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
  * particular task's event queue.  pbuf_queues form a helper API around a common
  * paradigm: wait on an event queue until at least one packet is available,
  * then process a queue of packets.
  *
- * When mbufs are available on the queue, an event OS_EVENT_T_MQUEUE_DATA
- * will be posted to the task's mbuf queue.
+ * When pbufs are available on the queue, an event OS_EVENT_T_MQUEUE_DATA
+ * will be posted to the task's pbuf queue.
  *
  * @param mq                    The pbuf_queue to initialize
  * @param ev_cb                 The callback to associate with the pbuf_queue
@@ -54,11 +55,11 @@ pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
 }
 
 /**
- * Remove and return a single mbuf from the mbuf queue.  Does not block.
+ * Remove and return a single pbuf from the pbuf queue.  Does not block.
  *
- * @param mq The mbuf queue to pull an element off of.
+ * @param mq The pbuf queue to pull an element off of.
  *
- * @return The next mbuf in the queue, or NULL if queue has no mbufs.
+ * @return The next pbuf in the queue, or NULL if queue has no pbufs.
  */
 struct pbuf *
 pbuf_queue_get(struct pbuf_queue *mq)
@@ -84,12 +85,12 @@ pbuf_queue_get(struct pbuf_queue *mq)
 }
 
 /**
- * Adds a packet (i.e. packet header mbuf) to a pbuf_queue. The event associated
+ * Adds a packet (i.e. packet header pbuf) to a pbuf_queue. The event associated
  * with the pbuf_queue gets posted to the specified eventq.
  *
- * @param mq                    The mbuf queue to append the mbuf to.
+ * @param mq                    The pbuf queue to append the pbuf to.
  * @param evq                   The event queue to post an event to.
- * @param m                     The mbuf to append to the mbuf queue.
+ * @param m                     The pbuf to append to the pbuf queue.
  *
  * @return 0 on success, non-zero on failure.
  */
@@ -100,7 +101,7 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
     os_sr_t sr;
     int rc;
 
-    /* Can only place the head of a chained mbuf on the queue. */
+    /* Can only place the head of a chained pbuf on the queue. */
     if (!OS_MBUF_IS_PKTHDR(m)) {
         rc = OS_EINVAL;
         goto err;
