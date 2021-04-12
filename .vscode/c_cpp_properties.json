@@ -78,7 +78,8 @@
                 "LORA_UNCONFIRMED_TX_RAND_DELAY=5000",
                 "LORA_NODE_PUBLIC_NWK=0",
                 "LORA_LP_CLOCK=1",
-                "LORA_NODE_SYSINIT_STAGE=200"
+                "LORA_NODE_SYSINIT_STAGE=200",
+                "LORA_MAC_TIMER_NUM=0"
             ],
             "windowsSdkVersion": "10.0.10586.0",
             "cStandard": "c11",

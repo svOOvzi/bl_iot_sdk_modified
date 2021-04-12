@@ -74,6 +74,9 @@ CFLAGS += -DLORA_LP_CLOCK=1
 # (Unused) Sysinit stage for the LoRa endpoint
 CFLAGS += -DLORA_NODE_SYSINIT_STAGE=200
 
+# (Unused) Timer number used for LoRa MAC and Radio
+CFLAGS += -DLORA_MAC_TIMER_NUM=0
+
 -include ./proj_config.mk
 
 ifeq ($(origin BL60X_SDK_PATH), undefined)
