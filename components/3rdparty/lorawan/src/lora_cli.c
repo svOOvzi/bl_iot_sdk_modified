@@ -560,10 +560,13 @@ err:
 #if (LORA_NODE_LOG_CLI) == 1
 static int lora_cli_log_cmd(int argc, char **argv);
 
+#ifdef TODO  //  Convert to BL602 CLI
 static struct shell_cmd lora_node_log_cmd = {
     .sc_cmd = "ln_log",
     .sc_cmd_func = lora_cli_log_cmd
 };
+#endif  //  TODO
+
 #endif
 
 int
@@ -713,8 +716,12 @@ lora_cli_init(void)
     SYSINIT_PANIC_ASSERT_MSG(rc == 0, "Failed to register lora CLI command");
 #endif
 #if (LORA_NODE_LOG_CLI)
+
+#ifdef TODO  //  Convert to BL602 CLI
     rc = shell_cmd_register(&lora_node_log_cmd);
     assert(rc == 0);
+#endif  //  TODO
+
 #endif /* (LORA_NODE_LOG_CLI) */
 }
 
