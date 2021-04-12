@@ -48,8 +48,8 @@ pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
 
     ev = &mq->mq_ev;
     memset(ev, 0, sizeof(*ev));
-    ev->ev_cb = ev_cb;
-    ev->ev_arg = arg;
+    ev->fn = ev_cb;
+    ev->arg = arg;
 
     return (0);
 }

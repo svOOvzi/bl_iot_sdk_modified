@@ -299,7 +299,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
             break;
         }
 
-        rc = LoRaMacQueryTxPossible(mp->omp_len, &txinfo);
+        rc = LoRaMacQueryTxPossible(mp->len, &txinfo);
         if (rc == LORAMAC_STATUS_MAC_CMD_LENGTH_ERROR) {
             /*
              * XXX: an ugly hack for now. If the server decides to send MAC
@@ -501,7 +501,7 @@ lora_mac_join_event(struct ble_npl_event *ev)
 
     /* XXX: should we check if we are joined here too? Could we have
        joined in meantime? */
-    lmj = (struct lm_join_ev_arg_obj *)ev->ev_arg;
+    lmj = (struct lm_join_ev_arg_obj *)ev->arg;
     mlmeReq.Type = MLME_JOIN;
     mlmeReq.Req.Join.DevEui = lmj->dev_eui;
     mlmeReq.Req.Join.AppEui = lmj->app_eui;
