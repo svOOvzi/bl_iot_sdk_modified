@@ -72,10 +72,12 @@ uint8_t g_lora_node_last_tx_mac_cmd;
     LoRaMacCallback_t lora_cb;
 #endif
 
+#ifdef NOTUSED
 /* MAC task */
 #define LORA_MAC_STACK_SIZE   (256)
 struct os_task g_lora_mac_task;
 os_stack_t g_lora_mac_stack[LORA_MAC_STACK_SIZE];
+#endif  //  NOTUSED
 
 /*
  * Lora MAC data object
@@ -103,9 +105,8 @@ extern void lora_bsp_enable_mac_timer(void);
 void
 lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 {
-    os_sr_t sr;
-
-    OS_ENTER_CRITICAL(sr);
+    //  TODO: os_sr_t sr;
+    //  TODO: OS_ENTER_CRITICAL(sr);
     g_lnd_log[g_lnd_log_index].lnd_id = logid;
     g_lnd_log[g_lnd_log_index].lnd_p8 = p8;
     g_lnd_log[g_lnd_log_index].lnd_p16 = p16;
@@ -116,7 +117,7 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
     if (g_lnd_log_index == LORA_NODE_DEBUG_LOG_ENTRIES) {
         g_lnd_log_index = 0;
     }
-    OS_EXIT_CRITICAL(sr);
+    //  TODO: OS_EXIT_CRITICAL(sr);
 }
 #endif  /* if defined(LORA_NODE_DEBUG_LOG) */
 
@@ -224,7 +225,7 @@ lora_node_mac_mcps_indicate(void)
         return;
     }
 
-    om = lora_pkt_alloc();
+    om = lora_pkt_alloc();  //  TODO: Size of payload
     if (om) {
         /* Copy data into mbuf */
         rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
@@ -672,10 +673,12 @@ lora_node_init(void)
     /* Set up transmit done queue and event */
     pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);
 
+    #ifdef NOTUSED
     /* Create the mac task */
     os_task_init(&g_lora_mac_task, "loramac", lora_mac_task, NULL,
                  (LORA_MAC_PRIO), OS_WAIT_FOREVER, g_lora_mac_stack,
                  LORA_MAC_STACK_SIZE);
+    #endif  //  NOTUSED
 
     /* Initialize join event */
     g_lora_mac_data.lm_join_ev.fn = lora_mac_join_event;
