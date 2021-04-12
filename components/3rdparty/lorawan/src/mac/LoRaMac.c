@@ -32,7 +32,7 @@
 #include <string.h>
 #include <assert.h>
 #include "node/lora.h"
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 #include "node/mac/LoRaMacCrypto.h"
 #include "node/mac/LoRaMac.h"
 #include "node/mac/LoRaMacTest.h"

@@ -20,7 +20,7 @@ Maintainer: Miguel Luis ( Semtech ), Gregory Cristian ( Semtech ) and Daniel Jä
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 
 #include "aes.h"
 #include "cmac.h"

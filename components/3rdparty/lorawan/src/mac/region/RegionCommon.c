@@ -29,7 +29,7 @@
  * \author    Daniel Jaeckle ( STACKFORCE )
  */
 #include <math.h>
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 #include "RegionCommon.h"
 
 #define BACKOFF_DC_1_HOUR       100

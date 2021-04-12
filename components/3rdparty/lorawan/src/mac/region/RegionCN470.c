@@ -28,7 +28,7 @@
  *
  * \author    Daniel Jaeckle ( STACKFORCE )
 */
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 #include "RegionCommon.h"
 #include "RegionCN470.h"
 

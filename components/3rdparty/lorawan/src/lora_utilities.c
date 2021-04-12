@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 #include "lora/utilities.h"
 #include "node/lora_priv.h"
 

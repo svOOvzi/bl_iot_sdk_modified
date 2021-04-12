@@ -38,7 +38,7 @@ DEALINGS WITH THE SOFTWARE
 #include <string.h>
 #include "aes.h"
 #include "cmac.h"
-#include "node/utilities.h"
+#include "node/lora_utilities.h"
 
 #define LSHIFT(v, r) do {                                       \
   int32_t i;                                                  \
