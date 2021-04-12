@@ -37,15 +37,16 @@
 #include "node/mac/LoRaMac.h"
 #include "node/mac/LoRaMacTest.h"
 #include "node/lora_priv.h"
-////#include "lora/utilities.h"
 
 //  We don't support statistics
 #define STATS_INC(x,y)
 
+#ifndef LORA_MAC_TIMER_NUM
+#error "Must define a Lora MAC timer number"
+#endif
+
 #if (LORA_MAC_TIMER_NUM) == -1
 #error "Must define a Lora MAC timer number"
-#else
-#define LORA_MAC_TIMER_NUM    (LORA_MAC_TIMER_NUM)
 #endif
 
 /* The lora mac timer counts in 1 usec increments */
