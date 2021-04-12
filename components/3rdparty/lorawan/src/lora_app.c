@@ -18,7 +18,8 @@
  */
 
 #include <assert.h>
-#include "lwip/pbuf.h"  //  For Lightweight IP Stack pbuf 
+#include "lwip/pbuf.h"        //  For Lightweight IP Stack pbuf 
+#include "node/pbuf_queue.h"  //  For Packet Buffer Queue
 #include "node/lora.h"
 #include "node/lora_priv.h"
 

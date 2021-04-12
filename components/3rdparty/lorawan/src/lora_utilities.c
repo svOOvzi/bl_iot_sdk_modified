@@ -20,7 +20,6 @@
 #include <stdlib.h>
 
 #include "node/lora_utilities.h"
-#include "lora/utilities.h"
 #include "node/lora_priv.h"
 
 int32_t

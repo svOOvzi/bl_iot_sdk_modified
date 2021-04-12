@@ -20,10 +20,14 @@
 #ifndef H_LORA_PRIV_
 #define H_LORA_PRIV_
 
-#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
+#include "nimble_npl.h"       //  For NimBLE Porting Layer (multitasking functions)
+#include "node/pbuf_queue.h"  //  For Packet Buffer Queue
 #include "node/mac/LoRaMac.h"
 #include "node/lora.h"
 #include "node/lora_band.h"
+
+struct hal_timer  {};  //  TODO
+typedef uint32_t os_time_t;  //  TODO
 
 /* Connection state machine flags. */
 union lora_mac_flags {

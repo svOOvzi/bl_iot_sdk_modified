@@ -19,9 +19,13 @@
  * under the License.
  */
 
+#ifndef H_PBUF_QUEUE_
+#define H_PBUF_QUEUE_
+
 #include "lwip/pbuf.h"   //  For Lightweight IP Stack pbuf 
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
-#include "node/pbuf_queue.h"
+
+struct pbuf_queue {};  //  TODO
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
@@ -41,19 +45,7 @@
  * @return                      0 on success, non-zero on failure.
  */
 int
-pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
-{
-    struct ble_npl_event *ev;
-
-    STAILQ_INIT(&mq->mq_head);
-
-    ev = &mq->mq_ev;
-    memset(ev, 0, sizeof(*ev));
-    ev->fn = ev_cb;
-    ev->arg = arg;
-
-    return (0);
-}
+pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg);
 
 /**
  * Remove and return a single pbuf from the pbuf queue.  Does not block.
@@ -63,27 +55,7 @@ pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
  * @return The next pbuf in the queue, or NULL if queue has no pbufs.
  */
 struct pbuf *
-pbuf_queue_get(struct pbuf_queue *mq)
-{
-    struct pbuf *mp;
-    struct pbuf *m;
-    os_sr_t sr;
-
-    OS_ENTER_CRITICAL(sr);
-    mp = STAILQ_FIRST(&mq->mq_head);
-    if (mp) {
-        STAILQ_REMOVE_HEAD(&mq->mq_head, omp_next);
-    }
-    OS_EXIT_CRITICAL(sr);
-
-    if (mp) {
-        m = OS_MBUF_PKTHDR_TO_MBUF(mp);
-    } else {
-        m = NULL;
-    }
-
-    return (m);
-}
+pbuf_queue_get(struct pbuf_queue *mq);
 
 /**
  * Adds a packet (i.e. packet header pbuf) to a pbuf_queue. The event associated
@@ -96,53 +68,11 @@ pbuf_queue_get(struct pbuf_queue *mq)
  * @return 0 on success, non-zero on failure.
  */
 int
-pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
-{
-    struct pbuf *mp;
-    os_sr_t sr;
-    int rc;
-
-    /* Can only place the head of a chained pbuf on the queue. */
-    if (!OS_MBUF_IS_PKTHDR(m)) {
-        rc = OS_EINVAL;
-        goto err;
-    }
-
-    mp = get_pbuf_header(m);
-
-    OS_ENTER_CRITICAL(sr);
-    STAILQ_INSERT_TAIL(&mq->mq_head, mp, omp_next);
-    OS_EXIT_CRITICAL(sr);
-
-    /* Only post an event to the queue if its specified */
-    if (evq) {
-        ble_npl_eventq_put(evq, &mq->mq_ev);
-    }
-
-    return (0);
-err:
-    return (rc);
-}
+pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m);
 
 /// Return the pbuf Packet Buffer header
 void *get_pbuf_header(
     struct pbuf *buf,    //  pbuf Packet Buffer
-    size_t header_size)  //  Size of header
-{
-    assert(buf != NULL);
+    size_t header_size);  //  Size of header
 
-    //  Shift the pbuf payload pointer BACKWARD
-    //  to locate the header.
-    u8_t rc = pbuf_add_header(buf, header_size);
-    assert(rc == 0);
-
-    //  Payload now points to the header
-    void *header = buf->payload;
-    assert(header != NULL);
-
-    //  Shift the pbuf payload pointer FORWARD
-    //  to locate the payload.
-    rc = pbuf_remove_header(buf, header_size);
-    assert(rc == 0);
-    return header;
-}
+#endif

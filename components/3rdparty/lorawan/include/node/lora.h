@@ -321,11 +321,6 @@ int lora_app_set_join_cb(lora_join_cb join_cb);
  */
 int lora_app_set_link_check_cb(lora_link_chk_cb link_chk_cb);
 
-/// Return the pbuf Packet Buffer header
-void *get_pbuf_header(
-    struct pbuf *buf,    //  pbuf Packet Buffer
-    size_t header_size);  //  Size of header
-
 /* Lora app return codes */
 #define LORA_APP_STATUS_OK              (0)
 #define LORA_APP_STATUS_NO_PORT         (1)
