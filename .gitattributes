@@ -1,4 +1,5 @@
 toolchain/* linguist-vendored
+tools/*     linguist-vendored
 
 # From https://code.visualstudio.com/docs/remote/troubleshooting#_resolving-git-line-ending-issues-in-wsl-resulting-in-many-modified-files
 * text=auto eol=lf
