@@ -1,5 +1,6 @@
 ::  Windows script to build, flash and run BL602 Firmware
 
+::  Go up two levels to the bl_iot_sdk folder
 pushd ..\..
 
 ::  Name of app
@@ -26,4 +27,5 @@ del *.d *.s *.i *.o
 
 ::  TODO: Run Firmware
 
+::  Return to the app folder
 popd
