@@ -18,6 +18,7 @@
  */
 
 #if (LORA_NODE_CLI) || (LORA_NODE_LOG_CLI)
+#include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
 #include "node/lora_priv.h"
@@ -95,17 +96,17 @@ lora_cli_cmd_fn(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora set_freq\n"
-"    lora tx_cfg\n"
-"    lora rx_cfg\n"
-"    lora tx\n"
-"    lora rx\n"
-"    lora max_payload_len\n");
+    printf(
+"usage:\r\n"
+"    lora set_freq\r\n"
+"    lora tx_cfg\r\n"
+"    lora rx_cfg\r\n"
+"    lora tx\r\n"
+"    lora rx\r\n"
+"    lora max_payload_len\r\n");
 
     return rc;
 }
@@ -134,12 +135,12 @@ lora_cli_set_freq(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora set_freq <hz>\n");
+    printf(
+"usage:\r\n"
+"    lora set_freq <hz>\r\n");
 
     return rc;
 }
@@ -268,16 +269,16 @@ lora_cli_tx_cfg(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora tx_cfg <modem-type (0/1)> <power> <frequency-deviation>\n"
-"                <bandwidth> <data-rate> <code-rate> <preamble-length>\n"
-"                <fixed-length (0/1)> <crc-on (0/1)>\n"
-"                <frequency-hopping (0/1)> <hop-period> <iq-inverted (0/1)>\n"
-"                <timeout>\n");
+    printf(
+"usage:\r\n"
+"    lora tx_cfg <modem-type (0/1)> <power> <frequency-deviation>\r\n"
+"                <bandwidth> <data-rate> <code-rate> <preamble-length>\r\n"
+"                <fixed-length (0/1)> <crc-on (0/1)>\r\n"
+"                <frequency-hopping (0/1)> <hop-period> <iq-inverted (0/1)>\r\n"
+"                <timeout>\r\n");
 
     return rc;
 }
@@ -428,16 +429,16 @@ lora_cli_rx_cfg(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora rx_cfg <modem-type (0/1)> <bandwidth> <data-rate> <code-rate>\n"
-"                <bandwidtch-afc> <preamble-length> <symbol-timeout>\n"
-"                <fixed-length (0/1)> <payload-length> <crc-on (0/1)>\n"
-"                <frequency-hopping (0/1)> <hop-period> <iq-inverted (0/1)>\n"
-"                <rx-continuous (0/1)>\n");
+    printf(
+"usage:\r\n"
+"    lora rx_cfg <modem-type (0/1)> <bandwidth> <data-rate> <code-rate>\r\n"
+"                <bandwidtch-afc> <preamble-length> <symbol-timeout>\r\n"
+"                <fixed-length (0/1)> <payload-length> <crc-on (0/1)>\r\n"
+"                <frequency-hopping (0/1)> <hop-period> <iq-inverted (0/1)>\r\n"
+"                <rx-continuous (0/1)>\r\n");
 
     return rc;
 }
@@ -467,12 +468,12 @@ lora_cli_tx(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora tx <0xXX:0xXX:...>\n");
+    printf(
+"usage:\r\n"
+"    lora tx <0xXX:0xXX:...>\r\n");
 
     return rc;
 }
@@ -501,12 +502,12 @@ lora_cli_rx(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora rx <timeout>\n");
+    printf(
+"usage:\r\n"
+"    lora rx <timeout>\r\n");
 
     return rc;
 }
@@ -542,12 +543,12 @@ lora_cli_max_payload_len(int argc, char **argv)
 
 err:
     if (err != NULL) {
-        console_printf("error: %s\n", err);
+        printf("error: %s\r\n", err);
     }
 
-    console_printf(
-"usage:\n"
-"    lora max_payload_len <length>\n");
+    printf(
+"usage:\r\n"
+"    lora max_payload_len <length>\r\n");
 
     return rc;
 }
@@ -572,7 +573,7 @@ lora_cli_log_cmd(int argc, char **argv)
     uint16_t i;
     uint16_t lines_logged;
 
-    console_printf("Lora node log\n");
+    printf("Lora node log\r\n");
     i = g_lnd_log_index;
     lines_logged = 0;
     while (lines_logged != LORA_NODE_DEBUG_LOG_ENTRIES) {
@@ -581,46 +582,46 @@ lora_cli_log_cmd(int argc, char **argv)
             goto next_entry;
         }
 
-        console_printf("index=%u ", i);
+        printf("index=%u ", i);
         switch (g_lnd_log[i].lnd_id) {
         case LORA_NODE_LOG_TX_DONE:
-            console_printf("TX_DONE chan=%u done_time=%lu",
+            printf("TX_DONE chan=%u done_time=%lu",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_TX_SETUP:
-            console_printf("TX_SETUP phytxpwr=%d sf=%u bw=%u freq=%lu",
+            printf("TX_SETUP phytxpwr=%d sf=%u bw=%u freq=%lu",
                            (int8_t)g_lnd_log[i].lnd_p8,
                            (uint8_t)(g_lnd_log[i].lnd_p16 >> 8),
                            (uint8_t)g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_TX_START:
-            console_printf("TX_START pwr=%d dr=%u chan=%u airtime=%lu",
+            printf("TX_START pwr=%d dr=%u chan=%u airtime=%lu",
                            (int8_t)g_lnd_log[i].lnd_p8,
                            (uint8_t)(g_lnd_log[i].lnd_p16 >> 8),
                            (uint8_t)g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_TX_DELAY:
-            console_printf("TX_DELAY dc=%u delay_usecs=%lu",
+            printf("TX_DELAY dc=%u delay_usecs=%lu",
                            (int8_t)g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p32);
             break;
        case LORA_NODE_LOG_TX_PREP_FRAME:
-            console_printf("TX_PREP_FRAME cmdbytes=%u uplink=%u mhdr=%x",
+            printf("TX_PREP_FRAME cmdbytes=%u uplink=%u mhdr=%x",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            (uint8_t)g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_RX_WIN1_SETUP:
-            console_printf("RX_WIN1_SETUP dr=%u chan=%u timeout=%lu",
+            printf("RX_WIN1_SETUP dr=%u chan=%u timeout=%lu",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_RX_TIMEOUT:
-            console_printf("RX_TIMEOUT chan=%u rxslot=%u",
+            printf("RX_TIMEOUT chan=%u rxslot=%u",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16);
             break;
         case LORA_NODE_LOG_RX_DONE:
-            console_printf("RX_DONE chan=%u size=%u slot=%u machdr=%x",
+            printf("RX_DONE chan=%u size=%u slot=%u machdr=%x",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            (uint8_t)(g_lnd_log[i].lnd_p32 >> 8),
                            (uint8_t)g_lnd_log[i].lnd_p32);
@@ -628,63 +629,63 @@ lora_cli_log_cmd(int argc, char **argv)
         case LORA_NODE_LOG_RADIO_TIMEOUT_IRQ:
             break;
         case LORA_NODE_LOG_RX_CFG:
-            console_printf("RX_CFG bw=%u dr=%u sf=%u freq=%lu",
+            printf("RX_CFG bw=%u dr=%u sf=%u freq=%lu",
                            (int8_t)g_lnd_log[i].lnd_p8,
                            (uint8_t)(g_lnd_log[i].lnd_p16 >> 8),
                            (uint8_t)g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_RX_PORT:
-            console_printf("RX_PORT port=%u len=%u dwnlink_cntr=%lu",
+            printf("RX_PORT port=%u len=%u dwnlink_cntr=%lu",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_RX_WIN2:
-            console_printf("RX_WIN2 rxslot=%u cont=%u freq=%lu",
+            printf("RX_WIN2 rxslot=%u cont=%u freq=%lu",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_APP_TX:
-            console_printf("APP_TX pktlen=%u om=%lx",
+            printf("APP_TX pktlen=%u om=%lx",
                            g_lnd_log[i].lnd_p16, g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_RTX_TIMEOUT:
-            console_printf("RTX_TIMEOUT macflags=%x", g_lnd_log[i].lnd_p8);
+            printf("RTX_TIMEOUT macflags=%x", g_lnd_log[i].lnd_p8);
             break;
         case LORA_NODE_LOG_RX_ADR_REQ:
-            console_printf("RX_ADR_REQ dr=%u txpwr=%u chmassk=%u nbrep=%u",
+            printf("RX_ADR_REQ dr=%u txpwr=%u chmassk=%u nbrep=%u",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            (uint16_t)(g_lnd_log[i].lnd_p32 >> 16),
                            (uint16_t)g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_PROC_MAC_CMD:
-            console_printf("PROC_MAC_CMD index=%u snr=%u cmd_size=%lu",
+            printf("PROC_MAC_CMD index=%u snr=%u cmd_size=%lu",
                            g_lnd_log[i].lnd_p8, g_lnd_log[i].lnd_p16,
                            g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_LINK_CHK:
-            console_printf("LINK_CHK status=%lu", g_lnd_log[i].lnd_p32);
+            printf("LINK_CHK status=%lu", g_lnd_log[i].lnd_p32);
             break;
         case LORA_NODE_LOG_LP_ENTER:
-            console_printf("LOW POWER ENTER");
+            printf("LOW POWER ENTER");
             break;
         case LORA_NODE_LOG_LP_EXIT:
-            console_printf("LOW POWER EXIT");
+            printf("LOW POWER EXIT");
             break;
         case LORA_NODE_LOG_RX_WIN2_TIMEOUT:
-            console_printf("RX_WIN2 TIMEOUT");
+            printf("RX_WIN2 TIMEOUT");
             break;
         case LORA_NODE_LOG_RX_WIN2_CANCEL:
-            console_printf("RX_WIN2 CANCEL");
+            printf("RX_WIN2 CANCEL");
             break;
         default:
-            console_printf("id=%u p8=%u p16=%u p32=%lu",
+            printf("id=%u p8=%u p16=%u p32=%lu",
                            g_lnd_log[i].lnd_id, g_lnd_log[i].lnd_p8,
                            g_lnd_log[i].lnd_p16, g_lnd_log[i].lnd_p32);
             break;
         }
 
-        console_printf(" cputime=%lu\n", g_lnd_log[i].lnd_cputime);
+        printf(" cputime=%lu\r\n", g_lnd_log[i].lnd_cputime);
 
 next_entry:
         ++i;
@@ -694,7 +695,7 @@ next_entry:
         ++lines_logged;
     }
 #else
-    console_printf("No Lora node log available\n");
+    printf("No Lora node log available\r\n");
 #endif
     return 0;
 }
