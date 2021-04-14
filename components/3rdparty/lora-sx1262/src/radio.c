@@ -135,54 +135,6 @@ uint32_t TimerGetElapsedTime(uint32_t saved_time)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//  SPI Functions
-
-/// SPI Device Instance. TODO: Move to sx1276.h
-extern spi_dev_t spi_device;
-
-/// SPI Transmit Buffer (1 byte)
-static uint8_t spi_tx_buf[1];
-
-/// SPI Receive Buffer (1 byte)
-static uint8_t spi_rx_buf[1];
-
-/// Blocking call to send a value on the SPI. Returns the value received from the SPI Peripheral.
-/// Assume that we are sending and receiving 8-bit values on SPI.
-/// Assume Chip Select Pin has already been set to Low by caller.
-/// TODO: We should combine multiple SPI DMA Requests, instead of handling one byte at a time
-uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
-    //  Populate the transmit buffer
-    spi_tx_buf[0] = val;
-
-    //  Clear the receive buffer
-    memset(&spi_rx_buf, 0, sizeof(spi_rx_buf));
-
-    //  Prepare SPI Transfer
-    static spi_ioc_transfer_t transfer;
-    memset(&transfer, 0, sizeof(transfer));    
-    transfer.tx_buf = (uint32_t) spi_tx_buf;  //  Transmit Buffer
-    transfer.rx_buf = (uint32_t) spi_rx_buf;  //  Receive Buffer
-    transfer.len    = 1;                      //  How many bytes
-
-    //  TODO: Assume Chip Select Pin has already been set to Low by caller
-    #warning Assume Chip Select Pin has already been set to Low by caller
-
-    //  Execute the SPI Transfer with the DMA Controller
-    int rc = hal_spi_transfer(
-        &spi_device,  //  SPI Device
-        &transfer,    //  SPI Transfers
-        1             //  How many transfers (Number of requests, not bytes)
-    );
-    assert(rc == 0);
-
-    //  TODO: Assume Chip Select Pin will be set to High by caller
-    #warning Assume Chip Select Pin will be set to High by caller
-
-    //  Return the received byte
-    return spi_rx_buf[0];
-}
-
-///////////////////////////////////////////////////////////////////////////////
 //  Critical Section Functions
 
 //  TODO: Implement critical section functions
