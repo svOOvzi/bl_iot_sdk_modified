@@ -72,9 +72,9 @@ Gpio_t DbgPinRx;
 void SX126xIoInit( void )
 {
     GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &SX126x.BUSY, RADIO_BUSY, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( SX126X_DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &DeviceSel, RADIO_DEVICE_SEL, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_BUSY_PIN, SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_DIO1, SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_DEVICE_SEL_PIN, SX126X_DEVICE_SEL_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoIrqInit( DioIrqHandler dioIrq )
@@ -85,8 +85,8 @@ void SX126xIoIrqInit( DioIrqHandler dioIrq )
 void SX126xIoDeInit( void )
 {
     GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &SX126x.BUSY, RADIO_BUSY, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( SX126X_DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_BUSY_PIN, SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_DIO1, SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoDbgInit( void )
@@ -184,7 +184,7 @@ void SX126xReset(void)
 
 void SX126xWaitOnBusy( void )
 {
-    while( GpioRead( &SX126x.BUSY ) == 1 );
+    while( GpioRead( SX126X_BUSY_PIN ) == 1 );
 }
 
 void SX126xWakeup( void )
@@ -343,7 +343,7 @@ void SX126xSetRfTxPower( int8_t power )
 
 uint8_t SX126xGetDeviceId( void )
 {
-    if( GpioRead( &DeviceSel ) == 1 )
+    if( GpioRead( SX126X_DEVICE_SEL_PIN ) == 1 )
     {
         return SX1261;
     }

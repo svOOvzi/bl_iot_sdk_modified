@@ -35,18 +35,20 @@ extern "C"
 /* Connect BL602 to SX1262 LoRa Transceiver
 | BL602 Pin     | SX1262 Pin          | Wire Colour 
 |:--------------|:--------------------|:-------------------
-| __`GPIO 0`__  | `DIO1`              | Dark Green
+////| __`GPIO 0`__  | `DIO1`              | Dark Green
 | __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
-| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
-| __`GPIO 3`__  | `SCK`               | Yellow (Top)
-| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
-| __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
+////| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
+////| __`GPIO 3`__  | `SCK`               | Yellow (Top)
+////| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
+////| __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
 | __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
 | __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
 | __`GPIO 14`__ | `NSS`               | Orange
 | __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
 | __`GND`__     | `GND`               | Black
+#define SX126X_RADIO_BUSY_PIN   -1  //  TODO
+#define SX126X_RADIO_DEVICE_SEL -1  //  TODO
 */
 
 #define SX126X_SPI_IDX      0  //  SPI Port 0
@@ -65,6 +67,9 @@ extern "C"
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 ////#define SX126X_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
 ////#define SX126X_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
+
+#define SX126X_BUSY_PIN   -1  //  TODO
+#define SX126X_DEVICE_SEL_PIN -1  //  TODO
 
 //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
 //  is in use, by scanning very quickly for the LoRa Packet Preamble.
