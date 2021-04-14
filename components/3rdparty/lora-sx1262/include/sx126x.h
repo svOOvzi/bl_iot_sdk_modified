@@ -724,10 +724,13 @@ typedef struct SX126x_s
     ModulationParams_t ModulationParams;
 }SX126x_t;
 
+//  NimBLE Porting Layer Event
+struct ble_npl_event;
+
 /*!
  * Hardware IO IRQ callback function definition
  */
-typedef void ( DioIrqHandler )( void* context );
+typedef void ( DioIrqHandler )( struct ble_npl_event *ev );
 
 /*
  * SX126x definitions

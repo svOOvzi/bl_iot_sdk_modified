@@ -164,7 +164,8 @@ uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
     transfer.rx_buf = (uint32_t) spi_rx_buf;  //  Receive Buffer
     transfer.len    = 1;                      //  How many bytes
 
-    //  Assume Chip Select Pin has already been set to Low by caller.
+    //  TODO: Assume Chip Select Pin has already been set to Low by caller
+    #warning Assume Chip Select Pin has already been set to Low by caller
 
     //  Execute the SPI Transfer with the DMA Controller
     int rc = hal_spi_transfer(
@@ -173,6 +174,9 @@ uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
         1             //  How many transfers (Number of requests, not bytes)
     );
     assert(rc == 0);
+
+    //  TODO: Assume Chip Select Pin will be set to High by caller
+    #warning Assume Chip Select Pin will be set to High by caller
 
     //  Return the received byte
     return spi_rx_buf[0];
@@ -600,7 +604,7 @@ bool IrqFired = false;
 /*!
  * \brief DIO 0 IRQ callback
  */
-void RadioOnDioIrq( void* context );
+void RadioOnDioIrq( struct ble_npl_event *ev );
 
 /*!
  * \brief Tx timeout timer callback
@@ -1403,7 +1407,7 @@ void RadioOnRxTimeoutIrq( struct ble_npl_event *ev )
     }
 }
 
-void RadioOnDioIrq( void* context )
+void RadioOnDioIrq( struct ble_npl_event *ev )
 {
     printf("RadioOnDioIrq\r\n");
     IrqFired = true;

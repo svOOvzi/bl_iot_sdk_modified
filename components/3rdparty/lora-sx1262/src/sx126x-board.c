@@ -47,7 +47,7 @@ static bool RadioIsActive = false;
 /// SPI Port
 spi_dev_t spi_device;
 
-void SX126XIoInit(void)
+void SX126xIoInit(void)
 {
     printf("SX126X init\r\n");
     int rc;
@@ -74,7 +74,7 @@ void SX126XIoInit(void)
 
     //  Configure Chip Select pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
-    pins[0] = RADIO_NSS;
+    pins[0] = SX126X_SPI_CS_PIN;
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(
         GPIO_FUN_SWGPIO,  //  Configure as GPIO 
         pins,             //  Pins to be configured
@@ -83,18 +83,18 @@ void SX126XIoInit(void)
     assert(rc2 == SUCCESS);    
 
     //  Configure Chip Select pin as a GPIO Output Pin (instead of GPIO Input)
-    rc = bl_gpio_enable_output(RADIO_NSS, 0, 0);
+    rc = bl_gpio_enable_output(SX126X_SPI_CS_PIN, 0, 0);
     assert(rc == 0);
 
     //  Set Chip Select pin to High, to deactivate SX126X
-    rc = bl_gpio_output_set(RADIO_NSS, 1);
+    rc = bl_gpio_output_set(SX126X_SPI_CS_PIN, 1);
     assert(rc == 0);
 
     //  Configure the SPI Port
     rc = spi_init(
-        &spi_device,    //  SPI Device
-        RADIO_SPI_IDX,  //  SPI Port
-        0,              //  SPI Mode: 0 for Controller
+        &spi_device,     //  SPI Device
+        SX126X_SPI_IDX,  //  SPI Port
+        0,               //  SPI Mode: 0 for Controller
         //  TODO: Due to a quirk in BL602 SPI, we must set
         //  SPI Polarity-Phase to 1 (CPOL=0, CPHA=1).
         //  But actually Polarity-Phase for SX126X should be 0 (CPOL=0, CPHA=0). 
@@ -112,7 +112,7 @@ void SX126XIoInit(void)
 
 /// Register GPIO Interrupt Handlers for DIO0 to DIO5.
 /// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
-void SX126XIoIrqInit(DioIrqHandler **irqHandlers)
+void SX126xIoIrqInit(DioIrqHandler **irqHandlers)
 {
     printf("SX126X interrupt init\r\n");
     int rc;
@@ -209,7 +209,7 @@ void SX126XIoIrqInit(DioIrqHandler **irqHandlers)
 }
 
 /// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
-void SX126XIoDeInit( void )
+void SX126xIoDeInit( void )
 {
     printf("TODO: SX126X interrupt deinit\r\n");
 #ifdef TODO
@@ -234,8 +234,9 @@ void SX126XIoDeInit( void )
 #endif  //  TODO
 }
 
+#ifdef NOTUSED
 /// Get the Power Amplifier configuration
-uint8_t SX126XGetPaSelect(uint32_t channel)
+uint8_t SX126xGetPaSelect(uint32_t channel)
 {
     uint8_t pacfg;
 
@@ -255,21 +256,22 @@ uint8_t SX126XGetPaSelect(uint32_t channel)
 
     return pacfg;
 }
+#endif  //  NOTUSED
 
 /// Checks if the given RF frequency is supported by the hardware
-bool SX126XCheckRfFrequency(uint32_t frequency)
+bool SX126xCheckRfFrequency(uint32_t frequency)
 {
     // Implement check. Currently all frequencies are supported
     return true;
 }
 
-uint32_t SX126XGetBoardTcxoWakeupTime(void)
+uint32_t SX126xGetBoardTcxoWakeupTime(void)
 {
     return 0;
 }
 
 /// Disable GPIO Interrupts for DIO0 to DIO3
-void SX126XRxIoIrqDisable(void)
+void SX126xRxIoIrqDisable(void)
 {
     printf("SX126X disable interrupts\r\n");
     if (SX126X_DIO0 >= 0) { bl_gpio_intmask(SX126X_DIO0, 1); }
@@ -279,7 +281,7 @@ void SX126XRxIoIrqDisable(void)
 }
 
 /// Enable GPIO Interrupts for DIO0 to DIO3
-void SX126XRxIoIrqEnable(void)
+void SX126xRxIoIrqEnable(void)
 {
     printf("SX126X enable interrupts\r\n");
     if (SX126X_DIO0 >= 0) { bl_gpio_intmask(SX126X_DIO0, 0); }
@@ -471,10 +473,10 @@ static int init_interrupt_event(
 //  Antenna Switch (Unused)
 
 #if SX126X_HAS_ANT_SW
-void SX126XAntSwInit(void);
-void SX126XAntSwDeInit(void);
+void SX126xAntSwInit(void);
+void SX126xAntSwDeInit(void);
 
-void SX126XSetAntSwLowPower( bool status )
+void SX126xSetAntSwLowPower( bool status )
 {
     if (RadioIsActive != status) {
         RadioIsActive = status;
@@ -488,20 +490,20 @@ void SX126XSetAntSwLowPower( bool status )
 }
 
 void
-SX126XAntSwInit(void)
+SX126xAntSwInit(void)
 {
     // Consider turning off GPIO pins for low power. They are always on right
     // now. GPIOTE library uses 0.5uA max when on, typical 0.1uA.
 }
 
 void
-SX126XAntSwDeInit(void)
+SX126xAntSwDeInit(void)
 {
     // Consider this for low power - ie turning off GPIO pins
 }
 
 void
-SX126XSetAntSw(uint8_t rxTx)
+SX126xSetAntSw(uint8_t rxTx)
 {
     // 1: TX, 0: RX
     if (rxTx != 0) {
