@@ -9,6 +9,7 @@
         "vector": "c",
         "demo.h": "c",
         "pbuf.h": "c",
-        "sx126x.h": "c"
+        "sx126x.h": "c",
+        "string.h": "c"
     }
 }

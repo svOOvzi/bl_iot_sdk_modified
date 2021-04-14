@@ -179,6 +179,13 @@ uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+//  Critical Section Functions
+
+//  TODO: Implement critical section functions
+#define CRITICAL_SECTION_BEGIN(...)
+#define CRITICAL_SECTION_END(...)
+
+///////////////////////////////////////////////////////////////////////////////
 
 /*!
  * \brief Initializes the radio
