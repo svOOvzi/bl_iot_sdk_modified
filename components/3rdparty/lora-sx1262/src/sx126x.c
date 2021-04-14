@@ -22,11 +22,9 @@
  */
 #include <string.h>
 #include "sx126x-utilities.h"
-////#include "timer.h"
 #include "radio.h"
-////#include "delay.h"
 #include "sx126x.h"
-////#include "sx126x-board.h"
+#include "sx126x-board.h"
 
 /*!
  * \brief Internal frequency of the radio

@@ -8,6 +8,7 @@
         "string_view": "c",
         "vector": "c",
         "demo.h": "c",
-        "pbuf.h": "c"
+        "pbuf.h": "c",
+        "sx126x.h": "c"
     }
 }

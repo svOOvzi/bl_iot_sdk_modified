@@ -27,6 +27,7 @@
 #include "sx126x-utilities.h"
 #include "radio.h"
 #include "sx126x.h"
+#include "sx126x-board.h"
 
 //  Timer definition for BL602
 typedef struct ble_npl_callout TimerEvent_t;
@@ -64,8 +65,7 @@ void TimerInit(
 }
 
 /// Stops a timer from running.  Can be called even if timer is not running.
-/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_stop
-void os_cputime_timer_stop(
+void TimerStop(
     struct ble_npl_callout *timer)  //  Pointer to timer to stop. Cannot be NULL.
 {
     //  Implement with Callout Functions from NimBLE Porting Layer
@@ -79,15 +79,15 @@ void os_cputime_timer_stop(
 }
 
 /// Sets a timer that will expire ‘usecs’ microseconds from the current time.
-/// NOTE: This must be called when the timer is stopped.
-/// Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_relative
-void os_cputime_timer_relative(
+void TimerStart(
     struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
     uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
 {
     //  Implement with Callout Functions from NimBLE Porting Layer.
-    //  Assume that Callout Timer has been stopped.
     assert(timer != NULL);
+
+    //  Stop the timer if running
+    TimerStop(timer);
 
     //  Convert microseconds to ticks
     ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
@@ -177,6 +177,8 @@ uint16_t hal_spi_tx_val(int spi_num, uint16_t val) {
     //  Return the received byte
     return spi_rx_buf[0];
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 /*!
  * \brief Initializes the radio
@@ -1196,8 +1198,7 @@ void RadioSend( uint8_t *buffer, uint8_t size )
     SX126xSetPacketParams( &SX126x.PacketParams );
 
     SX126xSendPayload( buffer, size, 0 );
-    TimerSetValue( &TxTimeoutTimer, TxTimeout );
-    TimerStart( &TxTimeoutTimer );
+    TimerStart( &TxTimeoutTimer, TxTimeout );
 }
 
 void RadioSleep( void )
@@ -1224,8 +1225,7 @@ void RadioRx( uint32_t timeout )
 
     if( timeout != 0 )
     {
-        TimerSetValue( &RxTimeoutTimer, timeout );
-        TimerStart( &RxTimeoutTimer );
+        TimerStart( &RxTimeoutTimer, timeout );
     }
 
     if( RxContinuous == true )
@@ -1247,8 +1247,7 @@ void RadioRxBoosted( uint32_t timeout )
 
     if( timeout != 0 )
     {
-        TimerSetValue( &RxTimeoutTimer, timeout );
-        TimerStart( &RxTimeoutTimer );
+        TimerStart( &RxTimeoutTimer, timeout );
     }
 
     if( RxContinuous == true )
@@ -1310,8 +1309,7 @@ void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time )
     SX126xSetRfTxPower( power );
     SX126xSetTxContinuousWave( );
 
-    TimerSetValue( &TxTimeoutTimer, timeout );
-    TimerStart( &TxTimeoutTimer );
+    TimerStart( &TxTimeoutTimer, timeout );
 }
 
 int16_t RadioRssi( RadioModems_t modem )
