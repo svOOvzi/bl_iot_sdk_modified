@@ -225,7 +225,7 @@ void SX126xIoTcxoInit( void )
 
 uint32_t SX126xGetBoardTcxoWakeupTime( void )
 {
-    return BOARD_TCXO_WAKEUP_TIME;
+    return SX126X_TCXO_WAKEUP_TIME;
 }
 
 void SX126xIoRfSwitchInit( void )
