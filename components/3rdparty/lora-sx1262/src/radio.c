@@ -22,13 +22,14 @@
  */
 #include <math.h>
 #include <string.h>
+#include <assert.h>
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "sx126x-utilities.h"
-////#include "timer.h"
-////#include "delay.h"
 #include "radio.h"
 #include "sx126x.h"
-////#include "sx126x-board.h"
-////#include "board.h"
+
+//  Timer definition for BL602
+typedef struct ble_npl_callout TimerEvent_t;
 
 /*!
  * \brief Initializes the radio
@@ -474,7 +475,8 @@ static RadioPublicNetwork_t RadioPublicNetwork = { false };
 /*!
  * Radio callbacks variable
  */
-static RadioEvents_t* RadioEvents;
+static RadioEvents_t RadioEvents;  ////  Stores a copy of the callbacks
+////  Previously: static RadioEvents_t *RadioEvents;
 
 /*
  * Public global variables
@@ -519,7 +521,12 @@ static uint8_t RadioGetFskBandwidthRegValue( uint32_t bandwidth )
 
 void RadioInit( RadioEvents_t *events )
 {
-    RadioEvents = events;
+    ////  We copy the Event Callbacks from "events", because
+    ////  "events" may be stored on the stack
+    assert(events != NULL);
+    memcpy(&RadioEvents, events, sizeof(RadioEvents));
+
+    ////  Previously: RadioEvents = events;
 
     SX126xInit( RadioOnDioIrq );
     SX126xSetStandby( STDBY_RC );
@@ -1228,17 +1235,17 @@ uint32_t RadioGetWakeupTime( void )
 
 void RadioOnTxTimeoutIrq( void* context )
 {
-    if( ( RadioEvents != NULL ) && ( RadioEvents->TxTimeout != NULL ) )
+    if( ( RadioEvents.TxTimeout != NULL ) )
     {
-        RadioEvents->TxTimeout( );
+        RadioEvents.TxTimeout( );
     }
 }
 
 void RadioOnRxTimeoutIrq( void* context )
 {
-    if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
+    if( ( RadioEvents.RxTimeout != NULL ) )
     {
-        RadioEvents->RxTimeout( );
+        RadioEvents.RxTimeout( );
     }
 }
 
@@ -1273,9 +1280,9 @@ void RadioIrqProcess( void )
             TimerStop( &TxTimeoutTimer );
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SX126xSetOperatingMode( MODE_STDBY_RC );
-            if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )
+            if( ( RadioEvents.TxDone != NULL ) )
             {
-                RadioEvents->TxDone( );
+                RadioEvents.TxDone( );
             }
         }
 
@@ -1290,9 +1297,9 @@ void RadioIrqProcess( void )
                     //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
                     SX126xSetOperatingMode( MODE_STDBY_RC );
                 }
-                if( ( RadioEvents != NULL ) && ( RadioEvents->RxError ) )
+                if( ( RadioEvents.RxError ) )
                 {
-                    RadioEvents->RxError( );
+                    RadioEvents.RxError( );
                 }
             }
             else
@@ -1311,9 +1318,9 @@ void RadioIrqProcess( void )
                 }
                 SX126xGetPayload( RadioRxPayload, &size , 255 );
                 SX126xGetPacketStatus( &RadioPktStatus );
-                if( ( RadioEvents != NULL ) && ( RadioEvents->RxDone != NULL ) )
+                if( ( RadioEvents.RxDone != NULL ) )
                 {
-                    RadioEvents->RxDone( RadioRxPayload, size, RadioPktStatus.Params.LoRa.RssiPkt, RadioPktStatus.Params.LoRa.SnrPkt );
+                    RadioEvents.RxDone( RadioRxPayload, size, RadioPktStatus.Params.LoRa.RssiPkt, RadioPktStatus.Params.LoRa.SnrPkt );
                 }
             }
         }
@@ -1322,9 +1329,9 @@ void RadioIrqProcess( void )
         {
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SX126xSetOperatingMode( MODE_STDBY_RC );
-            if( ( RadioEvents != NULL ) && ( RadioEvents->CadDone != NULL ) )
+            if( ( RadioEvents.CadDone != NULL ) )
             {
-                RadioEvents->CadDone( ( ( irqRegs & IRQ_CAD_ACTIVITY_DETECTED ) == IRQ_CAD_ACTIVITY_DETECTED ) );
+                RadioEvents.CadDone( ( ( irqRegs & IRQ_CAD_ACTIVITY_DETECTED ) == IRQ_CAD_ACTIVITY_DETECTED ) );
             }
         }
 
@@ -1335,9 +1342,9 @@ void RadioIrqProcess( void )
                 TimerStop( &TxTimeoutTimer );
                 //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
                 SX126xSetOperatingMode( MODE_STDBY_RC );
-                if( ( RadioEvents != NULL ) && ( RadioEvents->TxTimeout != NULL ) )
+                if( ( RadioEvents.TxTimeout != NULL ) )
                 {
-                    RadioEvents->TxTimeout( );
+                    RadioEvents.TxTimeout( );
                 }
             }
             else if( SX126xGetOperatingMode( ) == MODE_RX )
@@ -1345,9 +1352,9 @@ void RadioIrqProcess( void )
                 TimerStop( &RxTimeoutTimer );
                 //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
                 SX126xSetOperatingMode( MODE_STDBY_RC );
-                if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
+                if( ( RadioEvents.RxTimeout != NULL ) )
                 {
-                    RadioEvents->RxTimeout( );
+                    RadioEvents.RxTimeout( );
                 }
             }
         }
@@ -1375,9 +1382,9 @@ void RadioIrqProcess( void )
                 //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
                 SX126xSetOperatingMode( MODE_STDBY_RC );
             }
-            if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
+            if( ( RadioEvents.RxTimeout != NULL ) )
             {
-                RadioEvents->RxTimeout( );
+                RadioEvents.RxTimeout( );
             }
         }
     }

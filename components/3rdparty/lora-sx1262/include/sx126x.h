@@ -31,13 +31,11 @@ extern "C"
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
-////#include "gpio.h"
-////#include "spi.h"
 #include "radio.h"
 
 //  GPIO and SPI definitions for BL602
-typedef uint8_t Gpio_t;
-typedef uint8_t Spi_t;
+typedef uint8_t Gpio_t;  //  GPIO Pin Number
+typedef uint8_t Spi_t;   //  SPI Port Number (Always 0)
 
 #define SX1261                                      1
 #define SX1262                                      2
