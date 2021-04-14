@@ -78,10 +78,30 @@ Gpio_t DbgPinTx;
 Gpio_t DbgPinRx;
 #endif
 
+static void GpioInitOutput(uint8_t pin, uint8_t value) {
+    //  Configure pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = pin;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure pin as a GPIO Output Pin (instead of GPIO Input)
+    int rc = bl_gpio_enable_output(pin, 0, 0);
+    assert(rc == 0);
+
+    //  Set pin to Low or High
+    rc = bl_gpio_output_set(pin, value);
+    assert(rc == 0);
+}
+
 void SX126xIoInit( void )
 {
     printf("SX126xIoInit\r\n");
-    GpioInitOutput( SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
     GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInitInput( SX126X_DEVICE_SEL_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
@@ -118,7 +138,7 @@ void SX126xIoIrqInit( DioIrqHandler dioIrq )
 void SX126xIoDeInit( void )
 {
     printf("SX126xIoDeInit\r\n");
-    GpioInitOutput( SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
     GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
