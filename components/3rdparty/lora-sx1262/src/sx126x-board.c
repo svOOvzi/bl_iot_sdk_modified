@@ -44,62 +44,6 @@ extern DioIrqHandler *DioIrq[];
 static bool RadioIsActive = false;
 #endif
 
-/*!
- * Radio driver structure initialization
- */
-const struct Radio_s Radio =
-{
-    .Init = SX126xInit,
-    .GetStatus = SX126xGetStatus,
-    .SetModem = SX126xSetModem,
-    .SetChannel = SX126xSetChannel,
-    .IsChannelFree = SX126xIsChannelFree,
-    .Random = SX126xRandom,
-    .SetRxConfig = SX126xSetRxConfig,
-    .SetTxConfig = SX126xSetTxConfig,
-    .CheckRfFrequency = SX126xCheckRfFrequency,
-    .TimeOnAir = SX126xGetTimeOnAir,
-    .Send = SX126xSend,
-    .Sleep = SX126xSetSleep,
-    .Standby = SX126xSetStby,
-    .Rx = SX126xSetRx,
-    .StartCad = SX126xStartCad,
-    .Rssi = SX126xReadRssi,
-    .Write = SX126xWrite,
-    .Read = SX126xRead,
-    .WriteBuffer = SX126xWriteBuffer,
-    .ReadBuffer = SX126xReadBuffer,
-    .SetMaxPayloadLength = SX126xSetMaxPayloadLength,
-    .SetPublicNetwork = SX126xSetPublicNetwork,
-    .GetWakeupTime = SX126xGetWakeupTime,
-    ////.RxDisable = SX126xRxDisable
-        /*!
-     * \brief Process radio irq
-     */
-    ////void ( *IrqProcess )( void );
-    /*
-     * The next functions are available only on SX126x radios.
-     */
-    /*!
-     * \brief Sets the radio in reception mode with Max LNA gain for the given time
-     *
-     * \remark Available on SX126x radios only.
-     *
-     * \param [IN] timeout Reception timeout [ms]
-     *                     [0: continuous, others timeout]
-     */
-    ////void    ( *RxBoosted )( uint32_t timeout );
-    /*!
-     * \brief Sets the Rx duty cycle management parameters
-     *
-     * \remark Available on SX126x radios only.
-     *
-     * \param [in]  rxTime        Structure describing reception timeout value
-     * \param [in]  sleepTime     Structure describing sleep timeout value
-     */
-    ////void ( *SetRxDutyCycle ) ( uint32_t rxTime, uint32_t sleepTime );
-};
-
 /// SPI Port
 spi_dev_t spi_device;
 
