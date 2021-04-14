@@ -71,10 +71,10 @@ Gpio_t DbgPinRx;
 
 void SX126xIoInit( void )
 {
-    GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( SX126X_BUSY_PIN, SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( SX126X_DIO1, SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( SX126X_DEVICE_SEL_PIN, SX126X_DEVICE_SEL_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitInput( SX126X_DEVICE_SEL_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoIrqInit( DioIrqHandler dioIrq )
@@ -84,16 +84,16 @@ void SX126xIoIrqInit( DioIrqHandler dioIrq )
 
 void SX126xIoDeInit( void )
 {
-    GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( SX126X_BUSY_PIN, SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( SX126X_DIO1, SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoDbgInit( void )
 {
 #if defined( USE_RADIO_DEBUG )
-    GpioInit( &DbgPinTx, RADIO_DBG_PIN_TX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &DbgPinRx, RADIO_DBG_PIN_RX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_DBG_PIN_TX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_DBG_PIN_RX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 #endif
 }
 
@@ -144,15 +144,17 @@ void SX126xSetOperatingMode( RadioOperatingModes_t mode )
 void SX126xReset( void )
 {
     DelayMs( 10 );
-    GpioInit( &SX126x.Reset, RADIO_RESET, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_NRESET, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     DelayMs( 20 );
-    GpioInit( &SX126x.Reset, RADIO_RESET, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 ); // internal pull-up
+    GpioInitAnalogic( SX126X_NRESET, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 ); // internal pull-up
     DelayMs( 10 );
 }
 #endif  //  TODO
 
 void SX126xReset(void)
 {
+    #warning Check SX126xReset
+    
     //  Configure Reset pin as a GPIO Pin
     GLB_GPIO_Type pins[1];
     pins[0] = SX126X_NRESET;
