@@ -98,13 +98,29 @@ static void GpioInitOutput(uint8_t pin, uint8_t value) {
     assert(rc == 0);
 }
 
+static void GpioInitInput(uint8_t pin, uint8_t pullup, uint8_t pulldown) {
+    //  Configure pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = pin;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure Reset pin as a GPIO Input Pin
+    int rc = bl_gpio_enable_input(pin, pullup, pulldown);
+    assert(rc == 0);
+}
+
 void SX126xIoInit( void )
 {
     printf("SX126xIoInit\r\n");
     GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
-    GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInitInput( SX126X_DEVICE_SEL_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitInput( SX126X_BUSY_PIN, 0, 0 );
+    GpioInitInput( SX126X_DIO1, 0, 0 );
+    GpioInitInput( SX126X_DEVICE_SEL_PIN, 0, 0 );
 }
 
 /// Register GPIO Interrupt Handler for DIO1.
@@ -139,8 +155,8 @@ void SX126xIoDeInit( void )
 {
     printf("SX126xIoDeInit\r\n");
     GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
-    GpioInitInput( SX126X_BUSY_PIN, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInitInput( SX126X_DIO1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitInput( SX126X_BUSY_PIN, 0, 0 );
+    GpioInitInput( SX126X_DIO1, 0, 0 );
 }
 
 void SX126xIoDbgInit( void )
