@@ -53,9 +53,11 @@ Changes
 
 - "master" branch contains a modified LoRa Firmware that receives LoRa packets: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lora/
 
-- "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty
+- "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/nimble-porting-layer and https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1276
 
 - "lorawan" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/lorawan/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/lorawan/customer_app/sdk_app_lorawan/
+
+- "sx1262" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/sx1262/components/3rdparty/lora-sx1262
 
 BL602 SDK (Pine64 version)
 ==========================
