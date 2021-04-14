@@ -56,15 +56,15 @@ extern "C"
 #define SX126X_SPI_CS_PIN  14  //  SPI Chip Select Pin
 #define SX126X_SPI_CS_OLD   2  //  Unused SPI Chip Select Pin
 #define SX126X_NRESET      17  //  Reset Pin
-#define SX126X_DIO0        11  //  DIO0: Trigger for Packet Received
+////#define SX126X_DIO0        11  //  DIO0: Trigger for Packet Received
 #define SX126X_DIO1         0  //  DIO1: Trigger for Sync Timeout
-#define SX126X_DIO2         5  //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
-#define SX126X_DIO3        12  //  DIO3: Trigger for CAD Done
-#define SX126X_DIO4        -1  //  DIO4: Unused (FSK only)
-#define SX126X_DIO5        -1  //  DIO5: Unused (FSK only)
+////#define SX126X_DIO2         5  //  DIO2: Trigger for Change Channel (Spread Spectrum / Frequency Hopping)
+////#define SX126X_DIO3        12  //  DIO3: Trigger for CAD Done
+////#define SX126X_DIO4        -1  //  DIO4: Unused (FSK only)
+////#define SX126X_DIO5        -1  //  DIO5: Unused (FSK only)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
-#define SX126X_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
-#define SX126X_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
+////#define SX126X_LF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency below 525 MHz
+////#define SX126X_HF_USE_PA_BOOST  1  //  Enable Power Amplifier Boost for LoRa Frequency 525 MHz and above
 
 //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
 //  is in use, by scanning very quickly for the LoRa Packet Preamble.

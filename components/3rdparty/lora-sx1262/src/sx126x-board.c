@@ -71,22 +71,22 @@ Gpio_t DbgPinRx;
 
 void SX126xIoInit( void )
 {
-    GpioInit( &SX126x.Spi.Nss, RADIO_NSS, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
     GpioInit( &SX126x.BUSY, RADIO_BUSY, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &SX126x.DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInit( &DeviceSel, RADIO_DEVICE_SEL, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoIrqInit( DioIrqHandler dioIrq )
 {
-    GpioSetInterrupt( &SX126x.DIO1, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, dioIrq );
+    GpioSetInterrupt( SX126X_DIO1, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, dioIrq );
 }
 
 void SX126xIoDeInit( void )
 {
-    GpioInit( &SX126x.Spi.Nss, RADIO_NSS, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( SX126X_SPI_CS_PIN, SX126X_SPI_CS_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
     GpioInit( &SX126x.BUSY, RADIO_BUSY, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &SX126x.DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( SX126X_DIO1, RADIO_DIO_1, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void SX126xIoDbgInit( void )
@@ -140,6 +140,7 @@ void SX126xSetOperatingMode( RadioOperatingModes_t mode )
 #endif
 }
 
+#ifdef TODO
 void SX126xReset( void )
 {
     DelayMs( 10 );
@@ -147,6 +148,38 @@ void SX126xReset( void )
     DelayMs( 20 );
     GpioInit( &SX126x.Reset, RADIO_RESET, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 ); // internal pull-up
     DelayMs( 10 );
+}
+#endif  //  TODO
+
+void SX126xReset(void)
+{
+    //  Configure Reset pin as a GPIO Pin
+    GLB_GPIO_Type pins[1];
+    pins[0] = SX126X_NRESET;
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO,  //  Configure as GPIO 
+        pins,             //  Pins to be configured
+        sizeof(pins) / sizeof(pins[0])  //  Number of pins (1)
+    );
+    assert(rc2 == SUCCESS);    
+
+    //  Configure Reset pin as a GPIO Output Pin (instead of GPIO Input)
+    int rc = bl_gpio_enable_output(SX126X_NRESET, 0, 0);
+    assert(rc == 0);
+
+    //  Set Reset pin to Low
+    rc = bl_gpio_output_set(SX126X_NRESET, 1);
+    assert(rc == 0);
+
+    // Wait 1 ms
+    os_cputime_delay_usecs(1000);
+
+    //  Configure Reset pin as a GPIO Input Pin, no pullup, no pulldown
+    rc = bl_gpio_enable_input(SX126X_NRESET, 0, 0);
+    assert(rc == 0);
+
+    // Wait 6 ms
+    os_cputime_delay_usecs(6000);
 }
 
 void SX126xWaitOnBusy( void )
@@ -158,12 +191,12 @@ void SX126xWakeup( void )
 {
     CRITICAL_SECTION_BEGIN( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, RADIO_GET_STATUS );
-    SpiInOut( &SX126x.Spi, 0x00 );
+    SpiInOut( SX126X_SPI_IDX, RADIO_GET_STATUS );
+    SpiInOut( SX126X_SPI_IDX, 0x00 );
 
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     // Wait for chip to be ready.
     SX126xWaitOnBusy( );
@@ -178,16 +211,16 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, ( uint8_t )command );
+    SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
 
     for( uint16_t i = 0; i < size; i++ )
     {
-        SpiInOut( &SX126x.Spi, buffer[i] );
+        SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
 
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     if( command != RADIO_SET_SLEEP )
     {
@@ -201,16 +234,16 @@ uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t si
 
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, ( uint8_t )command );
-    status = SpiInOut( &SX126x.Spi, 0x00 );
+    SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
+    status = SpiInOut( SX126X_SPI_IDX, 0x00 );
     for( uint16_t i = 0; i < size; i++ )
     {
-        buffer[i] = SpiInOut( &SX126x.Spi, 0 );
+        buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
 
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 
@@ -221,18 +254,18 @@ void SX126xWriteRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
     
-    SpiInOut( &SX126x.Spi, RADIO_WRITE_REGISTER );
-    SpiInOut( &SX126x.Spi, ( address & 0xFF00 ) >> 8 );
-    SpiInOut( &SX126x.Spi, address & 0x00FF );
+    SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_REGISTER );
+    SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
+    SpiInOut( SX126X_SPI_IDX, address & 0x00FF );
     
     for( uint16_t i = 0; i < size; i++ )
     {
-        SpiInOut( &SX126x.Spi, buffer[i] );
+        SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
 
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -246,17 +279,17 @@ void SX126xReadRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, RADIO_READ_REGISTER );
-    SpiInOut( &SX126x.Spi, ( address & 0xFF00 ) >> 8 );
-    SpiInOut( &SX126x.Spi, address & 0x00FF );
-    SpiInOut( &SX126x.Spi, 0 );
+    SpiInOut( SX126X_SPI_IDX, RADIO_READ_REGISTER );
+    SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
+    SpiInOut( SX126X_SPI_IDX, address & 0x00FF );
+    SpiInOut( SX126X_SPI_IDX, 0 );
     for( uint16_t i = 0; i < size; i++ )
     {
-        buffer[i] = SpiInOut( &SX126x.Spi, 0 );
+        buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -272,15 +305,15 @@ void SX126xWriteBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, RADIO_WRITE_BUFFER );
-    SpiInOut( &SX126x.Spi, offset );
+    SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_BUFFER );
+    SpiInOut( SX126X_SPI_IDX, offset );
     for( uint16_t i = 0; i < size; i++ )
     {
-        SpiInOut( &SX126x.Spi, buffer[i] );
+        SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -289,16 +322,16 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( &SX126x.Spi.Nss, 0 );
+    GpioWrite( SX126X_SPI_CS_PIN, 0 );
 
-    SpiInOut( &SX126x.Spi, RADIO_READ_BUFFER );
-    SpiInOut( &SX126x.Spi, offset );
-    SpiInOut( &SX126x.Spi, 0 );
+    SpiInOut( SX126X_SPI_IDX, RADIO_READ_BUFFER );
+    SpiInOut( SX126X_SPI_IDX, offset );
+    SpiInOut( SX126X_SPI_IDX, 0 );
     for( uint16_t i = 0; i < size; i++ )
     {
-        buffer[i] = SpiInOut( &SX126x.Spi, 0 );
+        buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
-    GpioWrite( &SX126x.Spi.Nss, 1 );
+    GpioWrite( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -320,15 +353,19 @@ uint8_t SX126xGetDeviceId( void )
     }
 }
 
+#if SX126X_HAS_ANT_SW
 void SX126xAntSwOn( void )
 {
     GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
 }
+#endif  //  SX126X_HAS_ANT_SW
 
+#if SX126X_HAS_ANT_SW
 void SX126xAntSwOff( void )
 {
     GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
+#endif  //  SX126X_HAS_ANT_SW
 
 bool SX126xCheckRfFrequency( uint32_t frequency )
 {
@@ -338,7 +375,7 @@ bool SX126xCheckRfFrequency( uint32_t frequency )
 
 uint32_t SX126xGetDio1PinState( void )
 {
-    return GpioRead( &SX126x.DIO1 );
+    return GpioRead( SX126X_DIO1 );
 }
 
 #if defined( USE_RADIO_DEBUG )
