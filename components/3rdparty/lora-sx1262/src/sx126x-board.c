@@ -213,8 +213,8 @@ void SX126xIoDeInit( void )
 void SX126xIoDbgInit( void )
 {
 #if defined( USE_RADIO_DEBUG )
-    GpioInitOutput( SX126X_DBG_PIN_TX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInitOutput( SX126X_DBG_PIN_RX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInitOutput( SX126X_DBG_PIN_TX, 0 );
+    GpioInitOutput( SX126X_DBG_PIN_RX, 0 );
 #endif
 }
 
@@ -297,31 +297,31 @@ void SX126xReset(void)
     assert(rc == 0);
 
     // Wait 1 ms
-    os_cputime_delay_usecs(1000);
+    DelayMs(1);
 
     //  Configure Reset pin as a GPIO Input Pin, no pullup, no pulldown
     rc = bl_gpio_enable_input(SX126X_NRESET, 0, 0);
     assert(rc == 0);
 
     // Wait 6 ms
-    os_cputime_delay_usecs(6000);
+    DelayMs(6);
 }
 
 void SX126xWaitOnBusy( void )
 {
-    while( GpioRead( SX126X_BUSY_PIN ) == 1 );
+    while( bl_gpio_input_get_value( SX126X_BUSY_PIN ) == 1 );
 }
 
 void SX126xWakeup( void )
 {
     CRITICAL_SECTION_BEGIN( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, RADIO_GET_STATUS );
     SpiInOut( SX126X_SPI_IDX, 0x00 );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     // Wait for chip to be ready.
     SX126xWaitOnBusy( );
@@ -336,7 +336,7 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
 
@@ -345,7 +345,7 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
         SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
 
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     if( command != RADIO_SET_SLEEP )
     {
@@ -359,7 +359,7 @@ uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t si
 
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
     status = SpiInOut( SX126X_SPI_IDX, 0x00 );
@@ -368,7 +368,7 @@ uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t si
         buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
 
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 
@@ -379,7 +379,7 @@ void SX126xWriteRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
     
     SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_REGISTER );
     SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
@@ -390,7 +390,7 @@ void SX126xWriteRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
         SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
 
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -404,7 +404,7 @@ void SX126xReadRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, RADIO_READ_REGISTER );
     SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
@@ -414,7 +414,7 @@ void SX126xReadRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
     {
         buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -430,7 +430,7 @@ void SX126xWriteBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_BUFFER );
     SpiInOut( SX126X_SPI_IDX, offset );
@@ -438,7 +438,7 @@ void SX126xWriteBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
     {
         SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -447,7 +447,7 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 {
     SX126xCheckDeviceReady( );
 
-    GpioWrite( SX126X_SPI_CS_PIN, 0 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
 
     SpiInOut( SX126X_SPI_IDX, RADIO_READ_BUFFER );
     SpiInOut( SX126X_SPI_IDX, offset );
@@ -456,7 +456,7 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
     {
         buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
-    GpioWrite( SX126X_SPI_CS_PIN, 1 );
+    bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
 
     SX126xWaitOnBusy( );
 }
@@ -468,7 +468,7 @@ void SX126xSetRfTxPower( int8_t power )
 
 uint8_t SX126xGetDeviceId( void )
 {
-    if( GpioRead( SX126X_DEVICE_SEL_PIN ) == 1 )
+    if( bl_gpio_input_get_value( SX126X_DEVICE_SEL_PIN ) == 1 )
     {
         return SX1261;
     }
@@ -500,18 +500,18 @@ bool SX126xCheckRfFrequency( uint32_t frequency )
 
 uint32_t SX126xGetDio1PinState( void )
 {
-    return GpioRead( SX126X_DIO1 );
+    return bl_gpio_input_get_value( SX126X_DIO1 );
 }
 
 #if defined( USE_RADIO_DEBUG )
 static void SX126xDbgPinTxWrite( uint8_t state )
 {
-    GpioWrite( &DbgPinTx, state );
+    bl_gpio_output_set( SX126X_DBG_PIN_TX, state );
 }
 
 static void SX126xDbgPinRxWrite( uint8_t state )
 {
-    GpioWrite( &DbgPinRx, state );
+    bl_gpio_output_set( SX126X_DBG_PIN_RX, state );
 }
 #endif
 
@@ -687,6 +687,100 @@ static int init_interrupt_event(
     //  No unused Events found, should increase MAX_GPIO_INTERRUPTS
     assert(false);
     return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Timer Functions
+
+/// Initialise a timer
+void TimerInit(
+    struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
+    ble_npl_event_fn *f)            //  The timer callback function. Cannot be NULL.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+    assert(f != NULL);
+
+    //  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
+    extern struct ble_npl_eventq event_queue;
+
+    //  Init the Callout Timer with the Callback Function
+    ble_npl_callout_init(
+        timer,         //  Callout Timer
+        &event_queue,  //  Event Queue that will handle the Callout upon timeout
+        f,             //  Callback Function
+        NULL           //  Argument to be passed to Callback Function
+    );
+}
+
+/// Stops a timer from running.  Can be called even if timer is not running.
+void TimerStop(
+    struct ble_npl_callout *timer)  //  Pointer to timer to stop. Cannot be NULL.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer
+    assert(timer != NULL);
+
+    //  If Callout Timer is still running...
+    if (ble_npl_callout_is_active(timer)) {
+        //  Stop the Callout Timer
+        ble_npl_callout_stop(timer);
+    }
+}
+
+/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
+void TimerStart(
+    struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
+    uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
+{
+    //  Implement with Callout Functions from NimBLE Porting Layer.
+    assert(timer != NULL);
+
+    //  Stop the timer if running
+    TimerStop(timer);
+
+    //  Convert microseconds to ticks
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsecs / 1000  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Trigger the Callout Timer after the elapsed ticks
+    ble_npl_error_t rc = ble_npl_callout_reset(
+        timer,  //  Callout Timer
+        ticks   //  Number of ticks
+    );
+    assert(rc == 0);
+}
+
+/// Wait until ‘millisecs’ milliseconds has elapsed. This is a blocking delay.
+void DelayMs(uint32_t millisecs)  //  The number of milliseconds to wait.
+{
+    //  Implement with Timer Functions from NimBLE Porting Layer.
+    //  Convert milliseconds to ticks.
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        millisecs  //  Duration in milliseconds
+    );
+
+    //  Wait at least 1 tick
+    if (ticks == 0) { ticks = 1; }
+
+    //  Wait for the ticks
+    ble_npl_time_delay(ticks);
+}
+
+/// Return current time in microseconds
+uint32_t TimerGetCurrentTime(void)
+{
+    //  Convert ticks to milliseconds then microseconds
+    return xTaskGetTickCount() * portTICK_PERIOD_MS * 1000;
+}
+
+/// Return elased time in microseconds
+uint32_t TimerGetElapsedTime(uint32_t saved_time)
+{
+    return TimerGetCurrentTime() - saved_time;
 }
 
 #ifdef NOTUSED

@@ -30,19 +30,20 @@ extern "C"
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "nimble_npl.h"  //  For NimBLE Porting Layer (timer functions)
 #include "sx126x.h"
 
 /* Connect BL602 to SX1262 LoRa Transceiver
 | BL602 Pin     | SX1262 Pin          | Wire Colour 
 |:--------------|:--------------------|:-------------------
-////| __`GPIO 0`__  | `DIO1`              | Dark Green
+| __`GPIO 0`__  | `DIO1`              | Dark Green
 | __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
-////| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
-////| __`GPIO 3`__  | `SCK`               | Yellow (Top)
-////| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
+| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
+| __`GPIO 3`__  | `SCK`               | Yellow (Top)
+| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
 ////| __`GPIO 5`__  | `DIO2`              | Blue (Bottom)
-| __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
-| __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
+////| __`GPIO 11`__ | `DIO0`              | Yellow (Bottom)
+////| __`GPIO 12`__ | `DIO3`              | Light Green (Bottom)
 | __`GPIO 14`__ | `NSS`               | Orange
 | __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
@@ -73,6 +74,41 @@ extern "C"
 
 //  CAD = Channel Activity Detection. We detect whether a Radio Channel 
 //  is in use, by scanning very quickly for the LoRa Packet Preamble.
+
+//  Timer definition for BL602
+typedef struct ble_npl_callout TimerEvent_t;
+
+///////////////////////////////////////////////////////////////////////////////
+//  BL602 Functions
+
+//  TODO: Implement critical section functions
+#define CRITICAL_SECTION_BEGIN(...)
+#define CRITICAL_SECTION_END(...)
+
+/// Initialise a timer
+void TimerInit(
+    struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
+    ble_npl_event_fn *f);           //  The timer callback function. Cannot be NULL.
+
+/// Stops a timer from running.  Can be called even if timer is not running.
+void TimerStop(
+    struct ble_npl_callout *timer); //  Pointer to timer to stop. Cannot be NULL.
+
+/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
+void TimerStart(
+    struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
+    uint32_t microsecs);            //  The number of microseconds from now at which the timer will expire.
+
+/// Wait until ‘millisecs’ milliseconds has elapsed. This is a blocking delay.
+void DelayMs(uint32_t millisecs);   //  The number of milliseconds to wait.
+
+/// Return current time in microseconds
+uint32_t TimerGetCurrentTime(void);
+
+/// Return elased time in microseconds
+uint32_t TimerGetElapsedTime(uint32_t saved_time);
+
+///////////////////////////////////////////////////////////////////////////////
 
 /*!
  * \brief Initializes the radio I/Os pins interface

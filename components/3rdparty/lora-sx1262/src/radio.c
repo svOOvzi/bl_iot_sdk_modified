@@ -23,125 +23,12 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 #include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "sx126x-utilities.h"
 #include "radio.h"
 #include "sx126x.h"
 #include "sx126x-board.h"
-
-//  Timer definition for BL602
-typedef struct ble_npl_callout TimerEvent_t;
-
-//  BL602 Functions for LoRa
-#include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
-#include <hal/soc/spi.h>     //  For hal_spi_transfer
-#include <hal_spi.h>         //  For spi_init
-#include <bl_gpio.h>         //  For bl_gpio_output_set
-#include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
-#include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
-
-///////////////////////////////////////////////////////////////////////////////
-//  Timer Functions
-
-/// Initialise a timer
-void TimerInit(
-    struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
-    ble_npl_event_fn *f)            //  The timer callback function. Cannot be NULL.
-{
-    //  Implement with Callout Functions from NimBLE Porting Layer
-    assert(timer != NULL);
-    assert(f != NULL);
-
-    //  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
-    extern struct ble_npl_eventq event_queue;
-
-    //  Init the Callout Timer with the Callback Function
-    ble_npl_callout_init(
-        timer,         //  Callout Timer
-        &event_queue,  //  Event Queue that will handle the Callout upon timeout
-        f,             //  Callback Function
-        NULL           //  Argument to be passed to Callback Function
-    );
-}
-
-/// Stops a timer from running.  Can be called even if timer is not running.
-void TimerStop(
-    struct ble_npl_callout *timer)  //  Pointer to timer to stop. Cannot be NULL.
-{
-    //  Implement with Callout Functions from NimBLE Porting Layer
-    assert(timer != NULL);
-
-    //  If Callout Timer is still running...
-    if (ble_npl_callout_is_active(timer)) {
-        //  Stop the Callout Timer
-        ble_npl_callout_stop(timer);
-    }
-}
-
-/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
-void TimerStart(
-    struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
-    uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
-{
-    //  Implement with Callout Functions from NimBLE Porting Layer.
-    assert(timer != NULL);
-
-    //  Stop the timer if running
-    TimerStop(timer);
-
-    //  Convert microseconds to ticks
-    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
-        microsecs / 1000  //  Duration in milliseconds
-    );
-
-    //  Wait at least 1 tick
-    if (ticks == 0) { ticks = 1; }
-
-    //  Trigger the Callout Timer after the elapsed ticks
-    ble_npl_error_t rc = ble_npl_callout_reset(
-        timer,  //  Callout Timer
-        ticks   //  Number of ticks
-    );
-    assert(rc == 0);
-}
-
-/// Wait until ‘millisecs’ milliseconds has elapsed. This is a blocking delay.
-void DelayMs(uint32_t millisecs)  //  The number of milliseconds to wait.
-{
-    //  Implement with Timer Functions from NimBLE Porting Layer.
-    //  Convert milliseconds to ticks.
-    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
-        millisecs  //  Duration in milliseconds
-    );
-
-    //  Wait at least 1 tick
-    if (ticks == 0) { ticks = 1; }
-
-    //  Wait for the ticks
-    ble_npl_time_delay(ticks);
-}
-
-/// Return current time in microseconds
-uint32_t TimerGetCurrentTime(void)
-{
-    //  Convert ticks to milliseconds then microseconds
-    return xTaskGetTickCount() * portTICK_PERIOD_MS * 1000;
-}
-
-/// Return elased time in microseconds
-uint32_t TimerGetElapsedTime(uint32_t saved_time)
-{
-    return TimerGetCurrentTime() - saved_time;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Critical Section Functions
-
-//  TODO: Implement critical section functions
-#define CRITICAL_SECTION_BEGIN(...)
-#define CRITICAL_SECTION_END(...)
-
-///////////////////////////////////////////////////////////////////////////////
 
 /*!
  * \brief Initializes the radio
