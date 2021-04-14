@@ -110,6 +110,7 @@ void SX126xIoInit(void)
     assert(rc == 0);
 }
 
+#ifdef TODO
 /// Register GPIO Interrupt Handlers for DIO0 to DIO5.
 /// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
 void SX126xIoIrqInit(DioIrqHandler **irqHandlers)
@@ -207,6 +208,7 @@ void SX126xIoIrqInit(DioIrqHandler **irqHandlers)
     //  Enable GPIO Interrupt
     bl_irq_enable(GPIO_INT0_IRQn);
 }
+#endif  //  TODO
 
 /// Deregister GPIO Interrupt Handlers for DIO0 to DIO5
 void SX126xIoDeInit( void )
