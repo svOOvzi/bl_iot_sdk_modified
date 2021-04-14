@@ -72,7 +72,32 @@ const struct Radio_s Radio =
     .SetMaxPayloadLength = SX126xSetMaxPayloadLength,
     .SetPublicNetwork = SX126xSetPublicNetwork,
     .GetWakeupTime = SX126xGetWakeupTime,
-    .RxDisable = SX126xRxDisable
+    ////.RxDisable = SX126xRxDisable
+        /*!
+     * \brief Process radio irq
+     */
+    ////void ( *IrqProcess )( void );
+    /*
+     * The next functions are available only on SX126x radios.
+     */
+    /*!
+     * \brief Sets the radio in reception mode with Max LNA gain for the given time
+     *
+     * \remark Available on SX126x radios only.
+     *
+     * \param [IN] timeout Reception timeout [ms]
+     *                     [0: continuous, others timeout]
+     */
+    ////void    ( *RxBoosted )( uint32_t timeout );
+    /*!
+     * \brief Sets the Rx duty cycle management parameters
+     *
+     * \remark Available on SX126x radios only.
+     *
+     * \param [in]  rxTime        Structure describing reception timeout value
+     * \param [in]  sleepTime     Structure describing sleep timeout value
+     */
+    ////void ( *SetRxDutyCycle ) ( uint32_t rxTime, uint32_t sleepTime );
 };
 
 /// SPI Port
