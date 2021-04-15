@@ -772,10 +772,10 @@ void TimerStop(
     }
 }
 
-/// Sets a timer that will expire ‘usecs’ microseconds from the current time.
+/// Sets a timer that will expire ‘millisecs’ milliseconds from the current time.
 void TimerStart(
     struct ble_npl_callout *timer,  //  Pointer to timer. Cannot be NULL.
-    uint32_t microsecs)             //  The number of microseconds from now at which the timer will expire.
+    uint32_t millisecs)             //  The number of milliseconds from now at which the timer will expire.
 {
     //  Implement with Callout Functions from NimBLE Porting Layer.
     assert(timer != NULL);
@@ -783,9 +783,9 @@ void TimerStart(
     //  Stop the timer if running
     TimerStop(timer);
 
-    //  Convert microseconds to ticks
+    //  Convert milliseconds to ticks
     ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
-        microsecs / 1000  //  Duration in milliseconds
+        millisecs  //  Duration in milliseconds
     );
 
     //  Wait at least 1 tick
