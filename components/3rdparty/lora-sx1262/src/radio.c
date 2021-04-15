@@ -1246,10 +1246,18 @@ void RadioOnRxTimeoutIrq( struct ble_npl_event *ev )
     }
 }
 
+/// Callback Function for Transmit and Receive Interrupts.
+/// This function runs in the context of the FreeRTOS Background Application Task.
+/// So we are safe to call printf and SPI Functions now.
 void RadioOnDioIrq( struct ble_npl_event *ev )
 {
     printf("RadioOnDioIrq\r\n");
     IrqFired = true;
+
+    ////  Note: It's OK to process the IRQ here because we are in
+    ////  Application Task Context, not Interrupt Context.
+    ////  The Reference Implementation processes the IRQ in the main loop.
+    RadioIrqProcess();
 }
 
 void RadioIrqProcess( void )
