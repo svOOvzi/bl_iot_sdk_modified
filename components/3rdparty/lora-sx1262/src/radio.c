@@ -1276,6 +1276,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_TX_DONE ) == IRQ_TX_DONE )
         {
+            printf("IRQ_TX_DONE\r\n");
             TimerStop( &TxTimeoutTimer );
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SX126xSetOperatingMode( MODE_STDBY_RC );
@@ -1287,6 +1288,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_RX_DONE ) == IRQ_RX_DONE )
         {
+            printf("IRQ_RX_DONE\r\n");
             TimerStop( &RxTimeoutTimer );
 
             if( ( irqRegs & IRQ_CRC_ERROR ) == IRQ_CRC_ERROR )
@@ -1326,6 +1328,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_CAD_DONE ) == IRQ_CAD_DONE )
         {
+            printf("IRQ_CAD_DONE\r\n");
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SX126xSetOperatingMode( MODE_STDBY_RC );
             if( ( RadioEvents.CadDone != NULL ) )
@@ -1336,6 +1339,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_RX_TX_TIMEOUT ) == IRQ_RX_TX_TIMEOUT )
         {
+            printf("IRQ_RX_TX_TIMEOUT\r\n");
             if( SX126xGetOperatingMode( ) == MODE_TX )
             {
                 TimerStop( &TxTimeoutTimer );
@@ -1360,21 +1364,25 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_PREAMBLE_DETECTED ) == IRQ_PREAMBLE_DETECTED )
         {
+            printf("IRQ_PREAMBLE_DETECTED\r\n");
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_SYNCWORD_VALID ) == IRQ_SYNCWORD_VALID )
         {
+            printf("IRQ_SYNCWORD_VALID\r\n");
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_HEADER_VALID ) == IRQ_HEADER_VALID )
         {
+            printf("IRQ_HEADER_VALID\r\n");
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_HEADER_ERROR ) == IRQ_HEADER_ERROR )
         {
+            printf("IRQ_HEADER_ERROR\r\n");
             TimerStop( &RxTimeoutTimer );
             if( RxContinuous == false )
             {
