@@ -364,7 +364,6 @@ void SX126xWakeup( void )
 
 void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size )
 {
-    printf("SX126xWriteCommand\r\n");
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
