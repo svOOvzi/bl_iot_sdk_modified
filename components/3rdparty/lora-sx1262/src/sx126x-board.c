@@ -165,6 +165,9 @@ uint16_t SpiInOut(int spi_num, uint16_t val) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Initialise GPIO Pins and SPI Port. Called by SX126xIoIrqInit.
+/// Note: This is different from the Reference Implementation,
+/// which initialises the GPIO Pins and SPI Port at startup.
 void SX126xIoInit( void )
 {
     printf("SX126xIoInit\r\n");
@@ -193,10 +196,17 @@ void SX126xIoInit( void )
     assert(rc == 0);
 }
 
-/// Register GPIO Interrupt Handler for DIO1.
+/// Initialise GPIO Pins and SPI Port. Register GPIO Interrupt Handler for DIO1.
 /// Based on hal_button_register_handler_with_dts in https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_button.c
+/// Note: This is different from the Reference Implementation,
+/// which initialises the GPIO Pins and SPI Port at startup.
 void SX126xIoIrqInit( DioIrqHandler dioIrq )
 {
+    //  Initialise GPIO Pins and SPI Port.
+    //  Note: This is different from the Reference Implementation,
+    //  which initialises the GPIO Pins and SPI Port at startup.
+    SX126xIoInit();
+
     printf("SX126X interrupt init\r\n");
     assert(SX126X_DIO1 >= 0);
     assert(dioIrq != NULL);
