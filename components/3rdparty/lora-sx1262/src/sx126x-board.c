@@ -171,7 +171,7 @@ void SX126xIoInit( void )
     GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
     GpioInitInput( SX126X_BUSY_PIN, 0, 0 );
     GpioInitInput( SX126X_DIO1, 0, 0 );
-    GpioInitInput( SX126X_DEVICE_SEL_PIN, 0, 0 );
+    ////GpioInitInput( SX126X_DEVICE_SEL_PIN, 0, 0 );
 
     //  Configure the SPI Port
     int rc = spi_init(
@@ -328,11 +328,13 @@ void SX126xReset(void)
 
 void SX126xWaitOnBusy( void )
 {
+    printf("SX126xWaitOnBusy\r\n");
     while( bl_gpio_input_get_value( SX126X_BUSY_PIN ) == 1 );
 }
 
 void SX126xWakeup( void )
 {
+    printf("SX126xWakeup\r\n");
     CRITICAL_SECTION_BEGIN( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
@@ -353,6 +355,7 @@ void SX126xWakeup( void )
 
 void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size )
 {
+    printf("SX126xWriteCommand\r\n");
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
@@ -374,6 +377,7 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
 
 uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size )
 {
+    printf("SX126xReadCommand\r\n");
     uint8_t status = 0;
 
     SX126xCheckDeviceReady( );
@@ -482,19 +486,32 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 
 void SX126xSetRfTxPower( int8_t power )
 {
+    printf("SX126xSetRfTxPower\r\n");
     SX126xSetTxParams( power, RADIO_RAMP_40_US );
 }
 
 uint8_t SX126xGetDeviceId( void )
 {
+    //  For SX1262
+    printf("SX126xGetDeviceId: SX1262\r\n");
+    return SX1262;
+
+    //  For SX1261
+    //  printf("SX126xGetDeviceId: SX1261\r\n");
+    //  return SX1261;
+
+#ifdef NOTUSED
     if( bl_gpio_input_get_value( SX126X_DEVICE_SEL_PIN ) == 1 )
     {
+        printf("SX126xGetDeviceId: SX1261\r\n");
         return SX1261;
     }
     else
     {
+        printf("SX126xGetDeviceId: SX1262\r\n");
         return SX1262;
     }
+#endif  //  NOTUSED
 }
 
 void SX126xAntSwOn( void )

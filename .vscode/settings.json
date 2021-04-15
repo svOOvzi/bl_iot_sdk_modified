@@ -10,6 +10,7 @@
         "demo.h": "c",
         "pbuf.h": "c",
         "sx126x.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "sx126x-board.h": "c"
     }
 }
