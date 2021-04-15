@@ -120,8 +120,8 @@ static void GpioInitInput(uint8_t pin, uint8_t pullup, uint8_t pulldown) {
 ///////////////////////////////////////////////////////////////////////////////
 //  SPI Functions
 
-/// SPI Device Instance. TODO: Move to sx1276.h
-extern spi_dev_t spi_device;
+/// SPI Device Instance
+spi_dev_t spi_device;
 
 /// SPI Transmit Buffer (1 byte)
 static uint8_t spi_tx_buf[1];
