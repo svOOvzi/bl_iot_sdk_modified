@@ -42,7 +42,6 @@ extern "C"
 | __`GPIO 3`__  | `SCK`               | Yellow (Top)
 | __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
 | __`GPIO 11`__ | `DIO1`              | Yellow (Bottom)
-////| __`GPIO 12`__ | `DEVICE SEL`        | Light Green (Bottom)
 | __`GPIO 14`__ | `NSS`               | Orange
 | __`GPIO 17`__ | `RST`               | White
 | __`3V3`__     | `3.3V`              | Red
@@ -58,7 +57,6 @@ extern "C"
 #define SX126X_NRESET           17  //  Reset Pin
 #define SX126X_DIO1             11  //  DIO1
 #define SX126X_BUSY_PIN          0  //  TODO
-////#define SX126X_DEVICE_SEL_PIN   12  //  TODO
 #define SX126X_TCXO_WAKEUP_TIME  5  //  Time required for the TCXO to wakeup (milliseconds)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 
