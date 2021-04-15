@@ -98,10 +98,10 @@ struct {
 ///////////////////////////////////////////////////////////////////////////////
 //  LoRa Commands
 
-void SX126xIoInit(void);            //  Defined in sx126x-board.c
-void SX1276IoInit(void);            //  Defined in sx1276-board.c
-uint8_t SX126xRead(uint16_t addr);  //  Defined in sx126x.c
-uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
+void SX126xIoInit(void);  //  Defined in sx126x-board.c
+void SX1276IoInit(void);  //  Defined in sx1276-board.c
+uint8_t SX126xReadRegister(uint16_t addr);  //  Defined in sx126x.c
+uint8_t SX1276Read(uint16_t addr);          //  Defined in sx1276.c
 static void send_once(int is_ping);
 static void on_tx_done(void);
 static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
@@ -119,8 +119,8 @@ static void read_registers(char *buf, int len, int argc, char **argv)
     //  Read and print the first 16 registers: 0 to 15
     for (uint16_t addr = 0; addr < 0x10; addr++) {
         //  Read the register
-        uint8_t val = SX126xRead(addr);      //  For SX1262
-        //  uint8_t val = SX1276Read(addr);  //  For SX1276
+        uint8_t val = SX126xReadRegister(addr);      //  For SX1262
+        //  uint8_t val = SX1276Read(addr);          //  For SX1276
 
         //  Print the register value
         printf("Register 0x%02x = 0x%02x\r\n", addr, val);

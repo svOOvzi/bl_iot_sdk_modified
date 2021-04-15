@@ -87,6 +87,7 @@ $(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
 # Components needed to transmit and receive LoRa Packets
+# For SX1276: Change lora-sx1262 to lora-sx1276
 COMPONENTS_LORA    := lora-sx1262 nimble-porting-layer 
 
 # Components needed for LoRaWAN (We need pbuf from LWIP)

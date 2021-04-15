@@ -497,19 +497,19 @@ uint8_t SX126xGetDeviceId( void )
     }
 }
 
-#if SX126X_HAS_ANT_SW
 void SX126xAntSwOn( void )
 {
-    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
-}
-#endif  //  SX126X_HAS_ANT_SW
-
 #if SX126X_HAS_ANT_SW
+    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
+#endif  //  SX126X_HAS_ANT_SW
+}
+
 void SX126xAntSwOff( void )
 {
+#if SX126X_HAS_ANT_SW
     GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-}
 #endif  //  SX126X_HAS_ANT_SW
+}
 
 bool SX126xCheckRfFrequency( uint32_t frequency )
 {
