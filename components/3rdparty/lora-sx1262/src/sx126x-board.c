@@ -338,7 +338,6 @@ void SX126xReset(void)
 
 void SX126xWaitOnBusy( void )
 {
-    printf("SX126xWaitOnBusy\r\n");
     while( bl_gpio_input_get_value( SX126X_BUSY_PIN ) == 1 );
 }
 
