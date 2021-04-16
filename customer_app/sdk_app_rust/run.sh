@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-#  macOS script to build, flash and run BL602 Firmware
+#  macOS script to build, flash and run BL602 Rust Firmware
 #  Install the Rust toolchain like this...
 #    rustup default nightly
 #    rustup target add riscv32imac-unknown-none-elf
-#  TODO: BL602 is actually RV32-ACFIMX
-#  TODO: Fails with error "can't link soft-float modules with single-float modules"
+#  TODO: BL602 is actually RV32-ACFIMX (i.e. 32-bit hardware floating point)
+#  TODO: Linker fails with error "can't link soft-float modules with single-float modules"
+#  TODO: Need Rust to support 32-bit hardware floating point. BL602 IoT SDK was compiled with "gcc -march=rv32imfc -mabi=ilp32f"
+#  See https://github.com/rust-lang/rust/issues/65024
 
 set -e  #  Exit when any command fails
 set -x  #  Echo commands
