@@ -25,7 +25,7 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
-#include "utilities.h"
+#include "sx1276-utilities.h"
 
 /*
  * Local types definition
