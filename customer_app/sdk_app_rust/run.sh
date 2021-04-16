@@ -19,11 +19,28 @@ export BLFLASH_PATH=$PWD/../../../blflash
 #  Where GCC is located
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
+#  Rust build profile: debug or release
+rust_build_profile=debug
+#  rust_build_profile=release
+
+#  Rust build options
+rust_build_target=riscv32imac-unknown-none-elf
+rust_build_options="--target $rust_build_target"
+if [ "$rust_build_profile" == 'release' ]; then
+    # Build for release
+    rust_build_options="--release $rust_build_options"
+#  else 
+    # Build for debug: No change in options
+fi
+
 #  Build the firmware with the Rust Stub Library
 ####make
 
 #  Build the Rust Static Library
-
+pushd rust
+rustup default nightly
+cargo build -v $rust_build_options
+popd
 
 #  TODO: Replace the Rust Stub Library by the Rust Static Library
 #  build_out/rust-app/librust-app.a
