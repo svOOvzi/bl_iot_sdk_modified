@@ -56,12 +56,9 @@ extern "C"
 #define SX126X_SPI_CS_OLD        2  //  Unused SPI Chip Select Pin
 #define SX126X_NRESET           17  //  Reset Pin
 #define SX126X_DIO1             11  //  DIO1
-#define SX126X_BUSY_PIN          0  //  TODO
+#define SX126X_BUSY_PIN          0  //  Busy Pin
 #define SX126X_TCXO_WAKEUP_TIME  5  //  Time required for the TCXO to wakeup (milliseconds)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
-
-//  CAD = Channel Activity Detection. We detect whether a Radio Channel 
-//  is in use, by scanning very quickly for the LoRa Packet Preamble.
 
 //  Timer definition for BL602
 typedef struct ble_npl_callout TimerEvent_t;

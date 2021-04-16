@@ -14,6 +14,14 @@ Refer to...
 
 - ["PineCone BL602 RISC-V Board Receives LoRa Packets (SX1276)"](https://lupyuen.github.io/articles/lora2)
 
+# Connect BL602 to SX1262 / SX1276
+
+Refer to...
+
+- ["Connect BL602 to SX1262"]()
+
+- ["Connect BL602 to SX1276"]()
+
 # Select Frequency
 
 TODO
