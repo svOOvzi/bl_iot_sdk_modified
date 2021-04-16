@@ -19,7 +19,13 @@ export BLFLASH_PATH=$PWD/../../../blflash
 #  Where GCC is located
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
-#  Build the firmware
+#  Build the firmware with the Rust Stub Library
+make
+
+#  TODO: Replace the Rust Stub Library by the Rust Compiled Library
+#  build_out/rust-app/librust-app.a
+
+#  Link the Rust Compiled Library to the firmware
 make
 
 #  Generate the disassembly
