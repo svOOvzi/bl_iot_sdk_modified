@@ -30,7 +30,7 @@ TODO
 
 TODO
 
-# SX1262
+# LoRa SX1262 Demo
 
 TODO
 
@@ -263,7 +263,7 @@ Rx timeout
 # 
 ```
 
-# SX1276
+# LoRa SX1276 Demo
 
 TODO
 
