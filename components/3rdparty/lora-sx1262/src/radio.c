@@ -1254,12 +1254,15 @@ void RadioOnDioIrq( struct ble_npl_event *ev )
     printf("RadioOnDioIrq\r\n");
     IrqFired = true;
 
-    ////  Note: It's OK to process the IRQ here because we are in
+    ////  Note: It's OK to process the interrupt here because we are in
     ////  Application Task Context, not Interrupt Context.
     ////  The Reference Implementation processes the IRQ in the main loop.
     RadioIrqProcess();
 }
 
+/// Process Transmit and Receive Interrupts.
+/// Must be run in the Application Task Context, not Interrupt Context
+/// Because we will be calling printf and SPI Functions here.
 void RadioIrqProcess( void )
 {
     printf("RadioIrqProcess\r\n");
