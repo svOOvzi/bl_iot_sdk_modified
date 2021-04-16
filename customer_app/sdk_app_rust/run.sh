@@ -38,9 +38,23 @@ if [ "$rust_build_profile" == 'release' ]; then
     # Build for debug: No change in options
 fi
 
+#  Location of the Rust Stub Library.  We will replace this stub by the Rust Static Library
+rust_app_dir=build_out/rust-app
+rust_app_dest=$rust_app_dir/librust-app.a
+
 #  Location of the compiled Rust Static Library
 rust_build_dir=$PWD/rust/target/$rust_build_target/$rust_build_profile
 rust_app_build=$rust_build_dir/libapp.a
+
+#  Remove the Rust Stub Library if it exists
+if [ -e $rust_app_dest ]; then
+    rm $rust_app_dest
+fi
+
+#  Remove the Rust Static Library if it exists
+if [ -e $rust_app_build ]; then
+    rm $rust_app_build
+fi
 
 #  Build the firmware with the Rust Stub Library
 make
@@ -53,7 +67,7 @@ popd
 
 #  Replace the Rust Stub Library by the Rust Static Library
 ls -l $rust_app_build
-cp $rust_app_build build_out/rust-app/librust-app.a
+cp $rust_app_build $rust_app_dest
 
 #  Link the Rust Compiled Library to the firmware
 make
