@@ -18,7 +18,7 @@ The design of the SX1262 Driver is similar to the SX1276 Driver, which is explai
 
 To transmit and receive LoRa packets with the driver, run the `sdk_app_lora` BL602 Demo Firmware...
 
-- [`sdk_app_lora`: BL602 Demo Firmware for LoRa SX1262 / SX1276 ](../../../customer_app/README.md)
+- [`sdk_app_lora`: BL602 Demo Firmware for LoRa SX1262 / SX1276 ](../../../customer_app/sdk_app_lora)
 
 Here's a sample log...
 
