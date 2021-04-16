@@ -98,8 +98,10 @@ struct {
 ///////////////////////////////////////////////////////////////////////////////
 //  LoRa Commands
 
-void SX1276IoInit(void);            //  Defined in sx1276-board.c
-uint8_t SX1276Read(uint16_t addr);  //  Defined in sx1276.c
+void SX126xIoInit(void);  //  Defined in sx126x-board.c
+void SX1276IoInit(void);  //  Defined in sx1276-board.c
+uint8_t SX126xReadRegister(uint16_t addr);  //  Defined in sx126x.c
+uint8_t SX1276Read(uint16_t addr);          //  Defined in sx1276.c
 static void send_once(int is_ping);
 static void on_tx_done(void);
 static void on_rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
@@ -111,12 +113,14 @@ static void on_rx_error(void);
 static void read_registers(char *buf, int len, int argc, char **argv)
 {
     //  Init the SPI port
-    SX1276IoInit();
+    SX126xIoInit();      //  For SX1262
+    //  SX1276IoInit();  //  For SX1276
 
     //  Read and print the first 16 registers: 0 to 15
     for (uint16_t addr = 0; addr < 0x10; addr++) {
         //  Read the register
-        uint8_t val = SX1276Read(addr);
+        uint8_t val = SX126xReadRegister(addr);      //  For SX1262
+        //  uint8_t val = SX1276Read(addr);          //  For SX1276
 
         //  Print the register value
         printf("Register 0x%02x = 0x%02x\r\n", addr, val);
@@ -229,13 +233,13 @@ static void spi_result(char *buf, int len, int argc, char **argv)
     extern int g_tx_counter, g_rx_counter;
     extern uint32_t g_tx_status, g_tx_tc, g_tx_error, g_rx_status, g_rx_tc, g_rx_error;
     printf("Tx Interrupts:   %d\r\n",   g_tx_counter);
-    printf("Tx Status:       0x%x\r\n", g_tx_status);
-    printf("Tx Term Count:   0x%x\r\n", g_tx_tc);
-    printf("Tx Error:        0x%x\r\n", g_tx_error);
+    printf("Tx Status:       0x%x\r\n", (unsigned) g_tx_status);
+    printf("Tx Term Count:   0x%x\r\n", (unsigned) g_tx_tc);
+    printf("Tx Error:        0x%x\r\n", (unsigned) g_tx_error);
     printf("Rx Interrupts:   %d\r\n",   g_rx_counter);
-    printf("Rx Status:       0x%x\r\n", g_rx_status);
-    printf("Rx Term Count:   0x%x\r\n", g_rx_tc);
-    printf("Rx Error:        0x%x\r\n", g_rx_error);
+    printf("Rx Status:       0x%x\r\n", (unsigned) g_rx_status);
+    printf("Rx Term Count:   0x%x\r\n", (unsigned) g_rx_tc);
+    printf("Rx Error:        0x%x\r\n", (unsigned) g_rx_error);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
