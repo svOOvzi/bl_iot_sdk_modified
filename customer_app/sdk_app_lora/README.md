@@ -2,17 +2,17 @@
 
 This BL602 demo firmware transmits and receives LoRa packets by calling the SX1262 / SX1276 drivers...
 
-- [`lora-sx1262`: BL602 LoRa Driver for Semtech SX1262](../../../components/3rdparty/lora-sx1262)
+- [`lora-sx1262`: BL602 LoRa Driver for Semtech SX1262](../../components/3rdparty/lora-sx1262)
 
-- [`lora-sx1276`: BL602 LoRa Driver for Semtech SX1276](../../../components/3rdparty/lora-sx1276)
+- [`lora-sx1276`: BL602 LoRa Driver for Semtech SX1276](../../components/3rdparty/lora-sx1276)
 
 Refer to...
 
 - ["Porting SX1262 Driver to BL602"](https://twitter.com/MisterTechBlog/status/1381870711124369413)
 
-- ["Connect PineCone BL602 to SX1276"](https://lupyuen.github.io/articles/lora)
+- ["Connect PineCone BL602 to LoRa Transceiver (SX1276)"](https://lupyuen.github.io/articles/lora)
 
-- ["PineCone BL602 RISC-V Board Receives LoRa Packets with SX1276"](https://lupyuen.github.io/articles/lora2)
+- ["PineCone BL602 RISC-V Board Receives LoRa Packets (SX1276)"](https://lupyuen.github.io/articles/lora2)
 
 # Select Frequency
 
