@@ -11,15 +11,20 @@ use core::panic::PanicInfo; //  Import `PanicInfo` type which is used by `panic(
 /// rust_main() will be called by BL602 firmware.
 #[no_mangle]              //  Don't mangle the name "main"
 extern "C" fn rust_main(  //  Declare extern "C" because it will be called by BL602 firmware
-    /* char *buf, int len, int argc, char **argv */
-) -> () {
-    puts("Hello from Rust!\r\n");
+    _buf:  *const u8,  //  char *
+    _len:  i32,
+    _argc: i32,
+    _argv: *const u8   //  TODO: char **
+) {
+    //  Display a message
+    unsafe { puts(b"Hello from Rust!\r\n\0".as_ptr()); }
 }
 
 /// This function is called on panic, like an assertion failure. We display the filename and line number and pause in the debugger. From https://os.phil-opp.com/freestanding-rust-binary/
 #[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    puts("panic\r\n");
+fn panic(_info: &PanicInfo) -> ! {
+    unsafe { puts(b"TODO: Rust panic\r\n\0".as_ptr()); }
+
     /*    
     //  Display the filename and line number.
     console::print("panic ");
@@ -53,4 +58,9 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 /// Set to true if we are already in the panic handler
-static mut IN_PANIC: bool = false;
+/// static mut IN_PANIC: bool = false;
+
+//  Import C Functions
+extern "C" {
+    fn puts(s: *const u8) -> i32;
+}
