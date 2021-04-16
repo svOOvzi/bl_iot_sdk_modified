@@ -4,6 +4,7 @@
 #    rustup default nightly
 #    rustup target add riscv32imac-unknown-none-elf
 #  TODO: BL602 is actually RV32-ACFIMX
+#  TODO: Fails with error "can't link soft-float modules with single-float modules"
 
 set -e  #  Exit when any command fails
 set -x  #  Echo commands
@@ -42,7 +43,7 @@ rust_build_dir=$PWD/rust/target/$rust_build_target/$rust_build_profile
 rust_app_build=$rust_build_dir/libapp.a
 
 #  Build the firmware with the Rust Stub Library
-####make
+make
 
 #  Build the Rust Static Library
 pushd rust
@@ -50,8 +51,7 @@ rustup default nightly
 cargo build -v $rust_build_options
 popd
 
-#  TODO: Replace the Rust Stub Library by the Rust Static Library
-#  build_out/rust-app/librust-app.a
+#  Replace the Rust Stub Library by the Rust Static Library
 ls -l $rust_app_build
 cp $rust_app_build build_out/rust-app/librust-app.a
 
