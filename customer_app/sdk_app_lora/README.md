@@ -2,9 +2,9 @@
 
 This BL602 demo firmware transmits and receives LoRa packets by calling the SX1262 / SX1276 drivers...
 
-- [`lora-sx1262`: BL602 LoRa Driver for Semtech SX1262](../../components/3rdparty/lora-sx1262)
+- [`lora-sx1262`: Driver for Semtech SX1262 (Pine64 RFM90 LoRa Module)](../../components/3rdparty/lora-sx1262)
 
-- [`lora-sx1276`: BL602 LoRa Driver for Semtech SX1276](../../components/3rdparty/lora-sx1276)
+- [`lora-sx1276`: Driver for Semtech SX1276 / HopeRF RF96](../../components/3rdparty/lora-sx1276)
 
 Refer to...
 
