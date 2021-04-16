@@ -1,14 +1,20 @@
-# sdk_app_lora
+# BL602 Demo Firmware for LoRa SX1262 / SX1276 
 
-Demo Firmware for LoRa SX1276 / RF96 Transceiver with SPI Interface. 
-
-Supports transmitting and receiving of LoRa Packets.
+This firmware transmits and receives LoRa Packets.
 
 See the articles...
 
-https://lupyuen.github.io/articles/lora
+- ["Connect PineCone BL602 to LoRa Transceiver"](https://lupyuen.github.io/articles/lora)
 
-https://lupyuen.github.io/articles/lora2
+- ["PineCone BL602 RISC-V Board Receives LoRa Packets"](https://lupyuen.github.io/articles/lora2)
+
+# Select Frequency
+
+TODO
+
+# Select Transceiver
+
+TODO
 
 # SX1262
 
