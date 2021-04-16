@@ -91,7 +91,7 @@ endif
 COMPONENTS_LORA    := lora-sx1262 nimble-porting-layer 
 
 # Components needed for LoRaWAN (We need pbuf from LWIP)
-COMPONENTS_LORAWAN := lwip lorawan
+COMPONENTS_LORAWAN := lorawan lwip
 
 # Other Components
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
