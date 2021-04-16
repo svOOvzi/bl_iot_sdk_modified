@@ -14,6 +14,113 @@ https://lupyuen.github.io/articles/lora2
 
 TODO
 
+## Transmit LoRa Packet
+
+```text
+# create_task
+
+# init_driver
+SX126xReset
+SX126xIoInit
+SX126X interrupt init
+SX126X register handler: GPIO 11
+SX126xWakeup
+SX126xGetDeviceId: SX1262
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+
+# send_message
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+Tx done
+
+# send_message
+SX126xWakeup
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+Tx done
+
+# send_message
+SX126xWakeup
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+Tx done
+
+# 
+# receive_message
+SX126xWakeup
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_PREAMBLE_DETECTED
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_HEADER_VALID
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_DONE
+SX126xReadCommand
+SX126xReadCommand
+Rx done: 
+48 65 6c 6c 6f 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 
+
+# receive_message
+SX126xWakeup
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_PREAMBLE_DETECTED
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_HEADER_VALID
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_DONE
+SX126xReadCommand
+SX126xReadCommand
+Rx done: 
+48 65 6c 6c 6f 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 
+
+# receive_message
+SX126xWakeup
+
+# RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_PREAMBLE_DETECTED
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_HEADER_VALID
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_DONE
+SX126xReadCommand
+SX126xReadCommand
+Rx done: 
+48 65 6c 6c 6f 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 
+
+# 
+```
+
+## Receive LoRa Packet
+
 ```text
 
 # create_task
