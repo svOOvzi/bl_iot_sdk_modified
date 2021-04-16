@@ -11,10 +11,10 @@ use core::panic::PanicInfo; //  Import `PanicInfo` type which is used by `panic(
 /// rust_main() will be called by BL602 firmware.
 #[no_mangle]              //  Don't mangle the name "main"
 extern "C" fn rust_main(  //  Declare extern "C" because it will be called by BL602 firmware
-    _buf:  *const u8,  //  char *
-    _len:  i32,
-    _argc: i32,
-    _argv: *const u8   //  TODO: char **
+    _buf:  *const u8,         //  char *
+    _len:  i32,               //  int
+    _argc: i32,               //  int
+    _argv: *const *const u8   //  char **
 ) {
     //  Display a message
     unsafe { puts(b"Hello from Rust!\r\n\0".as_ptr()); }
