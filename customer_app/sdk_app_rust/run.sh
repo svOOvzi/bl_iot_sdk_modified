@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #  macOS script to build, flash and run BL602 Firmware
 #  Install the Rust toolchain like this...
-#  rustup default nightly
-#  rustup target add riscv32imac-unknown-none-elf
+#    rustup default nightly
+#    rustup target add riscv32imac-unknown-none-elf
+#  TODO: BL602 is actually RV32-ACFIMX
 
 set -e  #  Exit when any command fails
 set -x  #  Echo commands
