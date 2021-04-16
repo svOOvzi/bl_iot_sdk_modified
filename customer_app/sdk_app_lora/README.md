@@ -83,6 +83,18 @@ To select SX1276, change `lora-sx1262` to `lora-sx1276` in [`Makefile`](Makefile
 COMPONENTS_LORA    := lora-sx1262 nimble-porting-layer 
 ```
 
+Comment out the lines marked `For SX1262` and uncomment the lines marked `For SX1276` in [`sdk_app_lora/demo.c`](sdk_app_lora/demo.c)...
+
+```c
+//  Init the SPI port
+SX126xIoInit();      //  For SX1262
+//  SX1276IoInit();  //  For SX1276
+...
+//  Read the register
+uint8_t val = SX126xReadRegister(addr);  //  For SX1262
+//  uint8_t val = SX1276Read(addr);      //  For SX1276
+```
+
 # LoRa SX1262 Demo
 
 Enter these commands for the SX1262 demo firmware...
