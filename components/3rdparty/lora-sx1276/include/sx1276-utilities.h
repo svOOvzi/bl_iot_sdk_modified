@@ -21,8 +21,8 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#ifndef __LORA_UTILITIES_H__
-#define __LORA_UTILITIES_H__
+#ifndef __SX1276_UTILITIES_H__
+#define __SX1276_UTILITIES_H__
 
 #include <stdint.h>
 
@@ -41,4 +41,4 @@ uint32_t timer_get_current_time(void);
  */
 uint32_t timer_get_elapsed_time(uint32_t saved_time);
 
-#endif // __LORA_UTILITIES_H__
+#endif // __SX1276_UTILITIES_H__

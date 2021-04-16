@@ -46,7 +46,7 @@
                 "${workspaceFolder}/components/sys/bloop/looprt/include",
                 "${workspaceFolder}/components/sys/bloop/loopset",
                 "${workspaceFolder}/components/sys/bloop/loopset/include",
-                "${workspaceFolder}/components/3rdparty/lora-sx1276/include",
+                "${workspaceFolder}/components/3rdparty/lora-sx1262/include",
                 "${workspaceFolder}/components/network/lwip",
                 "${workspaceFolder}/components/network/lwip/src/include",
                 "${workspaceFolder}/components/network/lwip/lwip-port",
