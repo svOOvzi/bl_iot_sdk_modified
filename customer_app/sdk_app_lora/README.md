@@ -18,9 +18,9 @@ Refer to...
 
 Refer to...
 
-- ["Connect BL602 to SX1262"]()
+- ["Connect BL602 to SX1262"](../../components/3rdparty/lora-sx1262#connect-bl602-to-sx1262)
 
-- ["Connect BL602 to SX1276"]()
+- ["Connect BL602 to SX1276"](../../components/3rdparty/lora-sx1276#connect-bl602-to-sx1276)
 
 # Select Frequency
 
