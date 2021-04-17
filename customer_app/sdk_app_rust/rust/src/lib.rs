@@ -4,9 +4,9 @@
 //  Declare the system modules
 use core::panic::PanicInfo;  //  Import `PanicInfo` type which is used by `panic()` below
 
-/// rust_main() will be called by BL602 firmware
-#[no_mangle]              //  Don't mangle the name "main"
-extern "C" fn rust_main(  //  Declare extern "C" because it will be called by BL602 firmware
+/// `rust_main` will be called by the BL602 command-line interface
+#[no_mangle]              //  Don't mangle the name `rust_main`
+extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by BL602 firmware
     _buf:  *const u8,         //  char *
     _len:  i32,               //  int
     _argc: i32,               //  int
@@ -23,7 +23,7 @@ extern "C" fn rust_main(  //  Declare extern "C" because it will be called by BL
 
 /// This function is called on panic, like an assertion failure
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {  //  "!" means that panic handler will never return
+fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never return
     //  TODO: Implement the complete panic handler like this:
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
