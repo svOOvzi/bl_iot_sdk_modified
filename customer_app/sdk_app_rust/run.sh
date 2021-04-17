@@ -185,5 +185,43 @@ LD build_out/sdk_app_rust.elf
 collect2: error: ld returned 1 exit status
 make: *** [/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/../../make_scripts_riscv/project.mk:420: /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/build_out/sdk_app_rust.elf] Error 1
 
-# Luppy at Luppys-MBP in ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust on git:rust ✖︎ [20:56:05]
-→ 
+
+#  Custom Targets: 
+#  https://docs.rust-embedded.org/embedonomicon/compiler-support.html#built-in-target
+#  https://docs.rust-embedded.org/embedonomicon/custom-target.html
+rustc +nightly -Z unstable-options --print target-spec-json --target riscv32imac-unknown-none-elf ; exit
+
+{
+  "arch": "riscv32",
+  "cpu": "generic-rv32",
+  "data-layout": "e-m:e-p:32:32-i64:64-n32-S128",
+  "eh-frame-header": false,
+  "emit-debug-gdb-scripts": false,
+  "executables": true,
+  "features": "+m,+a,+c",
+  "is-builtin": true,
+  "linker": "rust-lld",
+  "linker-flavor": "ld.lld",
+  "llvm-target": "riscv32",
+  "max-atomic-width": 32,
+  "panic-strategy": "abort",
+  "relocation-model": "static",
+  "target-pointer-width": "32",
+  "unsupported-abis": [
+    "cdecl",
+    "stdcall",
+    "stdcall-unwind",
+    "fastcall",
+    "vectorcall",
+    "thiscall",
+    "thiscall-unwind",
+    "aapcs",
+    "win64",
+    "sysv64",
+    "ptx-kernel",
+    "msp430-interrupt",
+    "x86-interrupt",
+    "amdgpu-kernel"
+  ]
+}
+
