@@ -30,8 +30,11 @@ export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 rust_build_profile=debug
 #  rust_build_profile=release
 
-#  Rust build options
+#  Rust target: Custom target for llvm-abiname=ilp32f
+#  rust_build_target=$PWD/riscv32imacf-unknown-none-elf.json
 rust_build_target=riscv32imac-unknown-none-elf
+
+#  Rust build options
 rust_build_options="--target $rust_build_target"
 if [ "$rust_build_profile" == 'release' ]; then
     # Build for release
@@ -189,7 +192,8 @@ make: *** [/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/../../make
 #  Custom Targets: 
 #  https://docs.rust-embedded.org/embedonomicon/compiler-support.html#built-in-target
 #  https://docs.rust-embedded.org/embedonomicon/custom-target.html
-rustc +nightly -Z unstable-options --print target-spec-json --target riscv32imac-unknown-none-elf ; exit
+rustup target list 
+rustc +nightly -Z unstable-options --print target-spec-json --target riscv32imac-unknown-none-elf >riscv32imac-unknown-none-elf.json
 
 {
   "arch": "riscv32",
@@ -225,3 +229,40 @@ rustc +nightly -Z unstable-options --print target-spec-json --target riscv32imac
   ]
 }
 
+rustc +nightly -Z unstable-options --print target-spec-json --target riscv64gc-unknown-none-elf
+
+{
+  "arch": "riscv64",
+  "code-model": "medium",
+  "cpu": "generic-rv64",
+  "data-layout": "e-m:e-p:64:64-i64:64-i128:128-n64-S128",
+  "eh-frame-header": false,
+  "emit-debug-gdb-scripts": false,
+  "executables": true,
+  "features": "+m,+a,+f,+d,+c",
+  "is-builtin": true,
+  "linker": "rust-lld",
+  "linker-flavor": "ld.lld",
+  "llvm-abiname": "lp64d",
+  "llvm-target": "riscv64",
+  "max-atomic-width": 64,
+  "panic-strategy": "abort",
+  "relocation-model": "static",
+  "target-pointer-width": "64",
+  "unsupported-abis": [
+    "cdecl",
+    "stdcall",
+    "stdcall-unwind",
+    "fastcall",
+    "vectorcall",
+    "thiscall",
+    "thiscall-unwind",
+    "aapcs",
+    "win64",
+    "sysv64",
+    "ptx-kernel",
+    "msp430-interrupt",
+    "x86-interrupt",
+    "amdgpu-kernel"
+  ]
+}
