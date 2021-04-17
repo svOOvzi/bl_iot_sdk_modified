@@ -126,7 +126,6 @@ Output Log:
 + '[' -e build_out/rust-app/librust-app.a ']'
 + rm build_out/rust-app/librust-app.a
 + '[' -e /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a ']'
-+ rm /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 + make
 use existing version.txt file
 AR build_out/rust-app/librust-app.a
@@ -178,48 +177,21 @@ info: default toolchain set to 'nightly-x86_64-apple-darwin'
 
 + cargo build -v --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/riscv32imacf-unknown-none-elf.json -Z build-std=core
     Updating crates.io index
-       Fresh core v0.0.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/core)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-       Fresh rustc-std-workspace-core v1.99.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/rustc-std-workspace-core)
-       Fresh compiler_builtins v0.1.39
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-       Fresh app v0.0.1 (/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust)
-Hard-float 'f' ABI can't be used for a target that doesn't support the F instruction set extension (ignoring target-abi)
-    Finished dev [unoptimized + debuginfo] target(s) in 4.33s
+   Compiling core v0.0.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/core)
+   Compiling compiler_builtins v0.1.39
+     Running `rustc --crate-name core --edition=2018 /Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C metadata=9edda56de6439919 -C extra-filename=-9edda56de6439919 --out-dir /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/riscv32imacf-unknown-none-elf.json -Z force-unstable-if-unmarked -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/deps --cap-lints allow`
+     Running `rustc --crate-name build_script_build /Users/Luppy/.cargo/registry/src/github.com-1ecc6299db9ec823/compiler_builtins-0.1.39/build.rs --error-format=json --json=diagnostic-rendered-ansi --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C split-debuginfo=unpacked -C debuginfo=2 --cfg 'feature="compiler-builtins"' --cfg 'feature="core"' --cfg 'feature="default"' --cfg 'feature="rustc-dep-of-std"' -C metadata=691870a7e1a269a9 -C extra-filename=-691870a7e1a269a9 --out-dir /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/build/compiler_builtins-691870a7e1a269a9 -Z force-unstable-if-unmarked -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/deps --cap-lints allow`
+     Running `/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/build/compiler_builtins-691870a7e1a269a9/build-script-build`
+   Compiling rustc-std-workspace-core v1.99.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/rustc-std-workspace-core)
+     Running `rustc --crate-name rustc_std_workspace_core --edition=2018 /Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/rustc-std-workspace-core/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C metadata=9bd4312ef6ed2715 -C extra-filename=-9bd4312ef6ed2715 --out-dir /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/riscv32imacf-unknown-none-elf.json -Z force-unstable-if-unmarked -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/deps --extern core=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps/libcore-9edda56de6439919.rmeta --cap-lints allow`
+     Running `rustc --crate-name compiler_builtins /Users/Luppy/.cargo/registry/src/github.com-1ecc6299db9ec823/compiler_builtins-0.1.39/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="compiler-builtins"' --cfg 'feature="core"' --cfg 'feature="default"' --cfg 'feature="rustc-dep-of-std"' -C metadata=1fb19bfc5f340e89 -C extra-filename=-1fb19bfc5f340e89 --out-dir /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/riscv32imacf-unknown-none-elf.json -Z force-unstable-if-unmarked -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/deps --extern core=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps/librustc_std_workspace_core-9bd4312ef6ed2715.rmeta --cap-lints allow --cfg 'feature="unstable"' --cfg 'feature="mem"'`
+   Compiling app v0.0.1 (/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust)
+     Running `rustc --crate-name app --edition=2018 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi --crate-type staticlib --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="default"' -C metadata=f850a6e7fbc8f08b -C extra-filename=-f850a6e7fbc8f08b --out-dir /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/riscv32imacf-unknown-none-elf.json -C incremental=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/incremental -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps -L dependency=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/debug/deps --extern 'noprelude:compiler_builtins=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps/libcompiler_builtins-1fb19bfc5f340e89.rlib' --extern 'noprelude:core=/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/deps/libcore-9edda56de6439919.rlib' -Z unstable-options`
+    Finished dev [unoptimized + debuginfo] target(s) in 20.04s
 + popd
 ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust
 + ls -l /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
--rw-r--r--  2 Luppy  staff  4954648 Apr 17 08:25 /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
+-rw-r--r--  2 Luppy  staff  4955264 Apr 17 12:10 /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 + cp /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a build_out/rust-app/librust-app.a
 + make
 use existing version.txt file
@@ -265,8 +237,8 @@ Building Finish. To flash build output.
 + cp build_out/sdk_app_rust.bin /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/../../../blflash
 + pushd /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust/../../../blflash
 ~/pinecone/blflash ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust
-+ cargo run flash sdk_app_rust.bin --port /dev/tty.usbserial-1410 --initial-baud-rate 230400 --baud-rate 230400
-    Finished dev [unoptimized + debuginfo] target(s) in 0.30s
++ cargo run flash sdk_app_rust.bin --port '/dev/tty.usbserial-14*' --initial-baud-rate 230400 --baud-rate 230400
+    Finished dev [unoptimized + debuginfo] target(s) in 0.45s
      Running `target/debug/blflash flash sdk_app_rust.bin --port /dev/tty.usbserial-1410 --initial-baud-rate 230400 --baud-rate 230400`
 [INFO  blflash::flasher] Start connection...
 [TRACE blflash::flasher] 5ms send count 115
@@ -292,9 +264,6 @@ Building Finish. To flash build output.
 ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust
 + open -a CoolTerm
 + exit
-
-# Luppy at Luppys-MBP in ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust on git:rust ✖︎ [8:29:16]
-→ 
 
 #  Custom Targets: 
 #  https://docs.rust-embedded.org/embedonomicon/compiler-support.html#built-in-target
