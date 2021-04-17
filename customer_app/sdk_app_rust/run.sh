@@ -377,3 +377,9 @@ rustc +nightly -Z unstable-options --print target-spec-json --target riscv64gc-u
     "amdgpu-kernel"
   ]
 }
+
+Rust Build:
+
+cargo build -v \
+    --target riscv32imacf-unknown-none-elf.json \
+    -Z build-std=core
