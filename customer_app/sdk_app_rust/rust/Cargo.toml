@@ -1,0 +1,22 @@
+# Info about this package.
+[package]
+authors = ["Lee Lup Yuen <luppy@appkaki.com>"]
+edition = "2018"
+readme  = "README.md"
+name    = "app"
+version = "0.0.1"
+
+# External Rust libraries used by this module.  See crates.io.
+[dependencies]
+
+# Build this module as a Rust library, not a Rust application.  We will link this library with the BL602 firmware.
+[lib]
+name       = "app"  # Output will be named `libapp.rlib`
+test       = false
+bench      = false
+crate-type = ["staticlib"]
+
+# Optional features
+[features]
+default =  [          # Select the conditional compiled features
+]

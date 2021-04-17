@@ -1,0 +1,12 @@
+# Build Options
+[build]
+target = "riscv32imac-unknown-none-elf"
+
+# Rust compiler options for all builds (including Procedural Macros)
+rustflags = [
+    # "-C", "llvm-args=\"-mabi=ilp32f\""
+    # "-C", "llvm-abiname=ilp32f"
+]
+
+[target.riscv32imac-unknown-none-elf]
+# llvm_abiname = "ilp32f"

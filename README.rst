@@ -57,6 +57,8 @@ Changes
 
 - "master" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1262
 
+- "rust" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/rust/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/rust/customer_app/sdk_app_rust/
+
 BL602 SDK (Pine64 version)
 ==========================
 

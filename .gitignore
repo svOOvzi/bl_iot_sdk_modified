@@ -10,3 +10,6 @@
 # MacOS
 .DS_Store
 __pycache__
+
+# Rust
+customer_app/*/rust/target/
