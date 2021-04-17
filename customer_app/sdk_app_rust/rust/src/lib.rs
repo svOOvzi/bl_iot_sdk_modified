@@ -13,12 +13,10 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8   //  char **
 ) {
     //  Display a message
-    unsafe {   //  Flag this code as unsafe because we're calling a C function
-        puts(  //  Call the C function to display a message
-            b"Hello from Rust!\r\n\0"  //  Byte string to be printed, terminated by null
-            .as_ptr()                  //  Converted to a pointer
-        ); 
-    }
+    puts(  //  Call the C function to display a message
+        b"Hello from Rust!\r\n\0"  //  Byte string to be printed, terminated by null
+        .as_ptr()                  //  Converted to a pointer
+    ); 
 }
 
 /// This function is called on panic, like an assertion failure
@@ -28,21 +26,24 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
     //  For now we display a message
-    unsafe {   //  Flag this code as unsafe because we're calling a C function
-        puts(  //  Call the C function to display a message
-            b"TODO: Rust panic\r\n\0"  //  Byte string to be printed, terminated by null
-            .as_ptr()                  //  Converted to a pointer
-        ); 
-    }
+    puts(  //  Call the C function to display a message
+        b"TODO: Rust panic\r\n\0"  //  Byte string to be printed, terminated by null
+        .as_ptr()                  //  Converted to a pointer
+    ); 
 
 	//  Loop forever, do not pass go, do not collect $200
     loop {}
 }
 
-/// Import C Functions
-extern "C" {
-    /// Print a message to the serial console (from C stdio library)
-    fn puts(s: *const u8) -> i32;
+/// Print a message to the serial console
+fn puts(s: *const u8) -> i32 {    
+    extern "C" {  // Import C Functions
+        /// Print a message to the serial console (from C stdio library)
+        fn puts(s: *const u8) -> i32;
+    }
+    unsafe {     //  Flag this code as unsafe because we're calling a C function
+        puts(s)  //  Call the C function to print the message
+    }
 }
 
 /* Output Log
