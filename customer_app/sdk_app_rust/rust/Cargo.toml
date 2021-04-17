@@ -11,12 +11,12 @@ version = "0.0.1"
 
 # Build this module as a Rust library, not a Rust application.  We will link this library with the BL602 firmware.
 [lib]
-name       = "app"  # Output will be named `libapp.rlib`
+name       = "app"  # Output will be named `libapp.a`
 test       = false
 bench      = false
 crate-type = ["staticlib"]
 
 # Optional features
 [features]
-default =  [          # Select the conditional compiled features
+default =  [  # Select the conditional compiled features
 ]
