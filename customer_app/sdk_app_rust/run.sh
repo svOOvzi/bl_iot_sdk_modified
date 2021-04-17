@@ -45,38 +45,44 @@ if [ "$rust_build_profile" == 'release' ]; then
     # Build for debug: No change in options
 fi
 
-#  Location of the Rust Stub Library.  We will replace this stub by the Rust Static Library
+#  Location of the Stub Library.  We will replace this stub by the Rust Library
+#  rust_app_dest will be set to build_out/rust-app/librust-app.a
 rust_app_dir=build_out/rust-app
 rust_app_dest=$rust_app_dir/librust-app.a
 
-#  Location of the compiled Rust Static Library
+#  Location of the compiled Rust Library
+#  rust_app_build will be set to rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 rust_build_dir=$PWD/rust/target/$rust_build_target_folder/$rust_build_profile
 rust_app_build=$rust_build_dir/libapp.a
 
-#  Remove the Rust Stub Library if it exists
+#  Remove the Stub Library if it exists:
+#  build_out/rust-app/librust-app.a
 if [ -e $rust_app_dest ]; then
     rm $rust_app_dest
 fi
 
-#  Remove the Rust Static Library if it exists
+#  Remove the Rust Library if it exists:
+#  rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 if [ -e $rust_app_build ]; then
     rm $rust_app_build
 fi
 
-#  Build the firmware with the Rust Stub Library
+#  Build the firmware with the Stub Library
 make
 
-#  Build the Rust Static Library
+#  Build the Rust Library
 pushd rust
 rustup default nightly
 cargo build -v $rust_build_options
 popd
 
-#  Replace the Rust Stub Library by the Rust Static Library
+#  Replace the Stub Library by the compiled Rust Library
+#  Stub Library: build_out/rust-app/librust-app.a
+#  Rust Library: rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 ls -l $rust_app_build
 cp $rust_app_build $rust_app_dest
 
-#  Link the Rust Compiled Library to the firmware
+#  Link the Rust Library to the firmware
 make
 
 #  Generate the disassembly
@@ -264,84 +270,6 @@ Building Finish. To flash build output.
 ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust
 + open -a CoolTerm
 + exit
-
-#  Custom Targets: 
-#  https://docs.rust-embedded.org/embedonomicon/compiler-support.html#built-in-target
-#  https://docs.rust-embedded.org/embedonomicon/custom-target.html
-rustup target list 
-rustc +nightly -Z unstable-options --print target-spec-json --target riscv32imac-unknown-none-elf >riscv32imac-unknown-none-elf.json
-
-{
-  "arch": "riscv32",
-  "cpu": "generic-rv32",
-  "data-layout": "e-m:e-p:32:32-i64:64-n32-S128",
-  "eh-frame-header": false,
-  "emit-debug-gdb-scripts": false,
-  "executables": true,
-  "features": "+m,+a,+c",
-  "is-builtin": true,
-  "linker": "rust-lld",
-  "linker-flavor": "ld.lld",
-  "llvm-target": "riscv32",
-  "max-atomic-width": 32,
-  "panic-strategy": "abort",
-  "relocation-model": "static",
-  "target-pointer-width": "32",
-  "unsupported-abis": [
-    "cdecl",
-    "stdcall",
-    "stdcall-unwind",
-    "fastcall",
-    "vectorcall",
-    "thiscall",
-    "thiscall-unwind",
-    "aapcs",
-    "win64",
-    "sysv64",
-    "ptx-kernel",
-    "msp430-interrupt",
-    "x86-interrupt",
-    "amdgpu-kernel"
-  ]
-}
-
-rustc +nightly -Z unstable-options --print target-spec-json --target riscv64gc-unknown-none-elf
-
-{
-  "arch": "riscv64",
-  "code-model": "medium",
-  "cpu": "generic-rv64",
-  "data-layout": "e-m:e-p:64:64-i64:64-i128:128-n64-S128",
-  "eh-frame-header": false,
-  "emit-debug-gdb-scripts": false,
-  "executables": true,
-  "features": "+m,+a,+f,+d,+c",
-  "is-builtin": true,
-  "linker": "rust-lld",
-  "linker-flavor": "ld.lld",
-  "llvm-abiname": "lp64d",
-  "llvm-target": "riscv64",
-  "max-atomic-width": 64,
-  "panic-strategy": "abort",
-  "relocation-model": "static",
-  "target-pointer-width": "64",
-  "unsupported-abis": [
-    "cdecl",
-    "stdcall",
-    "stdcall-unwind",
-    "fastcall",
-    "vectorcall",
-    "thiscall",
-    "thiscall-unwind",
-    "aapcs",
-    "win64",
-    "sysv64",
-    "ptx-kernel",
-    "msp430-interrupt",
-    "x86-interrupt",
-    "amdgpu-kernel"
-  ]
-}
 
 Rust Build:
 
