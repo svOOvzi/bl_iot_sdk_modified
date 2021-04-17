@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#  macOS script to build, flash and run BL602 Rust Firmware
-#  Install the Rust toolchain like this...
-#    rustup default nightly
-#    rustup target add riscv32imac-unknown-none-elf
-#  TODO: BL602 is actually RV32-ACFIMX (i.e. 32-bit hardware floating point)
-#  TODO: Linker fails with error "can't link soft-float modules with single-float modules"
-#  TODO: Need Rust to support 32-bit hardware floating point. BL602 IoT SDK was compiled with "gcc -march=rv32imfc -mabi=ilp32f"
-#  See https://github.com/rust-lang/rust/issues/65024
+#  macOS script to build, flash and run BL602 Rust Firmware.
+#  We use a custom Rust target `riscv32imacf-unknown-none-elf` that sets `llvm-abiname` to `ilp32f` for Single-Precision Hardware Floating-Point.
+#  (Because BL602 IoT SDK was compiled with "gcc -march=rv32imfc -mabi=ilp32f")
+#  TODO: BL602 is actually RV32-ACFIMX
 
 set -e  #  Exit when any command fails
 set -x  #  Echo commands
@@ -40,7 +36,7 @@ rust_build_target_folder=riscv32imacf-unknown-none-elf
 #  rust_build_target=riscv32imac-unknown-none-elf
 #  rust_build_target_folder=riscv32imac-unknown-none-elf
 
-#  Rust build options
+#  Rust build options: Build the Rust Core Library for our custom target
 rust_build_options="--target $rust_build_target -Z build-std=core"
 if [ "$rust_build_profile" == 'release' ]; then
     # Build for release
