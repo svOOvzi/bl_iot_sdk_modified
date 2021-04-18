@@ -1,18 +1,22 @@
-# BL602 Rust Firmware
+# Rust Firmware for BL602 IoT SDK
 
-This BL602 firmware executes Rust code by injecting the compiled Rust code into the `rust_app` library...
-
-- [`rust-app`: BL602 Stub Library for Rust Application](../../components/3rdparty/rust-app)
+This BL602 firmware shows how we may create Rust firmware with the BL602 IoT SDK.
 
 Rust source code for the BL602 firmware is here...
 
 - [`rust`: Rust source code](rust)
 
-Build the BL602 firmware with this Rust build script...
+- [`rust_main`: Rust main function](rust/src/lib.rs)
 
-- [`run.sh`: Rust build script](run.sh)
+Run this script to build, flash and run the BL602 Rust firmware...
 
-This script uses a Custom Rust Target `riscv32imacf-unknown-none-elf`...
+- [`run.sh`: Build, flash and run BL602 Rust firmware](run.sh)
+
+This script links the compiled Rust code into the BL602 firmwae by overwriting the compiled `rust_app` Stub Library...
+
+- [`rust-app`: BL602 Stub Library for Rust Application](../../components/3rdparty/rust-app)
+
+The script uses a Custom Rust Target `riscv32imacf-unknown-none-elf`...
 
 - [`riscv32imacf-unknown-none-elf.json`: Rust Target for BL602](riscv32imacf-unknown-none-elf.json)
 
