@@ -30,7 +30,7 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
 }
 
 /// Print a message to the serial console
-fn puts(s: &str) -> i32 {    
+fn puts(s: &str) -> i32 {  //  `&str` is a reference to a string slice, similar to `char *` in C
     extern "C" {  // Import C Functions
         /// Print a message to the serial console (from C stdio library)
         fn puts(s: *const u8) -> i32;
