@@ -1,8 +1,11 @@
 //!  Main Rust Application for BL602 Firmware
 #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
 
-//  Declare the system modules
-use core::panic::PanicInfo;  //  Import `PanicInfo` type which is used by `panic()` below
+//  Import the Rust Core Library
+use core::{
+    panic::PanicInfo,  //  Import `PanicInfo` type which is used by `panic()` below
+    str::FromStr,      //  For converting `str` to `String`
+};
 
 /// `rust_main` will be called by the BL602 command-line interface
 #[no_mangle]              //  Don't mangle the name `rust_main`
@@ -13,7 +16,7 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8   //  char **
 ) {
     //  Display a message
-    puts("Hello from Rust!\0");
+    puts("Hello from Rust!");
 }
 
 /// This function is called on panic, like an assertion failure
@@ -23,7 +26,7 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
     //  For now we display a message
-    puts("TODO: Rust panic\0"); 
+    puts("TODO: Rust panic"); 
 
 	//  Loop forever, do not pass go, do not collect $200
     loop {}
@@ -31,18 +34,28 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
 
 /// Print a message to the serial console
 fn puts(s: &str) -> i32 {  //  `&str` is a reference to a string slice, similar to `char *` in C
-    extern "C" {  // Import C Functions
+    extern "C" {  //  Import C Function
         /// Print a message to the serial console (from C stdio library)
         fn puts(s: *const u8) -> i32;
     }
-    //  Convert the string to a pointer
-    let p = s.as_ptr();
+
+    //  Convert `str` to `String`, which similar to `char [64]` in C
+    let mut s_with_null = String::from_str(s)  //  `mut` because we will modify it
+        .expect("puts conversion failed");     //  If it exceeds 64 chars, halt with an error
+    
+    //  Terminate the string with null, since we will be passing to C
+    s_with_null.push('\0')
+        .expect("puts overflow");  //  If we exceed 64 chars, halt with an error
+
+    //  Convert the null-terminated string to a pointer
+    let p = s_with_null.as_str().as_ptr();
+
     unsafe {     //  Flag this code as unsafe because we're calling a C function
         puts(p)  //  Call the C function to print the message
     }
 }
 
-/// Limit Strings to 64 chars
+/// Limit Strings to 64 chars, similar to `char[64]` in C
 type String = heapless::String::<heapless::consts::U64>;
 
 /* Output Log
