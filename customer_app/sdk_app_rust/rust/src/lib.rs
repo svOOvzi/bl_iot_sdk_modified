@@ -13,10 +13,7 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8   //  char **
 ) {
     //  Display a message
-    puts(  //  Call the C function to display a message
-        b"Hello from Rust!\r\n\0"  //  Byte string to be printed, terminated by null
-        .as_ptr()                  //  Converted to a pointer
-    ); 
+    puts("Hello from Rust!\0");
 }
 
 /// This function is called on panic, like an assertion failure
@@ -26,25 +23,27 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
     //  For now we display a message
-    puts(  //  Call the C function to display a message
-        b"TODO: Rust panic\r\n\0"  //  Byte string to be printed, terminated by null
-        .as_ptr()                  //  Converted to a pointer
-    ); 
+    puts("TODO: Rust panic\0"); 
 
 	//  Loop forever, do not pass go, do not collect $200
     loop {}
 }
 
 /// Print a message to the serial console
-fn puts(s: *const u8) -> i32 {    
+fn puts(s: &str) -> i32 {    
     extern "C" {  // Import C Functions
         /// Print a message to the serial console (from C stdio library)
         fn puts(s: *const u8) -> i32;
     }
+    //  Convert the string to a pointer
+    let p = s.as_ptr();
     unsafe {     //  Flag this code as unsafe because we're calling a C function
-        puts(s)  //  Call the C function to print the message
+        puts(p)  //  Call the C function to print the message
     }
 }
+
+/// Limit Strings to 64 chars
+type String = heapless::String::<heapless::consts::U64>;
 
 /* Output Log
 

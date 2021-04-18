@@ -73,7 +73,7 @@ make
 #  Build the Rust Library
 pushd rust
 rustup default nightly
-cargo build -v $rust_build_options
+cargo build $rust_build_options
 popd
 
 #  Replace the Stub Library by the compiled Rust Library
