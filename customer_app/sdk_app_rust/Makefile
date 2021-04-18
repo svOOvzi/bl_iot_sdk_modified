@@ -19,7 +19,7 @@ $(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
 # Components needed for Rust
-COMPONENTS_RUST    := rust-app
+COMPONENTS_RUST    := rust-app nimble-porting-layer
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
 COMPONENTS_BLE     := 

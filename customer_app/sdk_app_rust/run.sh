@@ -32,6 +32,9 @@ rust_build_profile=debug
 rust_build_target=$PWD/riscv32imacf-unknown-none-elf.json
 rust_build_target_folder=riscv32imacf-unknown-none-elf
 
+set +x  #  Disable echo
+echo ; echo "----- Building Rust app and BL602 firmware for $rust_build_target_folder / $APP_NAME..." 
+
 #  Rust target: Standard target
 #  rust_build_target=riscv32imac-unknown-none-elf
 #  rust_build_target_folder=riscv32imac-unknown-none-elf
@@ -67,13 +70,21 @@ if [ -e $rust_app_build ]; then
     rm $rust_app_build
 fi
 
+set +x  #  Disable echo
+echo ; echo "----- Build BL602 Firmware"
+set -x  #  Enable echo
+
 #  Build the firmware with the Stub Library
 make
+
+set +x  #  Disable echo
+echo ; echo "----- Build Rust Library" 
+set -x  #  Enable echo
 
 #  Build the Rust Library
 pushd rust
 rustup default nightly
-cargo build -v $rust_build_options
+cargo build $rust_build_options
 popd
 
 #  Replace the Stub Library by the compiled Rust Library
@@ -81,6 +92,10 @@ popd
 #  Rust Library: rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 ls -l $rust_app_build
 cp $rust_app_build $rust_app_dest
+
+set +x  #  Disable echo
+echo ; echo "----- Link BL602 Firmware with Rust Library"
+set -x  #  Enable echo
 
 #  Link the Rust Library to the firmware
 make
@@ -95,6 +110,10 @@ $GCC_PATH/bin/riscv-none-embed-objdump \
 #  Copy firmware to blflash
 cp build_out/$APP_NAME.bin $BLFLASH_PATH
 
+set +x  #  Disable echo
+echo ; echo "----- Flash BL602 Firmware"
+set -x  #  Enable echo
+
 #  Flash the firmware
 pushd $BLFLASH_PATH
 cargo run flash $APP_NAME.bin \
@@ -103,6 +122,10 @@ cargo run flash $APP_NAME.bin \
     --baud-rate 230400
 sleep 5
 popd
+
+set +x  #  Disable echo
+echo ; echo "----- Run BL602 Firmware"
+set -x  #  Enable echo
 
 #  Run the firmware
 open -a CoolTerm
