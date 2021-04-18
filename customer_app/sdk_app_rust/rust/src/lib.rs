@@ -53,6 +53,8 @@ fn puts(s: &str) -> i32 {  //  `&str` is a reference to a string slice, similar 
     unsafe {     //  Flag this code as unsafe because we're calling a C function
         puts(p)  //  Call the C function to print the message
     }
+
+    //  No semicolon `;` here, so the value returned by the C function will be passed to our caller
 }
 
 /// Limit Strings to 64 chars, similar to `char[64]` in C
