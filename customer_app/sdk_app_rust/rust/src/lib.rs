@@ -3,7 +3,7 @@
 
 //  Import the Rust Core Library
 use core::{
-    panic::PanicInfo,  //  Import `PanicInfo` type which is used by `panic()` below
+    panic::PanicInfo,  //  For `PanicInfo` type which is used by `panic` below
     str::FromStr,      //  For converting `str` to `String`
 };
 
