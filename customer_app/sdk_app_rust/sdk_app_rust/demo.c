@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <FreeRTOS.h>
-#include <task.h>
-#include <semphr.h>
 #include <cli.h>
 #include "demo.h"
 
