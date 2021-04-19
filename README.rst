@@ -59,6 +59,8 @@ Changes
 
 - "master" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_rust/
 
+- "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
+
 BL602 SDK (Pine64 version)
 ==========================
 
