@@ -1,5 +1,5 @@
 //  This is a stub library (that contains no code), used for injecting Rust compiled code in the BL602 build.
-//  The compiled library will be replaced by the Rust applcation and Rust external libraries.
+//  The compiled library will be replaced by the Rust application.
 #include <stdio.h>
 
 /// Main function in Rust.
