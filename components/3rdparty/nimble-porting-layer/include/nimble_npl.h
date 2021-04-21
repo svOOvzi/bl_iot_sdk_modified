@@ -53,6 +53,9 @@ typedef enum ble_npl_error ble_npl_error_t;
 /* Include OS-specific definitions */
 #include "nimble_npl_os.h"
 
+/* Rename functions for BL602 */
+#include "nimble_npl_rename.h"
+
 /*
  * Generic
  */

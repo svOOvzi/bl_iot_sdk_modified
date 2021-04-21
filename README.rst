@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Run Rust RISC-V Firmware with BL602 IoT SDK" <https://lupyuen.github.io/articles/rust>`_
+
 - `"PineCone BL602 RISC-V Board Receives LoRa Packets" <https://lupyuen.github.io/articles/lora2>`_
 
 - `"RAKwireless WisBlock talks LoRa with PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/wisblock>`_
@@ -56,6 +58,10 @@ Changes
 - "lorawan" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/lorawan/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/lorawan/customer_app/sdk_app_lorawan/
 
 - "master" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1262
+
+- "master" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_rust/
+
+- "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
 
 BL602 SDK (Pine64 version)
 ==========================
