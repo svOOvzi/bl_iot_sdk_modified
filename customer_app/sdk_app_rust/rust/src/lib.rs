@@ -63,7 +63,7 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
 
 /// Print a message to the serial console.
 /// TODO: Auto-generate this wrapper with `bindgen` from the C declaration
-fn puts(s: &str) -> i32 {  //  `&str` is a reference to a string slice, similar to `char *` in C
+fn puts(s: &str) -> i32 {  //  `&str` is a reference to a string slice, similar to `const char *` in C
 
     extern "C" {  //  Import C Function
         /// Print a message to the serial console (from C stdio library)

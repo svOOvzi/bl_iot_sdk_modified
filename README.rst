@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Run Rust RISC-V Firmware with BL602 IoT SDK" <https://lupyuen.github.io/articles/rust>`_
+
 - `"PineCone BL602 RISC-V Board Receives LoRa Packets" <https://lupyuen.github.io/articles/lora2>`_
 
 - `"RAKwireless WisBlock talks LoRa with PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/wisblock>`_
