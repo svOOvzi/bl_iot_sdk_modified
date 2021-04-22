@@ -23,6 +23,10 @@
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
 #include "node/pbuf_queue.h"
 
+//  TODO: Implement with NimBLE Mutex
+#define OS_ENTER_CRITICAL(x) 
+#define OS_EXIT_CRITICAL(x) 
+
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
  * particular task's event queue.  pbuf_queues form a helper API around a common
@@ -67,7 +71,7 @@ pbuf_queue_get(struct pbuf_queue *mq)
 {
     struct pbuf *mp;
     struct pbuf *m;
-    os_sr_t sr;
+    //  os_sr_t sr;
 
     OS_ENTER_CRITICAL(sr);
     mp = STAILQ_FIRST(&mq->mq_head);
@@ -77,7 +81,7 @@ pbuf_queue_get(struct pbuf_queue *mq)
     OS_EXIT_CRITICAL(sr);
 
     if (mp) {
-        m = OS_MBUF_PKTHDR_TO_MBUF(mp);
+        m = mp;  //  Previously: OS_MBUF_PKTHDR_TO_MBUF(mp);
     } else {
         m = NULL;
     }
@@ -99,14 +103,16 @@ int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
 {
     struct pbuf *mp;
-    os_sr_t sr;
+    //  os_sr_t sr;
     int rc;
 
+#ifdef NOTUSED
     /* Can only place the head of a chained pbuf on the queue. */
     if (!OS_MBUF_IS_PKTHDR(m)) {
         rc = OS_EINVAL;
         goto err;
     }
+#endif  //  NOTUSED
 
     mp = get_pbuf_header(m);
 
