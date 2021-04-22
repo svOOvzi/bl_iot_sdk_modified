@@ -11,6 +11,7 @@
         "pbuf.h": "c",
         "sx126x.h": "c",
         "string.h": "c",
-        "sx126x-board.h": "c"
+        "sx126x-board.h": "c",
+        "pbuf_queue.h": "c"
     }
 }

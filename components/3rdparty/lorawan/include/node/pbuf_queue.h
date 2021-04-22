@@ -1,5 +1,5 @@
 //  Packet Buffer Queue. Based on mqueue (Mbuf Queue) from Mynewt OS:
-//  https://github.com/apache/mynewt-core/blob/master/kernel/os/src/os_mbuf.c
+//  https://github.com/apache/mynewt-core/blob/master/kernel/os/include/os/os_mbuf.h
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,10 +22,18 @@
 #ifndef H_PBUF_QUEUE_
 #define H_PBUF_QUEUE_
 
-#include "lwip/pbuf.h"   //  For Lightweight IP Stack pbuf 
-#include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
+#include "lwip/pbuf.h"       //  For Lightweight IP Stack pbuf 
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (multitasking functions)
+#include "node/bsd_queue.h"  //  For Queue Functions
 
-struct pbuf_queue {};  //  TODO
+/**
+ * Structure representing a queue of pbufs.
+ */
+struct pbuf_queue {
+    STAILQ_HEAD(, os_mbuf_pkthdr) mq_head;
+    /** Event to post when new buffers are available on the queue. */
+    struct ble_npl_event mq_ev;
+};
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
