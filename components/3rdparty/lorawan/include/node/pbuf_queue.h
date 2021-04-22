@@ -30,7 +30,7 @@
  * Structure representing a queue of pbufs.
  */
 struct pbuf_queue {
-    STAILQ_HEAD(, os_mbuf_pkthdr) mq_head;
+    STAILQ_HEAD(, pbuf) mq_head;
     /** Event to post when new buffers are available on the queue. */
     struct ble_npl_event mq_ev;
 };

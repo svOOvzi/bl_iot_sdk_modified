@@ -30,8 +30,8 @@
  * $FreeBSD: src/sys/sys/queue.h,v 1.32.2.7 2002/04/17 14:21:02 des Exp $
  */
 
-#ifndef _SYS_QUEUE_H_
-#define	_SYS_QUEUE_H_
+#ifndef _BSD_QUEUE_H_
+#define	_BSD_QUEUE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -519,4 +519,4 @@ struct {								\
 }
 #endif
 
-#endif /* !_SYS_QUEUE_H_ */
+#endif /* !_BSD_QUEUE_H_ */
