@@ -175,7 +175,7 @@ static void
 lora_node_reset_txq_timer(void)
 {
     /* XXX: For now, just reset timer to fire off in one second */
-    ble_npl_callout_reset(&g_lora_mac_data.lm_txq_timer, OS_TICKS_PER_SEC);
+    ble_npl_callout_reset(&g_lora_mac_data.lm_txq_timer, ble_npl_time_ms_to_ticks32(1000));
 }
 
 /**
