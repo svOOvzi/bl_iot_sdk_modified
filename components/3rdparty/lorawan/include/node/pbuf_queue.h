@@ -42,7 +42,15 @@ struct pbuf_list {
     /**
      * Pointer to pbuf
      */
-    struct pbuf *pb;    
+    struct pbuf *pb;
+    /**
+     * Pointer to header in pbuf
+     */
+    struct pbuf *header;
+    /**
+     * Pointer to payload in pbuf
+     */
+    struct pbuf *payload;
     /**
      * Pointer to next node in the pbuf_list
      */
