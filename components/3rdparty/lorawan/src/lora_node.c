@@ -123,17 +123,33 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 
 /* Allocate a packet for lora transmission. This returns a pbuf with packet header */
 struct pbuf *
-lora_pkt_alloc(uint16_t length)  //  Payload length of packet, excluding header
+lora_pkt_alloc(
+    uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
+    uint16_t payload_len)  //  Payload length of packet, excluding header
 {
+    //  TODO: Move to pbuf_queue
+    #warning Move to pbuf_queue
+    
     //  TODO: Init LWIP
+    #warning Init LWIP
+
     //  We assume that LWIP has been initialised
     //  Allocate a pbuf Packet Buffer
     struct pbuf *buf = pbuf_alloc(
         PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
-        length,           //  Payload size
+        payload_len,      //  Payload size
         PBUF_RAM          //  Allocate a single block of RAM
     );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
     assert(buf != NULL);
+
+    //  Packet Header will contain two structs: pbuf_list Header, followed by LoRaWAN Header
+
+    //  TODO: Erase packet, including pbuf_list header
+    #warning Erase packet
+
+    //  TODO: Init pbuf_list header
+    #warning Init pbuf_list
+
     return buf;
 }
 
@@ -192,7 +208,7 @@ bool
 lora_node_txq_empty(void)
 {
     bool rc;
-    struct pbuf *mp;
+    struct pbuf_list *mp;
 
     mp = STAILQ_FIRST(&g_lora_mac_data.lm_txq.mq_head);
     if (mp == NULL) {
@@ -225,8 +241,15 @@ lora_node_mac_mcps_indicate(void)
         return;
     }
 
-    om = lora_pkt_alloc();  //  TODO: Size of payload
-    if (om) {
+    om = lora_pkt_alloc(
+        sizeof(struct lora_pkt_info),  //  Header Length (LoRaWAN Header)
+        g_lora_mac_data.rxbufsize      //  Payload length
+    );
+    if (om) {        
+        #warning pbuf_copyinto
+        int pbuf_copyinto(struct pbuf *om, uint16_t offset, uint8_t *buf,
+                              uint16_t buf_size);  //  TODO
+
         /* Copy data into mbuf */
         rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
                               g_lora_mac_data.rxbufsize);
@@ -266,7 +289,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
     LoRaMacTxInfo_t txinfo;
     struct lora_pkt_info *lpkt;
     struct pbuf *om;
-    struct pbuf *mp;
+    struct pbuf_list *mp;
 
     /* Stop the transmit callback because something was just queued */
     ble_npl_callout_stop(&g_lora_mac_data.lm_txq_timer);
@@ -300,7 +323,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
             break;
         }
 
-        rc = LoRaMacQueryTxPossible(mp->len, &txinfo);
+        rc = LoRaMacQueryTxPossible(mp->payload_len, &txinfo);
         if (rc == LORAMAC_STATUS_MAC_CMD_LENGTH_ERROR) {
             /*
              * XXX: an ugly hack for now. If the server decides to send MAC

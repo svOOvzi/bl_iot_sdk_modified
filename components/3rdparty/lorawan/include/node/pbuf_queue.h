@@ -27,10 +27,33 @@
 #include "node/bsd_queue.h"  //  For Queue Functions
 
 /**
+ * Structure representing a list of pbufs inside a pbuf_queue.
+ * pbuf_list is stored in the header of the pbuf, before the LoRaWAN Header.
+ */
+struct pbuf_list {
+    /**
+     * Header length
+     */
+    u16_t header_len;
+    /**
+     * Payload length
+     */
+    u16_t payload_len;
+    /**
+     * Pointer to pbuf
+     */
+    struct pbuf *pb;    
+    /**
+     * Pointer to next node in the pbuf_list
+     */
+    STAILQ_ENTRY(pbuf_list) next;
+};
+
+/**
  * Structure representing a queue of pbufs.
  */
 struct pbuf_queue {
-    STAILQ_HEAD(, pbuf) mq_head;
+    STAILQ_HEAD(, pbuf_list) mq_head;
     /** Event to post when new buffers are available on the queue. */
     struct ble_npl_event mq_ev;
 };

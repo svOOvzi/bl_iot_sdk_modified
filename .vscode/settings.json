@@ -12,6 +12,8 @@
         "sx126x.h": "c",
         "string.h": "c",
         "sx126x-board.h": "c",
-        "pbuf_queue.h": "c"
+        "pbuf_queue.h": "c",
+        "rope": "c",
+        "regex": "c"
     }
 }

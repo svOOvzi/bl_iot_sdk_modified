@@ -69,19 +69,20 @@ pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
 struct pbuf *
 pbuf_queue_get(struct pbuf_queue *mq)
 {
-    struct pbuf *mp;
+    struct pbuf_list *mp;
     struct pbuf *m;
     //  os_sr_t sr;
 
     OS_ENTER_CRITICAL(sr);
     mp = STAILQ_FIRST(&mq->mq_head);
     if (mp) {
-        STAILQ_REMOVE_HEAD(&mq->mq_head, omp_next);
+        STAILQ_REMOVE_HEAD(&mq->mq_head, next);
     }
     OS_EXIT_CRITICAL(sr);
 
     if (mp) {
-        m = mp;  //  Previously: OS_MBUF_PKTHDR_TO_MBUF(mp);
+        //  Return the pbuf referenced by the pbuf_list
+        m = mp->pb;  //  Previously: OS_MBUF_PKTHDR_TO_MBUF(mp);
     } else {
         m = NULL;
     }
@@ -102,9 +103,8 @@ pbuf_queue_get(struct pbuf_queue *mq)
 int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
 {
-    struct pbuf *mp;
+    struct pbuf_list *mp;
     //  os_sr_t sr;
-    int rc;
 
 #ifdef NOTUSED
     /* Can only place the head of a chained pbuf on the queue. */
@@ -114,10 +114,13 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
     }
 #endif  //  NOTUSED
 
-    mp = get_pbuf_header(m);
+    #warning get_pbuf_list
+    struct pbuf_list *get_pbuf_list(struct pbuf *m);  //  TODO
+
+    mp = get_pbuf_list(m);
 
     OS_ENTER_CRITICAL(sr);
-    STAILQ_INSERT_TAIL(&mq->mq_head, mp, omp_next);
+    STAILQ_INSERT_TAIL(&mq->mq_head, mp, next);
     OS_EXIT_CRITICAL(sr);
 
     /* Only post an event to the queue if its specified */
@@ -126,8 +129,6 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
     }
 
     return (0);
-err:
-    return (rc);
 }
 
 /// Return the pbuf Packet Buffer header
