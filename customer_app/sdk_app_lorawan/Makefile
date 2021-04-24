@@ -40,7 +40,7 @@ CFLAGS += -DCONFIG_LORA_NODE_REGION=1
 CFLAGS += -DLORA_NODE_DEFAULT_DATARATE=0
 
 # Include shell commands for LoRa operations
-CFLAGS += -DLORA_NODE_CLI=1
+CFLAGS += -DLORA_NODE_CLI=0
 
 # Include shell commands for lora node debug log
 CFLAGS += -DLORA_NODE_LOG_CLI=1
