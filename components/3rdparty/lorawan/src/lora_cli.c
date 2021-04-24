@@ -34,6 +34,9 @@ static int lora_cli_tx(int argc, char **argv);
 static int lora_cli_rx(int argc, char **argv);
 static int lora_cli_max_payload_len(int argc, char **argv);
 
+#warning Convert to BL602 CLI
+
+#ifdef TODO
 static struct shell_cmd lora_cli_cmd = {
     .sc_cmd = "lora",
     .sc_cmd_func = lora_cli_cmd_fn,
@@ -110,6 +113,7 @@ err:
 
     return rc;
 }
+#endif  //  TODO
 
 static int
 lora_cli_set_freq(int argc, char **argv)
@@ -713,9 +717,14 @@ lora_cli_init(void)
 
     (void)rc;
 #if (LORA_NODE_CLI)
+
+#ifdef TODO  //  Convert to BL602 CLI
     rc = shell_cmd_register(&lora_cli_cmd);
     SYSINIT_PANIC_ASSERT_MSG(rc == 0, "Failed to register lora CLI command");
+#endif  //  TODO
+
 #endif
+
 #if (LORA_NODE_LOG_CLI)
 
 #ifdef TODO  //  Convert to BL602 CLI
