@@ -110,8 +110,8 @@ extern void lora_bsp_enable_mac_timer(void);
 void
 lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 {
-    //  TODO: os_sr_t sr;
-    OS_ENTER_CRITICAL(sr);
+    //  TODO: static os_sr_t log_mutex;
+    OS_ENTER_CRITICAL(log_mutex);
     g_lnd_log[g_lnd_log_index].lnd_id = logid;
     g_lnd_log[g_lnd_log_index].lnd_p8 = p8;
     g_lnd_log[g_lnd_log_index].lnd_p16 = p16;
@@ -122,7 +122,7 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
     if (g_lnd_log_index == LORA_NODE_DEBUG_LOG_ENTRIES) {
         g_lnd_log_index = 0;
     }
-    OS_EXIT_CRITICAL(sr);
+    OS_EXIT_CRITICAL(log_mutex);
 }
 #endif  /* if defined(LORA_NODE_DEBUG_LOG) */
 

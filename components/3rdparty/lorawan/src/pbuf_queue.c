@@ -32,6 +32,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  pbuf Functions
 
+//  TODO: Critical section for pbuf_header
+//  static os_sr_t pbuf_header_mutex;
+
 /* Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with pbuf_list header, 
    LoRaWAN header and LoRaWAN payload */
 struct pbuf *
@@ -95,24 +98,38 @@ void *get_pbuf_header(
 {
     assert(buf != NULL);
 
+    //  Warning: This code mutates the pbuf payload pointer, so we need a critical section
+    //  static os_sr_t sr;
+
+    //  Enter critical section
+    OS_ENTER_CRITICAL(pbuf_header_mutex);
+
     //  Shift the pbuf payload pointer BACKWARD
     //  to locate the header.
-    u8_t rc = pbuf_add_header(buf, header_size);
-    assert(rc == 0);
+    u8_t rc1 = pbuf_add_header(buf, header_size);
 
     //  Payload now points to the header
     void *header = buf->payload;
-    assert(header != NULL);
 
     //  Shift the pbuf payload pointer FORWARD
     //  to locate the payload.
-    rc = pbuf_remove_header(buf, header_size);
-    assert(rc == 0);
+    u8_t rc2 = pbuf_remove_header(buf, header_size);
+
+    //  Exit critical section
+    OS_EXIT_CRITICAL(pbuf_header_mutex);
+
+    //  Check for errors
+    assert(rc1 == 0);
+    assert(rc2 == 0);
+    assert(header != NULL);
     return header;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //  pbuf Queue Functions
+
+//  TODO: Critical section for pbuf_queue
+//  static os_sr_t pbuf_queue_mutex;
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
@@ -158,14 +175,13 @@ pbuf_queue_get(struct pbuf_queue *mq)
 {
     struct pbuf_list *mp;
     struct pbuf *m;
-    //  os_sr_t sr;
 
-    OS_ENTER_CRITICAL(sr);
+    OS_ENTER_CRITICAL(pbuf_queue_mutex);
     mp = STAILQ_FIRST(&mq->mq_head);
     if (mp) {
         STAILQ_REMOVE_HEAD(&mq->mq_head, next);
     }
-    OS_EXIT_CRITICAL(sr);
+    OS_EXIT_CRITICAL(pbuf_queue_mutex);
 
     if (mp) {
         //  Return the pbuf referenced by the pbuf_list
@@ -206,9 +222,9 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
 
     mp = get_pbuf_list(m);
 
-    OS_ENTER_CRITICAL(sr);
+    OS_ENTER_CRITICAL(pbuf_queue_mutex);
     STAILQ_INSERT_TAIL(&mq->mq_head, mp, next);
-    OS_EXIT_CRITICAL(sr);
+    OS_EXIT_CRITICAL(pbuf_queue_mutex);
 
     /* Only post an event to the queue if its specified */
     if (evq) {
