@@ -37,6 +37,7 @@
 #include "node/mac/LoRaMac.h"
 #include "node/mac/LoRaMacTest.h"
 #include "node/lora_priv.h"
+#include "node/lora_timer.h"
 
 //  We don't support statistics
 #define STATS_INC(x,y)
