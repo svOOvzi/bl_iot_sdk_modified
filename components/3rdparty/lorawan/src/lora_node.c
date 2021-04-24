@@ -415,8 +415,14 @@ lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 void
 lora_mac_task(void *arg)
 {
+    #warning Process LoRa events
     /* Process events */
     while (1) {
+        //  Previously: os_eventq_run(&g_lora_mac_data.lm_evq);
+        //  struct os_event *ev;
+        //  ev = os_eventq_get(evq);
+        //  assert(ev->ev_cb != NULL);
+        //  ev->ev_cb(ev);
         ble_npl_event_run(&g_lora_mac_data.lm_evq);
     }
 }

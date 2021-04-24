@@ -569,6 +569,7 @@ static struct shell_cmd lora_node_log_cmd = {
 
 #endif
 
+#warning Convert lora_cli_log_cmd to BL602 CLI
 int
 lora_cli_log_cmd(int argc, char **argv)
 {
