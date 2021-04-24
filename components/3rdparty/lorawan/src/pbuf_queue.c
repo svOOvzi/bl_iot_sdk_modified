@@ -42,6 +42,9 @@ alloc_pbuf(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len)  //  Payload length of packet, excluding header
 {
+    assert(header_len > 0);
+    assert(payload_len > 0);
+
     //  Init LWIP Buffer Pool
     static bool lwip_started = false;
     if (!lwip_started) {
@@ -65,10 +68,12 @@ alloc_pbuf(
 
     //  Get pointer to pbuf_list Header and LoRaWAN Header
     void *combined_header = get_pbuf_header(buf, combined_header_len);
-    void *header = get_pbuf_header(buf, header_len);
+    void *header          = get_pbuf_header(buf, header_len);
+    assert(combined_header != NULL);
+    assert(header != NULL);
 
     //  Verify integrity of headers: pbuf_list Header is followed by LoRaWAN Header and LoRaWAN Payload
-    assert((uint32_t) combined_header + combined_header_len == (uint32_t) buf->payload);
+    assert((uint32_t) combined_header + combined_header_len      == (uint32_t) buf->payload);
     assert((uint32_t) combined_header + sizeof(struct pbuf_list) == (uint32_t) header);
     assert((uint32_t) header + header_len == (uint32_t) buf->payload);
 
@@ -91,12 +96,38 @@ alloc_pbuf(
     return buf;
 }
 
+/// Given a pbuf, return the pbuf_list that's in the pbuf header
+static struct pbuf_list *
+get_pbuf_list(
+    struct pbuf *buf,     //  pbuf Packet Buffer
+    uint16_t header_len)  //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
+{
+    assert(buf != NULL);
+    assert(header_len > 0);
+
+    //  Packet Header will contain two structs: pbuf_list Header, followed by LoRaWAN Header
+    size_t combined_header_len = sizeof(struct pbuf_list) + header_len;
+
+    //  Get pointer to pbuf_list Header
+    struct pbuf_list *list = get_pbuf_header(buf, combined_header_len);
+    assert(list != NULL);
+
+    //  Verify integrity of pbuf_list: pbuf_list Header is followed by LoRaWAN Header and LoRaWAN Payload
+    assert((uint32_t) list + sizeof(struct pbuf_list) + list->header_len == (uint32_t) list->payload);
+    assert((uint32_t) list + sizeof(struct pbuf_list) == (uint32_t) list->header);
+    assert((uint32_t) list->header + list->header_len == (uint32_t) list->payload);
+
+    return list;
+}
+
 /// Return the pbuf Packet Buffer header
-void *get_pbuf_header(
+void *
+get_pbuf_header(
     struct pbuf *buf,    //  pbuf Packet Buffer
     size_t header_size)  //  Size of header
 {
     assert(buf != NULL);
+    assert(header_size > 0);
 
     //  Warning: This code mutates the pbuf payload pointer, so we need a critical section
     //  static os_sr_t sr;
@@ -145,15 +176,21 @@ void *get_pbuf_header(
  *                              event.  Typically, this callback pulls each
  *                              packet off the pbuf_queue and processes them.
  * @param arg                   The argument to associate with the pbuf_queue event.
+ * @param header_len            Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
  *
  * @return                      0 on success, non-zero on failure.
  */
 int
-pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg)
+pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg, uint16_t header_len)
 {
+    assert(mq != NULL);
+    assert(ev_cb != NULL);
+    assert(header_len > 0);
+
     struct ble_npl_event *ev;
 
     STAILQ_INIT(&mq->mq_head);
+    mq->header_len = header_len;
 
     ev = &mq->mq_ev;
     memset(ev, 0, sizeof(*ev));
@@ -207,7 +244,6 @@ int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
 {
     struct pbuf_list *mp;
-    //  os_sr_t sr;
 
 #ifdef NOTUSED
     /* Can only place the head of a chained pbuf on the queue. */
@@ -217,10 +253,7 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
     }
 #endif  //  NOTUSED
 
-    #warning get_pbuf_list
-    struct pbuf_list *get_pbuf_list(struct pbuf *m);  //  TODO
-
-    mp = get_pbuf_list(m);
+    mp = get_pbuf_list(m, mq->header_len);
 
     OS_ENTER_CRITICAL(pbuf_queue_mutex);
     STAILQ_INSERT_TAIL(&mq->mq_head, mp, next);

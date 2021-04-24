@@ -61,9 +61,14 @@ struct pbuf_list {
  * Structure representing a queue of pbufs.
  */
 struct pbuf_queue {
+    /** List of pbufs in the queue */
     STAILQ_HEAD(, pbuf_list) mq_head;
+
     /** Event to post when new buffers are available on the queue. */
     struct ble_npl_event mq_ev;
+
+    /** Header length of packet (LoRaWAN Header only, excluding pbuf_list header) */
+    uint16_t header_len;
 };
 
 /// Return the pbuf Packet Buffer header
@@ -92,11 +97,12 @@ alloc_pbuf(
  *                              event.  Typically, this callback pulls each
  *                              packet off the pbuf_queue and processes them.
  * @param arg                   The argument to associate with the pbuf_queue event.
+ * @param header_len            Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
  *
  * @return                      0 on success, non-zero on failure.
  */
 int
-pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg);
+pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg, uint16_t header_len);
 
 /**
  * Remove and return a single pbuf from the pbuf queue.  Does not block.

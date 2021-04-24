@@ -676,7 +676,7 @@ lora_node_init(void)
     ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
 
     /* Set up transmit done queue and event */
-    pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);
+    pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL, sizeof(struct lora_pkt_info));
 
     #ifdef NOTUSED
     /* Create the mac task */

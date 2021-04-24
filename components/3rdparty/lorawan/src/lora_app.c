@@ -545,8 +545,8 @@ lora_app_init(void)
     lora_app_link_chk_ev.fn = lora_app_link_chk_ev_cb;
 
     /* Set up receive queue and event */
-    pbuf_queue_init(&lora_node_app_rx_q, lora_node_proc_app_rxd_event, NULL);
+    pbuf_queue_init(&lora_node_app_rx_q, lora_node_proc_app_rxd_event, NULL, sizeof(struct lora_pkt_info));
 
     /* Set up transmit done queue and event */
-    pbuf_queue_init(&lora_node_app_txd_q, lora_node_proc_app_txd_event, NULL);
+    pbuf_queue_init(&lora_node_app_txd_q, lora_node_proc_app_txd_event, NULL, sizeof(struct lora_pkt_info));
 }
