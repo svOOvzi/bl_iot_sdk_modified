@@ -35,8 +35,8 @@
 //  TODO: Critical section for pbuf_header
 //  static os_sr_t pbuf_header_mutex;
 
-/* Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with pbuf_list header, 
-   LoRaWAN header and LoRaWAN payload */
+/// Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with 
+/// pbuf_list Header, LoRaWAN Header and LoRaWAN Payload
 struct pbuf *
 alloc_pbuf(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
@@ -130,8 +130,6 @@ get_pbuf_header(
     assert(header_size > 0);
 
     //  Warning: This code mutates the pbuf payload pointer, so we need a critical section
-    //  static os_sr_t sr;
-
     //  Enter critical section
     OS_ENTER_CRITICAL(pbuf_header_mutex);
 
@@ -160,7 +158,7 @@ get_pbuf_header(
 //  pbuf Queue Functions
 
 //  TODO: Critical section for pbuf_queue
-//  static os_sr_t pbuf_queue_mutex;
+//  static os_sr_t pbuf_queue_mutex;  //  TODO: One mutex per queue
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a

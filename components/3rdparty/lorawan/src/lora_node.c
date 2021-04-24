@@ -655,11 +655,13 @@ lora_node_init(void)
     LoRaMacStatus_t lms;
 #endif
 
+#ifdef TODO  //  Statistics not supported
     rc = stats_init_and_reg(
         STATS_HDR(lora_mac_stats),
         STATS_SIZE_INIT_PARMS(lora_mac_stats, STATS_SIZE_32),
         STATS_NAME_INIT_PARMS(lora_mac_stats), "lora_mac");
     SYSINIT_PANIC_ASSERT(rc == 0);
+#endif  //  TODO
 
 #if (LORA_NODE_CLI)
     lora_cli_init();

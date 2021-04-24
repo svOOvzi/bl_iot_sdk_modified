@@ -22,6 +22,10 @@
 #include "node/lora_utilities.h"
 #include "node/lora_priv.h"
 
+#warning Implement randr, TimerGetCurrentTime, TimerGetElapsedTime
+
+#ifdef TODO
+
 int32_t
 randr(int32_t min, int32_t max)
 {
@@ -39,3 +43,5 @@ TimerGetElapsedTime(TimerTime_t savedTime)
 {
     return timer_get_elapsed_time(savedTime);
 }
+
+#endif  //  TODO
