@@ -411,6 +411,7 @@ lora_mac_txq_timer_cb(struct ble_npl_event *ev)
     lora_mac_proc_tx_q_event(NULL);
 }
 
+#ifdef NOTUSED  //  Background Task now handled by event_queue in sdk_app_lorawan/demo.c
 /**
  * The LoRa mac task
  *
@@ -431,7 +432,9 @@ lora_mac_task(void *arg)
         ble_npl_event_run(g_lora_mac_data.lm_evq);
     }
 }
-#endif
+#endif  //  NOTUSED
+
+#endif  //  !(LORA_NODE_CLI)
 
 #if !(LORA_APP_AUTO_JOIN)
 /**
