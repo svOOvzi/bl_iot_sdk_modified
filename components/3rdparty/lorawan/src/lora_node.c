@@ -132,30 +132,7 @@ lora_pkt_alloc(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len)  //  Payload length of packet, excluding header
 {
-    //  TODO: Move to pbuf_queue
-    #warning Move to pbuf_queue
-
-    //  TODO: Init LWIP
-    #warning Init LWIP
-
-    //  We assume that LWIP has been initialised
-    //  Allocate a pbuf Packet Buffer
-    struct pbuf *buf = pbuf_alloc(
-        PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
-        payload_len,      //  Payload size
-        PBUF_RAM          //  Allocate a single block of RAM
-    );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
-    assert(buf != NULL);
-
-    //  Packet Header will contain two structs: pbuf_list Header, followed by LoRaWAN Header
-
-    //  TODO: Erase packet, including pbuf_list header
-    #warning Erase packet
-
-    //  TODO: Init pbuf_list header
-    #warning Init pbuf_list
-
-    return buf;
+    return alloc_pbuf(header_len, payload_len);
 }
 
 /**

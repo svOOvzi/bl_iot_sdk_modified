@@ -66,6 +66,18 @@ struct pbuf_queue {
     struct ble_npl_event mq_ev;
 };
 
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,     //  pbuf Packet Buffer
+    size_t header_size);  //  Size of header
+
+/* Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with pbuf_list header, 
+   LoRaWAN header and LoRaWAN payload */
+struct pbuf *
+alloc_pbuf(
+    uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
+    uint16_t payload_len); //  Payload length of packet, excluding header
+
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
  * particular task's event queue.  pbuf_queues form a helper API around a common
@@ -108,10 +120,5 @@ pbuf_queue_get(struct pbuf_queue *mq);
  */
 int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m);
-
-/// Return the pbuf Packet Buffer header
-void *get_pbuf_header(
-    struct pbuf *buf,    //  pbuf Packet Buffer
-    size_t header_size);  //  Size of header
 
 #endif

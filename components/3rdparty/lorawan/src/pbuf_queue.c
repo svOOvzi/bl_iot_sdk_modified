@@ -19,6 +19,7 @@
  * under the License.
  */
 
+#include "lwip/init.h"   //  For Lightweight IP Stack Init
 #include "lwip/pbuf.h"   //  For Lightweight IP Stack pbuf 
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (multitasking functions)
 #include "node/pbuf_queue.h"
@@ -28,6 +29,9 @@
 #define OS_ENTER_CRITICAL(x) 
 #define OS_EXIT_CRITICAL(x) 
 
+///////////////////////////////////////////////////////////////////////////////
+//  pbuf Functions
+
 /* Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with pbuf_list header, 
    LoRaWAN header and LoRaWAN payload */
 struct pbuf *
@@ -35,30 +39,80 @@ alloc_pbuf(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len)  //  Payload length of packet, excluding header
 {
+    //  Init LWIP Buffer Pool
+    static bool lwip_started = false;
+    if (!lwip_started) {
+        lwip_started = true;
+        lwip_init();
+    }
     
-    
-    //  TODO: Init LWIP
-    #warning Init LWIP
-
-    //  We assume that LWIP has been initialised
-    //  Allocate a pbuf Packet Buffer
+    //  Allocate a pbuf Packet Buffer with sufficient header space for pbuf_list header and LoRaWAN header
     struct pbuf *buf = pbuf_alloc(
         PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
         payload_len,      //  Payload size
-        PBUF_RAM          //  Allocate a single block of RAM
+        PBUF_RAM          //  Allocate as a single block of RAM
     );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
     assert(buf != NULL);
 
+    //  Erase packet
+    memset(buf->payload, 0, payload_len);
+
     //  Packet Header will contain two structs: pbuf_list Header, followed by LoRaWAN Header
+    size_t combined_header_len = sizeof(struct pbuf_list) + header_len;
 
-    //  TODO: Erase packet, including pbuf_list header
-    #warning Erase packet
+    //  Get pointer to pbuf_list Header and LoRaWAN Header
+    void *combined_header = get_pbuf_header(buf, combined_header_len);
+    void *header = get_pbuf_header(buf, header_len);
 
-    //  TODO: Init pbuf_list header
-    #warning Init pbuf_list
+    //  Verify integrity of headers: pbuf_list Header is followed by LoRaWAN Header and LoRaWAN Payload
+    assert((uint32_t) combined_header + combined_header_len == (uint32_t) buf->payload);
+    assert((uint32_t) combined_header + sizeof(struct pbuf_list) == (uint32_t) header);
+    assert((uint32_t) header + header_len == (uint32_t) buf->payload);
+
+    //  Erase pbuf_list Header and LoRaWAN Header
+    memset(combined_header, 0, combined_header_len);
+
+    //  Init pbuf_list header at the start of the combined header
+    struct pbuf_list *list = combined_header;
+    list->header_len  = header_len;
+    list->payload_len = payload_len;
+    list->header      = header;
+    list->payload     = buf->payload;
+    list->pb          = buf;
+
+    //  Verify integrity of pbuf_list: pbuf_list Header is followed by LoRaWAN Header and LoRaWAN Payload
+    assert((uint32_t) list + sizeof(struct pbuf_list) + list->header_len == (uint32_t) list->payload);
+    assert((uint32_t) list + sizeof(struct pbuf_list) == (uint32_t) list->header);
+    assert((uint32_t) list->header + list->header_len == (uint32_t) list->payload);
 
     return buf;
 }
+
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,    //  pbuf Packet Buffer
+    size_t header_size)  //  Size of header
+{
+    assert(buf != NULL);
+
+    //  Shift the pbuf payload pointer BACKWARD
+    //  to locate the header.
+    u8_t rc = pbuf_add_header(buf, header_size);
+    assert(rc == 0);
+
+    //  Payload now points to the header
+    void *header = buf->payload;
+    assert(header != NULL);
+
+    //  Shift the pbuf payload pointer FORWARD
+    //  to locate the payload.
+    rc = pbuf_remove_header(buf, header_size);
+    assert(rc == 0);
+    return header;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  pbuf Queue Functions
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a
@@ -162,27 +216,4 @@ pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m
     }
 
     return (0);
-}
-
-/// Return the pbuf Packet Buffer header
-void *get_pbuf_header(
-    struct pbuf *buf,    //  pbuf Packet Buffer
-    size_t header_size)  //  Size of header
-{
-    assert(buf != NULL);
-
-    //  Shift the pbuf payload pointer BACKWARD
-    //  to locate the header.
-    u8_t rc = pbuf_add_header(buf, header_size);
-    assert(rc == 0);
-
-    //  Payload now points to the header
-    void *header = buf->payload;
-    assert(header != NULL);
-
-    //  Shift the pbuf payload pointer FORWARD
-    //  to locate the payload.
-    rc = pbuf_remove_header(buf, header_size);
-    assert(rc == 0);
-    return header;
 }
