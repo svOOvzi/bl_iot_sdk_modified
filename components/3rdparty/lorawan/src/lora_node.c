@@ -730,7 +730,10 @@ void lora_enter_low_power(void)
 {
     if (!low_power_active) {
         low_power_active = true;
-        hal_timer_deinit((LORA_MAC_TIMER_NUM));
+
+        #warning Handle LoRa enter low power
+        //  TODO: hal_timer_deinit((LORA_MAC_TIMER_NUM));
+
         lora_node_log(LORA_NODE_LOG_LP_ENTER, 0, 0, 0);
     }
 }
@@ -739,7 +742,10 @@ void lora_exit_low_power(void)
 {
     if (low_power_active) {
         low_power_active = false;
-        lora_bsp_enable_mac_timer();
+
+        #warning Handle LoRa exit low power
+        //  TODO: lora_bsp_enable_mac_timer();
+
         lora_node_log(LORA_NODE_LOG_LP_EXIT, 0, 0, 0);
         lora_config_peripherals();
     }
