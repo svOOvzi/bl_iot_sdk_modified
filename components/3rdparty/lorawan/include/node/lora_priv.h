@@ -130,7 +130,7 @@ struct lora_mac_obj
     LoRaMacRxSlot_t rx_slot;
 
     /* Task event queue */
-    struct ble_npl_eventq lm_evq;
+    struct ble_npl_eventq *lm_evq;
 
     /* Transmit queue */
     struct pbuf_queue lm_txq;

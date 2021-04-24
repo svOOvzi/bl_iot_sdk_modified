@@ -143,10 +143,13 @@ lora_pkt_alloc(
 void
 lora_node_mcps_request(struct pbuf *om)
 {
+    assert(om != NULL);
     int rc;
 
     lora_node_log(LORA_NODE_LOG_APP_TX, 0, om->len, (uint32_t)om);
-    rc = pbuf_queue_put(&g_lora_mac_data.lm_txq, &g_lora_mac_data.lm_evq, om);
+
+    assert(g_lora_mac_data.lm_evq != NULL);
+    rc = pbuf_queue_put(&g_lora_mac_data.lm_txq, g_lora_mac_data.lm_evq, om);
     assert(rc == 0);
 }
 
@@ -183,7 +186,8 @@ lora_node_reset_txq_timer(void)
 void
 lora_node_chk_txq(void)
 {
-    ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
+    assert(g_lora_mac_data.lm_evq != NULL);
+    ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
 }
 
 bool
@@ -423,7 +427,8 @@ lora_mac_task(void *arg)
         //  ev = os_eventq_get(evq);
         //  assert(ev->ev_cb != NULL);
         //  ev->ev_cb(ev);
-        ble_npl_event_run(&g_lora_mac_data.lm_evq);
+        assert(g_lora_mac_data.lm_evq != NULL);
+        ble_npl_event_run(g_lora_mac_data.lm_evq);
     }
 }
 #endif
@@ -472,7 +477,10 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
         g_lm_join_ev_arg.app_eui = app_eui;
         g_lm_join_ev_arg.app_key = app_key;
         g_lm_join_ev_arg.trials = trials;
-        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
+
+        assert(g_lora_mac_data.lm_evq != NULL);
+
+        ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
         rc = LORA_APP_STATUS_OK;
     }
 
@@ -491,7 +499,9 @@ lora_node_link_check(void)
 
     rc = lora_node_chk_if_joined();
     if (rc == LORA_APP_STATUS_ALREADY_JOINED) {
-        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
+        assert(g_lora_mac_data.lm_evq != NULL);
+
+        ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
         rc = LORA_APP_STATUS_OK;
     }
 
@@ -646,19 +656,19 @@ lora_node_link_qual(int16_t *rssi, int16_t *snr)
 struct ble_npl_eventq *
 lora_node_mac_evq_get(void)
 {
-    return &g_lora_mac_data.lm_evq;
+    assert(g_lora_mac_data.lm_evq != NULL);
+    return g_lora_mac_data.lm_evq;
 }
 
 void
 lora_node_init(void)
 {
-    int rc;
 #if !(LORA_NODE_CLI)
     LoRaMacStatus_t lms;
 #endif
 
 #ifdef TODO  //  Statistics not supported
-    rc = stats_init_and_reg(
+    int rc = stats_init_and_reg(
         STATS_HDR(lora_mac_stats),
         STATS_SIZE_INIT_PARMS(lora_mac_stats, STATS_SIZE_32),
         STATS_NAME_INIT_PARMS(lora_mac_stats), "lora_mac");
@@ -676,8 +686,10 @@ lora_node_init(void)
 #endif
 
     /*--- MAC INIT ---*/
-    /* Initialize eventq */
-    ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
+    /* Initialize eventq to global event_queue from sdk_app_lorawan */
+    //  Previously: ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
+    extern struct ble_npl_eventq event_queue;  //  Defined in sdk_app_lorawan/demo.c
+    g_lora_mac_data.lm_evq = &event_queue;
 
     /* Set up transmit done queue and event */
     pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL, sizeof(struct lora_pkt_info));
@@ -697,8 +709,9 @@ lora_node_init(void)
     g_lora_mac_data.lm_link_chk_ev.fn = lora_mac_link_chk_event;
 
     /* Initialize the transmit queue timer */
+    assert(g_lora_mac_data.lm_evq != NULL);
     ble_npl_callout_init(&g_lora_mac_data.lm_txq_timer,
-                    &g_lora_mac_data.lm_evq, lora_mac_txq_timer_cb, NULL);
+                    g_lora_mac_data.lm_evq, lora_mac_txq_timer_cb, NULL);
 
     /* Initialize the LoRa mac */
     lora_cb.GetBatteryLevel = lora_node_get_batt_status;
