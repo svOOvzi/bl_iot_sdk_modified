@@ -1011,7 +1011,6 @@ void
 las_cmd_init(void)
 {
     int i;
-    int rc;
 
     /* Set the join callback */
     lora_app_set_join_cb(lora_app_shell_join_cb);
@@ -1021,7 +1020,7 @@ las_cmd_init(void)
 
 #ifdef TODO
     for (i = 0; i < LAS_NUM_CLI_CMDS; i++) {
-        rc = shell_cmd_register(las_cmds + i);
+        int rc = shell_cmd_register(las_cmds + i);
         SYSINIT_PANIC_ASSERT_MSG(
             rc == 0, "Failed to register lora app shell CLI commands");
     }
