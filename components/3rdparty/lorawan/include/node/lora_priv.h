@@ -25,8 +25,7 @@
 #include "node/mac/LoRaMac.h"
 #include "node/lora.h"
 #include "node/lora_band.h"
-
-typedef uint32_t os_time_t;  //  TODO
+#include "node/lora_timer.h"
 
 /* Connection state machine flags. */
 union lora_mac_flags {

@@ -39,6 +39,9 @@
 #include "node/lora_priv.h"
 #include "node/lora_timer.h"
 
+//  TODO: Sync with sx126x-utilities.h, sx1276-utilities.h
+uint32_t timer_get_current_time(void);
+
 //  We don't support statistics
 #define STATS_INC(x,y)
 
@@ -353,7 +356,7 @@ OnRadioRxTimeout(void)
  * \brief Function executed on duty cycle delayed Tx  timer event
  */
 static void
-OnTxDelayedTimerEvent(void *unused)
+OnTxDelayedTimerEvent(struct ble_npl_event *ev)
 {
     puts("OnTxDelayedTimerEvent");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_tx_delay_timeout_event);
@@ -363,7 +366,7 @@ OnTxDelayedTimerEvent(void *unused)
  * \brief Function executed on first Rx window timer event
  */
 static void
-OnRxWindow1TimerEvent(void *unused)
+OnRxWindow1TimerEvent(struct ble_npl_event *ev)
 {
     puts("OnRxWindow1TimerEvent");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win1_event);
@@ -373,7 +376,7 @@ OnRxWindow1TimerEvent(void *unused)
  * \brief Function executed on second Rx window timer event
  */
 static void
-OnRxWindow2TimerEvent(void *unused)
+OnRxWindow2TimerEvent(struct ble_npl_event *ev)
 {
     puts("OnRxWindow2TimerEvent");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win2_event);
@@ -386,7 +389,7 @@ OnRxWindow2TimerEvent(void *unused)
  * Context: Interrupt and MAC
  */
 static void
-lora_mac_rtx_timer_cb(void *unused)
+lora_mac_rtx_timer_cb(struct ble_npl_event *ev)
 {
     puts("lora_mac_rtx_timer_cb");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rtx_timeout_event);
