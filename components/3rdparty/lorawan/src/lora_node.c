@@ -195,6 +195,7 @@ lora_node_chk_txq(void)
 bool
 lora_node_txq_empty(void)
 {
+    puts("lora_node_txq_empty");
     bool rc;
     struct pbuf_list *mp;
 
@@ -268,6 +269,7 @@ lora_node_get_batt_status(void)
 static void
 lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
 {
+    puts("lora_mac_proc_tx_q_event");
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t evstatus;
     LoRaMacTxInfo_t txinfo;

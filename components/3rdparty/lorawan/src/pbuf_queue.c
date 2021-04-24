@@ -198,6 +198,7 @@ get_pbuf_header(
 int
 pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg, uint16_t header_len)
 {
+    puts("pbuf_queue_init");
     assert(mq != NULL);
     assert(ev_cb != NULL);
     assert(header_len > 0);
@@ -225,6 +226,7 @@ pbuf_queue_init(struct pbuf_queue *mq, ble_npl_event_fn *ev_cb, void *arg, uint1
 struct pbuf *
 pbuf_queue_get(struct pbuf_queue *mq)
 {
+    puts("pbuf_queue_get");
     struct pbuf_list *mp;
     struct pbuf *m;
 
@@ -258,6 +260,7 @@ pbuf_queue_get(struct pbuf_queue *mq)
 int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m)
 {
+    puts("pbuf_queue_put");
     struct pbuf_list *mp;
 
 #ifdef NOTUSED
