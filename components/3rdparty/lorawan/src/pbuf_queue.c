@@ -123,10 +123,10 @@ get_pbuf_list(
 /// Copy a buffer into a pbuf's payload. We don't support partial copying into the payload.
 /// Return 0 if successful.
 int pbuf_copyinto(
-    struct pbuf *pb,    //  pbuf Packet Buffer
-    uint16_t offset,    //  Offset into payload (must be 0)
-    uint8_t *buf,       //  Buffer to be copied into payload
-    uint16_t buf_size)  //  Size of buffer (must be same as pbuf payload size)
+    struct pbuf *pb,   //  pbuf Packet Buffer
+    uint16_t offset,   //  Offset into payload (must be 0)
+    const void *buf,   //  Buffer to be copied into payload
+    int buf_size)      //  Size of buffer (must be same as pbuf payload size)
 {
     assert(pb != NULL);
     assert(pb->payload != NULL);

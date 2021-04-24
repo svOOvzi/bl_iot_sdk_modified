@@ -81,10 +81,24 @@ alloc_pbuf(
 /// Copy a buffer into a pbuf's payload. We don't support partial copying into the payload.
 /// Return 0 if successful.
 int pbuf_copyinto(
-    struct pbuf *pb,     //  pbuf Packet Buffer
-    uint16_t offset,     //  Offset into payload (must be 0)
-    uint8_t *buf,        //  Buffer to be copied into payload
-    uint16_t buf_size);  //  Size of buffer (must be same as pbuf payload size)
+    struct pbuf *pb,  //  pbuf Packet Buffer
+    uint16_t offset,  //  Offset into payload (must be 0)
+    const void *buf,  //  Buffer to be copied into payload
+    int buf_size);    //  Size of buffer (must be same as pbuf payload size)
+
+/*
+ * Copy data from an mbuf chain starting "off" bytes from the beginning,
+ * continuing for "len" bytes, into the indicated buffer.
+ *
+ * @param m The mbuf chain to copy from
+ * @param off The offset into the mbuf chain to begin copying from
+ * @param len The length of the data to copy
+ * @param dst The destination buffer to copy into
+ *
+ * @return                      0 on success;
+ *                              -1 if the mbuf does not contain enough data.
+ */
+int pbuf_copydata(const struct pbuf *m, int off, int len, void *dst);
 
 /// Return the pbuf Packet Buffer header
 void *get_pbuf_header(
@@ -134,5 +148,7 @@ pbuf_queue_get(struct pbuf_queue *mq);
  */
 int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m);
+
+void swap_buf(uint8_t *dst, const uint8_t *src, int len);
 
 #endif
