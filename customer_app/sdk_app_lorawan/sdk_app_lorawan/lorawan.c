@@ -24,6 +24,94 @@
 #include "node/lora_priv.h"
 #include "node/lora.h"
 
+/**
+ * Parses a long long within an imposed range.
+ *
+ * @param sval                  The string to parse.
+ * @param min                   Values less than this are rejected.
+ * @param max                   Values greater than this are rejected.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+long long
+parse_ll_bounds(const char *sval, long long min, long long max,
+                int *out_status);
+
+/**
+ * Parses an unsigned long long within an imposed range.
+ *
+ * @param sval                  The string to parse.
+ * @param min                   Values less than this are rejected.
+ * @param max                   Values greater than this are rejected.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+unsigned long long
+parse_ull_bounds(const char *sval,
+                 unsigned long long min, unsigned long long max,
+                 int *out_status);
+
+/**
+ * Parses a long long.
+ *
+ * @param sval                  The string to parse.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+long long
+parse_ll(const char *sval, int *out_status);
+
+/**
+ * Parses an unsigned long long.
+ *
+ * @param sval                  The string to parse.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+unsigned long long
+parse_ull(const char *sval, int *out_status);
+
+/**
+ * @brief Parses a stream of bytes using ':' or '-' as delimiters.
+ *
+ * Parses a stream of bytes using ':' or '-' as delimiters.
+ * The base of each byte string is inferred from the text (base 16 if prefixed
+ * with "0x", base 10 otherwise).
+ *
+ * @param sval                  The string to parse.
+ * @param max_len               The maximum number of bytes to write.
+ * @param dst                   The destination buffer to write bytes to.
+ * @param out_len               Written on success; total number of bytes
+ *                                  written to the destination buffer.
+ *
+ * @return                      0 on success;
+ *                              SYS_EINVAL on invalid byte stream;
+ *                              SYS_ERANGE if result only partially written to
+ *                                  buffer due to insufficient space.
+ */
+int
+parse_byte_stream(const char *sval, int max_len, uint8_t *dst, int *out_len);
+
 extern void
 lora_app_shell_txd_func(uint8_t port, LoRaMacEventInfoStatus_t status,
                         Mcps_t pkt_type, struct os_mbuf *om);
@@ -799,7 +887,7 @@ las_cmd_app_tx(int argc, char **argv)
     uint8_t port;
     uint8_t len;
     uint8_t pkt_type;
-    struct os_mbuf *om;
+    struct pbuf *om;
     Mcps_t mcps_type;
 
     if (argc < 4) {
@@ -831,7 +919,7 @@ las_cmd_app_tx(int argc, char **argv)
     }
 
     /* Attempt to allocate a mbuf */
-    om = lora_pkt_alloc();
+    om = lora_pkt_alloc(len);
     if (!om) {
         printf("Unable to allocate mbuf\r\n");
         return 0;
@@ -844,13 +932,13 @@ las_cmd_app_tx(int argc, char **argv)
         mcps_type = MCPS_CONFIRMED;
     }
 
-    rc = os_mbuf_copyinto(om, 0, las_cmd_app_tx_buf, len);
+    rc = pbuf_copyinto(om, 0, las_cmd_app_tx_buf, len);
     assert(rc == 0);
 
     rc = lora_app_port_send(port, mcps_type, om);
     if (rc) {
         printf("Failed to send to port %u err=%d\r\n", port, rc);
-        os_mbuf_free_chain(om);
+        pbuf_free(om);
     } else {
         printf("Packet sent on port %u\r\n", port);
     }
@@ -931,11 +1019,13 @@ las_cmd_init(void)
     /* Set link check callback */
     lora_app_set_link_check_cb(lora_app_shell_link_chk_cb);
 
+#ifdef TODO
     for (i = 0; i < LAS_NUM_CLI_CMDS; i++) {
         rc = shell_cmd_register(las_cmds + i);
         SYSINIT_PANIC_ASSERT_MSG(
             rc == 0, "Failed to register lora app shell CLI commands");
     }
+#endif  //  TODO
 
     /* Init app tx payload to incrementing pattern */
     for (i = 0; i < LORA_APP_SHELL_MAX_APP_PAYLOAD; ++i) {

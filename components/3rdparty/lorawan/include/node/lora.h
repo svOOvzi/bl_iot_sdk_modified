@@ -193,7 +193,6 @@ struct lora_pkt_info
 
 /* Allocate a packet for lora transmission. This returns a pbuf with packet header */
 struct pbuf *lora_pkt_alloc(
-    uint16_t header_len,    //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len);  //  Payload length of packet, excluding header
 
 /* Port API */

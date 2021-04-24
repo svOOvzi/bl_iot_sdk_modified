@@ -129,10 +129,14 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 /* Allocate a packet for lora transmission. This returns a pbuf with packet header */
 struct pbuf *
 lora_pkt_alloc(
-    uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len)  //  Payload length of packet, excluding header
 {
-    return alloc_pbuf(header_len, payload_len);
+    struct pbuf *buf = alloc_pbuf(
+        sizeof(struct lora_pkt_info),  //  Header Length (LoRaWAN Header)
+        payload_len                    //  Payload length
+    );
+    assert(buf != NULL);
+    return buf;
 }
 
 /**
@@ -230,10 +234,7 @@ lora_node_mac_mcps_indicate(void)
         return;
     }
 
-    om = lora_pkt_alloc(
-        sizeof(struct lora_pkt_info),  //  Header Length (LoRaWAN Header)
-        g_lora_mac_data.rxbufsize      //  Payload length
-    );
+    om = lora_pkt_alloc(g_lora_mac_data.rxbufsize);  //  Payload length
     if (om) {        
         /* Copy data into mbuf */
         rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
