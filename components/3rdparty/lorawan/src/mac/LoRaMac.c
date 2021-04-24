@@ -202,13 +202,13 @@ static RadioEvents_t RadioEvents;
 /*!
  * LoRaMac duty cycle delayed Tx timer
  */
-static struct hal_timer TxDelayedTimer;
+static struct ble_npl_callout TxDelayedTimer;
 
 /*!
  * LoRaMac reception windows timers
  */
-static struct hal_timer RxWindowTimer1;
-static struct hal_timer RxWindowTimer2;
+static struct ble_npl_callout RxWindowTimer1;
+static struct ble_npl_callout RxWindowTimer2;
 
 /*!
  * LoRaMac Rx windows configuration

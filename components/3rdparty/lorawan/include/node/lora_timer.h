@@ -22,4 +22,12 @@ void os_cputime_timer_relative(
     struct ble_npl_callout *timer,   //  Pointer to timer. Cannot be NULL.
     uint32_t microsecs);             //  The number of microseconds from now at which the timer will expire.
 
+/*
+os_time_t os_time_get(void)
+Get the current OS time in ticks.
+
+int os_time_ticks_to_ms(os_time_t ticks, uint32_t *out_ms)
+Converts OS ticks to milliseconds.
+*/
+
 #endif  //  __LORA_TIMER_H__

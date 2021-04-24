@@ -26,7 +26,6 @@
 #include "node/lora.h"
 #include "node/lora_band.h"
 
-struct hal_timer  {};  //  TODO
 typedef uint32_t os_time_t;  //  TODO
 
 /* Connection state machine flags. */
@@ -172,7 +171,7 @@ struct lora_mac_obj
      * (so that a class C device will not transmit before listening on the
      * second receive window).
      */
-    struct hal_timer rtx_timer;
+    struct ble_npl_callout rtx_timer;
 
     /*
      * Global lora rx packet info structure. Used when receiving and prior to
