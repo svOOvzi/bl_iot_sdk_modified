@@ -71,17 +71,25 @@ struct pbuf_queue {
     uint16_t header_len;
 };
 
-/// Return the pbuf Packet Buffer header
-void *get_pbuf_header(
-    struct pbuf *buf,     //  pbuf Packet Buffer
-    size_t header_size);  //  Size of header
-
-/* Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with pbuf_list header, 
-   LoRaWAN header and LoRaWAN payload */
+/// Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with 
+/// pbuf_list Header, LoRaWAN Header and LoRaWAN Payload.
 struct pbuf *
 alloc_pbuf(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
     uint16_t payload_len); //  Payload length of packet, excluding header
+
+/// Copy a buffer into a pbuf's payload. We don't support partial copying into the payload.
+/// Return 0 if successful.
+int pbuf_copyinto(
+    struct pbuf *pb,     //  pbuf Packet Buffer
+    uint16_t offset,     //  Offset into payload (must be 0)
+    uint8_t *buf,        //  Buffer to be copied into payload
+    uint16_t buf_size);  //  Size of buffer (must be same as pbuf payload size)
+
+/// Return the pbuf Packet Buffer header
+void *get_pbuf_header(
+    struct pbuf *buf,     //  pbuf Packet Buffer
+    size_t header_size);  //  Size of header
 
 /**
  * Initializes a pbuf_queue.  A pbuf_queue is a queue of pbufs that ties to a

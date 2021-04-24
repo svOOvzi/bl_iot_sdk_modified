@@ -228,10 +228,6 @@ lora_node_mac_mcps_indicate(void)
         g_lora_mac_data.rxbufsize      //  Payload length
     );
     if (om) {        
-        #warning pbuf_copyinto
-        int pbuf_copyinto(struct pbuf *om, uint16_t offset, uint8_t *buf,
-                              uint16_t buf_size);  //  TODO
-
         /* Copy data into mbuf */
         rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
                               g_lora_mac_data.rxbufsize);

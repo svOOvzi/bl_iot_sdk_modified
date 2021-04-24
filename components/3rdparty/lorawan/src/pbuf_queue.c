@@ -36,7 +36,7 @@
 //  static os_sr_t pbuf_header_mutex;
 
 /// Allocate a pbuf for LoRaWAN transmission. This returns a pbuf with 
-/// pbuf_list Header, LoRaWAN Header and LoRaWAN Payload
+/// pbuf_list Header, LoRaWAN Header and LoRaWAN Payload.
 struct pbuf *
 alloc_pbuf(
     uint16_t header_len,   //  Header length of packet (LoRaWAN Header only, excluding pbuf_list header)
@@ -118,6 +118,23 @@ get_pbuf_list(
     assert((uint32_t) list->header + list->header_len == (uint32_t) list->payload);
 
     return list;
+}
+
+/// Copy a buffer into a pbuf's payload. We don't support partial copying into the payload.
+/// Return 0 if successful.
+int pbuf_copyinto(
+    struct pbuf *pb,    //  pbuf Packet Buffer
+    uint16_t offset,    //  Offset into payload (must be 0)
+    uint8_t *buf,       //  Buffer to be copied into payload
+    uint16_t buf_size)  //  Size of buffer (must be same as pbuf payload size)
+{
+    assert(pb != NULL);
+    assert(pb->payload != NULL);
+    assert(offset == 0);          //  TODO: Support partial pbuf copying
+    assert(buf_size == pb->len);  //  TODO: Support partial pbuf copying
+
+    memcpy(pb->payload, buf, buf_size);
+    return 0;
 }
 
 /// Return the pbuf Packet Buffer header
