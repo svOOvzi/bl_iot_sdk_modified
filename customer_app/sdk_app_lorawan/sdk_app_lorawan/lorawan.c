@@ -114,11 +114,11 @@ parse_byte_stream(const char *sval, int max_len, uint8_t *dst, int *out_len);
 
 extern void
 lora_app_shell_txd_func(uint8_t port, LoRaMacEventInfoStatus_t status,
-                        Mcps_t pkt_type, struct os_mbuf *om);
+                        Mcps_t pkt_type, struct pbuf *om);
 
 extern void
 lora_app_shell_rxd_func(uint8_t port, LoRaMacEventInfoStatus_t status,
-                        Mcps_t pkt_type, struct os_mbuf *om);
+                        Mcps_t pkt_type, struct pbuf *om);
 
 extern void
 lora_app_shell_join_cb(LoRaMacEventInfoStatus_t status, uint8_t attempts);
@@ -166,79 +166,6 @@ static struct mib_pair lora_mib[] = {
     {"min_rx_symbols",  MIB_MIN_RX_SYMBOLS},
     {NULL, (Mib_t)0}
 };
-
-static int las_cmd_wr_mib(int argc, char **argv);
-static int las_cmd_rd_mib(int argc, char **argv);
-static int las_cmd_wr_dev_eui(int argc, char **argv);
-static int las_cmd_rd_dev_eui(int argc, char **argv);
-static int las_cmd_wr_app_eui(int argc, char **argv);
-static int las_cmd_rd_app_eui(int argc, char **argv);
-static int las_cmd_wr_app_key(int argc, char **argv);
-static int las_cmd_rd_app_key(int argc, char **argv);
-static int las_cmd_app_port(int argc, char **argv);
-static int las_cmd_app_tx(int argc, char **argv);
-static int las_cmd_join(int argc, char **argv);
-static int las_cmd_link_chk(int argc, char **argv);
-
-#warning Add commands to BL602 CLI
-#ifdef TODO
-static struct shell_cmd las_cmds[] = {
-    {
-        .sc_cmd = "las_wr_mib",
-        .sc_cmd_func = las_cmd_wr_mib,
-    },
-    {
-        .sc_cmd = "las_rd_mib",
-        .sc_cmd_func = las_cmd_rd_mib,
-    },
-    {
-        .sc_cmd = "las_rd_dev_eui",
-        .sc_cmd_func = las_cmd_rd_dev_eui,
-    },
-    {
-        .sc_cmd = "las_wr_dev_eui",
-        .sc_cmd_func = las_cmd_wr_dev_eui,
-    },
-    {
-        .sc_cmd = "las_rd_app_eui",
-        .sc_cmd_func = las_cmd_rd_app_eui,
-    },
-    {
-        .sc_cmd = "las_wr_app_eui",
-        .sc_cmd_func = las_cmd_wr_app_eui,
-    },
-    {
-        .sc_cmd = "las_rd_app_key",
-        .sc_cmd_func = las_cmd_rd_app_key,
-    },
-    {
-        .sc_cmd = "las_wr_app_key",
-        .sc_cmd_func = las_cmd_wr_app_key,
-    },
-    {
-        .sc_cmd = "las_app_port",
-        .sc_cmd_func = las_cmd_app_port,
-    },
-    {
-        .sc_cmd = "las_app_tx",
-        .sc_cmd_func = las_cmd_app_tx,
-    },
-    {
-        .sc_cmd = "las_join",
-        .sc_cmd_func = las_cmd_join,
-    },
-    {
-        .sc_cmd = "las_link_chk",
-        .sc_cmd_func = las_cmd_link_chk,
-    },
-    {
-        .sc_cmd = NULL,
-        .sc_cmd_func = NULL
-    },
-};
-
-#define LAS_NUM_CLI_CMDS  (sizeof las_cmds / sizeof las_cmds[0])
-#endif  //  TODO
 
 void
 las_cmd_disp_byte_str(uint8_t *bytes, int len)
@@ -337,8 +264,8 @@ las_parse_bool(char *str)
     return rc;
 }
 
-static int
-las_cmd_wr_mib(int argc, char **argv)
+void
+las_cmd_wr_mib(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     int plen;
@@ -357,7 +284,7 @@ las_cmd_wr_mib(int argc, char **argv)
 
     if (strcmp(argv[1], "help") == 0) {
         las_cmd_wr_mib_help();
-        return 0;
+        return;
     }
 
     mp = las_find_mib_by_name(argv[1]);
@@ -374,12 +301,12 @@ las_cmd_wr_mib(int argc, char **argv)
                 mib.Param.Class = CLASS_A;
             } else if (!strcmp(argv[2], "B")) {
                 printf("Class B devices currently not supported\r\n");
-                return 0;
+                return;
             } else if (!strcmp(argv[2], "C")) {
                 mib.Param.Class = CLASS_C;
             } else {
                 printf("Invalid value. Valid values are A, B or C\r\n");
-                return 0;
+                return;
             }
             break;
         case MIB_NETWORK_JOINED:
@@ -389,7 +316,7 @@ las_cmd_wr_mib(int argc, char **argv)
             } else if (rc == 1) {
                 mib.Param.IsNetworkJoined = true;
             } else {
-                return 0;
+                return;
             }
             break;
         case MIB_ADR:
@@ -399,21 +326,21 @@ las_cmd_wr_mib(int argc, char **argv)
             } else if (rc == 1) {
                 mib.Param.AdrEnable = true;
             } else {
-                return 0;
+                return;
             }
             break;
         case MIB_NET_ID:
             mib.Param.NetID = (uint32_t)parse_ull(argv[2], &rc);
             if (rc) {
                 printf("Unable to parse value\r\n");
-                return 0;
+                return;
             }
             break;
         case MIB_DEV_ADDR:
             mib.Param.DevAddr = (uint32_t)parse_ull(argv[2], &rc);
             if (rc) {
                 printf("Unable to parse value\r\n");
-                return 0;
+                return;
             }
             break;
         case MIB_NWK_SKEY:
@@ -421,7 +348,7 @@ las_cmd_wr_mib(int argc, char **argv)
             if (rc || (plen != LORA_KEY_LEN)) {
                 printf("Key does not parse. Must be 16 bytes"
                                " and separated by : or -\r\n");
-                return 0;
+                return;
             }
             mib.Param.NwkSKey = key;
             break;
@@ -430,7 +357,7 @@ las_cmd_wr_mib(int argc, char **argv)
             if (rc || (plen != LORA_KEY_LEN)) {
                 printf("Key does not parse. Must be 16 bytes"
                                " and separated by : or -\r\n");
-                return 0;
+                return;
             }
             mib.Param.AppSKey = key;
             break;
@@ -441,7 +368,7 @@ las_cmd_wr_mib(int argc, char **argv)
             } else if (rc == 1) {
                 mib.Param.EnablePublicNetwork = true;
             } else {
-                return 0;
+                return;
             }
             break;
         case MIB_REPEATER_SUPPORT:
@@ -451,7 +378,7 @@ las_cmd_wr_mib(int argc, char **argv)
             } else if (rc == 1) {
                 mib.Param.EnableRepeaterSupport = true;
             } else {
-                return 0;
+                return;
             }
             break;
         case MIB_CHANNELS:
@@ -480,7 +407,7 @@ las_cmd_wr_mib(int argc, char **argv)
             if (rc || (plen != mask_len)) {
                 printf("Mask does not parse. Must be %d bytes"
                                " and separated by : or -\r\n", mask_len);
-                return 0;
+                return;
             }
 
             /* construct mask from byte stream */
@@ -521,14 +448,14 @@ las_cmd_wr_mib(int argc, char **argv)
             mib.Param.ChannelsDefaultDatarate = parse_ll(argv[2], &rc);
             if (rc) {
                 printf("Unable to parse value\r\n");
-                return 0;
+                return;
             }
             break;
         case MIB_CHANNELS_DATARATE:
             mib.Param.ChannelsDatarate = parse_ll(argv[2], &rc);
             if (rc) {
                 printf("Unable to parse value\r\n");
-                return 0;
+                return;
             }
             break;
         case MIB_CHANNELS_DEFAULT_TX_POWER:
@@ -553,16 +480,16 @@ las_cmd_wr_mib(int argc, char **argv)
 
     if (LoRaMacMibSetRequestConfirm(&mib) != LORAMAC_STATUS_OK) {
         printf("Mib not able to be set\r\n");
-        return 0;
+        return;
     }
 
     printf("mib %s set\r\n", mp->mib_name);
 
-    return 0;
+    return;
 
 wr_mib_err:
     las_cmd_wr_mib_help();
-    return 0;
+    return;
 }
 
 static void
@@ -572,8 +499,8 @@ las_cmd_rd_mib_help(void)
     las_cmd_show_mibs();
 }
 
-static int
-las_cmd_rd_mib(int argc, char **argv)
+void
+las_cmd_rd_mib(char *buf0, int len0, int argc, char **argv)
 {
     struct mib_pair *mp;
     LoRaMacStatus_t stat;
@@ -586,7 +513,7 @@ las_cmd_rd_mib(int argc, char **argv)
 
     if (strcmp(argv[1], "help") == 0) {
         las_cmd_rd_mib_help();
-        return 0;
+        return;
     }
 
     mp = las_find_mib_by_name(argv[1]);
@@ -691,27 +618,27 @@ las_cmd_rd_mib(int argc, char **argv)
             assert(0);
             break;
     }
-    return 0;
+    return;
 
 rd_mib_err:
     las_cmd_rd_mib_help();
-    return 0;
+    return;
 }
 
-static int
-las_cmd_rd_dev_eui(int argc, char **argv)
+void
+las_cmd_rd_dev_eui(char *buf0, int len0, int argc, char **argv)
 {
     if (argc != 1) {
         printf("Invalid # of arguments. Usage: las_rd_dev_eui\r\n");
-        return 0;
+        return;
     }
 
     las_cmd_disp_byte_str(g_lora_dev_eui, LORA_EUI_LEN);
-    return 0;
+    return;
 }
 
-static int
-las_cmd_wr_dev_eui(int argc, char **argv)
+void
+las_cmd_wr_dev_eui(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     int plen;
@@ -730,23 +657,23 @@ las_cmd_wr_dev_eui(int argc, char **argv)
         memcpy(g_lora_dev_eui, eui, LORA_EUI_LEN);
     }
 
-    return 0;
+    return;
 }
 
-static int
-las_cmd_rd_app_eui(int argc, char **argv)
+void
+las_cmd_rd_app_eui(char *buf0, int len0, int argc, char **argv)
 {
     if (argc != 1) {
         printf("Invalid # of arguments. Usage: las_rd_app_eui\r\n");
-        return 0;
+        return;
     }
 
     las_cmd_disp_byte_str(g_lora_app_eui, LORA_EUI_LEN);
-    return 0;
+    return;
 }
 
-static int
-las_cmd_wr_app_eui(int argc, char **argv)
+void
+las_cmd_wr_app_eui(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     int plen;
@@ -765,23 +692,23 @@ las_cmd_wr_app_eui(int argc, char **argv)
         memcpy(g_lora_app_eui, eui, LORA_EUI_LEN);
     }
 
-    return 0;
+    return;
 }
 
-static int
-las_cmd_rd_app_key(int argc, char **argv)
+void
+las_cmd_rd_app_key(char *buf0, int len0, int argc, char **argv)
 {
     if (argc != 1) {
         printf("Invalid # of arguments. Usage: las_rd_app_key\r\n");
-        return 0;
+        return;
     }
 
     las_cmd_disp_byte_str(g_lora_app_key, LORA_KEY_LEN);
-    return 0;
+    return;
 }
 
-static int
-las_cmd_wr_app_key(int argc, char **argv)
+void
+las_cmd_wr_app_key(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     int plen;
@@ -797,16 +724,16 @@ las_cmd_wr_app_key(int argc, char **argv)
     if (rc || (plen != LORA_KEY_LEN)) {
         printf("Key does not parse. Must be 16 bytes and separated by"
                        " : or -\r\n");
-        return 0;
+        return;
     } else {
         memcpy(g_lora_app_key, key, LORA_KEY_LEN);
     }
 
-    return 0;
+    return;
 }
 
-static int
-las_cmd_app_port(int argc, char **argv)
+void
+las_cmd_app_port(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     uint8_t port;
@@ -820,7 +747,7 @@ las_cmd_app_port(int argc, char **argv)
     port = parse_ull_bounds(argv[2], 1, 255, &rc);
     if (rc != 0) {
         printf("Invalid port %s. Must be 1 - 255\r\n", argv[2]);
-        return 0;
+        return;
     }
 
     if (!strcmp(argv[1], "open")) {
@@ -847,7 +774,7 @@ las_cmd_app_port(int argc, char **argv)
         if (rc) {
             printf("Invalid # of retries. Must be between 1 and "
                            "%d (inclusve)\r\n", MAX_ACK_RETRIES);
-            return 0;
+            return;
         }
 
         rc = lora_app_port_cfg(port, retries);
@@ -869,7 +796,7 @@ las_cmd_app_port(int argc, char **argv)
         goto cmd_app_port_err;
     }
 
-    return 0;
+    return;
 
 cmd_app_port_err:
     printf("Usage:\r\n");
@@ -877,11 +804,11 @@ cmd_app_port_err:
     printf("\tlas_app_port close <port num>\r\n");
     printf("\tlas_app_port cfg <port num> <retries>\r\n");
     printf("\r\not implemented! las_app_port show <port num | all>\r\n");
-    return 0;
+    return;
 }
 
-static int
-las_cmd_app_tx(int argc, char **argv)
+void
+las_cmd_app_tx(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     uint8_t port;
@@ -898,31 +825,31 @@ las_cmd_app_tx(int argc, char **argv)
     port = parse_ull_bounds(argv[1], 1, 255, &rc);
     if (rc != 0) {
         printf("Invalid port %s. Must be 1 - 255\r\n", argv[2]);
-        return 0;
+        return;
     }
     len = parse_ull_bounds(argv[2], 1, LORA_APP_SHELL_MAX_APP_PAYLOAD, &rc);
     if (rc != 0) {
         printf("Invalid length. Must be 1 - %u\r\n",
                        LORA_APP_SHELL_MAX_APP_PAYLOAD);
-        return 0;
+        return;
     }
     pkt_type = parse_ull_bounds(argv[3], 0, 1, &rc);
     if (rc != 0) {
         printf("Invalid type. Must be 0 (unconfirmed) or 1 (confirmed)"
                        "\r\n");
-        return 0;
+        return;
     }
 
     if (lora_app_mtu() < len) {
         printf("Can send at max %d bytes\r\n", lora_app_mtu());
-        return 0;
+        return;
     }
 
     /* Attempt to allocate a mbuf */
     om = lora_pkt_alloc(len);
     if (!om) {
         printf("Unable to allocate mbuf\r\n");
-        return 0;
+        return;
     }
 
     /* Get correct packet type. */
@@ -943,7 +870,7 @@ las_cmd_app_tx(int argc, char **argv)
         printf("Packet sent on port %u\r\n", port);
     }
 
-    return 0;
+    return;
 
 cmd_app_tx_err:
     printf("Usage:\r\n");
@@ -954,11 +881,11 @@ cmd_app_tx_err:
     printf("\ttype = 0 for unconfirmed, 1 for confirmed\r\n");
     printf("\tex: las_app_tx 10 20 1\r\n");
 
-    return 0;
+    return;
 }
 
-static int
-las_cmd_link_chk(int argc, char **argv)
+void
+las_cmd_link_chk(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
 
@@ -968,11 +895,11 @@ las_cmd_link_chk(int argc, char **argv)
     } else {
         printf("Sending link check\r\n");
     }
-    return 0;
+    return;
 }
 
-static int
-las_cmd_join(int argc, char **argv)
+void
+las_cmd_join(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
     uint8_t attempts;
@@ -995,7 +922,7 @@ las_cmd_join(int argc, char **argv)
     } else {
         printf("Attempting to join...\r\n");
     }
-    return 0;
+    return;
 
 cmd_join_err:
     printf("Usage:\r\n");
@@ -1004,7 +931,7 @@ cmd_join_err:
     printf("\tattempts = # of join requests to send before failure"
                    " (0 -255)�\r\n");
     printf("\tex: las_join 10\r\n");
-    return 0;
+    return;
 }
 
 void

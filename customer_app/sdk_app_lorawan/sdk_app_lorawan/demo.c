@@ -38,6 +38,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "rxinfo.h"
 #include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
 #include "nimble_port_freertos.h"   //  For nimble_port_freertos_init
+#include "lorawan.h"                //  For LoRaWAN command line functions
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -307,6 +308,7 @@ static void handle_event(struct ble_npl_event *ev) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
+    //  LoRa
     {"create_task",      "Create a task",          create_task},
     {"put_event",        "Add an event",           put_event},
     {"init_driver",      "Init LoRa driver",       init_driver},
@@ -314,6 +316,22 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
+
+    //  LoRaWAN
+    {"las_wr_mib",      "las_wr_mib",       las_cmd_wr_mib},
+    {"las_rd_mib",      "las_rd_mib",       las_cmd_rd_mib},
+    {"las_rd_dev_eui",  "las_rd_dev_eui",   las_cmd_rd_dev_eui},
+    {"las_wr_dev_eui",  "las_wr_dev_eui",   las_cmd_wr_dev_eui},
+    {"las_rd_app_eui",  "las_rd_app_eui",   las_cmd_rd_app_eui},
+    {"las_wr_app_eui",  "las_wr_app_eui",   las_cmd_wr_app_eui},
+    {"las_rd_app_key",  "las_rd_app_key",   las_cmd_rd_app_key},
+    {"las_wr_app_key",  "las_wr_app_key",   las_cmd_wr_app_key},
+    {"las_app_port",    "las_app_port",     las_cmd_app_port},
+    {"las_app_tx",      "las_app_tx",       las_cmd_app_tx},
+    {"las_join",        "las_join",         las_cmd_join},
+    {"las_link_chk",    "las_link_chk",     las_cmd_link_chk},
+
+    //  pbuf
     {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},
     {"test_pbuf2",       "Test LWIP pbuf (large)", test_pbuf2},
 };                                                                                   
