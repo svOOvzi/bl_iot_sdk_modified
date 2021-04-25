@@ -129,11 +129,35 @@ int pbuf_copyinto(
     int buf_size)      //  Size of buffer (must be same as pbuf payload size)
 {
     assert(pb != NULL);
+    assert(buf != NULL);
     assert(pb->payload != NULL);
     assert(offset == 0);          //  TODO: Support partial pbuf copying
     assert(buf_size == pb->len);  //  TODO: Support partial pbuf copying
 
     memcpy(pb->payload, buf, buf_size);
+    return 0;
+}
+
+/*
+ * Copy data from an mbuf chain starting "off" bytes from the beginning,
+ * continuing for "len" bytes, into the indicated buffer.
+ * We don't support partial copying into the payload.
+ *
+ * @param m The mbuf chain to copy from
+ * @param off The offset into the mbuf chain to begin copying from
+ * @param len The length of the data to copy
+ * @param dst The destination buffer to copy into
+ *
+ * @return                      0 on success;
+ *                              -1 if the mbuf does not contain enough data.
+ */
+int pbuf_copydata(const struct pbuf *m, int off, int len, void *dst) {
+    assert(m != NULL);
+    assert(dst != NULL);
+    assert(off == 0);       //  TODO: Support partial pbuf copying
+    assert(len == m->len);  //  TODO: Support partial pbuf copying
+
+    memcpy(dst, m->payload, len);
     return 0;
 }
 

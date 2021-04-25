@@ -22,15 +22,15 @@
 #include "node/lora_utilities.h"
 #include "node/lora_priv.h"
 
-#warning Implement randr, TimerGetCurrentTime, TimerGetElapsedTime
-
-#ifdef TODO
+#warning Implement TimerGetCurrentTime, TimerGetElapsedTime
 
 int32_t
 randr(int32_t min, int32_t max)
 {
     return rand() % (max - min + 1) + min;
 }
+
+#ifdef TODO
 
 TimerTime_t
 TimerGetCurrentTime(void)

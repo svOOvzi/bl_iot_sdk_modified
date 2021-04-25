@@ -89,6 +89,7 @@ int pbuf_copyinto(
 /*
  * Copy data from an mbuf chain starting "off" bytes from the beginning,
  * continuing for "len" bytes, into the indicated buffer.
+ * We don't support partial copying into the payload.
  *
  * @param m The mbuf chain to copy from
  * @param off The offset into the mbuf chain to begin copying from

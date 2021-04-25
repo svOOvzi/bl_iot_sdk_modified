@@ -25,20 +25,103 @@
 #include "node/lora.h"
 #include "parse.h"
 
-extern void
+void las_cmd_disp_byte_str(uint8_t *bytes, int len);
+
+///////////////////////////////////////////////////////////////////////////////
+//  LoRaWAN Callbacks
+
+/* XXX: should we count statistics for the app shell? You know, things
+   like transmitted, etc, etc. */
+static void
 lora_app_shell_txd_func(uint8_t port, LoRaMacEventInfoStatus_t status,
-                        Mcps_t pkt_type, struct pbuf *om);
+                        Mcps_t pkt_type, struct pbuf *om)
+{
+    struct lora_pkt_info *lpkt;
 
-extern void
+    assert(om != NULL);
+    printf("Txd on port %u type=%s status=%d len=%u\r\n",
+                   port, pkt_type == MCPS_CONFIRMED ? "conf" : "unconf",
+                   status, om->len);
+
+    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+    assert(lpkt != NULL);
+    printf("\tdr:%u\r\n", lpkt->txdinfo.datarate);
+    printf("\ttxpower (dbm):%d\r\n", lpkt->txdinfo.txpower);
+    printf("\ttries:%u\r\n", lpkt->txdinfo.retries);
+    printf("\tack_rxd:%u\r\n", lpkt->txdinfo.ack_rxd);
+    printf("\ttx_time_on_air:%lu\r\n", lpkt->txdinfo.tx_time_on_air);
+    printf("\tuplink_cntr:%lu\r\n", lpkt->txdinfo.uplink_cntr);
+    printf("\tuplink_chan:%lu\r\n", lpkt->txdinfo.uplink_chan);
+
+    pbuf_free(om);
+}
+
+static void
 lora_app_shell_rxd_func(uint8_t port, LoRaMacEventInfoStatus_t status,
-                        Mcps_t pkt_type, struct pbuf *om);
+                        Mcps_t pkt_type, struct pbuf *om)
+{
+    int rc;
+    struct lora_pkt_info *lpkt;
+    uint16_t cur_len;
+    uint16_t len;
+    uint16_t cur_off;
+    uint8_t temp[16];
 
-extern void
-lora_app_shell_join_cb(LoRaMacEventInfoStatus_t status, uint8_t attempts);
+    assert(om != NULL);
+    printf("Rxd on port %u type=%s status=%d len=%u\r\n",
+                   port, pkt_type == MCPS_CONFIRMED ? "conf" : "unconf",
+                   status, om->len);
 
-extern void
+    lpkt = get_pbuf_header(om, sizeof(struct lora_pkt_info));
+    assert(lpkt != NULL);
+    printf("\trxdr:%u\r\n", lpkt->rxdinfo.rxdatarate);
+    printf("\tsnr:%u\r\n", lpkt->rxdinfo.snr);
+    printf("\trssi:%d\r\n", lpkt->rxdinfo.rssi);
+    printf("\trxslot:%u\r\n", lpkt->rxdinfo.rxslot);
+    printf("\tack_rxd:%u\r\n", lpkt->rxdinfo.ack_rxd);
+    printf("\trxdata:%u\r\n", lpkt->rxdinfo.rxdata);
+    printf("\tmulticast:%u\r\n", lpkt->rxdinfo.multicast);
+    printf("\tfp:%u\r\n", lpkt->rxdinfo.frame_pending);
+    printf("\tdownlink_cntr:%lu\r\n", lpkt->rxdinfo.downlink_cntr);
+
+    /* Dump the bytes received */
+    len = om->len;
+    if (len != 0) {
+        printf("Rxd data:\r\n");
+        cur_off = 0;
+        while (cur_off < len) {
+            cur_len = len - cur_off;
+            if (cur_len > 16) {
+                cur_len = 16;
+            }
+            rc = pbuf_copydata(om, cur_off, cur_len, temp);
+            if (rc) {
+                break;
+            }
+            cur_off += cur_len;
+            las_cmd_disp_byte_str(temp, cur_len);
+        }
+    }
+
+    pbuf_free(om);
+}
+
+static void
+lora_app_shell_join_cb(LoRaMacEventInfoStatus_t status, uint8_t attempts)
+{
+    printf("Join cb. status=%d attempts=%u\r\n", status, attempts);
+}
+
+static void
 lora_app_shell_link_chk_cb(LoRaMacEventInfoStatus_t status, uint8_t num_gw,
-                           uint8_t demod_margin);
+                           uint8_t demod_margin)
+{
+    printf("Link check cb. status=%d num_gw=%u demod_margin=%u\r\n",
+                   status, num_gw, demod_margin);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  LoRaWAN Commands
 
 #define LORA_APP_SHELL_MAX_APP_PAYLOAD  (250)
 static uint8_t las_cmd_app_tx_buf[LORA_APP_SHELL_MAX_APP_PAYLOAD];
