@@ -2,7 +2,7 @@
 
 LoRaWAN Firmware with command-line interface, ported from to BL602 from Apache Mynewt OS...
 
-https://mynewt.apache.org/v1_8_0/tutorials/lora/lorawanapp.html
+https://mynewt.apache.org/latest/tutorials/lora/lorawanapp.html
 
 https://github.com/apache/mynewt-core/tree/master/apps/lora_app_shell
 
