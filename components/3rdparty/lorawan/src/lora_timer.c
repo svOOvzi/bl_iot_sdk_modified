@@ -67,6 +67,35 @@ void os_cputime_timer_relative(
     assert(rc == 0);
 }
 
+/// Get the current OS time in ticks
+ble_npl_time_t os_time_get(void) {
+    //  Get current time in system ticks
+    ble_npl_time_t ticks = ble_npl_time_get();
+
+    return ticks;
+}
+
+/// Converts OS ticks to milliseconds. Return 0 for success.
+int os_time_ticks_to_ms(ble_npl_time_t ticks, uint32_t *out_ms) {
+    assert(out_ms != NULL);
+    
+    //  Convert ticks to milliseconds
+    uint32_t millisec = ble_npl_time_ticks_to_ms32(ticks);
+    *out_ms = millisec;
+    return 0;
+}
+
+/// Get the current time in microseconds
+uint32_t timer_get_current_time(void)
+{
+    //  Get current time in system ticks
+    ble_npl_time_t ticks = ble_npl_time_get();
+
+    //  Convert ticks to microseconds
+    uint32_t millisec = ble_npl_time_ticks_to_ms32(ticks);
+    return millisec * 1000;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //  HAL Timer ported from Mynewt. We simulate with NimBLE Porting Layer.
 

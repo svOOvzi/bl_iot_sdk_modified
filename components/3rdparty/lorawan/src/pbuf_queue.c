@@ -196,6 +196,17 @@ get_pbuf_header(
     return header;
 }
 
+/* swap octets */
+void
+swap_buf(uint8_t *dst, const uint8_t *src, int len)
+{
+    int i;
+
+    for (i = 0; i < len; i++) {
+        dst[len - 1 - i] = src[i];
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //  pbuf Queue Functions
 

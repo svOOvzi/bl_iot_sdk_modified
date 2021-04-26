@@ -190,7 +190,7 @@ struct lora_mac_obj
      *
      * \remark Used for the BACKOFF_DC computation.
      */
-    os_time_t init_time;
+    ble_npl_time_t init_time;
 };
 
 extern struct lora_mac_obj g_lora_mac_data;

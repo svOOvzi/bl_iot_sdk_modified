@@ -4,9 +4,6 @@
 
 #include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 
-/// Time in OS ticks
-typedef uint32_t os_time_t;
-
 /// Initialise a timer. Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_init
 void os_cputime_timer_init(
     struct ble_npl_callout *timer,   //  The timer to initialize. Cannot be NULL.
@@ -26,10 +23,13 @@ void os_cputime_timer_relative(
     uint32_t microsecs);             //  The number of microseconds from now at which the timer will expire.
 
 /// Get the current OS time in ticks.
-os_time_t os_time_get(void);
+ble_npl_time_t os_time_get(void);
 
-/// Converts OS ticks to milliseconds.
-int os_time_ticks_to_ms(os_time_t ticks, uint32_t *out_ms);
+/// Converts OS ticks to milliseconds. Return 0 for success.
+int os_time_ticks_to_ms(ble_npl_time_t ticks, uint32_t *out_ms);
+
+/// Get the current time in microseconds
+uint32_t timer_get_current_time(void);
 
 /// Init the HAL Timer
 void lora_bsp_enable_mac_timer(void);

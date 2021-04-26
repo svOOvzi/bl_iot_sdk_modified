@@ -150,6 +150,7 @@ pbuf_queue_get(struct pbuf_queue *mq);
 int
 pbuf_queue_put(struct pbuf_queue *mq, struct ble_npl_eventq *evq, struct pbuf *m);
 
+/* swap octets */
 void swap_buf(uint8_t *dst, const uint8_t *src, int len);
 
 #endif
