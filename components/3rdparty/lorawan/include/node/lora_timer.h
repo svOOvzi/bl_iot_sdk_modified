@@ -59,7 +59,7 @@ int hal_timer_config(int timer_num, uint32_t freq_hz);
  *
  * @return The current tick value
  */
-uint32_t hal_timer_read(int timer_num);
+ble_npl_time_t hal_timer_read(int timer_num);
 
 /**
  * Set the timer structure prior to use. Should not be called if the timer
@@ -85,7 +85,7 @@ int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_f
  *
  * @return 0 on success, non-zero error code on failure.
  */
-int hal_timer_start_at(struct ble_npl_callout *tmr, uint32_t tick);
+int hal_timer_start_at(struct ble_npl_callout *tmr, ble_npl_time_t tick);
 
 /**
  * Stop a currently running timer; associated callback will NOT be called

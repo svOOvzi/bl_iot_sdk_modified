@@ -3,6 +3,9 @@
 #include "nimble_npl.h"      //  For NimBLE Porting Layer (timer functions)
 #include "node/lora_timer.h"
 
+//  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
+extern struct ble_npl_eventq event_queue;
+
 /// Initialise a timer. Based on https://mynewt.apache.org/latest/os/core_os/cputime/os_cputime.html#c.os_cputime_timer_init
 void os_cputime_timer_init(
     struct ble_npl_callout *timer,  //  The timer to initialize. Cannot be NULL.
@@ -12,9 +15,6 @@ void os_cputime_timer_init(
     //  Implement with Callout Functions from NimBLE Porting Layer
     assert(timer != NULL);
     assert(f != NULL);
-
-    //  Event Queue containing Events to be processed, defined in demo.c.  TODO: Move to header file.
-    extern struct ble_npl_eventq event_queue;
 
     //  Init the Callout Timer with the Callback Function
     ble_npl_callout_init(
@@ -65,4 +65,116 @@ void os_cputime_timer_relative(
         ticks   //  Number of ticks
     );
     assert(rc == 0);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  HAL Timer ported from Mynewt. We simulate with NimBLE Porting Layer.
+
+/// Only 1 HAL Timer supported
+static struct ble_npl_callout hal_timer;
+
+/// Init the HAL Timer
+void lora_bsp_enable_mac_timer(void);
+
+/**
+ * Un-initialize a HW timer.
+ *
+ * @param timer_num The number of the HW timer to un-initialize
+ */
+int hal_timer_deinit(int timer_num) {
+    assert(timer_num == 0);
+}
+
+/**
+ * Config a HW timer at the given frequency and start it. If the exact
+ * frequency is not obtainable the closest obtainable frequency is set.
+ *
+ * @param timer_num The number of the HW timer to configure
+ * @param freq_hz   The frequency in Hz to configure the timer at
+ *
+ * @return 0 on success, non-zero error code on failure
+ */
+int hal_timer_config(int timer_num, uint32_t freq_hz) {
+    assert(timer_num == 0);
+
+    #warning Implement hal_timer_config
+}
+
+/**
+ * Returns the HW timer current tick value
+ *
+ * @param timer_num The HW timer to read the tick value from
+ *
+ * @return The current tick value
+ */
+ble_npl_time_t hal_timer_read(int timer_num) {
+    assert(timer_num == 0);
+    return ble_npl_time_get();
+}
+
+/**
+ * Set the timer structure prior to use. Should not be called if the timer
+ * is running. Must be called at least once prior to using timer.
+ *
+ * @param timer_num The number of the HW timer to configure the callback on
+ * @param tmr       The timer structure to use for this timer
+ * @param cb_func   The timer callback to call when the timer fires
+ * @param arg       An opaque argument to provide the timer callback
+ *
+ * @return 0  on success, non-zero error code on failure.
+ */
+int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_fn cb_func,
+    void *arg) {
+    assert(timer_num == 0);
+    assert(tmr != NULL);
+
+    //  Init the Callout Timer with the Callback Function
+    ble_npl_callout_init(
+        tmr,           //  Callout Timer
+        &event_queue,  //  Event Queue that will handle the Callout upon timeout
+        cb_func,       //  Callback Function
+        arg            //  Argument to be passed to Callback Function
+    );
+}
+
+/**
+ * Start a timer that will expire when the timer reaches 'tick'. If tick
+ * has already passed the timer callback will be called "immediately" (at
+ * interrupt context).
+ *
+ * @param tmr  The timer to start
+ * @param tick The absolute tick value to fire the timer at
+ *
+ * @return 0 on success, non-zero error code on failure.
+ */
+int hal_timer_start_at(struct ble_npl_callout *tmr, ble_npl_time_t tick) {
+    assert(tmr != NULL);
+
+    //   Get relative ticks to wait
+    ble_npl_time_t current_ticks = ble_npl_time_get();
+    ble_npl_time_t ticks_to_wait = (tick > current_ticks)
+        ? (tick - current_ticks)
+        : 1;  //  Wait at least 1 tick
+
+    //  Trigger the Callout Timer after the elapsed ticks
+    ble_npl_error_t rc = ble_npl_callout_reset(
+        tmr,           //  Callout Timer
+        ticks_to_wait  //  Number of ticks
+    );
+    assert(rc == 0);
+}
+
+/**
+ * Stop a currently running timer; associated callback will NOT be called
+ *
+ * @param tmr The timer to stop
+ */
+int hal_timer_stop(struct ble_npl_callout *tmr) {
+    assert(tmr != NULL);
+
+    //  If Callout Timer is still running...
+    if (ble_npl_callout_is_active(tmr)) {
+        //  Stop the Callout Timer
+        ble_npl_callout_stop(tmr);
+    }
 }
