@@ -21,3 +21,7 @@ https://twitter.com/MisterTechBlog/status/1379926160377851910
 Read the (upcoming) article...
 
 https://lupyuen.github.io/articles/lorawan
+
+What is LoRaWAN? See this...
+
+https://lupyuen.github.io/articles/lora2
