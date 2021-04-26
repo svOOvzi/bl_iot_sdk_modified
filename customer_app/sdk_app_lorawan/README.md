@@ -50,6 +50,6 @@ las_join 1
 #  Open port
 las_app_port open 1
 
-#  Send data
-las_app_tx 10 5 1
+#  Send data to port 1, 5 bytes, unconfirmed (0)
+las_app_tx 1 5 0
 ```
