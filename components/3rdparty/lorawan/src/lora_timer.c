@@ -70,11 +70,10 @@ void os_cputime_timer_relative(
 ///////////////////////////////////////////////////////////////////////////////
 //  HAL Timer ported from Mynewt. We simulate with NimBLE Porting Layer.
 
-/// Only 1 HAL Timer supported
-static struct ble_npl_callout hal_timer;
-
 /// Init the HAL Timer
-void lora_bsp_enable_mac_timer(void);
+void lora_bsp_enable_mac_timer(void) {
+    //  Nothing to init
+}
 
 /**
  * Un-initialize a HW timer.
@@ -83,6 +82,7 @@ void lora_bsp_enable_mac_timer(void);
  */
 int hal_timer_deinit(int timer_num) {
     assert(timer_num == 0);
+    return 0;
 }
 
 /**
@@ -98,6 +98,7 @@ int hal_timer_deinit(int timer_num) {
 int hal_timer_config(int timer_num, uint32_t freq_hz) {
     assert(timer_num == 0);
     assert(freq_hz == 1000000);
+    return 0;
 }
 
 /**
@@ -109,9 +110,13 @@ int hal_timer_config(int timer_num, uint32_t freq_hz) {
  */
 uint32_t hal_timer_read(int timer_num) {
     assert(timer_num == 0);
-    ble_npl_time_get();
 
-    #warning convert to microseconds
+    //  Get current time in system ticks
+    ble_npl_time_t ticks = ble_npl_time_get();
+
+    //  Convert ticks to microseconds
+    uint32_t millisec = ble_npl_time_ticks_to_ms32(ticks);
+    return millisec * 1000;
 }
 
 /**
@@ -137,6 +142,7 @@ int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_f
         cb_func,       //  Callback Function
         arg            //  Argument to be passed to Callback Function
     );
+    return 0;
 }
 
 /**
@@ -152,10 +158,17 @@ int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_f
 int hal_timer_start_at(struct ble_npl_callout *tmr, uint32_t microsec) {
     assert(tmr != NULL);
 
-    //   Get relative ticks to wait
+    //  Convert absolute microseconds to ticks
+    ble_npl_time_t ticks = ble_npl_time_ms_to_ticks32(
+        microsec / 1000  //  Duration in milliseconds
+    );
+
+    //  Get current time in ticks
     ble_npl_time_t current_ticks = ble_npl_time_get();
-    ble_npl_time_t ticks_to_wait = (tick > current_ticks)
-        ? (tick - current_ticks)
+
+    //   Get relative ticks to wait
+    ble_npl_time_t ticks_to_wait = (ticks > current_ticks)
+        ? (ticks - current_ticks)
         : 1;  //  Wait at least 1 tick
 
     //  Trigger the Callout Timer after the elapsed ticks
@@ -164,6 +177,7 @@ int hal_timer_start_at(struct ble_npl_callout *tmr, uint32_t microsec) {
         ticks_to_wait  //  Number of ticks
     );
     assert(rc == 0);
+    return 0;
 }
 
 /**
@@ -179,4 +193,5 @@ int hal_timer_stop(struct ble_npl_callout *tmr) {
         //  Stop the Callout Timer
         ble_npl_callout_stop(tmr);
     }
+    return 0;
 }
