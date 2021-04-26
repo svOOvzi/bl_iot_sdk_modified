@@ -203,6 +203,9 @@ typedef void (*lora_txd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
 typedef void (*lora_rxd_func)(uint8_t port, LoRaMacEventInfoStatus_t status,
                               Mcps_t pkt_type, struct pbuf *om);
 
+//   Init the LoRaWAN node
+void lora_node_init(void);
+
 /**
  * Open a lora application port. This function will allocate a lora port, set
  * port default values for datarate and retries, set the transmit done and

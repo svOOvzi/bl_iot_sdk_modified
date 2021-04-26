@@ -163,6 +163,10 @@ static struct mib_pair lora_mib[] = {
     {NULL, (Mib_t)0}
 };
 
+void init_lorawan(char *buf0, int len0, int argc, char **argv) {
+    lora_node_init();
+}
+
 void
 las_cmd_disp_byte_str(uint8_t *bytes, int len)
 {

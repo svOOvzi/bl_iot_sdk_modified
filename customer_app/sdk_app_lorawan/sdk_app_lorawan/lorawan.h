@@ -21,6 +21,7 @@
 #ifndef H_APP_LORAWAN_
 #define H_APP_LORAWAN_
 
+void init_lorawan(char *buf0, int len0, int argc, char **argv);
 void las_cmd_wr_mib(char *buf0, int len0, int argc, char **argv);
 void las_cmd_rd_mib(char *buf0, int len0, int argc, char **argv);
 void las_cmd_wr_dev_eui(char *buf0, int len0, int argc, char **argv);

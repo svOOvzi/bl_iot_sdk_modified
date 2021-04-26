@@ -318,6 +318,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"spi_result",       "Show SPI counters",      spi_result},
 
     //  LoRaWAN
+    {"init_lorawan",    "Init LoRaWAN",     init_lorawan},
     {"las_wr_mib",      "las_wr_mib",       las_cmd_wr_mib},
     {"las_rd_mib",      "las_rd_mib",       las_cmd_rd_mib},
     {"las_rd_dev_eui",  "las_rd_dev_eui",   las_cmd_rd_dev_eui},

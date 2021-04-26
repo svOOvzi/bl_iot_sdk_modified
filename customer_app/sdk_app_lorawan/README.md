@@ -32,8 +32,8 @@ https://lupyuen.github.io/articles/lora2
 #  Start LoRa background task
 create_task
 
-#  Init LoRa driver
-???
+#  Init LoRaWAN driver
+init_lorawan
 
 #  Device EUI: Copy from ChirpStack: Applications -> app -> Device EUI
 las_wr_dev_eui 0x4b:0xc1:0x5e:0xe7:0x37:0x7b:0xb1:0x5b
