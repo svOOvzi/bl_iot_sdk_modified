@@ -14,6 +14,10 @@ And the Semtech SX1262 Driver...
 
 - [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
 
+Follow the updates in this Twitter Thread...
+
+https://twitter.com/MisterTechBlog/status/1379926160377851910
+
 Read the (upcoming) article...
 
 https://lupyuen.github.io/articles/lorawan
