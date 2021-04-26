@@ -91,17 +91,17 @@ int hal_timer_deinit(int timer_num) {
  *
  * @param timer_num The number of the HW timer to configure
  * @param freq_hz   The frequency in Hz to configure the timer at
+ *                  (Must be microseconds)
  *
  * @return 0 on success, non-zero error code on failure
  */
 int hal_timer_config(int timer_num, uint32_t freq_hz) {
     assert(timer_num == 0);
-
-    #warning Implement hal_timer_config
+    assert(freq_hz == 1000000);
 }
 
 /**
- * Returns the HW timer current tick value
+ * Returns the HW timer current microsecond value
  *
  * @param timer_num The HW timer to read the tick value from
  *
@@ -109,7 +109,9 @@ int hal_timer_config(int timer_num, uint32_t freq_hz) {
  */
 ble_npl_time_t hal_timer_read(int timer_num) {
     assert(timer_num == 0);
-    return ble_npl_time_get();
+    ble_npl_time_get();
+
+    #warning convert to microseconds
 }
 
 /**
@@ -143,11 +145,11 @@ int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_f
  * interrupt context).
  *
  * @param tmr  The timer to start
- * @param tick The absolute tick value to fire the timer at
+ * @param microsec The absolute microsecond value to fire the timer at
  *
  * @return 0 on success, non-zero error code on failure.
  */
-int hal_timer_start_at(struct ble_npl_callout *tmr, ble_npl_time_t tick) {
+int hal_timer_start_at(struct ble_npl_callout *tmr, ble_npl_time_t microsec) {
     assert(tmr != NULL);
 
     //   Get relative ticks to wait
