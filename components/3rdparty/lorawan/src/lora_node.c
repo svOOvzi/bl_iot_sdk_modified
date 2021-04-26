@@ -147,7 +147,7 @@ lora_pkt_alloc(
 void
 lora_node_mcps_request(struct pbuf *om)
 {
-    puts("lora_node_mcps_request");
+    printf("lora_node_mcps_request\r\n");
     assert(om != NULL);
     int rc;
 
@@ -191,7 +191,7 @@ lora_node_reset_txq_timer(void)
 void
 lora_node_chk_txq(void)
 {
-    puts("lora_node_chk_txq");
+    printf("lora_node_chk_txq\r\n");
     assert(g_lora_mac_data.lm_evq != NULL);
     ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
 }
@@ -199,7 +199,7 @@ lora_node_chk_txq(void)
 bool
 lora_node_txq_empty(void)
 {
-    puts("lora_node_txq_empty");
+    printf("lora_node_txq_empty\r\n");
     bool rc;
     struct pbuf_list *mp;
 
@@ -270,7 +270,7 @@ lora_node_get_batt_status(void)
 static void
 lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
 {
-    puts("lora_mac_proc_tx_q_event");
+    printf("lora_mac_proc_tx_q_event\r\n");
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t evstatus;
     LoRaMacTxInfo_t txinfo;
@@ -476,7 +476,7 @@ int
 lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
                uint8_t trials)
 {
-    puts("lora_node_join");
+    printf("lora_node_join\r\n");
     int rc;
 
     rc = lora_node_chk_if_joined();
@@ -504,7 +504,7 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
 int
 lora_node_link_check(void)
 {
-    puts("lora_node_link_check");
+    printf("lora_node_link_check\r\n");
     int rc;
 
     rc = lora_node_chk_if_joined();
@@ -673,7 +673,7 @@ lora_node_mac_evq_get(void)
 void
 lora_node_init(void)
 {
-    puts("lora_node_init");
+    printf("lora_node_init\r\n");
 #if !(LORA_NODE_CLI)
     LoRaMacStatus_t lms;
 #endif

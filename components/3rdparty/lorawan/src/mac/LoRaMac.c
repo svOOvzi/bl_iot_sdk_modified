@@ -240,12 +240,12 @@ static uint8_t lora_mac_extract_mac_cmds(uint8_t max_cmd_bytes, uint8_t *buf);
 static void
 lora_mac_rx_disable(void)
 {
-    puts("lora_mac_rx_disable");
+    printf("lora_mac_rx_disable\r\n");
     struct ble_npl_eventq *evq;
 
     /* Disable reception (if not receiving) */
     #warning Radio.RxDisable
-    puts("TODO: Radio.RxDisable");
+    printf("TODO: Radio.RxDisable\r\n");
     // Radio.RxDisable();
 
     /* Remove all possible receive related events */
@@ -263,7 +263,7 @@ lora_mac_rx_disable(void)
 static void
 lora_mac_rtx_timer_stop(void)
 {
-    puts("lora_mac_rtx_timer_stop");
+    printf("lora_mac_rtx_timer_stop\r\n");
     os_cputime_timer_stop(&g_lora_mac_data.rtx_timer);
     ble_npl_eventq_remove(lora_node_mac_evq_get(), &g_lora_mac_rtx_timeout_event);
 }
@@ -277,7 +277,7 @@ lora_mac_rtx_timer_stop(void)
 static void
 lora_mac_rx_win2_stop(void)
 {
-    puts("lora_mac_rx_win2_stop");
+    printf("lora_mac_rx_win2_stop\r\n");
     if (LoRaMacDeviceClass == CLASS_A) {
         hal_timer_stop(&RxWindowTimer2);
         lora_enter_low_power();
@@ -292,7 +292,7 @@ lora_mac_rx_win2_stop(void)
 static void
 OnRadioTxDone(void)
 {
-    puts("OnRadioTxDone");
+    printf("OnRadioTxDone\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_tx_event);
 }
 
@@ -307,7 +307,7 @@ OnRadioTxDone(void)
 static void
 OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    puts("OnRadioRxDone");
+    printf("OnRadioRxDone\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_event);
 
     /*
@@ -330,7 +330,7 @@ OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 static void
 OnRadioTxTimeout(void)
 {
-    puts("OnRadioTxTimeout");
+    printf("OnRadioTxTimeout\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_tx_timeout_event);
 }
 
@@ -340,7 +340,7 @@ OnRadioTxTimeout(void)
 static void
 OnRadioRxError(void)
 {
-    puts("OnRadioRxError");
+    printf("OnRadioRxError\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_err_event);
 }
 
@@ -350,7 +350,7 @@ OnRadioRxError(void)
 static void
 OnRadioRxTimeout(void)
 {
-    puts("OnRadioRxTimeout");
+    printf("OnRadioRxTimeout\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_timeout_event);
 }
 
@@ -360,7 +360,7 @@ OnRadioRxTimeout(void)
 static void
 OnTxDelayedTimerEvent(struct ble_npl_event *ev)
 {
-    puts("OnTxDelayedTimerEvent");
+    printf("OnTxDelayedTimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_tx_delay_timeout_event);
 }
 
@@ -370,7 +370,7 @@ OnTxDelayedTimerEvent(struct ble_npl_event *ev)
 static void
 OnRxWindow1TimerEvent(struct ble_npl_event *ev)
 {
-    puts("OnRxWindow1TimerEvent");
+    printf("OnRxWindow1TimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win1_event);
 }
 
@@ -380,7 +380,7 @@ OnRxWindow1TimerEvent(struct ble_npl_event *ev)
 static void
 OnRxWindow2TimerEvent(struct ble_npl_event *ev)
 {
-    puts("OnRxWindow2TimerEvent");
+    printf("OnRxWindow2TimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win2_event);
 }
 
@@ -393,7 +393,7 @@ OnRxWindow2TimerEvent(struct ble_npl_event *ev)
 static void
 lora_mac_rtx_timer_cb(struct ble_npl_event *ev)
 {
-    puts("lora_mac_rtx_timer_cb");
+    printf("lora_mac_rtx_timer_cb\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rtx_timeout_event);
 }
 
@@ -913,7 +913,7 @@ lora_mac_process_radio_tx(struct ble_npl_event *ev)
 static void
 lora_mac_process_radio_rx(struct ble_npl_event *ev)
 {
-    puts("lora_mac_process_radio_rx");
+    printf("lora_mac_process_radio_rx\r\n");
     LoRaMacHeader_t macHdr;
     LoRaMacFrameCtrl_t fCtrl;
     LoRaMacRxSlot_t entry_rx_slot;
