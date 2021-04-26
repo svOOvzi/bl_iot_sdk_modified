@@ -48,6 +48,7 @@ alloc_pbuf(
     //  Init LWIP Buffer Pool
     static bool lwip_started = false;
     if (!lwip_started) {
+        puts("lwip_init");
         lwip_started = true;
         lwip_init();
     }
