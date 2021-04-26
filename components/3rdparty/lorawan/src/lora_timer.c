@@ -105,9 +105,9 @@ int hal_timer_config(int timer_num, uint32_t freq_hz) {
  *
  * @param timer_num The HW timer to read the tick value from
  *
- * @return The current tick value
+ * @return The current microsecond value
  */
-ble_npl_time_t hal_timer_read(int timer_num) {
+uint32_t hal_timer_read(int timer_num) {
     assert(timer_num == 0);
     ble_npl_time_get();
 
@@ -140,16 +140,16 @@ int hal_timer_set_cb(int timer_num, struct ble_npl_callout *tmr, ble_npl_event_f
 }
 
 /**
- * Start a timer that will expire when the timer reaches 'tick'. If tick
+ * Start a timer that will expire when the timer reaches 'microsec' microseconds. If it
  * has already passed the timer callback will be called "immediately" (at
- * interrupt context).
+ * application context).
  *
  * @param tmr  The timer to start
  * @param microsec The absolute microsecond value to fire the timer at
  *
  * @return 0 on success, non-zero error code on failure.
  */
-int hal_timer_start_at(struct ble_npl_callout *tmr, ble_npl_time_t microsec) {
+int hal_timer_start_at(struct ble_npl_callout *tmr, uint32_t microsec) {
     assert(tmr != NULL);
 
     //   Get relative ticks to wait
