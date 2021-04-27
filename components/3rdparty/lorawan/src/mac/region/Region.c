@@ -766,6 +766,7 @@ bool RegionRxConfig( LoRaMacRegion_t region, RxConfigParams_t* rxConfig, int8_t*
 
 bool RegionTxConfig( LoRaMacRegion_t region, TxConfigParams_t* txConfig, int8_t* txPower, TimerTime_t* txTimeOnAir )
 {
+    printf("RegionTxConfig\r\n");
     switch( region )
     {
         AS923_TX_CONFIG( );

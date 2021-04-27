@@ -53,3 +53,64 @@ las_app_port open 1
 #  Send data to LoRaWAN port 1, 5 bytes, unconfirmed (0)
 las_app_tx 1 5 0
 ```
+
+# Output Log
+
+```text
+# create_task
+
+# init_lorawan
+lora_node_init
+pbuf_queue_init
+pbuf_queue_init
+pbuf_queue_init
+SX126xReset
+SX126xIoInit
+SX126X interrupt init
+SX126X register handler: GPIO 11
+SX126xWakeup
+SX126xGetDeviceId: SX1262
+RadioSetModem
+RadioSleep
+
+# las_join 10
+lora_node_join: joined=8
+lora_node_join: joining network
+Attempting to join...
+
+# lora_mac_join_event
+LoRaMacMlmeRequest
+Send
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=1
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel
+RadioSetChannel
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+Exception Entry--->>>
+mcause 38000007, mepc 2300ff4e, mtval 00000010
+Exception code: 7
+  msg: Store/AMO access fault
+=== backtrace start ===
+backtrace: 0x2300a988
+backtrace: 0x23009752
+backtrace: 0x2300ff52   <--- TRAP
+backtrace: 0x2301024c
+backtrace: 0x230102be
+backtrace: 0x23011362
+backtrace: 0x2300e12c
+backtrace: 0x23000eb6
+backtrace: INVALID!!!
+=== backtrace end ===
+```
