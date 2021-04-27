@@ -2000,7 +2000,9 @@ ScheduleTx(void)
                                &g_lora_mac_data.aggr_time_off);
 
     if (status != LORAMAC_STATUS_OK) {
+        printf("ScheduleTx: next channel failed\r\n");
         if (status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED) {
+            printf("ScheduleTx: duty cycle restricted\r\n");
             assert(duty_cycle_time_off != 0);
 
             // Send later - prepare timer
@@ -2015,7 +2017,7 @@ ScheduleTx(void)
             return LORAMAC_STATUS_OK;
         } else {
             // State where the MAC cannot send a frame
-            printf("ScheduleTx: Cannot send frame, status=%d\r\n", (int) status);
+            printf("ScheduleTx: cannot send frame, status=%d\r\n", (int) status);
             return status;
         }
     }

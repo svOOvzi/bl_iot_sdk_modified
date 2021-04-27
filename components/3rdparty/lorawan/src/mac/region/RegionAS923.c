@@ -913,6 +913,7 @@ void RegionAS923CalcBackOff( CalcBackOffParams_t* calcBackOff )
 
 LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time, TimerTime_t* aggregatedTimeOff )
 {
+    printf("RegionAS923NextChannel\r\n");
     uint8_t channelNext = 0;
     uint8_t nbEnabledChannels = 0;
     uint8_t delayTx = 0;
@@ -957,9 +958,11 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
                 // Free channel found
                 *channel = channelNext;
                 *time = 0;
+                printf("RegionAS923NextChannel: OK\r\n");
                 return LORAMAC_STATUS_OK;
             }
         }
+        printf("RegionAS923NextChannel: no free channel\r\n");
         return LORAMAC_STATUS_NO_FREE_CHANNEL_FOUND;
     }
     else
@@ -973,6 +976,7 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
         // Datarate not supported by any channel, restore defaults
         ChannelsMask[0] |= LC( 1 ) + LC( 2 );
         *time = 0;
+        printf("RegionAS923NextChannel: no channel\r\n");
         return LORAMAC_STATUS_NO_CHANNEL_FOUND;
     }
 }
