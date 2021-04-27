@@ -871,6 +871,7 @@ LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_
         nextTxDelay = nextChanParams->AggrTimeOff - TimerGetElapsedTime( nextChanParams->LastAggrTx );
     }
 
+    //  TODO: Should be fixed. See https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionKR920.c#L807-L832
     if( nbEnabledChannels > 0 )
     {
         for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < KR920_MAX_NB_CHANNELS; i++ )
@@ -880,6 +881,7 @@ LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_
 
             #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
             printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
+            printf("See https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionKR920.c#L807-L832\r\n");
             assert(false);
 
             // Perform carrier sense for KR920_CARRIER_SENSE_TIME

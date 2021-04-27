@@ -35,6 +35,69 @@
 // Definitions
 #define CHANNELS_MASK_SIZE              1
 
+// AS923 Channel Plan. From https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionAS923.c#L38-L97
+
+#ifndef REGION_AS923_DEFAULT_CHANNEL_PLAN
+#define REGION_AS923_DEFAULT_CHANNEL_PLAN CHANNEL_PLAN_GROUP_AS923_1
+#endif
+
+#if( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_1 )
+
+// Channel plan CHANNEL_PLAN_GROUP_AS923_1
+
+#define REGION_AS923_FREQ_OFFSET          0
+
+#define AS923_MIN_RF_FREQUENCY            915000000
+#define AS923_MAX_RF_FREQUENCY            928000000
+
+#elif ( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_2 )
+
+// Channel plan CHANNEL_PLAN_GROUP_AS923_2
+// -1.8MHz
+#define REGION_AS923_FREQ_OFFSET          ( ( ~( 0xFFFFB9B0 ) + 1 ) * 100 )
+
+#define AS923_MIN_RF_FREQUENCY            915000000
+#define AS923_MAX_RF_FREQUENCY            928000000
+
+#elif ( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_3 )
+
+// Channel plan CHANNEL_PLAN_GROUP_AS923_3
+// -6.6MHz
+#define REGION_AS923_FREQ_OFFSET          ( ( ~( 0xFFFEFE30 ) + 1 ) * 100 )
+
+#define AS923_MIN_RF_FREQUENCY            915000000
+#define AS923_MAX_RF_FREQUENCY            928000000
+
+#elif ( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_1_JP )
+
+// Channel plan CHANNEL_PLAN_GROUP_AS923_1_JP
+
+#define REGION_AS923_FREQ_OFFSET          0
+
+/*!
+ * Restrict AS923 frequencies to channels 24 to 38
+ * Center frequencies 920.6 MHz to 923.4 MHz @ 200 kHz max bandwidth
+ */
+#define AS923_MIN_RF_FREQUENCY            920600000
+#define AS923_MAX_RF_FREQUENCY            923400000
+
+/*!
+ * Specifies the reception bandwidth to be used while executing the LBT
+ * Max channel bandwidth is 200 kHz
+ */
+#define AS923_LBT_RX_BANDWIDTH            200000
+
+#undef AS923_TX_MAX_DATARATE
+#define AS923_TX_MAX_DATARATE             DR_5
+
+#undef AS923_RX_MAX_DATARATE
+#define AS923_RX_MAX_DATARATE             DR_5
+
+#undef AS923_DEFAULT_MAX_EIRP
+#define AS923_DEFAULT_MAX_EIRP            13.0f
+
+#endif
+
 // Global attributes
 /*!
  * LoRaMAC channels
@@ -914,7 +977,6 @@ void RegionAS923CalcBackOff( CalcBackOffParams_t* calcBackOff )
 LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time, TimerTime_t* aggregatedTimeOff )
 {
     printf("RegionAS923NextChannel\r\n");
-    uint8_t channelNext = 0;
     uint8_t nbEnabledChannels = 0;
     uint8_t delayTx = 0;
     uint8_t enabledChannels[AS923_MAX_NB_CHANNELS] = { 0 };
@@ -946,11 +1008,45 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
 
     if( nbEnabledChannels > 0 )
     {
+        //  This the new code for AS923 Channel Plan. From https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionAS923.c#L911-L935
+#if ( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_1_JP )
+        // Executes the LBT algorithm when operating in Japan
+        uint8_t channelNext = 0;
+
         for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < AS923_MAX_NB_CHANNELS; i++ )
         {
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
-            
+
+            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
+            assert(false);
+
+            // Perform carrier sense for AS923_CARRIER_SENSE_TIME
+            // If the channel is free, we can stop the LBT mechanism
+            if( Radio.IsChannelFree( RegionNvmGroup2->Channels[channelNext].Frequency, AS923_LBT_RX_BANDWIDTH, AS923_RSSI_FREE_TH, AS923_CARRIER_SENSE_TIME ) == true )
+            {
+                // Free channel found
+                *channel = channelNext;
+                return LORAMAC_STATUS_OK;
+            }
+        }
+        // Even if one or more channels are available according to the channel plan, no free channel
+        // was found during the LBT procedure.
+        return LORAMAC_STATUS_NO_FREE_CHANNEL_FOUND;
+#else
+        // We found a valid channel
+        *channel = enabledChannels[randr( 0, nbEnabledChannels - 1 )];
+        return LORAMAC_STATUS_OK;
+#endif
+
+#ifdef NOTUSED  //  This is the old code from Mynewt without AS923 Channel Plan
+        uint8_t channelNext = 0;
+        for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < AS923_MAX_NB_CHANNELS; i++ )
+        {
+            channelNext = enabledChannels[j];
+            j = ( j + 1 ) % nbEnabledChannels;
+
             #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
             printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
             assert(false);
@@ -968,6 +1064,8 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
         }
         printf("RegionAS923NextChannel: no free channel\r\n");
         return LORAMAC_STATUS_NO_FREE_CHANNEL_FOUND;
+#endif  //  NOTUSED
+
     }
     else
     {
