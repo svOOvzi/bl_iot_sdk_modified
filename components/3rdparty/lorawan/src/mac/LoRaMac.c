@@ -2393,23 +2393,34 @@ SendFrameOnChannel(uint8_t channel)
 
     RegionTxConfig(LoRaMacRegion, &txConfig, &txPower,
                    &g_lora_mac_data.tx_time_on_air);
+    printf("SendFrameOnChannel: power=%d\r\n", (int) txPower);
 
     /* Set MCPS confirm information */
     txi = g_lora_mac_data.curtx;
-    assert(txi != NULL);
-    txi->txdinfo.datarate = LoRaMacParams.ChannelsDatarate;
-    txi->txdinfo.txpower = txPower;
-    txi->txdinfo.uplink_chan = channel;
-    txi->txdinfo.tx_time_on_air = g_lora_mac_data.tx_time_on_air;
+
+    //// TODO: "txi" can be null when transmitting the Join Network Request.
+    //// We skip the logging code if "txi" is null.
+    if (txi == NULL) {
+        printf("SendFrameOnChannel: txi is null, skipping log\r\n");
+    } else {
+        txi->txdinfo.datarate = LoRaMacParams.ChannelsDatarate;
+        txi->txdinfo.txpower = txPower;
+        txi->txdinfo.uplink_chan = channel;
+        txi->txdinfo.tx_time_on_air = g_lora_mac_data.tx_time_on_air;
+    }
 
     // Send now
     Radio.Send(LoRaMacBuffer, LoRaMacBufferPktLen);
 
     LoRaMacState |= LORAMAC_TX_RUNNING;
 
-    lora_node_log(LORA_NODE_LOG_TX_START, txPower,
-                  ((uint16_t)LoRaMacParams.ChannelsDatarate << 8) | channel,
-                  g_lora_mac_data.tx_time_on_air);
+    //// TODO: "txi" can be null when transmitting the Join Network Request.
+    //// We skip the logging code if "txi" is null.
+    if (txi != NULL) {
+        lora_node_log(LORA_NODE_LOG_TX_START, txPower,
+                    ((uint16_t)LoRaMacParams.ChannelsDatarate << 8) | channel,
+                    g_lora_mac_data.tx_time_on_air);
+    }
 
     return LORAMAC_STATUS_OK;
 }
