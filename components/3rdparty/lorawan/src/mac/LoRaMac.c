@@ -1932,6 +1932,7 @@ ProcessMacCommands(uint8_t *payload, uint8_t macIndex, uint8_t commandsSize,
 LoRaMacStatus_t
 Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *om)
 {
+    printf("Send\r\n");
     LoRaMacFrameCtrl_t fCtrl;
     LoRaMacStatus_t status = LORAMAC_STATUS_PARAMETER_INVALID;
 
@@ -1970,6 +1971,7 @@ Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *om)
 static LoRaMacStatus_t
 ScheduleTx(void)
 {
+    printf("ScheduleTx\r\n");
     uint32_t duty_cycle_time_off = 0;
     LoRaMacStatus_t status;
     NextChanParams_t nextChan;
@@ -2005,6 +2007,7 @@ ScheduleTx(void)
             LoRaMacState |= LORAMAC_TX_DELAYED;
             os_cputime_timer_stop(&TxDelayedTimer);
             os_cputime_timer_relative(&TxDelayedTimer, duty_cycle_time_off);
+            printf("TxDelayedTimer: %d\r\n", (int) duty_cycle_time_off);
 
             lora_node_log(LORA_NODE_LOG_TX_DELAY, g_lora_mac_data.max_dc, 0,
                           duty_cycle_time_off);
@@ -3066,6 +3069,7 @@ LoRaMacMulticastChannelUnlink(MulticastParams_t *channelParam)
 LoRaMacStatus_t
 LoRaMacMlmeRequest(MlmeReq_t *mlmeRequest)
 {
+    printf("LoRaMacMlmeRequest\r\n");
     LoRaMacStatus_t status = LORAMAC_STATUS_SERVICE_UNKNOWN;
     LoRaMacHeader_t macHdr;
 

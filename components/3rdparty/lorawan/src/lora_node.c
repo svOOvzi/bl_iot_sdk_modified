@@ -526,6 +526,7 @@ lora_node_link_check(void)
 static void
 lora_mac_join_event(struct ble_npl_event *ev)
 {
+    printf("lora_mac_join_event\r\n");
     MlmeReq_t mlmeReq;
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t status;
@@ -543,10 +544,12 @@ lora_mac_join_event(struct ble_npl_event *ev)
     rc = LoRaMacMlmeRequest(&mlmeReq);
     switch (rc) {
     case LORAMAC_STATUS_OK:
+        printf("lora_mac_join_event: OK\r\n");
         status = LORAMAC_EVENT_INFO_STATUS_OK;
         break;
     /* XXX: for now, just report this generic error. */
     default:
+        printf("lora_mac_join_event: error %d\r\n", rc);
         status = LORAMAC_EVENT_INFO_STATUS_ERROR;
         break;
     }
