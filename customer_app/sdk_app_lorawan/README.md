@@ -57,6 +57,7 @@ las_app_tx 1 5 0
 # Output Log
 
 ```text
+
 # create_task
 
 # init_lorawan
@@ -72,6 +73,12 @@ SX126xWakeup
 SX126xGetDeviceId: SX1262
 RadioSetModem
 RadioSleep
+
+# las_wr_dev_eui 0x4b:0xc1:0x5e:0xe7:0x37:0x7b:0xb1:0x5b
+
+# las_wr_app_eui 0x00:0x00:0x00:0x00:0x00:0x00:0x00:0x00
+
+# las_wr_app_key 0xaa:0xff:0xad:0x5c:0x7e:0x87:0xf6:0x4d:0xe3:0xf0:0x87:0x32:0xfc:0x1d:0xd2:0x5d
 
 # las_join 10
 lora_node_join: joined=8
@@ -92,25 +99,651 @@ RegionComputeRxWindowParameters
 RegionComputeRxWindowParameters
 lora_mac_rx_disable
 TODO: Radio.RxDisable
-SendFrameOnChannel
-RadioSetChannel
+SendFrameOnChannel: channel=1
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923400000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
 SX126xGetDeviceId: SX1262
-Exception Entry--->>>
-mcause 38000007, mepc 2300ff4e, mtval 00000010
-Exception code: 7
-  msg: Store/AMO access fault
-=== backtrace start ===
-backtrace: 0x2300a988
-backtrace: 0x23009752
-backtrace: 0x2300ff52   <--- TRAP
-backtrace: 0x2301024c
-backtrace: 0x230102be
-backtrace: 0x23011362
-backtrace: 0x2300e12c
-backtrace: 0x23000eb6
-backtrace: INVALID!!!
-=== backtrace end ===
+SendFrameOnChannel: power=0
+SendFrameOnChannel: txi is null, skipping log
+RadioSend: size=23
+lora_mac_join_event: OK
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923400000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
+TxDelayedTimer: 30274000
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=0
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=0
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923200000
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+SendFrameOnChannel: power=0
+SendFrameOnChannel: txi is null, skipping log
+RadioSend: size=23
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
+TxDelayedTimer: 29260000
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=0
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=0
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923200000
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+SendFrameOnChannel: power=0
+SendFrameOnChannel: txi is null, skipping log
+RadioSend: size=23
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
+TxDelayedTimer: 27175000
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=0
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=0
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923200000
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+SendFrameOnChannel: power=0
+SendFrameOnChannel: txi is null, skipping og
+RadioSend: size=23
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
+TxDelayedTimer: 25765000
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=0
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=0
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923200000
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xGetDeviceId: SX1262
+SendFrameOnChannel: power=0
+SendFrameOnChannel: txi is null, skipping log
+RadioSend: size=23
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+OnTxDelayedTimerEvent
+RadioSetModem
+SX126xWakeup
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
+TxDelayedTimer: 28493000
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+lora_mac_txq_timer_cb
+lora_mac_proc_tx_q_event
+
 ```
