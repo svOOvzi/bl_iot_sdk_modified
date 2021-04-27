@@ -1041,6 +1041,11 @@ uint32_t RadioTimeOnAir( RadioModems_t modem, uint32_t bandwidth,
 void RadioSend( uint8_t *buffer, uint8_t size )
 {
     printf("RadioSend: size=%d\r\n", (int) size);
+    for (int i = 0; i < size; i++) {
+        printf("%02x ", buffer[i]);
+    }
+    printf("\r\n");
+
     SX126xSetDioIrqParams( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
