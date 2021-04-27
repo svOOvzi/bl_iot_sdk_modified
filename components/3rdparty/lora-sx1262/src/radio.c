@@ -591,6 +591,7 @@ void RadioSetChannel( uint32_t freq )
 
 bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh, uint32_t maxCarrierSenseTime )
 {
+    printf("RadioIsChannelFree\r\n");
     bool     status           = true;
     int16_t  rssi             = 0;
     uint32_t carrierSenseTime = 0;
@@ -607,6 +608,7 @@ bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh
     DelayMs( 1 );
 
     carrierSenseTime = TimerGetCurrentTime( );
+    printf("RadioIsChannelFree: carrierSenseTime=%d, elapsed=%d, maxCarrierSenseTime=%d\r\n", (int) carrierSenseTime, (int) TimerGetElapsedTime( carrierSenseTime ), (int) maxCarrierSenseTime);
 
     // Perform carrier sense for maxCarrierSenseTime
     while( TimerGetElapsedTime( carrierSenseTime ) < maxCarrierSenseTime )
@@ -620,6 +622,7 @@ bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh
         }
     }
     RadioSleep( );
+    printf("RadioIsChannelFree done\r\n");
     return status;
 }
 
