@@ -589,7 +589,7 @@ void RadioSetModem( RadioModems_t modem )
 
 void RadioSetChannel( uint32_t freq )
 {
-    printf("RadioSetChannel\r\n");
+    printf("RadioSetChannel: freq=%d\r\n", (int) freq);
     SX126xSetRfFrequency( freq );
 }
 
@@ -1040,6 +1040,7 @@ uint32_t RadioTimeOnAir( RadioModems_t modem, uint32_t bandwidth,
 
 void RadioSend( uint8_t *buffer, uint8_t size )
 {
+    printf("RadioSend: size=%d\r\n", (int) size);
     SX126xSetDioIrqParams( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,

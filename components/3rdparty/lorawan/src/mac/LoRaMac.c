@@ -2379,7 +2379,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
 LoRaMacStatus_t
 SendFrameOnChannel(uint8_t channel)
 {
-    printf("SendFrameOnChannel\r\n");
+    printf("SendFrameOnChannel: channel=%d\r\n", (int) channel);
     TxConfigParams_t txConfig;
     struct lora_pkt_info *txi;
     int8_t txPower = 0;
@@ -2396,6 +2396,7 @@ SendFrameOnChannel(uint8_t channel)
 
     /* Set MCPS confirm information */
     txi = g_lora_mac_data.curtx;
+    assert(txi != NULL);
     txi->txdinfo.datarate = LoRaMacParams.ChannelsDatarate;
     txi->txdinfo.txpower = txPower;
     txi->txdinfo.uplink_chan = channel;

@@ -330,6 +330,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
             STATS_INC(lora_mac_stats, tx_mac_flush);
             /* NOTE: no need to get a mbuf. */
 send_empty_msg:
+            printf("lora_mac_proc_tx_q_event: send empty msg\r\n");
             lpkt = &g_lora_mac_data.txpkt;
             g_lora_mac_data.curtx = lpkt;
             om = NULL;
@@ -338,6 +339,7 @@ send_empty_msg:
             rc = LORAMAC_STATUS_OK;
         } else {
 send_from_txq:
+            printf("lora_mac_proc_tx_q_event: send from txq\r\n");
             om = pbuf_queue_get(&g_lora_mac_data.lm_txq);
             assert(om != NULL);
             lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
