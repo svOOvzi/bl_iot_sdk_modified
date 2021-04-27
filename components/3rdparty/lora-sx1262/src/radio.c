@@ -563,6 +563,7 @@ RadioState_t RadioGetStatus( void )
 
 void RadioSetModem( RadioModems_t modem )
 {
+    printf("RadioSetModem\r\n");
     switch( modem )
     {
     default:
@@ -586,6 +587,7 @@ void RadioSetModem( RadioModems_t modem )
 
 void RadioSetChannel( uint32_t freq )
 {
+    printf("RadioSetChannel\r\n");
     SX126xSetRfFrequency( freq );
 }
 
@@ -652,7 +654,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                          bool crcOn, bool freqHopOn, uint8_t hopPeriod,
                          bool iqInverted, bool rxContinuous )
 {
-
+    printf("RadioSetRxConfig\r\n");
     RxContinuous = rxContinuous;
     if( rxContinuous == true )
     {
@@ -1056,6 +1058,7 @@ void RadioSend( uint8_t *buffer, uint8_t size )
 
 void RadioSleep( void )
 {
+    printf("RadioSleep\r\n");
     SleepParams_t params = { 0 };
 
     params.Fields.WarmStart = 1;
@@ -1066,11 +1069,13 @@ void RadioSleep( void )
 
 void RadioStandby( void )
 {
+    printf("RadioStandby\r\n");
     SX126xSetStandby( STDBY_RC );
 }
 
 void RadioRx( uint32_t timeout )
 {
+    printf("RadioRx\r\n");
     SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
