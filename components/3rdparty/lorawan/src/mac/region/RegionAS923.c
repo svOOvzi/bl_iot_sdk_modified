@@ -950,6 +950,10 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
         {
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
+            
+            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
+            assert(false);
 
             // Perform carrier sense for AS923_CARRIER_SENSE_TIME
             // If the channel is free, we can stop the LBT mechanism

@@ -14,6 +14,9 @@
         "sx126x-board.h": "c",
         "pbuf_queue.h": "c",
         "rope": "c",
-        "regex": "c"
+        "regex": "c",
+        "lora_utilities.h": "c",
+        "regioncommon.h": "c",
+        "lora_priv.h": "c"
     }
 }

@@ -878,6 +878,10 @@ LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
 
+            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
+            assert(false);
+
             // Perform carrier sense for KR920_CARRIER_SENSE_TIME
             // If the channel is free, we can stop the LBT mechanism
             if( Radio.IsChannelFree( MODEM_LORA, Channels[channelNext].Frequency, KR920_RSSI_FREE_TH, KR920_CARRIER_SENSE_TIME ) == true )

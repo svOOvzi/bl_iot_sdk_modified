@@ -515,6 +515,8 @@ static uint8_t RadioGetFskBandwidthRegValue( uint32_t bandwidth )
         }
     }
     // ERROR: Value not found
+    printf("RadioGetFskBandwidthRegValue: not found, bandwidth=%d\r\n", (int) bandwidth);
+    assert(false);
     while( 1 );
 }
 
@@ -593,7 +595,7 @@ void RadioSetChannel( uint32_t freq )
 
 bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh, uint32_t maxCarrierSenseTime )
 {
-    printf("RadioIsChannelFree\r\n");
+    printf("RadioIsChannelFree: freq=%d, rxBandwidth=%d\r\n", (int) freq, (int) rxBandwidth);
     bool     status           = true;
     int16_t  rssi             = 0;
     uint32_t carrierSenseTime = 0;
@@ -770,6 +772,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
 
             break;
     }
+    printf("RadioSetRxConfig done\r\n");
 }
 
 void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
