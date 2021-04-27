@@ -2015,6 +2015,7 @@ ScheduleTx(void)
             return LORAMAC_STATUS_OK;
         } else {
             // State where the MAC cannot send a frame
+            printf("ScheduleTx: Cannot send frame, status=%d\r\n", (int) status);
             return status;
         }
     }
@@ -2061,6 +2062,7 @@ ScheduleTx(void)
 static void
 CalculateBackOff(uint8_t channel)
 {
+    printf("CalculateBackOff\r\n");
     uint32_t elapsed_msecs;
     uint32_t tx_ticks;
     CalcBackOffParams_t calc_backoff;
@@ -2375,6 +2377,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
 LoRaMacStatus_t
 SendFrameOnChannel(uint8_t channel)
 {
+    printf("SendFrameOnChannel\r\n");
     TxConfigParams_t txConfig;
     struct lora_pkt_info *txi;
     int8_t txPower = 0;
