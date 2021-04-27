@@ -413,6 +413,7 @@ proc_txq_om_done:
 static void
 lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 {
+    printf("lora_mac_txq_timer_cb\r\n");
     lora_mac_proc_tx_q_event(NULL);
 }
 
@@ -476,10 +477,10 @@ int
 lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
                uint8_t trials)
 {
-    printf("lora_node_join\r\n");
     int rc;
 
     rc = lora_node_chk_if_joined();
+    printf("lora_node_join: joined=%d\r\n", rc);
     if (rc != LORA_APP_STATUS_ALREADY_JOINED) {
         /* Send event to MAC */
         g_lm_join_ev_arg.dev_eui = dev_eui;
