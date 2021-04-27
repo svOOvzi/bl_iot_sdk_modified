@@ -309,7 +309,6 @@ static void handle_event(struct ble_npl_event *ev) {
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     //  LoRa
-    {"create_task",      "Create a task",          create_task},
     {"put_event",        "Add an event",           put_event},
     {"init_driver",      "Init LoRa driver",       init_driver},
     {"send_message",     "Send LoRa message",      send_message},
@@ -318,19 +317,20 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"spi_result",       "Show SPI counters",      spi_result},
 
     //  LoRaWAN
-    {"init_lorawan",    "Init LoRaWAN",     init_lorawan},
-    {"las_wr_mib",      "las_wr_mib",       las_cmd_wr_mib},
-    {"las_rd_mib",      "las_rd_mib",       las_cmd_rd_mib},
-    {"las_rd_dev_eui",  "las_rd_dev_eui",   las_cmd_rd_dev_eui},
-    {"las_wr_dev_eui",  "las_wr_dev_eui",   las_cmd_wr_dev_eui},
-    {"las_rd_app_eui",  "las_rd_app_eui",   las_cmd_rd_app_eui},
-    {"las_wr_app_eui",  "las_wr_app_eui",   las_cmd_wr_app_eui},
-    {"las_rd_app_key",  "las_rd_app_key",   las_cmd_rd_app_key},
-    {"las_wr_app_key",  "las_wr_app_key",   las_cmd_wr_app_key},
-    {"las_app_port",    "las_app_port",     las_cmd_app_port},
-    {"las_app_tx",      "las_app_tx",       las_cmd_app_tx},
-    {"las_join",        "las_join",         las_cmd_join},
-    {"las_link_chk",    "las_link_chk",     las_cmd_link_chk},
+    {"create_task",     "Create LoRaWAN task",                  create_task},
+    {"init_lorawan",    "Init LoRaWAN driver",                  init_lorawan},
+    {"las_wr_mib",      "Write LoRaWAN MIB",                    las_cmd_wr_mib},
+    {"las_rd_mib",      "Read LoRaWAN MIB",                     las_cmd_rd_mib},
+    {"las_rd_dev_eui",  "Read LoRaWAN device EUI",              las_cmd_rd_dev_eui},
+    {"las_wr_dev_eui",  "Write LoRaWAN device EUI",             las_cmd_wr_dev_eui},
+    {"las_rd_app_eui",  "Read LoRaWAN application EUI",         las_cmd_rd_app_eui},
+    {"las_wr_app_eui",  "Write LoRaWAN application EUI",        las_cmd_wr_app_eui},
+    {"las_rd_app_key",  "Read LoRaWAN application key",         las_cmd_rd_app_key},
+    {"las_wr_app_key",  "Write LoRaWAN application key",        las_cmd_wr_app_key},
+    {"las_app_port",    "Open/close LoRaWAN application port",  las_cmd_app_port},
+    {"las_app_tx",      "Transmit on LoRaWAN application port", las_cmd_app_tx},
+    {"las_join",        "Perform a LoRaWAN OTA join",           las_cmd_join},
+    {"las_link_chk",    "Perform a LoRaWAN link check",         las_cmd_link_chk},
 
     //  pbuf
     {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},

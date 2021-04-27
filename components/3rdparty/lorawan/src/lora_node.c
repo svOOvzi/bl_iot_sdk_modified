@@ -482,6 +482,7 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
     rc = lora_node_chk_if_joined();
     printf("lora_node_join: joined=%d\r\n", rc);
     if (rc != LORA_APP_STATUS_ALREADY_JOINED) {
+        printf("lora_node_join: joining network\r\n");
         /* Send event to MAC */
         g_lm_join_ev_arg.dev_eui = dev_eui;
         g_lm_join_ev_arg.app_eui = app_eui;
@@ -492,6 +493,8 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
 
         ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
         rc = LORA_APP_STATUS_OK;
+    } else {
+        printf("lora_node_join: already joined network\r\n");
     }
 
     return rc;
