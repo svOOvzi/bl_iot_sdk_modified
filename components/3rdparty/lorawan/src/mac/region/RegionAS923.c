@@ -1008,9 +1008,13 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
 
     if( nbEnabledChannels > 0 )
     {
-        //  This the new code for AS923 Channel Plan. From https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionAS923.c#L911-L935
+        //// Note: This the new Carrier Sensing implementation for AS923 Channel Plan,
+        //// based on Semtech's Reference Implementation: https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionAS923.c#L911-L935
+        //// Only Japan and South Korea need Carrier Sensing to select a LoRa
+        //// Frequency Channel before transmitting. Other regions can select
+        //// a random LoRa Frequency Channel without Carrier Sensing.
 #if ( REGION_AS923_DEFAULT_CHANNEL_PLAN == CHANNEL_PLAN_GROUP_AS923_1_JP )
-        // Executes the LBT algorithm when operating in Japan
+        // Carrier Sensing in Japan: Executes the LBT algorithm when operating in Japan
         uint8_t channelNext = 0;
 
         for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < AS923_MAX_NB_CHANNELS; i++ )
@@ -1018,7 +1022,8 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
 
-            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            //// TODO: Carrier Sensing needs to fixed because Radio.IsChannelFree has different parameters for SX1262 and SX1276
+            #error Radio.IsChannelFree interface is different for SX1262 and SX1276
             printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
             assert(false);
 
@@ -1033,21 +1038,26 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
         }
         // Even if one or more channels are available according to the channel plan, no free channel
         // was found during the LBT procedure.
+        printf("RegionAS923NextChannel: no free channel\r\n");
         return LORAMAC_STATUS_NO_FREE_CHANNEL_FOUND;
 #else
-        // We found a valid channel
+        // Outside Japan: Select a random LoRa Frequency Channel without Carrier Sensing
         *channel = enabledChannels[randr( 0, nbEnabledChannels - 1 )];
+        printf("RegionAS923NextChannel: channel=%d\r\n", (int) *channel);
         return LORAMAC_STATUS_OK;
 #endif
 
-#ifdef NOTUSED  //  This is the old code from Mynewt without AS923 Channel Plan
+#ifdef NOTUSED
+        //// Note: This is the old code from Mynewt without AS923 Channel Plan.
+        //// The previous code from Mynewt will always perform Carrier Sensing.
         uint8_t channelNext = 0;
         for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < AS923_MAX_NB_CHANNELS; i++ )
         {
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
 
-            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            //// TODO: Carrier Sensing needs to fixed because Radio.IsChannelFree has different parameters for SX1262 and SX1276
+            #error Radio.IsChannelFree interface is different for SX1262 and SX1276
             printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
             assert(false);
 
@@ -1058,7 +1068,7 @@ LoRaMacStatus_t RegionAS923NextChannel( NextChanParams_t* nextChanParams, uint8_
                 // Free channel found
                 *channel = channelNext;
                 *time = 0;
-                printf("RegionAS923NextChannel: OK\r\n");
+                printf("RegionAS923NextChannel: channel=%d\r\n", (int) *channel);
                 return LORAMAC_STATUS_OK;
             }
         }
