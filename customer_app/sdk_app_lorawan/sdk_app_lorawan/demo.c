@@ -104,7 +104,7 @@ struct {
 
 #ifdef SEND_LORAWAN_MESSAGE
 #define RF_FREQUENCY                923200000
-#define LORAPING_TX_OUTPUT_POWER           13         /* dBm */
+#define LORAPING_TX_OUTPUT_POWER           18         /* dBm */
 
 #define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
                                                       /*  1: 250 kHz, */
