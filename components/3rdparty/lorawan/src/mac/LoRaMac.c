@@ -2393,7 +2393,7 @@ SendFrameOnChannel(uint8_t channel)
 
     RegionTxConfig(LoRaMacRegion, &txConfig, &txPower,
                    &g_lora_mac_data.tx_time_on_air);
-    printf("SendFrameOnChannel: power=%d\r\n", (int) txPower);
+	printf("SendFrameOnChannel: channel=%d, datarate=%d, txpower=%d, maxeirp=%d, antennagain=%d\r\n", (int) txConfig.Channel, (int) txConfig.Datarate, (int) txConfig.TxPower, (int) txConfig.MaxEirp, (int) txConfig.AntennaGain);
 
     /* Set MCPS confirm information */
     txi = g_lora_mac_data.curtx;
