@@ -97,6 +97,34 @@ struct {
 } loraping_stats;
 
 ///////////////////////////////////////////////////////////////////////////////
+//  Send LoRaWAN Message
+
+//  Uncomment this if "send_message" command will send a LoRaWAN Join Network Request
+#define SEND_LORAWAN_MESSAGE  ////
+
+#ifdef SEND_LORAWAN_MESSAGE
+#define RF_FREQUENCY                923200000
+#define LORAPING_TX_OUTPUT_POWER           15         /* dBm */
+
+#define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
+                                                      /*  1: 250 kHz, */
+                                                      /*  2: 500 kHz, */
+                                                      /*  3: Reserved] */
+#define LORAPING_SPREADING_FACTOR          10         /* [SF7..SF12] */
+#define LORAPING_CODINGRATE                 1         /* [1: 4/5, */
+                                                      /*  2: 4/6, */
+                                                      /*  3: 4/7, */
+                                                      /*  4: 4/8] */
+#define LORAPING_PREAMBLE_LENGTH            8         /* Same for Tx and Rx */
+#define LORAPING_SYMBOL_TIMEOUT             5         /* Symbols */
+#define LORAPING_FIX_LENGTH_PAYLOAD_ON      false
+#define LORAPING_IQ_INVERSION_ON            false
+
+#define LORAPING_TX_TIMEOUT_MS              3000    /* ms */
+#define LORAPING_RX_TIMEOUT_MS              5000    /* ms */
+#endif  //  SEND_LORAWAN_MESSAGE
+
+///////////////////////////////////////////////////////////////////////////////
 //  LoRa Commands
 
 void SX126xIoInit(void);  //  Defined in sx126x-board.c
@@ -205,12 +233,14 @@ static void send_once(int is_ping)
         loraping_buffer[i] = i - 4;
     }
 
+#ifndef SEND_LORAWAN_MESSAGE
     //  Send the transmit buffer (64 bytes)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
-
-    //  Replay a packet
-    //  static uint8_t replay[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5b, 0xb1, 0x7b, 0x37, 0xe7, 0x5e, 0xc1, 0x4b, 0xb4, 0xb1, 0xb8, 0x30, 0xe9, 0x8c};
-    //  Radio.Send(replay, sizeof replay);
+#else
+    //  Replay a LoRaWAN Join Network Request
+    static uint8_t replay[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5b, 0xb1, 0x7b, 0x37, 0xe7, 0x5e, 0xc1, 0x4b, 0xb4, 0xb1, 0xb8, 0x30, 0xe9, 0x8c};
+    Radio.Send(replay, sizeof replay);
+#endif  //  !SEND_LORAWAN_MESSAGE
 }
 
 /// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
