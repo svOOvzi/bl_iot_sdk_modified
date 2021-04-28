@@ -495,7 +495,8 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
 void SX126xSetRfTxPower( int8_t power )
 {
     printf("SX126xSetRfTxPower\r\n");
-    SX126xSetTxParams( power, RADIO_RAMP_40_US );
+    ////TODO: SX126xSetTxParams( power, RADIO_RAMP_40_US );
+    SX126xSetTxParams( power, RADIO_RAMP_3400_US );////TODO
 }
 
 uint8_t SX126xGetDeviceId( void )
