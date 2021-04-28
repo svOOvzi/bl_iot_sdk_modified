@@ -494,11 +494,6 @@ lora_mac_proc_tx_q_event
 # Send Message Log
 
 ```text
-
-# 
-# init_task
-command 'init_task' not found
-
 # create_task
 
 # init_driver
