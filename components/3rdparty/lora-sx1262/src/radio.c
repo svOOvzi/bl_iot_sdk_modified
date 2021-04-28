@@ -790,7 +790,7 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                         bool fixLen, bool crcOn, bool freqHopOn,
                         uint8_t hopPeriod, bool iqInverted, uint32_t timeout )
 {
-
+    printf("RadioSetTxConfig: modem=%d, power=%d, fdev=%d, bandwidth=%d, datarate=%d, coderate=%d, preambleLen=%d, fixLen=%d, crcOn=%d, freqHopOn=%d, hopPeriod=%d, iqInverted=%d, timeout=%d\r\n", (int) modem, (int) power, (int) fdev, (int) bandwidth, (int) datarate, (int) coderate, (int) preambleLen, (int) fixLen, (int) crcOn, (int) freqHopOn, (int) hopPeriod, (int) iqInverted, (int) timeout);
     switch( modem )
     {
         case MODEM_FSK:
