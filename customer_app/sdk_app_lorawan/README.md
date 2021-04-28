@@ -128,7 +128,7 @@ RadioSleep
 
 # las_wr_app_key 0xaa:0xff:0xad:0x5c:0x7e:0x87:0xf6:0x4d:0xe3:0xf0:0x87:0x32:0xfc:0x1d:0xd2:0x5d
 
-# las_join 3
+# las_join 1
 lora_node_join: joined=8
 lora_node_join: joining network
 Attempting to join...
@@ -157,10 +157,10 @@ SX126xSetRfTxPower
 SX126xSetTxParams: power=13, rampTime=2
 SX126xGetDeviceId: SX1262
 SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
-SenFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
+SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 2b 6d d1 a0 ca a0 
 lora_mac_join_event: OK
 RadioOnDioIrq
 RadioIrqProcess
@@ -168,6 +168,15 @@ SX126xReadCommand
 IRQ_TX_DONE
 OnRadioTxDone
 RadioSleep
+
+# las_join 1
+lora_node_join: joined=8
+lora_node_join: joining network
+Attempting to join...
+
+# lora_mac_join_event
+LoRaMacMlmeRequest
+lora_mac_join_event: error 1
 OnRxWindow1TimerEvent
 RadioSetChannel: freq=923400000
 SX126xWakeup
@@ -198,266 +207,51 @@ OnRadioRxTimeout
 RadioSleep
 lora_node_chk_txq
 lora_mac_proc_tx_q_event
-OnTxDelayedTimerEvent
+
+# 
+# las_join 1
+lora_node_join: joined=8
+lora_node_join: joining network
+Attempting to join...
+
+# lora_mac_join_event
+LoRaMacMlmeRequest
+Send
 RadioSetModem
 SX126xWakeup
 ScheduleTx
 CalculateBackOff
 RegionNextChannel
 RegionAS923NextChannel
-ScheduleTx: next channel failed
-ScheduleTx: duty cycle restricted
-TxDelayedTimer: 30274000
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnTxDelayedTimerEvent
-RadioSetModem
-ScheduleTx
-CalculateBackOff
-RegionNextChannel
-RegionAS923NextChannel
-RegionAS923NextChannel:nel=0
+RegionAS923NextChannel: channel=1
 RegionComputeRxWindowParameters
 RegionComputeRxWindowParameters
 lora_mac_rx_disable
 TODO: Radio.RxDisable
-SendFrameOnChannel: channel=0
+SendFrameOnChannel: channel=1
 RegionTxConfig
 RegionAS923TxConfig
-RadioSetChannel: freq=923200000
-RadioStandby
-RadioSetModem
-SX126xSetRfTxPower
-SX126xSetTxParams: powr=13, rampTime=2
-SX126xGetDeviceId: SX1262
-SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
-SendFrameOnChannel: channel=0, datarate=2, txpower=0, maxeirp=16, antennagain=2
-SendFrameOnChannel: txi is null, skipping log
-RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 79 71 4c 86 05 02 
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-RadioOnDioIrq
-RadioIrqProcess
-SX126xReadCommand
-IRQ_TX_DONE
-OnRadioTxDone
-RadioSleep
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnRxWindow1TimerEvent
-RadioSetChannel: freq=923200000
-SX126xWakeup
-RadioSetRxConfig
-RadioStandby
-RadioSetModem
-RadioSetRxConfig done
-RadioRx
-RadioOnDioIrq
-RadioIrqProcess
-SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
-RadioSleep
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnRxWindow2TimerEvent
-RadioSetChannel: freq=923200000
-SX126xWakeup
-RadioSetRxConfig
-RadioStandby
-RadioSetModem
-RadioSetRxConfig done
-RadioRx
-RadioOnDioIrq
-RadioIrqProcess
-SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
-RadioSleep
-lora_node_chk_txq
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnTxDelayedTimerEvent
-RadioSetModem
-SX126xWakeup
-ScheduleTx
-CalculateBackOff
-RegionNextChannel
-RegionAS923NextChannel
-ScheduleTx: next channel failed
-ScheduleTx: duty cycle restricted
-TxDelayedTimer: 29260000
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnTxDelayedTimerEvent
-RadioSetModem
-ScheduleTx
-CalculateBackOff
-RegionNextChannel
-RegionAS923NextChannel
-RegionAS923NextChannel: channel=0
-RegionComputeRxWindowParameters
-RegionComputeRxWindowParameters
-lora_mac_rx_disable
-TODO: Radio.RxDisable
-SendFrameOnChannel: channel=0
-RegionTxConfig
-RegionAS923TxConfig
-RadioSetChannel: freq=923200000
+RadioSetChannel: freq=923400000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
 SX126xSetTxParams: power=13, rampTime=2
 SX126xGetDeviceId: SX1262
 SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
-SendFrameOnChannel: channel=0, datarate=2, txpower=0, maxeirp=16, antennagain=2
+SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 5a 56 29 7e ce 50 
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b2 45 a0 a5 0f 81 
+lora_mac_join_event: OK
 RadioOnDioIrq
 RadioIrqProcess
 SX126xReadCommand
 IRQ_TX_DONE
 OnRadioTxDone
 RadioSleep
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_t_q_event
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
-OnRxWindow1TimerEvent
-RadioSetChannel: freq=923200000
+
+# OnRxWindow1TimerEvent
+RadioSetChannel: freq=923400000
 SX126xWakeup
 RadioSetRxConfig
 RadioStandby
@@ -470,8 +264,6 @@ SX126xReadCommand
 IRQ_RX_TX_TIMEOUT
 OnRadioRxTimeout
 RadioSleep
-lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
 OnRxWindow2TimerEvent
 RadioSetChannel: freq=923200000
 SX126xWakeup
@@ -488,7 +280,6 @@ OnRadioRxTimeout
 RadioSleep
 lora_node_chk_txq
 lora_mac_proc_tx_q_event
-
 ```
 
 # Send Message Log
