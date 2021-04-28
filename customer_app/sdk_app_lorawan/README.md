@@ -116,7 +116,9 @@ SX126xIoInit
 SX126X interrupt init
 SX126X register handler: GPIO 11
 SX126xWakeup
+SX126xSetTxParams: power=0, rampTime=4
 SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 RadioSetModem
 RadioSleep
 
@@ -152,11 +154,13 @@ RadioSetChannel: freq=923400000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=2
 SX126xGetDeviceId: SX1262
-SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
+SenFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 09 a4 cb 6e f9 63 
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
 lora_mac_join_event: OK
 RadioOnDioIrq
 RadioIrqProcess
@@ -270,7 +274,7 @@ ScheduleTx
 CalculateBackOff
 RegionNextChannel
 RegionAS923NextChannel
-RegionAS923NextChannel: channel=0
+RegionAS923NextChannel:nel=0
 RegionComputeRxWindowParameters
 RegionComputeRxWindowParameters
 lora_mac_rx_disable
@@ -282,11 +286,13 @@ RadioSetChannel: freq=923200000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
+SX126xSetTxParams: powr=13, rampTime=2
 SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 SendFrameOnChannel: channel=0, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b aa c9 af 3d ab 00 
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 79 71 4c 86 05 02 
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 RadioOnDioIrq
@@ -346,8 +352,8 @@ ScheduleTx
 CalculateBackOff
 RegionNextChannel
 RegionAS923NextChannel
-ScheduleTx: next channeed
-ScheduleTx: duty cycle restr
+ScheduleTx: next channel failed
+ScheduleTx: duty cycle restricted
 TxDelayedTimer: 29260000
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
@@ -404,7 +410,7 @@ lora_mac_proc_tx_q_event
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 lora_mac_txq_timer_cb
-lora_mac_proc_tx__event
+lora_mac_proc_tx_q_event
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 OnTxDelayedTimerEvent
@@ -425,11 +431,13 @@ RadioSetChannel: freq=923200000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=2
 SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 SendFrameOnChannel: channel=0, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 14 4c 46 e7 8d dd 
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 5a 56 29 7e ce 50 
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 RadioOnDioIrq
@@ -445,7 +453,7 @@ lora_mac_proc_tx_q_event
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 lora_mac_txq_timer_cb
-lora_mac_proc_tx_q_event
+lora_mac_proc_t_q_event
 lora_mac_txq_timer_cb
 lora_mac_proc_tx_q_event
 OnRxWindow1TimerEvent
