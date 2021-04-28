@@ -20,6 +20,7 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+#include <stdio.h>
 #include <string.h>
 #include "sx126x-utilities.h"
 #include "radio.h"
@@ -438,6 +439,7 @@ void SX126xCalibrateImage( uint32_t freq )
 
 void SX126xSetPaConfig( uint8_t paDutyCycle, uint8_t hpMax, uint8_t deviceSel, uint8_t paLut )
 {
+	printf("SX126xSetPaConfig: paDutyCycle=%d, hpMax=%d, deviceSel=%d, paLut=%d \r\n", (int) paDutyCycle, (int) hpMax, (int) deviceSel, (int) paLut);
     uint8_t buf[4];
 
     buf[0] = paDutyCycle;
@@ -525,6 +527,7 @@ RadioPacketTypes_t SX126xGetPacketType( void )
 
 void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
 {
+    printf("SX126xSetTxParams: power=%d, rampTime=%d\r\n", (int) power, (int) rampTime);
     uint8_t buf[2];
 
     if( SX126xGetDeviceId( ) == SX1261 )
@@ -561,6 +564,8 @@ void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
         {
             power = -9;
         }
+
+        ////  TODO: SX126xWriteRegister(REG_OCP, 0x38); // current max 160mA for the whole device
     }
     buf[0] = power;
     buf[1] = ( uint8_t )rampTime;
