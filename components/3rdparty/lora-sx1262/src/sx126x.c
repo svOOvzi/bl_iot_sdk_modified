@@ -527,7 +527,8 @@ RadioPacketTypes_t SX126xGetPacketType( void )
 
 void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
 {
-    if (power > 0) { power = 22; }  ////  TODO: Increase power
+    //// TODO: Power is usually passed in as 0 or 13. We boost the power to 14
+    ////if (power > 0) { power = 14; }  ////  TODO: Increase power
     printf("SX126xSetTxParams: power=%d, rampTime=%d\r\n", (int) power, (int) rampTime);
     uint8_t buf[2];
 
@@ -550,7 +551,7 @@ void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
             power = -17;
         }
         ////  TODO: Set the current max value in the over current protection. From SX126x-Arduino/src/radio/sx126x/sx126x.cpp
-		SX126xWriteRegister(REG_OCP, 0x18); // current max is 80 mA for the whole device
+		////SX126xWriteRegister(REG_OCP, 0x18); // current max is 80 mA for the whole device
     }
     else // sx1262
     {
@@ -569,7 +570,7 @@ void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
         }
 
         ////  TODO: Set the current max value in the over current protection. From SX126x-Arduino/src/radio/sx126x/sx126x.cpp
-        SX126xWriteRegister(REG_OCP, 0x38); // current max 160mA for the whole device
+        ////SX126xWriteRegister(REG_OCP, 0x38); // current max 160mA for the whole device
     }
     buf[0] = power;
     buf[1] = ( uint8_t )rampTime;
