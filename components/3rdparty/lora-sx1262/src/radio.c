@@ -535,6 +535,7 @@ void RadioInit( RadioEvents_t *events )
     ////  TODO: Declare the power regulation used to power the device
     ////  This command allows the user to specify if DC-DC or LDO is used for power regulation.
     ////  Using only LDO implies that the Rx or Tx current is doubled
+
     #warning SX126x is set to LDO power regulator mode (instead of DC-DC)
     SX126xSetRegulatorMode( USE_LDO );   ////  Default: Rx or Tx current is doubled
 
