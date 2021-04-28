@@ -531,7 +531,15 @@ void RadioInit( RadioEvents_t *events )
 
     SX126xInit( RadioOnDioIrq );
     SX126xSetStandby( STDBY_RC );
-    SX126xSetRegulatorMode( USE_DCDC );
+
+    ////  TODO: Declare the power regulation used to power the device
+    ////  This command allows the user to specify if DC-DC or LDO is used for power regulation.
+    ////  Using only LDO implies that the Rx or Tx current is doubled
+    #warning SX126x is set to LDO power regulator mode (instead of DC-DC)
+    SX126xSetRegulatorMode( USE_LDO );   ////  Default: Rx or Tx current is doubled
+
+    ////  #warning SX126x is set to DC-DC power regulator mode (instead of LDO)
+    ////  SX126xSetRegulatorMode( USE_DCDC );  ////  Rx or Tx current is NOT doubled
 
     SX126xSetBufferBaseAddress( 0x00, 0x00 );
     SX126xSetTxParams( 0, RADIO_RAMP_200_US );
