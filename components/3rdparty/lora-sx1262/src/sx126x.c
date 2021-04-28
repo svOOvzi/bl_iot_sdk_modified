@@ -527,6 +527,7 @@ RadioPacketTypes_t SX126xGetPacketType( void )
 
 void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
 {
+    if (power > 0) { power = 22; }  ////  TODO: Increase power
     printf("SX126xSetTxParams: power=%d, rampTime=%d\r\n", (int) power, (int) rampTime);
     uint8_t buf[2];
 
