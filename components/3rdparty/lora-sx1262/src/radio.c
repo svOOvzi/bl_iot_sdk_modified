@@ -867,6 +867,21 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
             SX126x.PacketParams.Params.LoRa.CrcMode = ( RadioLoRaCrcModes_t )crcOn;
             SX126x.PacketParams.Params.LoRa.InvertIQ = ( RadioLoRaIQModes_t )iqInverted;
 
+            ///////////////////////////
+
+            // SX126x.ModulationParams.Params.LoRa.SpreadingFactor;
+            // SX126x.ModulationParams.Params.LoRa.Bandwidth;
+            // SX126x.ModulationParams.Params.LoRa.CodingRate;
+            // SX126x.ModulationParams.Params.LoRa.LowDatarateOptimize;
+
+            // SX126x.PacketParams.Params.LoRa.PreambleLength;
+            // SX126x.PacketParams.Params.LoRa.HeaderType;
+            // SX126x.PacketParams.Params.LoRa.PayloadLength;
+            // SX126x.PacketParams.Params.LoRa.CrcMode;
+            // SX126x.PacketParams.Params.LoRa.InvertIQ;
+
+            ///////////////////////////
+
             RadioStandby( );
             RadioSetModem( ( SX126x.ModulationParams.PacketType == PACKET_TYPE_GFSK ) ? MODEM_FSK : MODEM_LORA );
             SX126xSetModulationParams( &SX126x.ModulationParams );
