@@ -84,7 +84,7 @@ lora_node_join: joined=8
 lora_node_join: joining network
 Attempting to join...
 
-# lora_mac_join_event
+lora_mac_join_event
 LoRaMacMlmeRequest
 Send
 RadioSetModem
@@ -155,7 +155,7 @@ lora_node_join: joined=8
 lora_node_join: joining network
 Attempting to join...
 
-# lora_mac_join_event
+lora_mac_join_event
 LoRaMacMlmeRequest
 Send
 RadioSetModem
@@ -226,7 +226,7 @@ lora_node_join: joined=8
 lora_node_join: joining network
 Attempting to join...
 
-# lora_mac_join_event
+lora_mac_join_event
 LoRaMacMlmeRequest
 Send
 RadioSetModem
