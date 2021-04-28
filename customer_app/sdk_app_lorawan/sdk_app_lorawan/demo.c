@@ -206,7 +206,10 @@ static void send_once(int is_ping)
     }
 
     //  Send the transmit buffer (64 bytes)
-    Radio.Send(loraping_buffer, sizeof loraping_buffer);
+    ////Radio.Send(loraping_buffer, sizeof loraping_buffer);
+
+    static uint8_t replay[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5b, 0xb1, 0x7b, 0x37, 0xe7, 0x5e, 0xc1, 0x4b, 0xb4, 0xb1, 0xb8, 0x30, 0xe9, 0x8c};
+    Radio.Send(replay, sizeof replay); ////
 }
 
 /// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
