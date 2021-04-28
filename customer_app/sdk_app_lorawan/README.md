@@ -151,6 +151,7 @@ SendFrameOnChannel: channel=1
 RegionTxConfig
 RegionAS923TxConfig
 RadioSetChannel: freq=923400000
+RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timut=3000
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
