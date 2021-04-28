@@ -294,14 +294,11 @@ SX126xIoInit
 SX126X interrupt init
 SX126X register handler: GPIO 11
 SX126xWakeup
-SX126xSetTxParams: power=0, rampTime=4
-SX126xGetDeviceId: SX1262
-SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
-RadioSetChannel: freq=923000000
-RadioStandby
-RadioSetModem
+SX126xSetTxRadioSetChannel: freq=923200000
+RadioSetTxConfig: modem=1, power=15, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0rted=0, timeout=3000
+RadioStandRadioSetModem
 SX126xSetRfTxPower
-SX126xSetTxParams: power=14, rampTime=2
+SX126xSetTxParams: power=15, rampTime=2
 SX126xGetDeviceId: SX1262
 SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 RadioSetRxConfig
