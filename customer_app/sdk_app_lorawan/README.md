@@ -765,6 +765,7 @@ RadioSetRxConfig done
 # send_message
 RadioSend: size=23
 00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=23, CrcMode=1, InvertIQ=0
 
 # RadioOnDioIrq
 RadioIrqProcess
@@ -777,6 +778,7 @@ RadioSleep
 RadioSend: size=23
 00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
 SX126xWakeup
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=23, CrcMode=1, InvertIQ=0
 
 # RadioOnDioIrq
 RadioIrqProcess
@@ -785,16 +787,5 @@ IRQ_TX_DONE
 Tx done
 RadioSleep
 
-# send_message
-RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
-SX126xWakeup
-
-# RadioOnDioIrq
-RadioIrqProcess
-SX126xReadCommand
-IRQ_TX_DONE
-Tx done
-RadioSleep
 # 
 ```
