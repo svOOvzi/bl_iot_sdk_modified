@@ -1260,12 +1260,14 @@ void RadioSetPublicNetwork( bool enable )
     RadioSetModem( MODEM_LORA );
     if( enable == true )
     {
+        printf("RadioSetPublicNetwork: public=%x\r\n", LORA_MAC_PUBLIC_SYNCWORD); //// TODO
         // Change LoRa modem SyncWord
         SX126xWriteRegister( REG_LR_SYNCWORD, ( LORA_MAC_PUBLIC_SYNCWORD >> 8 ) & 0xFF );
         SX126xWriteRegister( REG_LR_SYNCWORD + 1, LORA_MAC_PUBLIC_SYNCWORD & 0xFF );
     }
     else
     {
+        printf("RadioSetPublicNetwork: private=%x\r\n", LORA_MAC_PRIVATE_SYNCWORD); //// TODO
         // Change LoRa modem SyncWord
         SX126xWriteRegister( REG_LR_SYNCWORD, ( LORA_MAC_PRIVATE_SYNCWORD >> 8 ) & 0xFF );
         SX126xWriteRegister( REG_LR_SYNCWORD + 1, LORA_MAC_PRIVATE_SYNCWORD & 0xFF );
