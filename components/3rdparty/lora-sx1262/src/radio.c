@@ -869,7 +869,8 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
 
             ///////////////////////////
 
-            printf("RadioSetTxConfig: SpreadingFactor=%d, Bandwidth=%d, CodingRate=%d, LowDatarateOptimize=%d, PreambleLength=%d, HeaderType=%d, PayloadLength=%d, CrcMode=%d, InvertIQ=%d\r\n", (int) SX126x.ModulationParams.Params.LoRa.SpreadingFactor, (int) SX126x.ModulationParams.Params.LoRa.Bandwidth, (int) SX126x.ModulationParams.Params.LoRa.CodingRate, (int) SX126x.ModulationParams.Params.LoRa.LowDatarateOptimize, (int) SX126x.PacketParams.Params.LoRa.PreambleLength, (int) SX126x.PacketParams.Params.LoRa.HeaderType, (int) SX126x.PacketParams.Params.LoRa.PayloadLength, (int) SX126x.PacketParams.Params.LoRa.CrcMode, (int) SX126x.PacketParams.Params.LoRa.InvertIQ);
+            //// TODO
+            printf("RadioSetTxConfig: SpreadingFactor=%d, Bandwidth=%d, CodingRate=%d, LowDatarateOptimize=%d, PreambleLength=%d, HeaderType=%d, PayloadLength=%d, CrcMode=%d, InvertIQ=%d\r\n", (int) SX126x.ModulationParams.Params.LoRa.SpreadingFactor, (int) SX126x.ModulationParams.Params.LoRa.Bandwidth, (int) SX126x.ModulationParams.Params.LoRa.CodingRate, (int) SX126x.ModulationParams.Params.LoRa.LowDatarateOptimize, (int) SX126x.PacketParams.Params.LoRa.PreambleLength, (int) SX126x.PacketParams.Params.LoRa.HeaderType, (int) SX126x.PacketParams.Params.LoRa.PayloadLength, (int) SX126x.PacketParams.Params.LoRa.CrcMode, (int) SX126x.PacketParams.Params.LoRa.InvertIQ); //// TODO
 
             // SX126x.ModulationParams.Params.LoRa.SpreadingFactor;
             // SX126x.ModulationParams.Params.LoRa.Bandwidth;
@@ -1086,6 +1087,10 @@ void RadioSend( uint8_t *buffer, uint8_t size )
     {
         SX126x.PacketParams.Params.Gfsk.PayloadLength = size;
     }
+
+    //// TODO
+    printf("RadioSend: PreambleLength=%d, HeaderType=%d, PayloadLength=%d, CrcMode=%d, InvertIQ=%d\r\n", (int) SX126x.PacketParams.Params.LoRa.PreambleLength, (int) SX126x.PacketParams.Params.LoRa.HeaderType, (int) SX126x.PacketParams.Params.LoRa.PayloadLength, (int) SX126x.PacketParams.Params.LoRa.CrcMode, (int) SX126x.PacketParams.Params.LoRa.InvertIQ); //// TODO
+
     SX126xSetPacketParams( &SX126x.PacketParams );
 
     SX126xSendPayload( buffer, size, 0 );
