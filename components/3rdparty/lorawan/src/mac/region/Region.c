@@ -28,6 +28,7 @@
  *
  * \author    Daniel Jaeckle ( STACKFORCE )
  */
+#include <stdio.h>
 #include "node/mac/LoRaMac.h"
 
 // Setup regions
@@ -722,6 +723,7 @@ bool RegionAdrNext( LoRaMacRegion_t region, AdrNextParams_t* adrNext, int8_t* dr
 
 void RegionComputeRxWindowParameters( LoRaMacRegion_t region, int8_t datarate, uint8_t minRxSymbols, uint32_t rxError, RxConfigParams_t *rxConfigParams )
 {
+    printf("RegionComputeRxWindowParameters\r\n");
     switch( region )
     {
         AS923_COMPUTE_RX_WINDOW_PARAMETERS( );
@@ -764,6 +766,7 @@ bool RegionRxConfig( LoRaMacRegion_t region, RxConfigParams_t* rxConfig, int8_t*
 
 bool RegionTxConfig( LoRaMacRegion_t region, TxConfigParams_t* txConfig, int8_t* txPower, TimerTime_t* txTimeOnAir )
 {
+    printf("RegionTxConfig\r\n");
     switch( region )
     {
         AS923_TX_CONFIG( );
@@ -932,6 +935,7 @@ void RegionCalcBackOff( LoRaMacRegion_t region, CalcBackOffParams_t* calcBackOff
 
 LoRaMacStatus_t RegionNextChannel( LoRaMacRegion_t region, NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time, TimerTime_t* aggregatedTimeOff )
 {
+    printf("RegionNextChannel\r\n");
     switch( region )
     {
         AS923_NEXT_CHANNEL( );

@@ -599,7 +599,8 @@ bool RegionKR920TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
     // Setup maximum payload lenght of the radio driver
     Radio.SetMaxPayloadLength( MODEM_LORA, txConfig->PktLen );
     // Get the time-on-air of the next tx frame
-    *txTimeOnAir = Radio.TimeOnAir( MODEM_LORA, txConfig->PktLen );
+    //// TODO: Previously *txTimeOnAir = Radio.TimeOnAir( MODEM_LORA, txConfig->PktLen );
+    *txTimeOnAir = Radio.TimeOnAir( MODEM_LORA, bandwidth, phyDr, 1, 8, false, txConfig->PktLen, true );
 
     *txPower = txPowerLimited;
     return true;
@@ -870,12 +871,19 @@ LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_
         nextTxDelay = nextChanParams->AggrTimeOff - TimerGetElapsedTime( nextChanParams->LastAggrTx );
     }
 
+    //  TODO: Should be fixed. See https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionKR920.c#L807-L832
     if( nbEnabledChannels > 0 )
     {
         for( uint8_t  i = 0, j = randr( 0, nbEnabledChannels - 1 ); i < KR920_MAX_NB_CHANNELS; i++ )
         {
             channelNext = enabledChannels[j];
             j = ( j + 1 ) % nbEnabledChannels;
+
+            //// TODO: Carrier Sensing needs to fixed because Radio.IsChannelFree has different parameters for SX1262 and SX1276
+            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
+            printf("See https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionKR920.c#L807-L832\r\n");
+            assert(false);
 
             // Perform carrier sense for KR920_CARRIER_SENSE_TIME
             // If the channel is free, we can stop the LBT mechanism

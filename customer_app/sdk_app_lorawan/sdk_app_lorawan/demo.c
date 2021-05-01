@@ -38,6 +38,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "rxinfo.h"
 #include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
 #include "nimble_port_freertos.h"   //  For nimble_port_freertos_init
+#include "lorawan.h"                //  For LoRaWAN command line functions
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -94,6 +95,34 @@ struct {
     int tx_timeout;
     int tx_success;
 } loraping_stats;
+
+///////////////////////////////////////////////////////////////////////////////
+//  Send LoRaWAN Message
+
+//  Uncomment this if "send_message" command will send a LoRaWAN Join Network Request
+#define SEND_LORAWAN_MESSAGE  ////
+
+#ifdef SEND_LORAWAN_MESSAGE
+#define RF_FREQUENCY                923200000
+#define LORAPING_TX_OUTPUT_POWER           22         /* dBm */
+
+#define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
+                                                      /*  1: 250 kHz, */
+                                                      /*  2: 500 kHz, */
+                                                      /*  3: Reserved] */
+#define LORAPING_SPREADING_FACTOR          10         /* [SF7..SF12] */
+#define LORAPING_CODINGRATE                 1         /* [1: 4/5, */
+                                                      /*  2: 4/6, */
+                                                      /*  3: 4/7, */
+                                                      /*  4: 4/8] */
+#define LORAPING_PREAMBLE_LENGTH            8         /* Same for Tx and Rx */
+#define LORAPING_SYMBOL_TIMEOUT             5         /* Symbols */
+#define LORAPING_FIX_LENGTH_PAYLOAD_ON      false
+#define LORAPING_IQ_INVERSION_ON            false
+
+#define LORAPING_TX_TIMEOUT_MS              3000    /* ms */
+#define LORAPING_RX_TIMEOUT_MS              5000    /* ms */
+#endif  //  SEND_LORAWAN_MESSAGE
 
 ///////////////////////////////////////////////////////////////////////////////
 //  LoRa Commands
@@ -204,8 +233,14 @@ static void send_once(int is_ping)
         loraping_buffer[i] = i - 4;
     }
 
+#ifndef SEND_LORAWAN_MESSAGE
     //  Send the transmit buffer (64 bytes)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
+#else
+    //  Replay a LoRaWAN Join Network Request
+    static uint8_t replay[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5b, 0xb1, 0x7b, 0x37, 0xe7, 0x5e, 0xc1, 0x4b, 0xb4, 0xb1, 0xb8, 0x30, 0xe9, 0x8c};
+    Radio.Send(replay, sizeof replay);
+#endif  //  !SEND_LORAWAN_MESSAGE
 }
 
 /// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
@@ -307,13 +342,31 @@ static void handle_event(struct ble_npl_event *ev) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"create_task",      "Create a task",          create_task},
+    //  LoRa
     {"put_event",        "Add an event",           put_event},
     {"init_driver",      "Init LoRa driver",       init_driver},
     {"send_message",     "Send LoRa message",      send_message},
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
+
+    //  LoRaWAN
+    {"create_task",     "Create LoRaWAN task",                  create_task},
+    {"init_lorawan",    "Init LoRaWAN driver",                  init_lorawan},
+    {"las_wr_mib",      "Write LoRaWAN MIB",                    las_cmd_wr_mib},
+    {"las_rd_mib",      "Read LoRaWAN MIB",                     las_cmd_rd_mib},
+    {"las_rd_dev_eui",  "Read LoRaWAN device EUI",              las_cmd_rd_dev_eui},
+    {"las_wr_dev_eui",  "Write LoRaWAN device EUI",             las_cmd_wr_dev_eui},
+    {"las_rd_app_eui",  "Read LoRaWAN application EUI",         las_cmd_rd_app_eui},
+    {"las_wr_app_eui",  "Write LoRaWAN application EUI",        las_cmd_wr_app_eui},
+    {"las_rd_app_key",  "Read LoRaWAN application key",         las_cmd_rd_app_key},
+    {"las_wr_app_key",  "Write LoRaWAN application key",        las_cmd_wr_app_key},
+    {"las_app_port",    "Open/close LoRaWAN application port",  las_cmd_app_port},
+    {"las_app_tx",      "Transmit on LoRaWAN application port", las_cmd_app_tx},
+    {"las_join",        "Perform a LoRaWAN OTA join",           las_cmd_join},
+    {"las_link_chk",    "Perform a LoRaWAN link check",         las_cmd_link_chk},
+
+    //  pbuf
     {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},
     {"test_pbuf2",       "Test LWIP pbuf (large)", test_pbuf2},
 };                                                                                   

@@ -597,6 +597,7 @@ GetFskBandwidthRegValue(uint32_t bandwidth)
     }
 
     // ERROR: Value not found
+    assert(false);
     while(1);
 }
 
@@ -832,6 +833,7 @@ SX1276SetTxConfig(RadioModems_t modem, int8_t power, uint32_t fdev,
         SX1276.Settings.LoRa.Power = power;
         if (bandwidth > 2) {
             // Fatal error: When using LoRa modem only bandwidths 125, 250 and 500 kHz are supported
+            assert(false);
             while(1);
         }
         bandwidth += 7;

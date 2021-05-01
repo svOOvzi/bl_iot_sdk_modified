@@ -37,6 +37,10 @@
 #include "node/mac/LoRaMac.h"
 #include "node/mac/LoRaMacTest.h"
 #include "node/lora_priv.h"
+#include "node/lora_timer.h"
+
+//  TODO: Sync with sx126x-utilities.h, sx1276-utilities.h
+uint32_t timer_get_current_time(void);
 
 //  We don't support statistics
 #define STATS_INC(x,y)
@@ -201,13 +205,13 @@ static RadioEvents_t RadioEvents;
 /*!
  * LoRaMac duty cycle delayed Tx timer
  */
-static struct hal_timer TxDelayedTimer;
+static struct ble_npl_callout TxDelayedTimer;
 
 /*!
  * LoRaMac reception windows timers
  */
-static struct hal_timer RxWindowTimer1;
-static struct hal_timer RxWindowTimer2;
+static struct ble_npl_callout RxWindowTimer1;
+static struct ble_npl_callout RxWindowTimer2;
 
 /*!
  * LoRaMac Rx windows configuration
@@ -236,10 +240,13 @@ static uint8_t lora_mac_extract_mac_cmds(uint8_t max_cmd_bytes, uint8_t *buf);
 static void
 lora_mac_rx_disable(void)
 {
+    printf("lora_mac_rx_disable\r\n");
     struct ble_npl_eventq *evq;
 
     /* Disable reception (if not receiving) */
-    Radio.RxDisable();
+    #warning Radio.RxDisable
+    printf("TODO: Radio.RxDisable\r\n");
+    // Radio.RxDisable();
 
     /* Remove all possible receive related events */
     evq = lora_node_mac_evq_get();
@@ -256,6 +263,7 @@ lora_mac_rx_disable(void)
 static void
 lora_mac_rtx_timer_stop(void)
 {
+    printf("lora_mac_rtx_timer_stop\r\n");
     os_cputime_timer_stop(&g_lora_mac_data.rtx_timer);
     ble_npl_eventq_remove(lora_node_mac_evq_get(), &g_lora_mac_rtx_timeout_event);
 }
@@ -269,6 +277,7 @@ lora_mac_rtx_timer_stop(void)
 static void
 lora_mac_rx_win2_stop(void)
 {
+    printf("lora_mac_rx_win2_stop\r\n");
     if (LoRaMacDeviceClass == CLASS_A) {
         hal_timer_stop(&RxWindowTimer2);
         lora_enter_low_power();
@@ -283,6 +292,7 @@ lora_mac_rx_win2_stop(void)
 static void
 OnRadioTxDone(void)
 {
+    printf("OnRadioTxDone\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_tx_event);
 }
 
@@ -297,6 +307,7 @@ OnRadioTxDone(void)
 static void
 OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
+    printf("OnRadioRxDone\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_event);
 
     /*
@@ -319,6 +330,7 @@ OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 static void
 OnRadioTxTimeout(void)
 {
+    printf("OnRadioTxTimeout\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_tx_timeout_event);
 }
 
@@ -328,6 +340,7 @@ OnRadioTxTimeout(void)
 static void
 OnRadioRxError(void)
 {
+    printf("OnRadioRxError\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_err_event);
 }
 
@@ -337,6 +350,7 @@ OnRadioRxError(void)
 static void
 OnRadioRxTimeout(void)
 {
+    printf("OnRadioRxTimeout\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_radio_rx_timeout_event);
 }
 
@@ -344,8 +358,9 @@ OnRadioRxTimeout(void)
  * \brief Function executed on duty cycle delayed Tx  timer event
  */
 static void
-OnTxDelayedTimerEvent(void *unused)
+OnTxDelayedTimerEvent(struct ble_npl_event *ev)
 {
+    printf("OnTxDelayedTimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_tx_delay_timeout_event);
 }
 
@@ -353,8 +368,9 @@ OnTxDelayedTimerEvent(void *unused)
  * \brief Function executed on first Rx window timer event
  */
 static void
-OnRxWindow1TimerEvent(void *unused)
+OnRxWindow1TimerEvent(struct ble_npl_event *ev)
 {
+    printf("OnRxWindow1TimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win1_event);
 }
 
@@ -362,8 +378,9 @@ OnRxWindow1TimerEvent(void *unused)
  * \brief Function executed on second Rx window timer event
  */
 static void
-OnRxWindow2TimerEvent(void *unused)
+OnRxWindow2TimerEvent(struct ble_npl_event *ev)
 {
+    printf("OnRxWindow2TimerEvent\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rx_win2_event);
 }
 
@@ -374,8 +391,9 @@ OnRxWindow2TimerEvent(void *unused)
  * Context: Interrupt and MAC
  */
 static void
-lora_mac_rtx_timer_cb(void *unused)
+lora_mac_rtx_timer_cb(struct ble_npl_event *ev)
 {
+    printf("lora_mac_rtx_timer_cb\r\n");
     ble_npl_eventq_put(lora_node_mac_evq_get(), &g_lora_mac_rtx_timeout_event);
 }
 
@@ -895,6 +913,7 @@ lora_mac_process_radio_tx(struct ble_npl_event *ev)
 static void
 lora_mac_process_radio_rx(struct ble_npl_event *ev)
 {
+    printf("lora_mac_process_radio_rx\r\n");
     LoRaMacHeader_t macHdr;
     LoRaMacFrameCtrl_t fCtrl;
     LoRaMacRxSlot_t entry_rx_slot;
@@ -1913,6 +1932,7 @@ ProcessMacCommands(uint8_t *payload, uint8_t macIndex, uint8_t commandsSize,
 LoRaMacStatus_t
 Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *om)
 {
+    printf("Send\r\n");
     LoRaMacFrameCtrl_t fCtrl;
     LoRaMacStatus_t status = LORAMAC_STATUS_PARAMETER_INVALID;
 
@@ -1951,6 +1971,7 @@ Send(LoRaMacHeader_t *macHdr, uint8_t fPort, struct pbuf *om)
 static LoRaMacStatus_t
 ScheduleTx(void)
 {
+    printf("ScheduleTx\r\n");
     uint32_t duty_cycle_time_off = 0;
     LoRaMacStatus_t status;
     NextChanParams_t nextChan;
@@ -1979,13 +2000,16 @@ ScheduleTx(void)
                                &g_lora_mac_data.aggr_time_off);
 
     if (status != LORAMAC_STATUS_OK) {
+        printf("ScheduleTx: next channel failed\r\n");
         if (status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED) {
+            printf("ScheduleTx: duty cycle restricted\r\n");
             assert(duty_cycle_time_off != 0);
 
             // Send later - prepare timer
             LoRaMacState |= LORAMAC_TX_DELAYED;
             os_cputime_timer_stop(&TxDelayedTimer);
             os_cputime_timer_relative(&TxDelayedTimer, duty_cycle_time_off);
+            printf("TxDelayedTimer: %d\r\n", (int) duty_cycle_time_off);
 
             lora_node_log(LORA_NODE_LOG_TX_DELAY, g_lora_mac_data.max_dc, 0,
                           duty_cycle_time_off);
@@ -1993,6 +2017,7 @@ ScheduleTx(void)
             return LORAMAC_STATUS_OK;
         } else {
             // State where the MAC cannot send a frame
+            printf("ScheduleTx: cannot send frame, status=%d\r\n", (int) status);
             return status;
         }
     }
@@ -2039,6 +2064,7 @@ ScheduleTx(void)
 static void
 CalculateBackOff(uint8_t channel)
 {
+    printf("CalculateBackOff\r\n");
     uint32_t elapsed_msecs;
     uint32_t tx_ticks;
     CalcBackOffParams_t calc_backoff;
@@ -2353,6 +2379,7 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
 LoRaMacStatus_t
 SendFrameOnChannel(uint8_t channel)
 {
+    printf("SendFrameOnChannel: channel=%d\r\n", (int) channel);
     TxConfigParams_t txConfig;
     struct lora_pkt_info *txi;
     int8_t txPower = 0;
@@ -2366,22 +2393,34 @@ SendFrameOnChannel(uint8_t channel)
 
     RegionTxConfig(LoRaMacRegion, &txConfig, &txPower,
                    &g_lora_mac_data.tx_time_on_air);
+	printf("SendFrameOnChannel: channel=%d, datarate=%d, txpower=%d, maxeirp=%d, antennagain=%d\r\n", (int) txConfig.Channel, (int) txConfig.Datarate, (int) txConfig.TxPower, (int) txConfig.MaxEirp, (int) txConfig.AntennaGain);
 
     /* Set MCPS confirm information */
     txi = g_lora_mac_data.curtx;
-    txi->txdinfo.datarate = LoRaMacParams.ChannelsDatarate;
-    txi->txdinfo.txpower = txPower;
-    txi->txdinfo.uplink_chan = channel;
-    txi->txdinfo.tx_time_on_air = g_lora_mac_data.tx_time_on_air;
+
+    //// TODO: "txi" can be null when transmitting the Join Network Request.
+    //// We skip the logging code if "txi" is null.
+    if (txi == NULL) {
+        printf("SendFrameOnChannel: txi is null, skipping log\r\n");
+    } else {
+        txi->txdinfo.datarate = LoRaMacParams.ChannelsDatarate;
+        txi->txdinfo.txpower = txPower;
+        txi->txdinfo.uplink_chan = channel;
+        txi->txdinfo.tx_time_on_air = g_lora_mac_data.tx_time_on_air;
+    }
 
     // Send now
     Radio.Send(LoRaMacBuffer, LoRaMacBufferPktLen);
 
     LoRaMacState |= LORAMAC_TX_RUNNING;
 
-    lora_node_log(LORA_NODE_LOG_TX_START, txPower,
-                  ((uint16_t)LoRaMacParams.ChannelsDatarate << 8) | channel,
-                  g_lora_mac_data.tx_time_on_air);
+    //// TODO: "txi" can be null when transmitting the Join Network Request.
+    //// We skip the logging code if "txi" is null.
+    if (txi != NULL) {
+        lora_node_log(LORA_NODE_LOG_TX_START, txPower,
+                    ((uint16_t)LoRaMacParams.ChannelsDatarate << 8) | channel,
+                    g_lora_mac_data.tx_time_on_air);
+    }
 
     return LORAMAC_STATUS_OK;
 }
@@ -3047,6 +3086,7 @@ LoRaMacMulticastChannelUnlink(MulticastParams_t *channelParam)
 LoRaMacStatus_t
 LoRaMacMlmeRequest(MlmeReq_t *mlmeRequest)
 {
+    printf("LoRaMacMlmeRequest\r\n");
     LoRaMacStatus_t status = LORAMAC_STATUS_SERVICE_UNKNOWN;
     LoRaMacHeader_t macHdr;
 

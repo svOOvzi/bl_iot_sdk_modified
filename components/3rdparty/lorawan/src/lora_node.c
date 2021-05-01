@@ -23,6 +23,11 @@
 #include "node/lora_priv.h"
 #include "node/lora_band.h"
 
+//  TODO: Implement with NimBLE Mutex
+#warning Implement critical section
+#define OS_ENTER_CRITICAL(x) 
+#define OS_EXIT_CRITICAL(x) 
+
 //  We don't support stats
 #define STATS_INC(x,y)
 #define STATS_HDR(x) 0
@@ -105,8 +110,8 @@ extern void lora_bsp_enable_mac_timer(void);
 void
 lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
 {
-    //  TODO: os_sr_t sr;
-    //  TODO: OS_ENTER_CRITICAL(sr);
+    //  TODO: static os_sr_t log_mutex;
+    OS_ENTER_CRITICAL(log_mutex);
     g_lnd_log[g_lnd_log_index].lnd_id = logid;
     g_lnd_log[g_lnd_log_index].lnd_p8 = p8;
     g_lnd_log[g_lnd_log_index].lnd_p16 = p16;
@@ -117,22 +122,19 @@ lora_node_log(uint8_t logid, uint8_t p8, uint16_t p16, uint32_t p32)
     if (g_lnd_log_index == LORA_NODE_DEBUG_LOG_ENTRIES) {
         g_lnd_log_index = 0;
     }
-    //  TODO: OS_EXIT_CRITICAL(sr);
+    OS_EXIT_CRITICAL(log_mutex);
 }
 #endif  /* if defined(LORA_NODE_DEBUG_LOG) */
 
 /* Allocate a packet for lora transmission. This returns a pbuf with packet header */
 struct pbuf *
-lora_pkt_alloc(uint16_t length)  //  Payload length of packet, excluding header
+lora_pkt_alloc(
+    uint16_t payload_len)  //  Payload length of packet, excluding header
 {
-    //  TODO: Init LWIP
-    //  We assume that LWIP has been initialised
-    //  Allocate a pbuf Packet Buffer
-    struct pbuf *buf = pbuf_alloc(
-        PBUF_TRANSPORT,   //  Buffer will include 182-byte transport header
-        length,           //  Payload size
-        PBUF_RAM          //  Allocate a single block of RAM
-    );                    //  TODO: Switch to pooled memory (PBUF_POOL), which is more efficient
+    struct pbuf *buf = alloc_pbuf(
+        sizeof(struct lora_pkt_info),  //  Header Length (LoRaWAN Header)
+        payload_len                    //  Payload length
+    );
     assert(buf != NULL);
     return buf;
 }
@@ -145,10 +147,14 @@ lora_pkt_alloc(uint16_t length)  //  Payload length of packet, excluding header
 void
 lora_node_mcps_request(struct pbuf *om)
 {
+    printf("lora_node_mcps_request\r\n");
+    assert(om != NULL);
     int rc;
 
     lora_node_log(LORA_NODE_LOG_APP_TX, 0, om->len, (uint32_t)om);
-    rc = pbuf_queue_put(&g_lora_mac_data.lm_txq, &g_lora_mac_data.lm_evq, om);
+
+    assert(g_lora_mac_data.lm_evq != NULL);
+    rc = pbuf_queue_put(&g_lora_mac_data.lm_txq, g_lora_mac_data.lm_evq, om);
     assert(rc == 0);
 }
 
@@ -175,7 +181,7 @@ static void
 lora_node_reset_txq_timer(void)
 {
     /* XXX: For now, just reset timer to fire off in one second */
-    ble_npl_callout_reset(&g_lora_mac_data.lm_txq_timer, OS_TICKS_PER_SEC);
+    ble_npl_callout_reset(&g_lora_mac_data.lm_txq_timer, ble_npl_time_ms_to_ticks32(1000));
 }
 
 /**
@@ -185,14 +191,17 @@ lora_node_reset_txq_timer(void)
 void
 lora_node_chk_txq(void)
 {
-    ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
+    printf("lora_node_chk_txq\r\n");
+    assert(g_lora_mac_data.lm_evq != NULL);
+    ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_txq.mq_ev);
 }
 
 bool
 lora_node_txq_empty(void)
 {
+    printf("lora_node_txq_empty\r\n");
     bool rc;
-    struct pbuf *mp;
+    struct pbuf_list *mp;
 
     mp = STAILQ_FIRST(&g_lora_mac_data.lm_txq.mq_head);
     if (mp == NULL) {
@@ -225,8 +234,8 @@ lora_node_mac_mcps_indicate(void)
         return;
     }
 
-    om = lora_pkt_alloc();  //  TODO: Size of payload
-    if (om) {
+    om = lora_pkt_alloc(g_lora_mac_data.rxbufsize);  //  Payload length
+    if (om) {        
         /* Copy data into mbuf */
         rc = pbuf_copyinto(om, 0, g_lora_mac_data.rxbuf,
                               g_lora_mac_data.rxbufsize);
@@ -261,12 +270,13 @@ lora_node_get_batt_status(void)
 static void
 lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
 {
+    printf("lora_mac_proc_tx_q_event\r\n");
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t evstatus;
     LoRaMacTxInfo_t txinfo;
     struct lora_pkt_info *lpkt;
     struct pbuf *om;
-    struct pbuf *mp;
+    struct pbuf_list *mp;
 
     /* Stop the transmit callback because something was just queued */
     ble_npl_callout_stop(&g_lora_mac_data.lm_txq_timer);
@@ -300,7 +310,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
             break;
         }
 
-        rc = LoRaMacQueryTxPossible(mp->len, &txinfo);
+        rc = LoRaMacQueryTxPossible(mp->payload_len, &txinfo);
         if (rc == LORAMAC_STATUS_MAC_CMD_LENGTH_ERROR) {
             /*
              * XXX: an ugly hack for now. If the server decides to send MAC
@@ -320,6 +330,7 @@ lora_mac_proc_tx_q_event(struct ble_npl_event *ev)
             STATS_INC(lora_mac_stats, tx_mac_flush);
             /* NOTE: no need to get a mbuf. */
 send_empty_msg:
+            printf("lora_mac_proc_tx_q_event: send empty msg\r\n");
             lpkt = &g_lora_mac_data.txpkt;
             g_lora_mac_data.curtx = lpkt;
             om = NULL;
@@ -328,6 +339,7 @@ send_empty_msg:
             rc = LORAMAC_STATUS_OK;
         } else {
 send_from_txq:
+            printf("lora_mac_proc_tx_q_event: send from txq\r\n");
             om = pbuf_queue_get(&g_lora_mac_data.lm_txq);
             assert(om != NULL);
             lpkt = (struct lora_pkt_info *) get_pbuf_header(om, sizeof(struct lora_pkt_info));
@@ -403,9 +415,11 @@ proc_txq_om_done:
 static void
 lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 {
+    printf("lora_mac_txq_timer_cb\r\n");
     lora_mac_proc_tx_q_event(NULL);
 }
 
+#ifdef NOTUSED  //  Background Task now handled by event_queue in sdk_app_lorawan/demo.c
 /**
  * The LoRa mac task
  *
@@ -414,12 +428,21 @@ lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 void
 lora_mac_task(void *arg)
 {
+    #warning Process LoRa events
     /* Process events */
     while (1) {
-        ble_npl_event_run(&g_lora_mac_data.lm_evq);
+        //  Previously: os_eventq_run(&g_lora_mac_data.lm_evq);
+        //  struct os_event *ev;
+        //  ev = os_eventq_get(evq);
+        //  assert(ev->ev_cb != NULL);
+        //  ev->ev_cb(ev);
+        assert(g_lora_mac_data.lm_evq != NULL);
+        ble_npl_event_run(g_lora_mac_data.lm_evq);
     }
 }
-#endif
+#endif  //  NOTUSED
+
+#endif  //  !(LORA_NODE_CLI)
 
 #if !(LORA_APP_AUTO_JOIN)
 /**
@@ -459,14 +482,21 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
     int rc;
 
     rc = lora_node_chk_if_joined();
+    printf("lora_node_join: joined=%d\r\n", rc);
     if (rc != LORA_APP_STATUS_ALREADY_JOINED) {
+        printf("lora_node_join: joining network\r\n");
         /* Send event to MAC */
         g_lm_join_ev_arg.dev_eui = dev_eui;
         g_lm_join_ev_arg.app_eui = app_eui;
         g_lm_join_ev_arg.app_key = app_key;
         g_lm_join_ev_arg.trials = trials;
-        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
+
+        assert(g_lora_mac_data.lm_evq != NULL);
+
+        ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_join_ev);
         rc = LORA_APP_STATUS_OK;
+    } else {
+        printf("lora_node_join: already joined network\r\n");
     }
 
     return rc;
@@ -480,11 +510,14 @@ lora_node_join(uint8_t *dev_eui, uint8_t *app_eui, uint8_t *app_key,
 int
 lora_node_link_check(void)
 {
+    printf("lora_node_link_check\r\n");
     int rc;
 
     rc = lora_node_chk_if_joined();
     if (rc == LORA_APP_STATUS_ALREADY_JOINED) {
-        ble_npl_eventq_put(&g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
+        assert(g_lora_mac_data.lm_evq != NULL);
+
+        ble_npl_eventq_put(g_lora_mac_data.lm_evq, &g_lora_mac_data.lm_link_chk_ev);
         rc = LORA_APP_STATUS_OK;
     }
 
@@ -495,6 +528,7 @@ lora_node_link_check(void)
 static void
 lora_mac_join_event(struct ble_npl_event *ev)
 {
+    printf("lora_mac_join_event\r\n");
     MlmeReq_t mlmeReq;
     LoRaMacStatus_t rc;
     LoRaMacEventInfoStatus_t status;
@@ -512,10 +546,12 @@ lora_mac_join_event(struct ble_npl_event *ev)
     rc = LoRaMacMlmeRequest(&mlmeReq);
     switch (rc) {
     case LORAMAC_STATUS_OK:
+        printf("lora_mac_join_event: OK\r\n");
         status = LORAMAC_EVENT_INFO_STATUS_OK;
         break;
     /* XXX: for now, just report this generic error. */
     default:
+        printf("lora_mac_join_event: error %d\r\n", rc);
         status = LORAMAC_EVENT_INFO_STATUS_ERROR;
         break;
     }
@@ -639,22 +675,25 @@ lora_node_link_qual(int16_t *rssi, int16_t *snr)
 struct ble_npl_eventq *
 lora_node_mac_evq_get(void)
 {
-    return &g_lora_mac_data.lm_evq;
+    assert(g_lora_mac_data.lm_evq != NULL);
+    return g_lora_mac_data.lm_evq;
 }
 
 void
 lora_node_init(void)
 {
-    int rc;
+    printf("lora_node_init\r\n");
 #if !(LORA_NODE_CLI)
     LoRaMacStatus_t lms;
 #endif
 
-    rc = stats_init_and_reg(
+#ifdef TODO  //  Statistics not supported
+    int rc = stats_init_and_reg(
         STATS_HDR(lora_mac_stats),
         STATS_SIZE_INIT_PARMS(lora_mac_stats, STATS_SIZE_32),
         STATS_NAME_INIT_PARMS(lora_mac_stats), "lora_mac");
     SYSINIT_PANIC_ASSERT(rc == 0);
+#endif  //  TODO
 
 #if (LORA_NODE_CLI)
     lora_cli_init();
@@ -667,11 +706,13 @@ lora_node_init(void)
 #endif
 
     /*--- MAC INIT ---*/
-    /* Initialize eventq */
-    ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
+    /* Initialize eventq to global event_queue from sdk_app_lorawan */
+    //  Previously: ble_npl_eventq_init(&g_lora_mac_data.lm_evq);
+    extern struct ble_npl_eventq event_queue;  //  Defined in sdk_app_lorawan/demo.c
+    g_lora_mac_data.lm_evq = &event_queue;
 
     /* Set up transmit done queue and event */
-    pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL);
+    pbuf_queue_init(&g_lora_mac_data.lm_txq, lora_mac_proc_tx_q_event, NULL, sizeof(struct lora_pkt_info));
 
     #ifdef NOTUSED
     /* Create the mac task */
@@ -688,8 +729,9 @@ lora_node_init(void)
     g_lora_mac_data.lm_link_chk_ev.fn = lora_mac_link_chk_event;
 
     /* Initialize the transmit queue timer */
+    assert(g_lora_mac_data.lm_evq != NULL);
     ble_npl_callout_init(&g_lora_mac_data.lm_txq_timer,
-                    &g_lora_mac_data.lm_evq, lora_mac_txq_timer_cb, NULL);
+                    g_lora_mac_data.lm_evq, lora_mac_txq_timer_cb, NULL);
 
     /* Initialize the LoRa mac */
     lora_cb.GetBatteryLevel = lora_node_get_batt_status;

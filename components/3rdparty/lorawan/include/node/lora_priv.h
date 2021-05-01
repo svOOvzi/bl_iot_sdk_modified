@@ -25,9 +25,7 @@
 #include "node/mac/LoRaMac.h"
 #include "node/lora.h"
 #include "node/lora_band.h"
-
-struct hal_timer  {};  //  TODO
-typedef uint32_t os_time_t;  //  TODO
+#include "node/lora_timer.h"
 
 /* Connection state machine flags. */
 union lora_mac_flags {
@@ -130,7 +128,7 @@ struct lora_mac_obj
     LoRaMacRxSlot_t rx_slot;
 
     /* Task event queue */
-    struct ble_npl_eventq lm_evq;
+    struct ble_npl_eventq *lm_evq;
 
     /* Transmit queue */
     struct pbuf_queue lm_txq;
@@ -172,7 +170,7 @@ struct lora_mac_obj
      * (so that a class C device will not transmit before listening on the
      * second receive window).
      */
-    struct hal_timer rtx_timer;
+    struct ble_npl_callout rtx_timer;
 
     /*
      * Global lora rx packet info structure. Used when receiving and prior to
@@ -192,7 +190,7 @@ struct lora_mac_obj
      *
      * \remark Used for the BACKOFF_DC computation.
      */
-    os_time_t init_time;
+    ble_npl_time_t init_time;
 };
 
 extern struct lora_mac_obj g_lora_mac_data;

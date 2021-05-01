@@ -63,10 +63,10 @@ CFLAGS += -DLORA_JOIN_REQ_RAND_DELAY=5000
 # the transmission of join requests by an end device.
 CFLAGS += -DLORA_UNCONFIRMED_TX_RAND_DELAY=5000
 
-# TODO: Check this
 # Sets public or private lora network. A value of 1 means
-# the network is public; private otherwise
-CFLAGS += -DLORA_NODE_PUBLIC_NWK=0
+# the network is public; private otherwise.
+# Must be set to 1 so that ChirpStack will detect our Public Sync Word (0x3444)
+CFLAGS += -DLORA_NODE_PUBLIC_NWK=1
 
 # Used by BSP packages to configure LP clock for the LoRa system.
 CFLAGS += -DLORA_LP_CLOCK=1
@@ -91,8 +91,7 @@ endif
 COMPONENTS_LORA    := lora-sx1262 nimble-porting-layer 
 
 # Components needed for LoRaWAN (We need pbuf from LWIP)
-# TODO: Add lorawan when fixed
-COMPONENTS_LORAWAN := lwip
+COMPONENTS_LORAWAN := lorawan lwip
 
 # Other Components
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
