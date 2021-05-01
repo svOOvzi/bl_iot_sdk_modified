@@ -101,6 +101,23 @@ error="validate dev-nonce error: object already exists"
 
 Because the Nonce should not be reused.
 
+# LoRa Packet Forwarder for WisGate
+
+Config file is at...
+
+```text
+/opt/ttn-gateway/packet_forwarder/lora_pkt_fwd/global_conf.json
+```
+
+Restart packet forwarder...
+
+```bash
+sudo bash
+cd /opt/ttn-gateway/packet_forwarder/lora_pkt_fwd
+pkill -9 lora_pkt_fwd
+./lora_pkt_fwd
+```
+
 # Output Log
 
 ```text
