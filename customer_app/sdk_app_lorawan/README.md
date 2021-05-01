@@ -127,7 +127,7 @@ pkill -9 lora_pkt_fwd
 lora_node_init
 pbuf_queue_init
 pbuf_queue_init
-pbuf_quue_init
+pbuf_queue_init
 SX126xReset
 SX126xIoInit
 SX126X interrupt init
@@ -137,7 +137,7 @@ SX126xSetTxParams: power=22, rampTime=7
 SX126xGetDeviceId: SX1262
 SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 RadioSetModem
-RadioSetPublicNetwork: private syncword=1424
+RadioSetPublicNetwork: public syncword=3444
 RadioSleep
 
 # las_wr_dev_eui 0x4b:0xc1:0x5e:0xe7:0x37:0x7b:0xb1:0x5b
@@ -180,7 +180,7 @@ SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1
 SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
 SendFrameOnChannel: txi is null, skipping log
 RadioSend: size=23
-00 00 00 00 00 00 00 00 0 5b b1 7b 37 e7 5e c1 4b 64 a4 53 86 33 4d 
+00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 57 95 d6 c1 92 35 
 RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=23, CrcMode=1, InvertIQ=0
 lora_mac_join_event: OK
 RadioOnDioIrq
@@ -200,99 +200,21 @@ RadioRx
 RadioOnDioIrq
 RadioIrqProcess
 SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
-RadioSleep
-OnRxWindow2TimerEvent
-RadioSetChannel: freq=923200000
-SX126xWakeup
-RadioSetRxConfig
-RadioStandby
-RadioSetModem
-RadioSetRxConfig done
-RadioRx
+IRQ_PREAMBLE_DETECTED
 RadioOnDioIrq
 RadioIrqProcess
 SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
-RadioSleep
-lora_node_chk_txq
-lora_mac_proc_tx_q_event
-
-# las_join 1
-lora_node_join: joined=8
-lora_node_join: joining network
-Attempting to join...
-
-# lora_mac_join_event
-LoRaMacMlmeRequest
-Send
-RadioSetModem
-SX126xWakeup
-ScheduleTx
-CalculateBackOff
-RegionNextChannel
-RegionAS923NextChannel
-RegionAS923NextChannel: channel=1
-RegionComputeRxWindoarameters
-RegionComputeRxWindowParameters
-lora_mac_rx_disable
-TODO: Radio.RxDisable
-SendFrameOnChannel: channel=1
-RegionTxConfig
-RegionAS923TxConfig
-RadioSetChannel: freq=923400000
-RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
-RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=64, CrcMode=1, InvertIQ=0
-RadioStandby
-RadioSetModem
-SX126xSetRfTxPower
-SX126xSetTxParams: power=13, rampTime=7
-SX126xGetDeviceId: SX1262
-SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
-SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
-SendFrameOnChannel: txi is null, skipping log
-RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b 6a 29 83 1a 92 8f 
-RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=23, CrcMode=1, InvertIQ=0
-lora_mac_join_event: OK
+IRQ_HEADER_VALID
 RadioOnDioIrq
 RadioIrqProcess
 SX126xReadCommand
-IRQ_TX_DONE
-OnRadioTxDone
-RadioSleep
-OnRxWindow1TimerEvent
-RadioSetChannel: freq=923400000
-SX126xWakeup
-RadioSetRxConfig
-RadioStandby
-RadioSetModem
-RadioSetRxConfig done
-RadioRx
-RadioOnDioIrq
-RadioIrqProcess
+IRQ_RX_DONE
 SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
-RadioSleep
-OnRxWindow2TimerEvent
-RadioSetChannel: freq=923200000
-SX126xWakeup
-RadioSetRxConfig
-RadioStandby
-RadioSetModem
-RadioSetRxConfig done
-RadioRx
-RadioOnDioIrq
-RadioIrqProcess
 SX126xReadCommand
-IRQ_RX_TX_TIMEOUT
-OnRadioRxTimeout
+OnRadioRxDone
+lora_mac_process_radio_rx
 RadioSleep
-lora_node_chk_txq
-lora_mac_proc_tx_q_event
+lora_mac_rx_win2_stop
 ```
 
 # Send Message Log
