@@ -737,7 +737,6 @@ lora_mac_proc_tx_q_event
 # Send Message Log
 
 ```text
-
 # create_task
 
 # init_driver
@@ -751,6 +750,7 @@ SX126xGetDeviceId: SX1262
 SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1 
 RadioSetChannel: freq=923200000
 RadioSetTxConfig: modem=1, power=22, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
+RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=255, CrcMode=1, InvertIQ=0
 RadioStandby
 RadioSetModem
 SX126xSetRfTxPower
@@ -796,16 +796,5 @@ SX126xReadCommand
 IRQ_TX_DONE
 Tx done
 RadioSleep
-
-# send_message
-RadioSend: size=23
-00 00 00 00 00 00 00 00 00 5b b1 7b 37 e7 5e c1 4b b4 b1 b8 30 e9 8c 
-SX126xWakeup
-
-# RadioOnDioIrq
-RadioIrqProcess
-SX126xeadCommand
-IRQ_TX_DONE
-Tx done
-RadioSleep
+# 
 ```
