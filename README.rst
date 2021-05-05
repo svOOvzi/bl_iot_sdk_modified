@@ -63,6 +63,8 @@ Changes
 
 - "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
 
+- "ulisp" branch contains MicroLisp Library and MicroLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ulisp-bl602 and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_ulisp/
+
 BL602 SDK (Pine64 version)
 ==========================
 
