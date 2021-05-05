@@ -163,11 +163,11 @@ static void init_driver(char *buf, int len, int argc, char **argv)
     //  Set the LoRa Callback Functions
     RadioEvents_t radio_events;
     memset(&radio_events, 0, sizeof(radio_events));  //  Must init radio_events to null, because radio_events lives on stack!
-    radio_events.TxDone    = on_tx_done;
-    radio_events.RxDone    = on_rx_done;
-    radio_events.TxTimeout = on_tx_timeout;
-    radio_events.RxTimeout = on_rx_timeout;
-    radio_events.RxError   = on_rx_error;
+    radio_events.TxDone    = on_tx_done;     //  Packet has been transmitted
+    radio_events.RxDone    = on_rx_done;     //  Packet has been received
+    radio_events.TxTimeout = on_tx_timeout;  //  Transmit Timeout
+    radio_events.RxTimeout = on_rx_timeout;  //  Receive Timeout
+    radio_events.RxError   = on_rx_error;    //  Receive Error
 
     //  Init the SPI Port and the LoRa Transceiver
     Radio.Init(&radio_events);
