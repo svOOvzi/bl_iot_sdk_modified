@@ -13,3 +13,18 @@ https://github.com/lupyuen/ulisp-bl602
 For more information about uLisp...
 
 http://www.ulisp.com/show?21T5
+
+# Commands
+
+We need a space before the first `(` because `(` is parsed as a command keyword...
+
+```text
+# Create a list (1 2 3)
+( list 1 2 3 )
+
+# Returns 1
+( car ( list 1 2 3 ) )
+
+# Returns (2 3)
+( cdr ( list 1 2 3 ) )
+```
