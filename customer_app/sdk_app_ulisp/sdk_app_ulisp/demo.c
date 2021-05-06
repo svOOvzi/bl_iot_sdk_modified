@@ -45,8 +45,18 @@ void blinky(char *buf, int len, int argc, char **argv) {
 
 /// Run a uLisp command
 void run_ulisp(char *buf, int len, int argc, char **argv) {
-    printf("buf=%s, len=%d, argc=%d, argv=%s\r\n", buf, len, argc, argv[0]);
-    execute_ulisp(buf);
+    //  Concatenate the command line, separated by spaces
+    static char cmd_buf[1024];
+    cmd_buf[0] = 0;
+    for (int i = 0; i < argc; i++) {
+        assert(argv[i] != NULL);
+        strncat(cmd_buf, argv[i], sizeof(cmd_buf) - strlen(cmd_buf) - 1);
+        strncat(cmd_buf, " ",     sizeof(cmd_buf) - strlen(cmd_buf) - 1);
+    }
+    cmd_buf[sizeof(cmd_buf) - 1] = 0;
+
+    //  Execute the command line
+    execute_ulisp(cmd_buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,7 +64,7 @@ void run_ulisp(char *buf, int len, int argc, char **argv) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"a",        "Run the uLisp command",          run_ulisp},
+    {"(",        "Run the uLisp command",          run_ulisp},
 };                                                                                   
 
 /// Init the command-line interface
