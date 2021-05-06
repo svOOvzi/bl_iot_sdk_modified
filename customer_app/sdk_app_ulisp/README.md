@@ -1,5 +1,15 @@
 # BL602 uLisp Firmware
 
-uLisp ported from ESP8266 to BL602
+A version of the Lisp programming language for BL602 RISC-V boards.
 
-http://www.ulisp.com/
+uLisp was ported to BL602 from ESP32 Arduino...
+
+https://github.com/technoblogy/ulisp-esp
+
+This firmware calls the BL602 uLisp Library `components/3rdparty/ulisp-bl602`...
+
+https://github.com/lupyuen/ulisp-bl602
+
+For more information about uLisp...
+
+http://www.ulisp.com/show?21T5
