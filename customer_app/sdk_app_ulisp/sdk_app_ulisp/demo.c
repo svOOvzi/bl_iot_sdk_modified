@@ -46,6 +46,8 @@ void blinky(char *buf, int len, int argc, char **argv) {
 /// Run a uLisp command
 void run_ulisp(char *buf, int len, int argc, char **argv) {
     setup_ulisp();
+
+    buf = "(list 1 2 3)"; ////
     execute_ulisp(buf);
 }
 
