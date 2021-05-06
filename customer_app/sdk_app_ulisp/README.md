@@ -18,6 +18,8 @@ http://www.ulisp.com/show?21T5
 
 We need a space before the first `(` because `(` is parsed as a command keyword...
 
+List Commands from http://www.ulisp.com/show?1AC5
+
 ```text
 # Create a list (1 2 3)
 ( list 1 2 3 )
