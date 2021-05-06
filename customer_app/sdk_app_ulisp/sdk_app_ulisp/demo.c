@@ -45,6 +45,7 @@ void blinky(char *buf, int len, int argc, char **argv) {
 
 /// Run a uLisp command
 void run_ulisp(char *buf, int len, int argc, char **argv) {
+    setup_ulisp();
     execute_ulisp(buf);
 }
 
@@ -59,7 +60,6 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
 /// Init the command-line interface
 int cli_init(void)
 {
-    setup_ulisp();
     return 0;
 }
 
