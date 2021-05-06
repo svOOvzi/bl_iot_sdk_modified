@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := sdk_app_blinky
+PROJECT_NAME := sdk_app_ulisp
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
