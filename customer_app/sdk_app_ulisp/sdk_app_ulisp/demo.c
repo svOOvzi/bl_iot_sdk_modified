@@ -4,6 +4,7 @@
 #include <cli.h>
 #include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
+#include "ulisp.h"       //  For uLisp Library
 #include "demo.h"
 
 /// PineCone Blue LED is connected on BL602 GPIO 11
@@ -42,20 +43,24 @@ void blinky(char *buf, int len, int argc, char **argv) {
     //  Return to the BL602 command-line interface
 }
 
+/// Run a uLisp command
+void run_ulisp(char *buf, int len, int argc, char **argv) {
+    execute_ulisp(buf);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Command Line Interface
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"blinky",        "Blink the LED",          blinky},
+    {"(",        "Run the uLisp command",          run_ulisp},
 };                                                                                   
 
 /// Init the command-line interface
 int cli_init(void)
 {
-   //  To run a command at startup, do this...
-   //  command_name("", 0, 0, NULL);
-   return 0;
+    setup_ulisp();
+    return 0;
 }
 
 /// TODO: We now show assertion failures in development.
