@@ -51,20 +51,14 @@ Blinky Commands from http://www.ulisp.com/show?1AEK
 
 ```text
 # Define the blinky function
-( defun b ()
-  ( pinmode 11 :output )
-  ( loop
-   ( digitalwrite 11 :high )
-   ( delay 1000 )
-   ( digitalwrite 11 :low ) 
+( defun b ()                  \
+  ( pinmode 11 :output )      \
+  ( loop                      \
+   ( digitalwrite 11 :high )  \
+   ( delay 1000 )             \
+   ( digitalwrite 11 :low  )  \
    ( delay 1000 )))
 
 # Run the blinky function
 ( b )
-```
-
-We need to paste the function as a single line like this...
-
-```text
-( defun b () ( pinmode 11 :output ) ( loop ( digitalwrite 11 :high ) ( delay 1000 ) ( digitalwrite 11 :low ) ( delay 1000 )))
 ```

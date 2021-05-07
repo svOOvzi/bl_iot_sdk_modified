@@ -1,53 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 #include <cli.h>
-#include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
-#include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
 #include "ulisp.h"       //  For uLisp Library
 #include "demo.h"
 
-/// PineCone Blue LED is connected on BL602 GPIO 11
-/// TODO: Change the LED GPIO Pin Number for your BL602 board
-#define LED_GPIO 11
-
-/// Blink the BL602 LED
-void blinky(char *buf, int len, int argc, char **argv) {
-    //  Show a message on the serial console
-    puts("Hello from Blinky!");
-
-    //  Configure the LED GPIO for output (instead of input)
-    int rc = bl_gpio_enable_output(
-        LED_GPIO,  //  GPIO pin number
-        0,         //  No GPIO pullup
-        0          //  No GPIO pulldown
-    );
-    assert(rc == 0);  //  Halt on error
-
-    //  Blink the LED 5 times
-    for (int i = 0; i < 10; i++) {
-
-        //  Toggle the LED GPIO between 0 (on) and 1 (off)
-        rc = bl_gpio_output_set(  //  Set the GPIO output (from BL602 GPIO HAL)
-            LED_GPIO,             //  GPIO pin number
-            i % 2                 //  0 for low, 1 for high
-        );
-        assert(rc == 0);  //  Halt on error
-
-        //  Sleep 1 second
-        time_delay(                   //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(1000)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
-        );
-    }
-
-    //  Return to the BL602 command-line interface
-}
+/// Command-Line Buffer that will be passed to uLisp
+static char cmd_buf[1024] = { 0 };
 
 /// Run a uLisp command
 void run_ulisp(char *buf, int len, int argc, char **argv) {
+    assert(argc > 0);
+    assert(argv[argc - 1] != NULL);
+
+    //  If the last command line arg is `\`, we expect a continuation
+    bool to_continue = false;
+    if (strcmp(argv[argc - 1], "\\") == 0) {
+        to_continue = true;
+        argc--;   //  Skip the `\`
+    }
+
     //  Concatenate the command line, separated by spaces
-    static char cmd_buf[1024];
-    cmd_buf[0] = 0;
     for (int i = 0; i < argc; i++) {
         assert(argv[i] != NULL);
         strncat(cmd_buf, argv[i], sizeof(cmd_buf) - strlen(cmd_buf) - 1);
@@ -55,8 +29,14 @@ void run_ulisp(char *buf, int len, int argc, char **argv) {
     }
     cmd_buf[sizeof(cmd_buf) - 1] = 0;
 
-    //  Execute the command line
-    execute_ulisp(cmd_buf);
+    //  If this the end of the command line...
+    if (!to_continue) {
+        //  Execute the command line
+        execute_ulisp(cmd_buf);
+
+        //  Erase the buffer
+        cmd_buf[0] = 0;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
