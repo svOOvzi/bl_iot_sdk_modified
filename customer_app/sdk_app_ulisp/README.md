@@ -51,7 +51,7 @@ Blinky Commands from http://www.ulisp.com/show?1AEK
 
 ```text
 # Define the blinky function
-( defun b ()                  \
+( defun blinky ()             \
   ( pinmode 11 :output )      \
   ( loop                      \
    ( digitalwrite 11 :high )  \
@@ -60,5 +60,7 @@ Blinky Commands from http://www.ulisp.com/show?1AEK
    ( delay 1000 )))
 
 # Run the blinky function
-( b )
+( blinky )
 ```
+
+Make sure there's no space after "`\`"
