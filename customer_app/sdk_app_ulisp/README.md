@@ -10,6 +10,10 @@ This firmware calls the BL602 uLisp Library `components/3rdparty/ulisp-bl602`...
 
 https://github.com/lupyuen/ulisp-bl602
 
+This firmware works with `blockly-ulisp`, which allows embedded apps to be dragged-and-dropped from Web Browser to BL602...
+
+https://github.com/AppKaki/blockly-ulisp
+
 For more information about uLisp...
 
 http://www.ulisp.com/show?21T5
