@@ -4,3 +4,6 @@
 [submodule "customer_app/sdk_app_st7789/sdk_app_st7789/lvgl"]
 	path = customer_app/sdk_app_st7789/sdk_app_st7789/lvgl
 	url = https://github.com/lvgl/lvgl
+[submodule "components/3rdparty/ulisp-bl602"]
+	path = components/3rdparty/ulisp-bl602
+	url = https://github.com/lupyuen/ulisp-bl602

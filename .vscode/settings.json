@@ -17,6 +17,7 @@
         "regex": "c",
         "lora_utilities.h": "c",
         "regioncommon.h": "c",
-        "lora_priv.h": "c"
+        "lora_priv.h": "c",
+        "*.def": "c"
     }
 }

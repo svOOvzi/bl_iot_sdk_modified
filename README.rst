@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"uLisp and Blockly on PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/lisp>`_
+
 - `"Run Rust RISC-V Firmware with BL602 IoT SDK" <https://lupyuen.github.io/articles/rust>`_
 
 - `"PineCone BL602 RISC-V Board Receives LoRa Packets" <https://lupyuen.github.io/articles/lora2>`_
@@ -62,6 +64,8 @@ Changes
 - "master" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_rust/
 
 - "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
+
+- "ulisp" branch contains uLisp Library and uLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/ulisp/components/3rdparty/ulisp-bl602 and https://github.com/lupyuen/bl_iot_sdk/tree/ulisp/customer_app/sdk_app_ulisp/
 
 BL602 SDK (Pine64 version)
 ==========================
