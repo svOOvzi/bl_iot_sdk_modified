@@ -57,7 +57,7 @@ Changes
 
 - "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/nimble-porting-layer and https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1276
 
-- "lorawan" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/lorawan/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/lorawan/customer_app/sdk_app_lorawan/
+- "master" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lorawan/
 
 - "master" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1262
 
@@ -65,7 +65,7 @@ Changes
 
 - "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
 
-- "master" branch contains uLisp Library and uLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ulisp-bl602 and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_ulisp/
+- "master" branch contains uLisp Library and uLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (ulisp-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_ulisp/
 
 BL602 SDK (Pine64 version)
 ==========================
