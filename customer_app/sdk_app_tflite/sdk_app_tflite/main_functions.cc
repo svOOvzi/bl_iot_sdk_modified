@@ -1,3 +1,4 @@
+//  Based on https://github.com/lupyuen/tflite-bl602/blob/main/tensorflow/lite/micro/examples/hello_world/main_functions.cc
 /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "tensorflow/lite/micro/examples/hello_world/main_functions.h"
+#include "main_functions.h"
 
 #include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/examples/hello_world/constants.h"
