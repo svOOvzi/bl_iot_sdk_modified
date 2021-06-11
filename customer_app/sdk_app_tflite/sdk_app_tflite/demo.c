@@ -4,42 +4,17 @@
 #include <cli.h>
 #include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
+#include "main_functions.h"  //  For TensorFlow Lite
 #include "demo.h"
 
-/// PineCone Blue LED is connected on BL602 GPIO 11
-/// TODO: Change the LED GPIO Pin Number for your BL602 board
-#define LED_GPIO 11
+/// Command to init TensorFlow Model
+static void init(char *buf, int len, int argc, char **argv) {
+    setup();
+}
 
-/// Blink the BL602 LED
-void blinky(char *buf, int len, int argc, char **argv) {
-    //  Show a message on the serial console
-    puts("Hello from Blinky!");
-
-    //  Configure the LED GPIO for output (instead of input)
-    int rc = bl_gpio_enable_output(
-        LED_GPIO,  //  GPIO pin number
-        0,         //  No GPIO pullup
-        0          //  No GPIO pulldown
-    );
-    assert(rc == 0);  //  Halt on error
-
-    //  Blink the LED 5 times
-    for (int i = 0; i < 10; i++) {
-
-        //  Toggle the LED GPIO between 0 (on) and 1 (off)
-        rc = bl_gpio_output_set(  //  Set the GPIO output (from BL602 GPIO HAL)
-            LED_GPIO,             //  GPIO pin number
-            i % 2                 //  0 for low, 1 for high
-        );
-        assert(rc == 0);  //  Halt on error
-
-        //  Sleep 1 second
-        time_delay(                   //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(1000)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
-        );
-    }
-
-    //  Return to the BL602 command-line interface
+/// Command to infer TensorFlow Model
+static void infer(char *buf, int len, int argc, char **argv) {
+    loop();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,7 +22,8 @@ void blinky(char *buf, int len, int argc, char **argv) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"blinky",        "Blink the LED",          blinky},
+    {"init",        "Init Model",        init},
+    {"infer",       "Run Inference",     infer},
 };                                                                                   
 
 /// Init the command-line interface
@@ -94,40 +70,3 @@ void dump_stack(void)
     }
     printf("=== stack end ===\r\n\r\n");
 }
-
-/* Output Log
-
-# help
-====Build-in Commands====
-====Support 4 cmds once, seperate by ; ====
-help                     : print this
-p                        : print memory
-m                        : modify memory
-echo                     : echo for command
-exit                     : close CLI
-devname                  : print device name
-sysver                   : system version
-reboot                   : reboot system
-poweroff                 : poweroff system
-reset                    : system reset
-time                     : system time
-ota                      : system ota
-ps                       : thread dump
-ls                       : file list
-hexdump                  : dump file
-cat                      : cat file
-
-====User Commands====
-blinky                   : Blink the LED
-blogset                  : blog pri set level
-blogdump                 : blog info dump
-bl_sys_time_now          : sys time now
-
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
-
-*/

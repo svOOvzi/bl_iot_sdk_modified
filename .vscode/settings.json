@@ -18,6 +18,7 @@
         "lora_utilities.h": "c",
         "regioncommon.h": "c",
         "lora_priv.h": "c",
-        "*.def": "c"
+        "*.def": "c",
+        "*.tcc": "c"
     }
 }
