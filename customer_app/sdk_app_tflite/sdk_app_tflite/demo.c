@@ -17,6 +17,13 @@ static void infer(char *buf, int len, int argc, char **argv) {
     loop();
 }
 
+/// TODO: Handle math overflow.
+float __math_oflowf (uint32_t sign) {
+    assert(false);  //  For now, we halt when there is a math overflow
+    //  Previously: return xflowf (sign, 0x1p97f);
+    //  From https://code.woboq.org/userspace/glibc/sysdeps/ieee754/flt-32/math_errf.c.html#__math_oflowf
+}
+
 /// Global Destructor for C++, which we're not using.
 /// See https://alex-robenko.gitbook.io/bare_metal_cpp/compiler_output/static#custom-destructors
 void *__dso_handle = NULL;
