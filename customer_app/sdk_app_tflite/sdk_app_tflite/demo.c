@@ -81,3 +81,56 @@ void dump_stack(void)
     }
     printf("=== stack end ===\r\n\r\n");
 }
+
+/* Output Log:
+
+# help
+====Build-in Commands====
+====Support 4 cmds once, seperate by ; ====
+help                     : print this
+p                        : print memory
+m                        : modify memory
+echo                     : echo for command
+exit                     : close CLI
+devname                  : print device name
+sysver                   : system version
+reboot                   : reboot system
+poweroff                 : poweroff system
+reset                    : system reset
+time                     : system time
+ota                      : system ota
+ps                       : thread dump
+ls                       : file list
+hexdump                  : dump file
+cat                      : cat file
+
+====User Commands====
+init                     : Init Model
+infer                    : Run Inference
+blogset                  : blog pri set level
+blogdump                 : blog info dump
+bl_sys_time_now          : sys time now
+
+# init
+
+# infer
+x=0.000000, y=0.000000
+
+# infer
+x=0.314159, y=0.372770
+
+# infer
+x=0.628319, y=0.559154
+
+# infer
+x=0.942478, y=0.838731
+
+# infer
+x=1.256637, y=0.965812
+
+# infer
+x=1.570796, y=1.042060
+
+# infer
+x=1.884956, y=0.957340 
+*/
