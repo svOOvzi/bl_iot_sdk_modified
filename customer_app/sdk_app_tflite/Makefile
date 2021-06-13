@@ -1,6 +1,6 @@
 #
 # This is a project Makefile. It is assumed the directory this Makefile resides in is a
-# project subdirectory.
+# project subdirectory. For GCC Compiler Options see PROJECT_NAME/bouffalo.mk
 #
 
 PROJECT_NAME := sdk_app_tflite
@@ -8,16 +8,6 @@ PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
 #CONFIG_TOOLPREFIX :=
-
-# Define the GCC compiler options:
-# CFLAGS for C compiler, CPPFLAGS for C++ compiler
-
-# Don't use Thread-Safe Initialisation for C++ Static Variables.
-# This fixes the missing symbols __cxa_guard_acquire and __cxa_guard_release.
-# Note: This assumes that we will not init C++ static variables in multiple tasks.
-# See https://alex-robenko.gitbook.io/bare_metal_cpp/compiler_output/static
-CFLAGS   += -fno-threadsafe-statics
-CPPFLAGS += -fno-threadsafe-statics
 
 -include ./proj_config.mk
 

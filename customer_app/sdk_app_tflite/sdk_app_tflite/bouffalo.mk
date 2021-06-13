@@ -24,3 +24,18 @@ endif
 ifeq ($(CONFIG_ENABLE_VFS_ROMFS),1)
 CPPFLAGS += -DCONF_USER_ENABLE_VFS_ROMFS
 endif
+
+# Define the GCC compiler options:
+# CFLAGS for C compiler, CPPFLAGS for C++ compiler
+# See additional options at components/3rdparty/tflite-bl602/bouffalo.mk
+
+# Use Static Memory instead of Heap Memory
+# See components/3rdparty/tflite-bl602/tensorflow/lite/kernels/internal/types.h
+CFLAGS   += -DTF_LITE_STATIC_MEMORY
+CPPFLAGS += -DTF_LITE_STATIC_MEMORY
+
+# Don't use Thread-Safe Initialisation for C++ Static Variables.
+# This fixes the missing symbols __cxa_guard_acquire and __cxa_guard_release.
+# Note: This assumes that we will not init C++ static variables in multiple tasks.
+# See https://alex-robenko.gitbook.io/bare_metal_cpp/compiler_output/static
+CPPFLAGS += -fno-threadsafe-statics
