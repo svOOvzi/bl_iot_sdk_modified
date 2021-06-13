@@ -17,6 +17,10 @@ static void infer(char *buf, int len, int argc, char **argv) {
     loop();
 }
 
+/// Global Destructor for C++, which we're not using.
+/// See https://alex-robenko.gitbook.io/bare_metal_cpp/compiler_output/static#custom-destructors
+void *__dso_handle = NULL;
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Command Line Interface
 
