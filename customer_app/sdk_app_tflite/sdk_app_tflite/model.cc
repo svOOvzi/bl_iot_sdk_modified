@@ -21,9 +21,9 @@ limitations under the License.
 // C data array, so it can be easily compiled into a binary for devices that
 // don't have a file system.
 
-// See train/README.md for a full description of the creation process.
+// See https://github.com/lupyuen/tflite-bl602/blob/main/tensorflow/lite/micro/examples/hello_world/train/README.md for a full description of the creation process.
 
-#include "tensorflow/lite/micro/examples/hello_world/model.h"
+#include "model.h"
 
 // Keep model aligned to 8 bytes to guarantee aligned 64-bit accesses.
 alignas(8) const unsigned char g_model[] = {

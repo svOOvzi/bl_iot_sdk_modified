@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "tensorflow/lite/micro/examples/hello_world/output_handler.h"
+#include "output_handler.h"
 
 void HandleOutput(tflite::ErrorReporter* error_reporter, float x_value,
                   float y_value) {
