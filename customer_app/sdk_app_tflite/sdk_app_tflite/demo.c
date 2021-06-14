@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
@@ -7,14 +8,22 @@
 #include "main_functions.h"  //  For TensorFlow Lite
 #include "demo.h"
 
-/// Command to init TensorFlow Model
+/// Command to init the TensorFlow Model
 static void init(char *buf, int len, int argc, char **argv) {
     load_model();
 }
 
-/// Command to infer TensorFlow Model
+/// Command to infer values with TensorFlow Model
 static void infer(char *buf, int len, int argc, char **argv) {
-    run_inference();
+    //  Convert the argument to float
+    if (argc != 2) { printf("Usage: infer <float>\r\n"); return; }
+    float input = atof(argv[1]);
+
+    //  Run the inference
+    float result = run_inference(input);
+
+    //  Show the result
+    printf("%f\r\n", result);
 }
 
 /// TODO: Handle math overflow.
@@ -113,24 +122,12 @@ bl_sys_time_now          : sys time now
 
 # init
 
-# infer
-x=0.000000, y=0.000000
+# infer 0.1
+0.160969
 
-# infer
-x=0.314159, y=0.372770
+# infer 0.2
+0.262633
 
-# infer
-x=0.628319, y=0.559154
-
-# infer
-x=0.942478, y=0.838731
-
-# infer
-x=1.256637, y=0.965812
-
-# infer
-x=1.570796, y=1.042060
-
-# infer
-x=1.884956, y=0.957340 
+# infer 0.3
+0.372770
 */

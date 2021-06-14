@@ -25,8 +25,10 @@ extern "C" {
 // Load the TensorFlow Lite Model into Static Memory
 void load_model();
 
-// Run an inference with the loaded TensorFlow Lite Model
-void run_inference();
+// Run an inference with the loaded TensorFlow Lite Model.
+// Return the output value inferred by the model.
+float run_inference(
+  float x);  //  Value to be fed into the model
 
 #ifdef __cplusplus
 }

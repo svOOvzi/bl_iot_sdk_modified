@@ -83,15 +83,10 @@ void load_model() {
   inference_count = 0;
 }
 
-// Run an inference with the loaded TensorFlow Lite Model
-void run_inference() {
-  // Calculate an x value to feed into the model. We compare the current
-  // inference_count to the number of inferences per cycle to determine
-  // our position within the range of possible x values the model was
-  // trained on, and use this to calculate a value.
-  float position = static_cast<float>(inference_count) /
-                   static_cast<float>(kInferencesPerCycle);
-  float x = position * kXrange;
+// Run an inference with the loaded TensorFlow Lite Model.
+// Return the output value inferred by the model.
+float run_inference(
+  float x) {  //  Value to be fed into the model
 
   // Quantize the input from floating-point to integer
   int8_t x_quantized = x / input->params.scale + input->params.zero_point;
@@ -103,7 +98,7 @@ void run_inference() {
   if (invoke_status != kTfLiteOk) {
     TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed on x: %f\n",
                          static_cast<double>(x));
-    return;
+    return 0;
   }
 
   // Obtain the quantized output from model's output tensor
@@ -111,13 +106,11 @@ void run_inference() {
   // Dequantize the output from integer to floating-point
   float y = (y_quantized - output->params.zero_point) * output->params.scale;
 
-  // Output the results. A custom HandleOutput function can be implemented
-  // for each supported hardware target.
-  printf("x=%f, y=%f\r\n", x, y); ////
-  //// TODO: HandleOutput(error_reporter, x, y);
-
   // Increment the inference_counter, and reset it if we have reached
   // the total number per cycle
   inference_count += 1;
   if (inference_count >= kInferencesPerCycle) inference_count = 0;
+
+  // Output the results
+  return y;
 }
