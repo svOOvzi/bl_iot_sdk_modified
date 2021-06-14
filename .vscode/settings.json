@@ -19,6 +19,8 @@
         "regioncommon.h": "c",
         "lora_priv.h": "c",
         "*.def": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "istream": "cpp",
+        "ostream": "cpp"
     }
 }

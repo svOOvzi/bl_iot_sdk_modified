@@ -38,8 +38,8 @@ constexpr int kTensorArenaSize = 2000;
 uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
-// The name of this function is important for Arduino compatibility.
-void setup() {
+// Load the TensorFlow Lite Model into Static Memory
+void load_model() {
   tflite::InitializeTarget();
 
   // Set up logging. Google style is to avoid globals or statics because of
@@ -83,8 +83,8 @@ void setup() {
   inference_count = 0;
 }
 
-// The name of this function is important for Arduino compatibility.
-void loop() {
+// Run an inference with the loaded TensorFlow Lite Model
+void run_inference() {
   // Calculate an x value to feed into the model. We compare the current
   // inference_count to the number of inferences per cycle to determine
   // our position within the range of possible x values the model was

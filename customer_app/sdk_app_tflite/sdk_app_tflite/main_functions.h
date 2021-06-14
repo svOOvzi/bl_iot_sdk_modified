@@ -22,14 +22,11 @@ limitations under the License.
 extern "C" {
 #endif
 
-// Initializes all data needed for the example. The name is important, and needs
-// to be setup() for Arduino compatibility.
-void setup();
+// Load the TensorFlow Lite Model into Static Memory
+void load_model();
 
-// Runs one iteration of data gathering and inference. This should be called
-// repeatedly from the application code. The name needs to be loop() for Arduino
-// compatibility.
-void loop();
+// Run an inference with the loaded TensorFlow Lite Model
+void run_inference();
 
 #ifdef __cplusplus
 }

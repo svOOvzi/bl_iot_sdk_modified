@@ -9,12 +9,12 @@
 
 /// Command to init TensorFlow Model
 static void init(char *buf, int len, int argc, char **argv) {
-    setup();
+    load_model();
 }
 
 /// Command to infer TensorFlow Model
 static void infer(char *buf, int len, int argc, char **argv) {
-    loop();
+    run_inference();
 }
 
 /// TODO: Handle math overflow.
