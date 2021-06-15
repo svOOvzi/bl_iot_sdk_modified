@@ -83,7 +83,7 @@ static void glow(char *buf, int len, int argc, char **argv) {
 
         //  Sleep 100 milliseconds
         time_delay(                  //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(100)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
+            time_ms_to_ticks32(100)  //  Convert 100 milliseconds to ticks (from NimBLE Porting Layer)
         );
     }
 
