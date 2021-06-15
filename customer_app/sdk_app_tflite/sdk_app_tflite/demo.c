@@ -3,8 +3,9 @@
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
-#include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
-#include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
+#include <bl_gpio.h>         //  For BL602 GPIO Hardware Abstraction Layer
+#include <bl_pwm.h>          //  For BL602 PWM Hardware Abstraction Layer
+#include "nimble_npl.h"      //  For NimBLE Porting Layer (mulitasking functions)
 #include "main_functions.h"  //  For TensorFlow Lite
 #include "constants.h"       //  For Model Constants
 #include "demo.h"
@@ -12,6 +13,10 @@
 /// PineCone Blue LED is connected on BL602 GPIO 11
 /// TODO: Change the LED GPIO Pin Number for your BL602 board
 #define LED_GPIO 11
+
+/// Use PWM Channel 1 to control the LED GPIO.
+/// TODO: Select the PWM Channel that matches the LED GPIO
+#define PWM_CHANNEL 1
 
 /// Command to load the TensorFlow Model (Sine Wave)
 static void init(char *buf, int len, int argc, char **argv) {
@@ -37,16 +42,24 @@ static void infer(char *buf, int len, int argc, char **argv) {
 /// See https://lupyuen.github.io/articles/led#from-gpio-to-pulse-width-modulation-pwm
 static void glow(char *buf, int len, int argc, char **argv) {
     //  Configure the LED GPIO for PWM
-    //  pwm_init 1 11 2000
-    //  int32_t bl_pwm_init(uint8_t id, uint8_t pin, uint32_t freq);
+    int rc = bl_pwm_init(
+        PWM_CHANNEL,  //  PWM Channel (1) 
+        LED_GPIO,     //  GPIO Pin Number (11)
+        2000          //  PWM Frequency (2000 Hz)
+    );
+    assert(rc == 0);
 
     //  Dim the LED by setting the Duty Cycle to 100%
-    //  pwm_duty_set 1 100
-    //  int32_t bl_pwm_set_freq(uint8_t id, uint32_t freq);
+    rc = bl_pwm_set_duty(
+        PWM_CHANNEL,  //  PWM Channel (1) 
+        100           //  Duty Cycle (100%)
+    );
+    assert(rc == 0);
 
     //  Start the PWM, which will blink the LED very rapidly
     //  pwm_start 1
-    //  int32_t bl_pwm_start(uint8_t id);
+    rc = bl_pwm_start(PWM_CHANNEL);
+    assert(rc == 0);
 
     //  Based on input values from 0 to 2 * Pi (stepping by 0.1)...
     for (float input = 0; input < kXrange; input += 0.1) {  //  kXrange is 2 * Pi: 6.283
@@ -57,18 +70,27 @@ static void glow(char *buf, int len, int argc, char **argv) {
         //  We sqaure the output value to produce range 0 to 1.
         float output_squared = output * output;
 
-        //  Set the brightness (Duty Cycle) of the PWM LED to the output value squared
-        //  pwm_duty_set 1 100
-        //  int32_t bl_pwm_set_duty(uint8_t id, float duty);
+        //  Set the brightness (Duty Cycle) of the PWM LED to the 
+        //  output value squared, scaled to 100%
+        rc = bl_pwm_set_duty(
+            PWM_CHANNEL,                //  PWM Channel (1) 
+            (1 - output_squared) * 100  //  Duty Cycle (0% to 100%)
+        );
+        assert(rc == 0);
 
-        //  We flip the brightness because...
+        //  We flip the brightness (output squared) because...
         //  Duty Cycle = 0% means 100% brightness
         //  Duty Cycle = 100% means 0% brightness
+
+        //  Sleep 100 milliseconds
+        time_delay(                  //  Sleep by number of ticks (from NimBLE Porting Layer)
+            time_ms_to_ticks32(100)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
+        );
     }
 
     //  Stop the PWM, which will stop blinking the LED
-    //  pwm_stop 1
-    //  int32_t bl_pwm_stop( uint8_t id);
+    rc = bl_pwm_stop(PWM_CHANNEL);
+    assert(rc == 0);
 }
 
 /// TODO: Handle math overflow.
