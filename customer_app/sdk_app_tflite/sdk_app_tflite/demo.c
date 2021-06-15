@@ -45,7 +45,7 @@ static void glow(char *buf, int len, int argc, char **argv) {
     int rc = bl_pwm_init(
         PWM_CHANNEL,  //  PWM Channel (1) 
         LED_GPIO,     //  GPIO Pin Number (11)
-        2000          //  PWM Frequency (2000 Hz)
+        2000          //  PWM Frequency (2,000 Hz)
     );
     assert(rc == 0);
 
@@ -56,8 +56,7 @@ static void glow(char *buf, int len, int argc, char **argv) {
     );
     assert(rc == 0);
 
-    //  Start the PWM, which will blink the LED very rapidly
-    //  pwm_start 1
+    //  Start the PWM, which will blink the LED very rapidly (2,000 times a second)
     rc = bl_pwm_start(PWM_CHANNEL);
     assert(rc == 0);
 
@@ -67,7 +66,7 @@ static void glow(char *buf, int len, int argc, char **argv) {
         float output = run_inference(input);
 
         //  Output value has range -1 to 1.
-        //  We sqaure the output value to produce range 0 to 1.
+        //  We square the output value to produce range 0 to 1.
         float output_squared = output * output;
 
         //  Set the brightness (Duty Cycle) of the PWM LED to the 
@@ -78,7 +77,7 @@ static void glow(char *buf, int len, int argc, char **argv) {
         );
         assert(rc == 0);
 
-        //  We flip the brightness (output squared) because...
+        //  We flip the brightness (1 - output squared) because...
         //  Duty Cycle = 0% means 100% brightness
         //  Duty Cycle = 100% means 0% brightness
 
