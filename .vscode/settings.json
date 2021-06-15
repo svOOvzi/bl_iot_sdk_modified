@@ -21,6 +21,7 @@
         "*.def": "c",
         "*.tcc": "c",
         "istream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "constants.h": "c"
     }
 }
