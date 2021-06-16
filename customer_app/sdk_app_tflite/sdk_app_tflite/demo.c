@@ -60,31 +60,34 @@ static void glow(char *buf, int len, int argc, char **argv) {
     rc = bl_pwm_start(PWM_CHANNEL);
     assert(rc == 0);
 
-    //  Based on input values from 0 to 2 * Pi (stepping by 0.1)...
-    for (float input = 0; input < kXrange; input += 0.1) {  //  kXrange is 2 * Pi: 6.283
-        //  Infer the output value with the TensorFlow Model (Sine Wave)
-        float output = run_inference(input);
+    //  Repeat 4 times...
+    for (int i = 0; i < 4; i++) {
+        //  With input values from 0 to 2 * Pi (stepping by 0.05)...
+        for (float input = 0; input < kXrange; input += 0.05) {  //  kXrange is 2 * Pi: 6.283
+            //  Infer the output value with the TensorFlow Model (Sine Wave)
+            float output = run_inference(input);
 
-        //  Output value has range -1 to 1.
-        //  We square the output value to produce range 0 to 1.
-        float output_squared = output * output;
+            //  Output value has range -1 to 1.
+            //  We square the output value to produce range 0 to 1.
+            float output_squared = output * output;
 
-        //  Set the brightness (Duty Cycle) of the PWM LED to the 
-        //  output value squared, scaled to 100%
-        rc = bl_pwm_set_duty(
-            PWM_CHANNEL,                //  PWM Channel (1) 
-            (1 - output_squared) * 100  //  Duty Cycle (0% to 100%)
-        );
-        assert(rc == 0);
+            //  Set the brightness (Duty Cycle) of the PWM LED to the 
+            //  output value squared, scaled to 100%
+            rc = bl_pwm_set_duty(
+                PWM_CHANNEL,                //  PWM Channel (1) 
+                (1 - output_squared) * 100  //  Duty Cycle (0% to 100%)
+            );
+            assert(rc == 0);
 
-        //  We flip the brightness (1 - output squared) because...
-        //  Duty Cycle = 0% means 100% brightness
-        //  Duty Cycle = 100% means 0% brightness
+            //  We flip the brightness (1 - output squared) because...
+            //  Duty Cycle = 0% means 100% brightness
+            //  Duty Cycle = 100% means 0% brightness
 
-        //  Sleep 100 milliseconds
-        time_delay(                  //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(100)  //  Convert 100 milliseconds to ticks (from NimBLE Porting Layer)
-        );
+            //  Sleep 100 milliseconds
+            time_delay(                  //  Sleep by number of ticks (from NimBLE Porting Layer)
+                time_ms_to_ticks32(100)  //  Convert 100 milliseconds to ticks (from NimBLE Porting Layer)
+            );
+        }
     }
 
     //  Stop the PWM, which will stop blinking the LED
