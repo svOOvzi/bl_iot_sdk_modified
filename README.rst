@@ -1,5 +1,9 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Machine Learning on RISC-V BL602 with TensorFlow Lite" <https://lupyuen.github.io/articles/tflite>`_
+
+- `"Simulate RISC-V BL602 with WebAssembly, uLisp and Blockly" <https://lupyuen.github.io/articles/wasm>`_
+
 - `"uLisp and Blockly on PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/lisp>`_
 
 - `"Run Rust RISC-V Firmware with BL602 IoT SDK" <https://lupyuen.github.io/articles/rust>`_
@@ -67,7 +71,7 @@ Changes
 
 - "master" branch contains uLisp Library and uLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (ulisp-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_ulisp/
 
-- "tflite" branch contains TensorFlow Lite Library and Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/tflite/components/3rdparty/ (tflite-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_tflite/
+- "master" branch contains TensorFlow Lite Library and Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (tflite-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_tflite/
 
 BL602 SDK (Pine64 version)
 ==========================
