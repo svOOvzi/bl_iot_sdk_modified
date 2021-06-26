@@ -32,6 +32,26 @@
 					"line": 138,
 					"column": 17,
 					"label": ""
+				},
+				{
+					"line": 165,
+					"column": 21,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/reg_ipc_app.h",
+			"bookmarks": [
+				{
+					"line": 65,
+					"column": 34,
+					"label": ""
+				},
+				{
+					"line": 67,
+					"column": 10,
+					"label": ""
 				}
 			]
 		}
