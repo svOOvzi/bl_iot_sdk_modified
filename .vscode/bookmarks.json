@@ -1,0 +1,39 @@
+{
+	"files": [
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/bl_cmds.c",
+			"bookmarks": [
+				{
+					"line": 65,
+					"column": 19,
+					"label": ""
+				},
+				{
+					"line": 132,
+					"column": 21,
+					"label": ""
+				},
+				{
+					"line": 295,
+					"column": 13,
+					"label": ""
+				},
+				{
+					"line": 302,
+					"column": 30,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/ipc_host.c",
+			"bookmarks": [
+				{
+					"line": 138,
+					"column": 17,
+					"label": ""
+				}
+			]
+		}
+	]
+}
