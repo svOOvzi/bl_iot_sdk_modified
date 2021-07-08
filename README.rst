@@ -1,6 +1,10 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
+
 - `"Machine Learning on RISC-V BL602 with TensorFlow Lite" <https://lupyuen.github.io/articles/tflite>`_
+
+- `"BL602 Bootloader" <https://lupyuen.github.io/articles/boot>`_
 
 - `"Simulate RISC-V BL602 with WebAssembly, uLisp and Blockly" <https://lupyuen.github.io/articles/wasm>`_
 
