@@ -27,7 +27,7 @@
 //  We shall read 1,000 ADC samples, which will take 0.1 seconds
 #define ADC_SAMPLES 1000
 
-/// Init the ADC Channel
+/// Init the ADC Channel and start reading the ADC Samples
 void init_adc(char *buf, int len, int argc, char **argv) {
     //  Only these GPIOs are supported: 4, 5, 6, 9, 10, 11, 12, 13, 14, 15
     assert(ADC_GPIO==4 || ADC_GPIO==5 || ADC_GPIO==6 || ADC_GPIO==9 || ADC_GPIO==10 || ADC_GPIO==11 || ADC_GPIO==12 || ADC_GPIO==13 || ADC_GPIO==14 || ADC_GPIO==15);
@@ -65,7 +65,7 @@ void init_adc(char *buf, int len, int argc, char **argv) {
     bl_adc_start();
 }
 
-/// Read the ADC Channel and compute the average value of the ADC Samples
+/// Compute the average value of the ADC Samples that have just been read
 void read_adc(char *buf, int len, int argc, char **argv) {
     //  Static array that will contain 1,000 ADC Samples
     static uint32_t adc_data[ADC_SAMPLES];
