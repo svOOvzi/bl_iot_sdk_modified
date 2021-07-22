@@ -93,7 +93,14 @@ void read_adc(char *buf, int len, int argc, char **argv) {
         sizeof(adc_data)                 //  Size
     );  
 
-    //  TODO: Compute the average value of the ADC Samples
+    //  Compute the average value of the ADC Samples
+    uint32_t sum = 0;
+    for (int i = 0; i < ADC_SAMPLES; i++) {
+        //  Scale up the ADC Sample to the range 0 to 3199
+        uint32_t val = ((raw_data[i] & 0xffff) * 3200) >> 16;
+        sum += val;
+    }
+    printf("Average: %lu\r\n", (sum / ADC_SAMPLES));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
