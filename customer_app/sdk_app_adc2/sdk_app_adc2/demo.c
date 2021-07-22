@@ -4,11 +4,13 @@
 //    ...
 //    adccfg.gain1=ADC_PGA_GAIN_1;  // Previously: ADC_PGA_GAIN_NONE
 //    adccfg.gain2=ADC_PGA_GAIN_1;  // Previously: ADC_PGA_GAIN_NONE
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
-#include <hal_adc.h>     //  For BL602 ADC Hardware Abstraction Layer
+#include <bl_adc.h>     //  For BL602 ADC Hardware Abstraction Layer
+#include <bl_dma.h>     //  For BL602 DMA Hardware Abstraction Layer
 #include "demo.h"
 
 /// GPIO Pin Number that will be configured as ADC Input.
@@ -18,33 +20,80 @@
 /// TODO: Change the GPIO Pin Number for your BL602 board
 #define ADC_GPIO 11
 
+//  We set the ADC Frequency to 10 kHz according to https://wiki.analog.com/university/courses/electronics/electronics-lab-led-sensor?rev=1551786227
+//  This is 10,000 samples per second.
+#define ADC_FREQUENCY 10000  //  Hz
+
+//  We shall read 1,000 ADC samples, which will take 0.1 seconds
+#define ADC_SAMPLES 1000
+
 /// Init the ADC Channel
 void init_adc(char *buf, int len, int argc, char **argv) {
     //  Only these GPIOs are supported: 4, 5, 6, 9, 10, 11, 12, 13, 14, 15
     assert(ADC_GPIO==4 || ADC_GPIO==5 || ADC_GPIO==6 || ADC_GPIO==9 || ADC_GPIO==10 || ADC_GPIO==11 || ADC_GPIO==12 || ADC_GPIO==13 || ADC_GPIO==14 || ADC_GPIO==15);
 
-    //  We set the ADC Frequency to 10 kHz according to https://wiki.analog.com/university/courses/electronics/electronics-lab-led-sensor?rev=1551786227
-    //  This is 10,000 samples per second.
-    //  We shall read 1000 samples, which will take 0.1 seconds.
-    int rc = hal_adc_init(
-        1,        //  Single-Channel Conversion Mode
-        10000,    //  Frequency
-        1000,     //  Number of Samples
-        ADC_GPIO  //  GPIO Pin Number
-    );
+    //  For Single-Channel Conversion Mode, frequency must be between 500 and 16,000 Hz
+    assert(ADC_FREQUENCY >= 500 && ADC_FREQUENCY <= 16000);
+
+    //  Init the ADC Frequency for Single-Channel Conversion Mode
+    int rc = bl_adc_freq_init(1, ADC_FREQUENCY);
     assert(rc == 0);
+
+    //  Init the ADC GPIO for Single-Channel Conversion Mode
+    rc = bl_adc_init(1, ADC_GPIO);
+    assert(rc == 0);
+
+    //  Init DMA for the ADC Channel for Single-Channel Conversion Mode
+    rc = bl_adc_dma_init(1, ADC_SAMPLES);
+    assert(rc == 0);
+
+    //  Configure the GPIO Pin as ADC Input, no pullup, no pulldown
+    rc = bl_adc_gpio_init(ADC_GPIO);
+    assert(rc == 0);
+
+    //  Get the ADC Channel Number for the GPIO Pin
+    int channel = bl_adc_get_channel_by_gpio(ADC_GPIO);
+
+    //  Get the DMA Context for the ADC Channel
+    adc_ctx_t *ctx = bl_dma_find_ctx_by_channel(ADC_DMA_CHANNEL);
+    assert(ctx != NULL);
+
+    //  Indicate that the GPIO has been configured for ADC
+    ctx->chan_init_table |= (1 << channel);
+
+    //  Start reading the ADC via DMA
+    bl_adc_start();
 }
 
-/// Read the ADC Channel
+/// Read the ADC Channel and compute the average value of the ADC Samples
 void read_adc(char *buf, int len, int argc, char **argv) {
-    //  Read the ADC Channel via DMA. Returns -1 in case of error.
-    int val = hal_adc_get_data(
-        ADC_GPIO,  //  GPIO Pin Number
-        1          //  Raw Flag
-    );
-    //  Raw Flag = 0: Returns raw value between 0 to 65535
-    //  Raw Flag = 1: Returns scaled value between 0 to 3199
-    printf("value=%d\r\n", val);
+    //  Static array that will contain 1,000 ADC Samples
+    static uint32_t adc_data[ADC_SAMPLES];
+
+    //  Get the ADC Channel Number for the GPIO Pin
+    int channel = bl_adc_get_channel_by_gpio(ADC_GPIO);
+    
+    //  Get the DMA Context for the ADC Channel
+    adc_ctx_t *ctx = bl_dma_find_ctx_by_channel(ADC_DMA_CHANNEL);
+    assert(ctx != NULL);
+
+    //  Verify that the GPIO has been configured for ADC
+    assert(((1 << channel) & ctx->chan_init_table) != 0);
+
+    //  If ADC Sampling is not finished, try again later    
+    if (ctx->channel_data == NULL) {
+        printf("ADC Sampling not finished\r\n");
+        return;
+    }
+
+    //  Copy the read ADC Samples to the static array
+    memcpy(
+        (uint8_t*) adc_data,             //  Destination
+        (uint8_t*) (ctx->channel_data),  //  Source
+        sizeof(adc_data)                 //  Size
+    );  
+
+    //  TODO: Compute the average value of the ADC Samples
 }
 
 ///////////////////////////////////////////////////////////////////////////////
