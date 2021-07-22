@@ -163,42 +163,33 @@ void dump_stack(void)
 [In darkness]
 
 # read_adc
-Average: 1415
-value=1415
+Average: 1416
 
 # read_adc
-Average: 1415
-value=1415
+Average: 1416
 
 # read_adc
-Average: 1414
-value=1415
+Average: 1416
 
 [In sunlight]
 
 # read_adc
-Average: 1410
-value=1411
+Average: 1408
 
 # read_adc
-Average: 1411
-value=1411
+Average: 1408
 
 # read_adc
-Average: 1410
-value=1410
+Average: 1408
 
 [In darkness]
 
 # read_adc
-Average: 1415
-value=1416
+Average: 1417
 
 # read_adc
-Average: 1415
-value=1416
+Average: 1416
 
 # read_adc
-Average: 1415
-value=1416
+Average: 1416
 */
