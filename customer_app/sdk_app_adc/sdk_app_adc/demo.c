@@ -27,9 +27,9 @@ void init_adc(char *buf, int len, int argc, char **argv) {
     //  This is 10,000 samples per second.
     //  We shall read 1000 samples, which will take 0.1 seconds.
     int rc = hal_adc_init(
-        1,  //  Single-Channel Conversion Mode
-        10000,  //  Frequency
-        1000,  //  Number of Samples
+        1,        //  Single-Channel Conversion Mode
+        10000,    //  Frequency
+        1000,     //  Number of Samples
         ADC_GPIO  //  GPIO Pin Number
     );
     assert(rc == 0);
@@ -40,7 +40,7 @@ void read_adc(char *buf, int len, int argc, char **argv) {
     //  Read the ADC Channel via DMA. Returns -1 in case of error.
     int val = hal_adc_get_data(
         ADC_GPIO,  //  GPIO Pin Number
-        1  //  Raw Flag
+        1          //  Raw Flag
     );
     //  Raw Flag = 0: Returns raw value between 0 to 65535
     //  Raw Flag = 1: Returns scaled value between 0 to 3199
@@ -102,4 +102,47 @@ void dump_stack(void)
 }
 
 /* Output Log
+# init_adc
+
+[In darkness]
+
+# read_adc
+Average: 1415
+value=1415
+
+# read_adc
+Average: 1415
+value=1415
+
+# read_adc
+Average: 1414
+value=1415
+
+[In sunlight]
+
+# read_adc
+Average: 1410
+value=1411
+
+# read_adc
+Average: 1411
+value=1411
+
+# read_adc
+Average: 1410
+value=1410
+
+[In darkness]
+
+# read_adc
+Average: 1415
+value=1416
+
+# read_adc
+Average: 1415
+value=1416
+
+# read_adc
+Average: 1415
+value=1416
 */
