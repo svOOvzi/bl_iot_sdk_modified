@@ -19,10 +19,11 @@ void init_adc(char *buf, int len, int argc, char **argv) {
 
     //  We set the ADC Frequency to 10 kHz according to https://wiki.analog.com/university/courses/electronics/electronics-lab-led-sensor?rev=1551786227
     //  This is 10,000 samples per second.
+    //  We shall read 1000 samples, which will take 0.1 seconds.
     int rc = hal_adc_init(
         1,  //  Single-Channel Conversion Mode
         10000,  //  Frequency
-        32,  //  Number of Samples
+        1000,  //  Number of Samples
         ADC_GPIO  //  GPIO Pin Number
     );
     assert(rc == 0);
