@@ -67,7 +67,7 @@ void init_adc(char *buf, int len, int argc, char **argv) {
 
 /// Compute the average value of the ADC Samples that have just been read
 void read_adc(char *buf, int len, int argc, char **argv) {
-    //  Static array that will contain 1,000 ADC Samples
+    //  Static array that will store 1,000 ADC Samples
     static uint32_t adc_data[ADC_SAMPLES];
 
     //  Get the ADC Channel Number for the GPIO Pin
@@ -97,8 +97,8 @@ void read_adc(char *buf, int len, int argc, char **argv) {
     uint32_t sum = 0;
     for (int i = 0; i < ADC_SAMPLES; i++) {
         //  Scale up the ADC Sample to the range 0 to 3199
-        uint32_t val = ((raw_data[i] & 0xffff) * 3200) >> 16;
-        sum += val;
+        uint32_t scaled = ((adc_data[i] & 0xffff) * 3200) >> 16;
+        sum += scaled;
     }
     printf("Average: %lu\r\n", (sum / ADC_SAMPLES));
 }
