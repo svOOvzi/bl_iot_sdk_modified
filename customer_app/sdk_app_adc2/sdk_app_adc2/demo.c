@@ -1,9 +1,5 @@
 //  Measure the ambient brightness with an LED configured as ADC Input.
-//  Note: ADC Gain must be set to ADC_PGA_GAIN_1 in components/hal_drv/bl602_hal/bl_adc.c:
-//  int bl_adc_init(int mode, int gpio_num) {
-//    ...
-//    adccfg.gain1=ADC_PGA_GAIN_1;  // Previously: ADC_PGA_GAIN_NONE
-//    adccfg.gain2=ADC_PGA_GAIN_1;  // Previously: ADC_PGA_GAIN_NONE
+//  This version calls the BL602 ADC Low Level HAL.
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
