@@ -77,7 +77,7 @@ Changes
 
 - "master" branch contains TensorFlow Lite Library and Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (tflite-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_tflite/
 
-- "adc" branch contains ADC Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_adc
+- "adc" branch contains ADC Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_adc , https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_adc2 , https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_rust_adc
 
 BL602 SDK (Pine64 version)
 ==========================
