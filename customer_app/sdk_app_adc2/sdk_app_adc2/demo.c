@@ -9,6 +9,7 @@
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
+#include <bl602_adc.h>  //  For BL602 ADC Standard Driver
 #include <bl_adc.h>     //  For BL602 ADC Hardware Abstraction Layer
 #include <bl_dma.h>     //  For BL602 DMA Hardware Abstraction Layer
 #include "demo.h"
@@ -27,6 +28,8 @@
 //  We shall read 1,000 ADC samples, which will take 0.1 seconds
 #define ADC_SAMPLES 1000
 
+static int set_adc_gain(void);
+
 /// Init the ADC Channel and start reading the ADC Samples
 void init_adc(char *buf, int len, int argc, char **argv) {
     //  Only these GPIOs are supported: 4, 5, 6, 9, 10, 11, 12, 13, 14, 15
@@ -41,6 +44,10 @@ void init_adc(char *buf, int len, int argc, char **argv) {
 
     //  Init the ADC GPIO for Single-Channel Conversion Mode
     rc = bl_adc_init(1, ADC_GPIO);
+    assert(rc == 0);
+
+    //  Enable ADC Gain to increase the ADC sensitivity
+    rc = set_adc_gain();
     assert(rc == 0);
 
     //  Init DMA for the ADC Channel for Single-Channel Conversion Mode
@@ -101,6 +108,21 @@ void read_adc(char *buf, int len, int argc, char **argv) {
         sum += scaled;
     }
     printf("Average: %lu\r\n", (sum / ADC_SAMPLES));
+}
+
+///  Enable ADC Gain to increase the ADC sensitivity.
+///  Based on ADC_Init: https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Src/bl602_adc.c#L152-L230
+static int set_adc_gain(void) {
+    //  Read the ADC Configuration Hardware Register
+    uint32_t reg = BL_RD_REG(AON_BASE, AON_GPADC_REG_CONFIG2);
+
+    //  Set the ADC Gain
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA1_GAIN, ADC_PGA_GAIN_1);
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA2_GAIN, ADC_PGA_GAIN_1);
+
+    //  Update the ADC Configuration Hardware Register
+    BL_WR_REG(AON_BASE, AON_GPADC_REG_CONFIG2, reg);
+    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
