@@ -28,6 +28,11 @@
 //  We shall read 1,000 ADC samples, which will take 0.1 seconds
 #define ADC_SAMPLES 1000
 
+//  Set ADC Gain to Level 1 to increase the ADC sensitivity.
+//  To disable ADC Gain, set ADC_GAIN1 and ADC_GAIN2 to ADC_PGA_GAIN_NONE.
+#define ADC_GAIN1 ADC_PGA_GAIN_1
+#define ADC_GAIN2 ADC_PGA_GAIN_1
+
 static int set_adc_gain(void);
 
 /// Init the ADC Channel and start reading the ADC Samples
@@ -117,8 +122,23 @@ static int set_adc_gain(void) {
     uint32_t reg = BL_RD_REG(AON_BASE, AON_GPADC_REG_CONFIG2);
 
     //  Set the ADC Gain
-    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA1_GAIN, ADC_PGA_GAIN_1);
-    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA2_GAIN, ADC_PGA_GAIN_1);
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA1_GAIN, ADC_GAIN1);
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA2_GAIN, ADC_GAIN2);
+
+    //  Set the ADC Chop Mode
+    if (ADC_GAIN1 != ADC_PGA_GAIN_NONE || ADC_GAIN2 != ADC_PGA_GAIN_NONE) {
+        reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_CHOP_MODE, 2);
+    } else {
+        reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_CHOP_MODE, 1);        
+    }
+
+    //  Enable the ADC PGA
+    reg = BL_CLR_REG_BIT(reg, AON_GPADC_PGA_VCMI_EN);
+    if (ADC_GAIN1 != ADC_PGA_GAIN_NONE || ADC_GAIN2 != ADC_PGA_GAIN_NONE) {
+        reg = BL_SET_REG_BIT(reg, AON_GPADC_PGA_EN);
+    } else {
+        reg = BL_CLR_REG_BIT(reg, AON_GPADC_PGA_EN);
+    }
 
     //  Update the ADC Configuration Hardware Register
     BL_WR_REG(AON_BASE, AON_GPADC_REG_CONFIG2, reg);
