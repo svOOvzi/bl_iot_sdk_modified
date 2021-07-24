@@ -3,51 +3,15 @@
 
 //  Import External Libraries
 use core::{            //  Rust Core Library
-    panic::PanicInfo,  //  For `PanicInfo` type used by `panic` function
+    fmt::Write,        //  For String Formatting    
+    panic::PanicInfo,  //  For Panic Function
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
     adc,               //  For ADC HAL
     dma,               //  For DMA HAL
     puts,              //  For Console Output
+    String,            //  For Strings (limited to 64 chars)
 };
-
-/*
-/// This function will be called by the BL602 command-line interface
-#[no_mangle]              //  Don't mangle the function name
-extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by BL602 firmware
-    _result: *mut u8,        //  Result to be returned to command-line interface (char *)
-    _len:  i32,              //  Length of command line (int)
-    _argc: i32,              //  Number of command line args (int)
-    _argv: *const *const u8  //  Array of command line args (char **)
-) {
-    //  Show a message on the serial console
-    puts("Hello from Rust!");
-
-    //  PineCone Blue LED is connected on BL602 GPIO 11
-    const LED_GPIO: u8 = 11;  //  `u8` is 8-bit unsigned integer
-
-    //  Configure the LED GPIO for output (instead of input)
-    gpio::enable_output(LED_GPIO, 0, 0)      //  No pullup, no pulldown
-        .expect("GPIO enable output failed");  //  Halt on error
-
-    //  Blink the LED 5 times
-    for i in 0..10 {  //  Iterates 10 times from 0 to 9 (`..` excludes 10)
-
-        //  Toggle the LED GPIO between 0 (on) and 1 (off)
-        gpio::output_set(  //  Set the GPIO output (from BL602 GPIO HAL)
-            LED_GPIO,        //  GPIO pin number
-            i % 2            //  0 for low, 1 for high
-        ).expect("GPIO output failed");  //  Halt on error
-
-        //  Sleep 1 second
-        time_delay(                   //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(1000)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
-        );
-    }
-
-    //  Return to the BL602 command-line interface
-}
-*/
 
 /// GPIO Pin Number that will be configured as ADC Input.
 /// PineCone Blue LED is connected on BL602 GPIO 11.
@@ -108,14 +72,18 @@ extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by B
         .expect("ADC GPIO failed");
 
     //  Get the ADC Channel Number for the GPIO Pin
-    let channel = adc::get_channel_by_gpio(ADC_GPIO);
+    let channel = 1;
+    ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
 
     //  Get the DMA Context for the ADC Channel
     let ctx = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
 
+    ////TODO: Cast ctx to ctx2
+    let mut ctx2 = adc::adc_ctx::default();
+
     //  Indicate that the GPIO has been configured for ADC
-    //  TODO: ctx.chan_init_table |= 1 << channel;
+    ctx2.chan_init_table |= 1 << channel;
 
     //  Start reading the ADC via DMA
     adc::start()
@@ -132,25 +100,28 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {    
     //  Array that will store last 1,000 ADC Samples
-    let adc_data: [u32; ADC_SAMPLES] = [0; ADC_SAMPLES];
+    let adc_data: [u32; ADC_SAMPLES]
+        = [0; ADC_SAMPLES];  //  Init array to zeroes
 
     //  Get the ADC Channel Number for the GPIO Pin
-    let channel = adc::get_channel_by_gpio(ADC_GPIO);
+    let channel = 1; 
+    ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
     
     //  Get the DMA Context for the ADC Channel
     let ctx = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
 
+    ////TODO: Cast ctx to ctx2
+    let ctx2 = adc::adc_ctx::default();
+
     //  Verify that the GPIO has been configured for ADC
-    //  TODO: assert!(((1 << channel) & ctx.chan_init_table) != 0);
+    assert!(((1 << channel) & ctx2.chan_init_table) != 0);
 
     //  If ADC Sampling is not finished, try again later    
-    /* TODO
-    if ctx.channel_data.is_nullptr() {
+    if ctx2.channel_data.is_null() {
         puts("ADC Sampling not finished");
         return;
     }
-    */
 
     /* TODO
     //  Copy the read ADC Samples to the static array
@@ -168,7 +139,13 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
         let scaled = ((adc_data[i] & 0xffff) * 3200) >> 16;
         sum += scaled;
     }
-    //  TODO: printf("[Rust] Average: %lu\r\n", (sum / ADC_SAMPLES));
+    let avg = sum / ADC_SAMPLES as u32;
+
+    //  Format the output and display it
+    let mut buf = String::new();
+    write!(buf, "[Rust] Average: {}", avg)
+        .expect("buf overflow");
+    puts(&buf);
 }
 
 /// This function is called on panic, like an assertion failure
