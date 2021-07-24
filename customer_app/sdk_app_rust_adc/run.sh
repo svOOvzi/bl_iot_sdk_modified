@@ -74,8 +74,8 @@ set +x  #  Disable echo
 echo ; echo "----- Build BL602 Firmware"
 set -x  #  Enable echo
 
-#  Build the firmware with the Stub Library
-make
+#  Build the firmware with the Stub Library, ignoring references to the Rust Library
+make || echo "----- Ignore undefined references to Rust Library"
 
 set +x  #  Disable echo
 echo ; echo "----- Build Rust Library" 

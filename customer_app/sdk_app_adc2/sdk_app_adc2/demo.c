@@ -31,7 +31,7 @@
 #define ADC_GAIN2 ADC_PGA_GAIN_1
 
 /// Enable ADC Gain to increase the ADC sensitivity
-static int set_adc_gain(void);
+static int set_adc_gain(uint32_t gain1, uint32_t gain2);
 
 /// Command to init the ADC Channel and start reading the ADC Samples.
 /// Based on `hal_adc_init` in <https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_adc.c#L50-L102>
@@ -51,7 +51,7 @@ void init_adc(char *buf, int len, int argc, char **argv) {
     assert(rc == 0);
 
     //  Enable ADC Gain to increase the ADC sensitivity
-    rc = set_adc_gain();
+    rc = set_adc_gain(ADC_GAIN1, ADC_GAIN2);
     assert(rc == 0);
 
     //  Init DMA for the ADC Channel for Single-Channel Conversion Mode
@@ -77,7 +77,7 @@ void init_adc(char *buf, int len, int argc, char **argv) {
 }
 
 /// Command to compute the average value of the ADC Samples that have just been read.
-/// Based on `hal_adc_get_data` in <https://github.com/lupyuen/bl_iot_sdk/blob/adc/components/hal_drv/bl602_hal/hal_adc.c#L142-L179>
+/// Based on `hal_adc_get_data` in <https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_adc.c#L142-L179>
 void read_adc(char *buf, int len, int argc, char **argv) {
     //  Static array that will store 1,000 ADC Samples
     static uint32_t adc_data[ADC_SAMPLES];
@@ -116,17 +116,17 @@ void read_adc(char *buf, int len, int argc, char **argv) {
 }
 
 /// Enable ADC Gain to increase the ADC sensitivity.
-/// Based on ADC_Init: https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Src/bl602_adc.c#L152-L230
-static int set_adc_gain(void) {
+/// Based on ADC_Init in <https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Src/bl602_adc.c#L152-L230>
+static int set_adc_gain(uint32_t gain1, uint32_t gain2) {
     //  Read the ADC Configuration Hardware Register
     uint32_t reg = BL_RD_REG(AON_BASE, AON_GPADC_REG_CONFIG2);
 
     //  Set the ADC Gain
-    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA1_GAIN, ADC_GAIN1);
-    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA2_GAIN, ADC_GAIN2);
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA1_GAIN, gain1);
+    reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_PGA2_GAIN, gain2);
 
     //  Set the ADC Chop Mode
-    if (ADC_GAIN1 != ADC_PGA_GAIN_NONE || ADC_GAIN2 != ADC_PGA_GAIN_NONE) {
+    if (gain1 != ADC_PGA_GAIN_NONE || gain2 != ADC_PGA_GAIN_NONE) {
         reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_CHOP_MODE, 2);
     } else {
         reg = BL_SET_REG_BITS_VAL(reg, AON_GPADC_CHOP_MODE, 1);        
@@ -134,7 +134,7 @@ static int set_adc_gain(void) {
 
     //  Enable the ADC PGA
     reg = BL_CLR_REG_BIT(reg, AON_GPADC_PGA_VCMI_EN);
-    if (ADC_GAIN1 != ADC_PGA_GAIN_NONE || ADC_GAIN2 != ADC_PGA_GAIN_NONE) {
+    if (gain1 != ADC_PGA_GAIN_NONE || gain2 != ADC_PGA_GAIN_NONE) {
         reg = BL_SET_REG_BIT(reg, AON_GPADC_PGA_EN);
     } else {
         reg = BL_CLR_REG_BIT(reg, AON_GPADC_PGA_EN);
