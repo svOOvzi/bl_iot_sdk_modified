@@ -4,12 +4,14 @@
 //  Import External Libraries
 use core::{            //  Rust Core Library
     fmt::Write,        //  For String Formatting    
+    mem::transmute,    //  For Pointer Casting
     panic::PanicInfo,  //  For Panic Function
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
     adc,               //  For ADC HAL
     dma,               //  For DMA HAL
     puts,              //  For Console Output
+    Ptr,               //  For C Pointer
     String,            //  For Strings (limited to 64 chars)
 };
 
@@ -76,14 +78,21 @@ extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by B
     ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
 
     //  Get the DMA Context for the ADC Channel
-    let ctx = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
+    let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
 
-    ////TODO: Cast ctx to ctx2
-    let mut ctx2 = adc::adc_ctx::default();
+    //  Cast the returned C Pointer (void *) to a DMA Context Pointer (adc_ctx *)
+    let ctx = unsafe {         //  Unsafe because we are casting a pointer
+        transmute::<           //  Cast the type...
+            Ptr,               //  From C Pointer (void *)
+            *mut adc::adc_ctx  //  To DMA Context Pointer (adc_ctx *)
+        >(ptr)                 //  For this pointer
+    };
 
     //  Indicate that the GPIO has been configured for ADC
-    ctx2.chan_init_table |= 1 << channel;
+    unsafe {  //  Unsafe because we are dereferencing a pointer
+        (*ctx).chan_init_table |= 1 << channel;
+    }
 
     //  Start reading the ADC via DMA
     adc::start()
@@ -108,17 +117,24 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
     ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
     
     //  Get the DMA Context for the ADC Channel
-    let ctx = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
+    let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
 
-    ////TODO: Cast ctx to ctx2
-    let ctx2 = adc::adc_ctx::default();
+    //  Cast the returned C Pointer (void *) to a DMA Context Pointer (adc_ctx *)
+    let ctx = unsafe {         //  Unsafe because we are casting a pointer
+        transmute::<           //  Cast the type...
+            Ptr,               //  From C Pointer (void *)
+            *mut adc::adc_ctx  //  To DMA Context Pointer (adc_ctx *)
+        >(ptr)                 //  For this pointer
+    };
 
     //  Verify that the GPIO has been configured for ADC
-    assert!(((1 << channel) & ctx2.chan_init_table) != 0);
+    unsafe {  //  Unsafe because we are dereferencing a pointer
+        assert!(((1 << channel) & (*ctx).chan_init_table) != 0);
+    }
 
     //  If ADC Sampling is not finished, try again later    
-    if ctx2.channel_data.is_null() {
+    if unsafe { (*ctx).channel_data.is_null() } {  //  Unsafe because we are dereferencing a pointer
         puts("ADC Sampling not finished");
         return;
     }
