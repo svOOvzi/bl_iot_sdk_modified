@@ -1,5 +1,5 @@
-//  Measure the ambient brightness with an LED configured as ADC Input.
-//  This version calls the BL602 ADC Low Level HAL.
+//! Measure the ambient brightness with an LED configured as ADC Input.
+//! This version calls the BL602 ADC Low Level HAL.
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,21 +17,24 @@
 /// TODO: Change the GPIO Pin Number for your BL602 board
 #define ADC_GPIO 11
 
-//  We set the ADC Frequency to 10 kHz according to https://wiki.analog.com/university/courses/electronics/electronics-lab-led-sensor?rev=1551786227
-//  This is 10,000 samples per second.
+/// We set the ADC Frequency to 10 kHz according to <https://wiki.analog.com/university/courses/electronics/electronics-lab-led-sensor?rev=1551786227>
+/// This is 10,000 samples per second.
 #define ADC_FREQUENCY 10000  //  Hz
 
-//  We shall read 1,000 ADC samples, which will take 0.1 seconds
+/// We shall read 1,000 ADC samples, which will take 0.1 seconds
 #define ADC_SAMPLES 1000
 
-//  Set ADC Gain to Level 1 to increase the ADC sensitivity.
-//  To disable ADC Gain, set ADC_GAIN1 and ADC_GAIN2 to ADC_PGA_GAIN_NONE.
+/// Set ADC Gain to Level 1 to increase the ADC sensitivity.
+/// To disable ADC Gain, set `ADC_GAIN1` and `ADC_GAIN2` to `ADC_PGA_GAIN_NONE`.
+/// See <https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Inc/bl602_adc.h#L133-L144>
 #define ADC_GAIN1 ADC_PGA_GAIN_1
 #define ADC_GAIN2 ADC_PGA_GAIN_1
 
+/// Enable ADC Gain to increase the ADC sensitivity
 static int set_adc_gain(void);
 
-/// Init the ADC Channel and start reading the ADC Samples
+/// Command to init the ADC Channel and start reading the ADC Samples.
+/// Based on `hal_adc_init` in <https://github.com/lupyuen/bl_iot_sdk/blob/master/components/hal_drv/bl602_hal/hal_adc.c#L50-L102>
 void init_adc(char *buf, int len, int argc, char **argv) {
     //  Only these GPIOs are supported: 4, 5, 6, 9, 10, 11, 12, 13, 14, 15
     assert(ADC_GPIO==4 || ADC_GPIO==5 || ADC_GPIO==6 || ADC_GPIO==9 || ADC_GPIO==10 || ADC_GPIO==11 || ADC_GPIO==12 || ADC_GPIO==13 || ADC_GPIO==14 || ADC_GPIO==15);
@@ -73,7 +76,8 @@ void init_adc(char *buf, int len, int argc, char **argv) {
     bl_adc_start();
 }
 
-/// Compute the average value of the ADC Samples that have just been read
+/// Command to compute the average value of the ADC Samples that have just been read.
+/// Based on `hal_adc_get_data` in <https://github.com/lupyuen/bl_iot_sdk/blob/adc/components/hal_drv/bl602_hal/hal_adc.c#L142-L179>
 void read_adc(char *buf, int len, int argc, char **argv) {
     //  Static array that will store 1,000 ADC Samples
     static uint32_t adc_data[ADC_SAMPLES];
@@ -111,8 +115,8 @@ void read_adc(char *buf, int len, int argc, char **argv) {
     printf("Average: %lu\r\n", (sum / ADC_SAMPLES));
 }
 
-///  Enable ADC Gain to increase the ADC sensitivity.
-///  Based on ADC_Init: https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Src/bl602_adc.c#L152-L230
+/// Enable ADC Gain to increase the ADC sensitivity.
+/// Based on ADC_Init: https://github.com/lupyuen/bl_iot_sdk/blob/master/components/bl602/bl602_std/bl602_std/StdDriver/Src/bl602_adc.c#L152-L230
 static int set_adc_gain(void) {
     //  Read the ADC Configuration Hardware Register
     uint32_t reg = BL_RD_REG(AON_BASE, AON_GPADC_REG_CONFIG2);
