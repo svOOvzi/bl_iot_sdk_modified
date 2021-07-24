@@ -49,7 +49,7 @@ dependencies = [
 
 [[package]]
 name = "bl602-sdk"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "bl602-macros",
  "cty",
