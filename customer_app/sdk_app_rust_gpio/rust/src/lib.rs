@@ -1,14 +1,14 @@
-//!  Main Rust Application for BL602 Firmware
+//!  Blink the LED connected to a GPIO Pin
 #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
 
-//  Import External Libraries
+//  Import Libraries
 use core::{            //  Rust Core Library
-    panic::PanicInfo,  //  For `PanicInfo` type used by `panic` function
+    panic::PanicInfo,  //  Panic Function
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
-    gpio,              //  For GPIO HAL
-    puts,
-    time_delay,
+    gpio,              //  GPIO HAL
+    puts,              //  Console Output
+    time_delay,        //  NimBLE Time Functions
     time_ms_to_ticks32,
 };
 
@@ -16,7 +16,7 @@ use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
 #[no_mangle]              //  Don't mangle the function name
 extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by BL602 firmware
     _result: *mut u8,        //  Result to be returned to command-line interface (char *)
-    _len:  i32,              //  Length of command line (int)
+    _len:  i32,              //  Size of result buffer (int)
     _argc: i32,              //  Number of command line args (int)
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {

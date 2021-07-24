@@ -1,18 +1,18 @@
 //! Measure the ambient brightness with an LED configured as ADC Input.
 #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
 
-//  Import External Libraries
+//  Import Libraries
 use core::{            //  Rust Core Library
-    fmt::Write,        //  For String Formatting    
-    mem::transmute,    //  For Pointer Casting
-    panic::PanicInfo,  //  For Panic Function
+    fmt::Write,        //  String Formatting    
+    mem::transmute,    //  Pointer Casting
+    panic::PanicInfo,  //  Panic Function
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
-    adc,               //  For ADC HAL
-    dma,               //  For DMA HAL
-    puts,              //  For Console Output
-    Ptr,               //  For C Pointer
-    String,            //  For Strings (limited to 64 chars)
+    adc,               //  ADC HAL
+    dma,               //  DMA HAL
+    puts,              //  Console Output
+    Ptr,               //  C Pointer
+    String,            //  Strings (limited to 64 chars)
 };
 
 /// GPIO Pin Number that will be configured as ADC Input.
@@ -41,7 +41,7 @@ const ADC_PGA_GAIN_1: u32 = 1;  //  From <https://github.com/lupyuen/bl_iot_sdk/
 #[no_mangle]             //  Don't mangle the function name
 extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by BL602 firmware
     _result: *mut u8,        //  Result to be returned to command-line interface (char *)
-    _len:  i32,              //  Length of command line (int)
+    _len:  i32,              //  Size of result buffer (int)
     _argc: i32,              //  Number of command line args (int)
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {
@@ -104,7 +104,7 @@ extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by B
 #[no_mangle]              //  Don't mangle the function name
 extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by BL602 firmware
     _result: *mut u8,        //  Result to be returned to command-line interface (char *)
-    _len:  i32,              //  Length of command line (int)
+    _len:  i32,              //  Size of result buffer (int)
     _argc: i32,              //  Number of command line args (int)
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {    
