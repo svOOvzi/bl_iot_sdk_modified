@@ -109,7 +109,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {    
     //  Array that will store last 1,000 ADC Samples
-    let adc_data: [u32; ADC_SAMPLES]
+    let mut adc_data: [u32; ADC_SAMPLES]
         = [0; ADC_SAMPLES];  //  Init array to zeroes
 
     //  Get the ADC Channel Number for the GPIO Pin
@@ -139,14 +139,14 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
         return;
     }
 
-    /* TODO
     //  Copy the read ADC Samples to the static array
-    memcpy(
-        (uint8_t*) adc_data,             //  Destination
-        (uint8_t*) (ctx->channel_data),  //  Source
-        sizeof(adc_data)                 //  Size
-    );  
-    */
+    unsafe {                        //  Unsafe because we are copying raw memory
+        core::ptr::copy(            //  Copy the memory...
+            (*ctx).channel_data,    //  From Source (ADC DMA data)
+            adc_data.as_mut_ptr(),  //  To Destination (mutable pointer to adc_data)
+            adc_data.len()          //  Count
+        );    
+    }
 
     //  Compute the average value of the ADC Samples
     let mut sum = 0;
