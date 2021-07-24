@@ -74,8 +74,7 @@ extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by B
         .expect("ADC GPIO failed");
 
     //  Get the ADC Channel Number for the GPIO Pin
-    let channel = 1;
-    ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
+    let channel = unsafe { bl_adc_get_channel_by_gpio(ADC_GPIO) };
 
     //  Get the DMA Context for the ADC Channel
     let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
@@ -113,8 +112,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
         = [0; ADC_SAMPLES];  //  Init array to zeroes
 
     //  Get the ADC Channel Number for the GPIO Pin
-    let channel = 1; 
-    ////TODO: adc::get_channel_by_gpio(ADC_GPIO);
+    let channel = unsafe { bl_adc_get_channel_by_gpio(ADC_GPIO) };
     
     //  Get the DMA Context for the ADC Channel
     let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
@@ -181,6 +179,10 @@ extern "C" {  //  Import C Function
     /// Enable ADC Gain to increase the ADC sensitivity.
     /// Defined in customer_app/sdk_app_rust_adc/sdk_app_rust_adc/demo.c
     fn set_adc_gain(gain1: u32, gain2: u32) -> i32;
+
+    /// Get the ADC Channel Number for the GPIO Pin
+    /// TODO: Fix the return type of the Rust Wrapper
+    fn bl_adc_get_channel_by_gpio(gpio_num: i32) -> i32;
 }
 
 /* Output Log
