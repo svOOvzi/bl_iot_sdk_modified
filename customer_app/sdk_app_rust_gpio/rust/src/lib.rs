@@ -3,7 +3,7 @@
 
 //  Import Libraries
 use core::{            //  Rust Core Library
-    panic::PanicInfo,  //  Panic Function
+    panic::PanicInfo,  //  Panic Handler
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
     gpio,              //  GPIO HAL
