@@ -35,7 +35,7 @@ checksum = "46afbd2983a5d5a7bd740ccb198caf5b82f45c40c09c0eed36052d91cb92e719"
 
 [[package]]
 name = "bl602-macros"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "cstr_core",
  "cty",
@@ -49,7 +49,7 @@ dependencies = [
 
 [[package]]
 name = "bl602-sdk"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "bl602-macros",
  "cty",
