@@ -26,8 +26,8 @@ const ADC_GPIO: i32 = 11;
 /// This is 10,000 samples per second.
 const ADC_FREQUENCY: u32 = 10000;  //  Hz
 
-/// We shall read 1,000 ADC samples, which will take 0.1 seconds
-const ADC_SAMPLES: usize = 1000;
+/// We shall read 100 ADC samples, which will take 0.01 seconds
+const ADC_SAMPLES: usize = 100;
 
 /// Set ADC Gain to Level 1 to increase the ADC sensitivity.
 /// To disable ADC Gain, set `ADC_GAIN1` and `ADC_GAIN2` to `ADC_PGA_GAIN_NONE`.
@@ -118,6 +118,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
     //  Get the DMA Context for the ADC Channel
     let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
+    assert!(!ptr.is_null());  //  TODO: Check null pointer in wrapper
 
     //  Cast the returned C Pointer (void *) to a DMA Context Pointer (adc_ctx *)
     let ctx = unsafe {         //  Unsafe because we are casting a pointer
