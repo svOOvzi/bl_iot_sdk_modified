@@ -12,10 +12,10 @@ use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
     time_ms_to_ticks32,
 };
 
-/// `rust_main` will be called by the BL602 command-line interface
-#[no_mangle]              //  Don't mangle the name `rust_main`
+/// This function will be called by the BL602 command-line interface
+#[no_mangle]              //  Don't mangle the function name
 extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by BL602 firmware
-    _buf:  *const u8,        //  Command line (char *)
+    _result: *mut u8,        //  Result to be returned to command-line interface (char *)
     _len:  i32,              //  Length of command line (int)
     _argc: i32,              //  Number of command line args (int)
     _argv: *const *const u8  //  Array of command line args (char **)
