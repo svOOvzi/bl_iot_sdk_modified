@@ -79,6 +79,7 @@ extern "C" fn init_adc(  //  Declare `extern "C"` because it will be called by B
     //  Get the DMA Context for the ADC Channel
     let ptr = dma::find_ctx_by_channel(adc::ADC_DMA_CHANNEL as i32)
         .expect("DMA Ctx failed");
+    assert!(!ptr.is_null());  //  TODO: Check null pointer in wrapper
 
     //  Cast the returned C Pointer (void *) to a DMA Context Pointer (adc_ctx *)
     let ctx = unsafe {         //  Unsafe because we are casting a pointer
@@ -142,7 +143,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
         core::ptr::copy(            //  Copy the memory...
             (*ctx).channel_data,    //  From Source (ADC DMA data)
             adc_data.as_mut_ptr(),  //  To Destination (mutable pointer to adc_data)
-            adc_data.len()          //  Count
+            adc_data.len()          //  Number of Items (each item is uint32 or 4 bytes)
         );    
     }
 
