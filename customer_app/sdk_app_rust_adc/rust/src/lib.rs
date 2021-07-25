@@ -184,4 +184,34 @@ extern "C" {  //  Import C Function
 }
 
 /* Output Log
+[In darkness]
+
+# init_adc
+[Rust] Init ADC
+# read_adc
+[Rust] Average: 1417
+# read_adc
+[Rust] Average: 1417
+# read_adc
+[Rust] Average: 1417
+
+[In sunlight]
+
+# read_adc
+[Rust] Average: 1414
+# read_adc
+[Rust] Average: 1411
+# read_adc
+[Rust] Average: 1411
+# read_adc
+[Rust] Average: 1412
+
+[In darkness]
+
+# read_adc
+[Rust] Average: 1417
+# read_adc
+[Rust] Average: 1417
+# read_adc
+[Rust] Average: 1417
 */
