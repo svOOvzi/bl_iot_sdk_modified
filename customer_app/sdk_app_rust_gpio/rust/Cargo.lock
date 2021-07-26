@@ -35,7 +35,9 @@ checksum = "46afbd2983a5d5a7bd740ccb198caf5b82f45c40c09c0eed36052d91cb92e719"
 
 [[package]]
 name = "bl602-macros"
-version = "0.0.1"
+version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eda0d0198d21cf9c9878c43af035128145b8f9abe02b1fa0da2198f90ac96d12"
 dependencies = [
  "cstr_core",
  "cty",
@@ -49,7 +51,9 @@ dependencies = [
 
 [[package]]
 name = "bl602-sdk"
-version = "0.0.5"
+version = "0.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dc4fc08b44018e85777c16cfe1df029e84385949874ee86a7230a7fe5532de4"
 dependencies = [
  "bl602-macros",
  "cty",
