@@ -90,7 +90,6 @@ popd
 #  Replace the Stub Library by the compiled Rust Library
 #  Stub Library: build_out/rust-app/librust-app.a
 #  Rust Library: rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
-ls -l $rust_app_build
 cp $rust_app_build $rust_app_dest
 
 set +x  #  Disable echo
