@@ -132,7 +132,7 @@ open -a CoolTerm
 exit
 
 Build Log:
-→ ./run.sh
+→ ./run.sh 
 + export APP_NAME=sdk_app_rust_adc
 + APP_NAME=sdk_app_rust_adc
 + export CONFIG_CHIP_NAME=BL602
@@ -248,23 +248,23 @@ CC build_out/freertos_riscv_ram/misaligned/misaligned_ldst.o
 AS build_out/freertos_riscv_ram/misaligned/fp_asm.o
 CC build_out/freertos_riscv_ram/panic/panic_c.o
 /Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c: In function 'backtrace_stack_app':
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:112:8:warning: assignment to 'uintptr_t *' {aka 'unsigned int *'} from 'long unsigned int' makes pointer from integer without a cast [-Wint-conversion]
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:112:8: warning: assignment to 'uintptr_t *' {aka 'unsigned int *'} from 'long unsigned int' makes pointer from integer without a cast [-Wint-conversion]
      pc = fp[-1];
         ^
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:119:12warning: comparison between pointer and integer
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:119:12: warning: comparison between pointer and integer
      if (pc > VALID_FP_START_XIP) {
             ^
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:124:10warning: assignment to 'long unsigned int *' from incompatible pointer type 'uintptr_t *' {aka 'unsigned int *'} [-Wincompatible-pointer-types]
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:124:10: warning: assignment to 'long unsigned int *' from incompatible pointer type 'uintptr_t *' {aka 'unsigned int *'} [-Wincompatible-pointer-types]
        fp = (uintptr_t *)pc;
           ^
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:127:10warning: assignment to 'long unsigned int *' from incompatible pointer type 'uintptr_t *' {aka 'unsigned int *'} [-Wincompatible-pointer-types]
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:127:10: warning: assignment to 'long unsigned int *' from incompatible pointer type 'uintptr_t *' {aka 'unsigned int *'} [-Wincompatible-pointer-types]
        fp = (uintptr_t *)fp[-2];
           ^
 /Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c: In function 'backtrace_now_app':
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:144:5:warning: 'return' with no value, in function returning non-void
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:144:5: warning: 'return' with no value, in function returning non-void
      return;
      ^~~~~~
-/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:136:5:note: declared here
+/Users/Luppy/pinecone/bl_iot_sdk/components/bl602/freertos_riscv_ram/panic/panic_c.c:136:5: note: declared here
  int backtrace_now_app(int (*print_func)(const char *fmt, ...)) {
      ^~~~~~~~~~~~~~~~~
 CC build_out/freertos_riscv_ram/portable/GCC/RISC-V/port.o
@@ -338,7 +338,7 @@ AR build_out/rust-app/librust-app.a
 CC build_out/sdk_app_rust_adc/demo.o
 CC build_out/sdk_app_rust_adc/main.o
 CC build_out/sdk_app_rust_adc/nimble.o
-AR build_out/sdk_app_rust_adc/libsdk_app_rust.a
+AR build_out/sdk_app_rust_adc/libsdk_app_rust_adc.a
 CC build_out/utils/src/utils_hex.o
 CC build_out/utils/src/utils_crc.o
 CC build_out/utils/src/utils_sha256.o
@@ -374,43 +374,12 @@ CC build_out/yloop/src/device.o
 CC build_out/yloop/src/local_event.o
 AR build_out/yloop/libyloop.a
 LD build_out/sdk_app_rust_adc.elf
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/sdk_app_rust_adc.bin
-Requirement already satisfied: fdt>=0.2.0 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 2)) (0.2.0)
-Requirement already satisfied: pycryptodomex>=3.9.8 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 3)) (3.9.9)
-Requirement already satisfied: toml>=0.10.2 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 4)) (0.10.2)
-Requirement already satisfied: configobj>=5.0.6 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 5)) (5.0.6)
-Requirement already satisfied: six in /Users/Luppy/Library/Python/3.6/lib/python/site-packages (from configobj>=5.0.6->-r requirements.txt (line 5)) (1.15.0)
-You are using pip version 18.1, however version 21.0.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-========= chip flash id: c84015 =========
-/Users/Luppy/pinecone/bl_iot_sdk/image_conf/bl602/flash_select/GD25Q16E_c84015.conf
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_c84015/FW_OTA.bin
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_c84015/FW_OTA.bin.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_c84015/FW_OTA.bin.xz
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_c84015/FW_OTA.bin.xz.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/whole_dts40M_pt2M_boot2release_c84015.bin
-========= chip flash id: ef6015 =========
-/Users/Luppy/pinecone/bl_iot_sdk/image_conf/bl602/flash_select/W25Q16FW_ef6015.conf
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef6015/FW_OTA.bin
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef6015/FW_OTA.bin.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef6015/FW_OTA.bin.xz
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef6015/FW_OTA.bin.xz.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/whole_dts40M_pt2M_boot2release_ef6015.bin
-========= chip flash id: ef4015 =========
-/Users/Luppy/pinecone/bl_iot_sdk/image_conf/bl602/flash_select/W25Q16JV_ef4015.conf
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef4015/FW_OTA.bin
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef4015/FW_OTA.bin.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef4015/FW_OTA.bin.xz
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef4015/FW_OTA.bin.xz.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/whole_dts40M_pt2M_boot2release_ef4015.bin
-========= chip flash id: ef7015 =========
-/Users/Luppy/pinecone/bl_iot_sdk/image_conf/bl602/flash_select/W25Q16JV_ef7015.conf
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef7015/FW_OTA.bin
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef7015/FW_OTA.bin.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef7015/FW_OTA.bin.xz
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/ota/dts40M_pt2M_boot2release_ef7015/FW_OTA.bin.xz.ota
-Generating BIN File to /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/whole_dts40M_pt2M_boot2release_ef7015.bin
-Building Finish. To flash build output.
+/Users/Luppy/pinecone/bl_iot_sdk/toolchain/riscv/Darwin/bin/../lib/gcc/riscv64-unknown-elf/8.3.0/../../../../riscv64-unknown-elf/bin/ld: /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/sdk_app_rust_adc/libsdk_app_rust_adc.a(demo.o):(.static_cli_cmds+0x8): undefined reference to `init_adc'
+/Users/Luppy/pinecone/bl_iot_sdk/toolchain/riscv/Darwin/bin/../lib/gcc/riscv64-unknown-elf/8.3.0/../../../../riscv64-unknown-elf/bin/ld: /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/sdk_app_rust_adc/libsdk_app_rust_adc.a(demo.o):(.static_cli_cmds+0x14): undefined reference to `read_adc'
+collect2: error: ld returned 1 exit status
+make: *** [/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/../../make_scripts_riscv/project.mk:420: /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/build_out/sdk_app_rust_adc.elf] Error 1
++ echo '----- Ignore undefined references to Rust Library'
+----- Ignore undefined references to Rust Library
 + set +x
 
 ----- Build Rust Library
@@ -420,29 +389,31 @@ Building Finish. To flash build output.
 info: using existing install for 'nightly-x86_64-apple-darwin'
 info: default toolchain set to 'nightly-x86_64-apple-darwin'
 
-  nightly-x86_64-apple-darwin unchanged - rustc 1.53.0-nightly (7af1f55ae 2021-04-15)
+  nightly-x86_64-apple-darwin unchanged - rustc 1.55.0-nightly (952fdf2a1 2021-07-05)
 
 + cargo build --target /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/riscv32imacf-unknown-none-elf.json -Z build-std=core
-    Updating crates.io index
-   Compiling compiler_builtins v0.1.39
+   Compiling compiler_builtins v0.1.46
    Compiling core v0.0.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/core)
-   Compiling typenum v1.13.0
-   Compiling version_check v0.9.3
-   Compiling heapless v0.6.1
-   Compiling generic-array v0.14.4
+   Compiling proc-macro2 v1.0.28
+   Compiling memchr v2.4.0
+   Compiling unicode-xid v0.2.2
+   Compiling syn v1.0.74
+   Compiling cty v0.2.1
+   Compiling heapless v0.7.3
+   Compiling rustc-serialize v0.3.24
+   Compiling lazy_static v1.4.0
+   Compiling cstr_core v0.2.4
+   Compiling quote v1.0.9
+   Compiling bl602-macros v0.0.2
    Compiling rustc-std-workspace-core v1.99.0 (/Users/Luppy/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/library/rustc-std-workspace-core)
-   Compiling stable_deref_trait v1.2.0
    Compiling byteorder v1.4.3
-   Compiling hash32 v0.1.1
-   Compiling generic-array v0.13.3
-   Compiling generic-array v0.12.4
-   Compiling as-slice v0.1.5
+   Compiling stable_deref_trait v1.2.0
+   Compiling hash32 v0.2.1
+   Compiling bl602-sdk v0.0.6
    Compiling app v0.0.1 (/Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 29.47s
+    Finished dev [unoptimized + debuginfo] target(s) in 23.55s
 + popd
 ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc
-+ ls -l /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
--rw-r--r--  2 Luppy  staff  5344472 Apr 20 16:13 /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a
 + cp /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/rust/target/riscv32imacf-unknown-none-elf/debug/libapp.a build_out/rust-app/librust-app.a
 + set +x
 
@@ -456,7 +427,7 @@ Requirement already satisfied: pycryptodomex>=3.9.8 in /Library/Frameworks/Pytho
 Requirement already satisfied: toml>=0.10.2 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 4)) (0.10.2)
 Requirement already satisfied: configobj>=5.0.6 in /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages (from -r requirements.txt (line 5)) (5.0.6)
 Requirement already satisfied: six in /Users/Luppy/Library/Python/3.6/lib/python/site-packages (from configobj>=5.0.6->-r requirements.txt (line 5)) (1.15.0)
-You are using pip version 18.1, however version 21.0.1 is available.
+You are using pip version 18.1, however version 21.2.1 is available.
 You should consider upgrading via the 'pip install --upgrade pip' command.
 ========= chip flash id: c84015 =========
 /Users/Luppy/pinecone/bl_iot_sdk/image_conf/bl602/flash_select/GD25Q16E_c84015.conf
@@ -494,26 +465,26 @@ Building Finish. To flash build output.
 ----- Flash BL602 Firmware
 + pushd /Users/Luppy/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc/../../../blflash
 ~/pinecone/blflash ~/pinecone/bl_iot_sdk/customer_app/sdk_app_rust_adc
-+ cargo run flash sdk_app_rust_adc.bin --port /dev/tty.usbserial-1410 --initial-baud-rate 230400 --baud-rate 230400
-    Finished dev [unoptimized + debuginfo] target(s) in 0.97s
-     Running `target/debug/blflash flash sdk_app_rust_adc.bin --port /dev/tty.usbserial-1410 --initial-baud-rate 230400 --baud-rate 230400`
++ cargo run flash sdk_app_rust_adc.bin --port /dev/tty.usbserial-1420 --initial-baud-rate 230400 --baud-rate 230400
+    Finished dev [unoptimized + debuginfo] target(s) in 0.61s
+     Running `target/debug/blflash flash sdk_app_rust_adc.bin --port /dev/tty.usbserial-1420 --initial-baud-rate 230400 --baud-rate 230400`
 [INFO  blflash::flasher] Start connection...
 [TRACE blflash::flasher] 5ms send count 115
-[TRACE blflash::flasher] handshake sent elapsed 145.949µs
+[TRACE blflash::flasher] handshake sent elapsed 104.593µs
 [INFO  blflash::flasher] Connection Succeed
 [INFO  blflash] Bootrom version: 1
 [TRACE blflash] Boot info: BootInfo { len: 14, bootrom_version: 1, otp_info: [0, 0, 0, 0, 3, 0, 0, 0, 61, 9d, c0, 5, b9, 18, 1d, 0] }
 [INFO  blflash::flasher] Sending eflash_loader...
-[INFO  blflash::flasher] Finished 1.6282326s 17.55KB/s
+[INFO  blflash::flasher] Finished 1.595620342s 17.92KB/s
 [TRACE blflash::flasher] 5ms send count 115
-[TRACE blflash::flasher] handshake sent elapsed 54.259µs
+[TRACE blflash::flasher] handshake sent elapsed 81.908µs
 [INFO  blflash::flasher] Entered eflash_loader
 [INFO  blflash::flasher] Skip segment addr: 0 size: 47504 sha256 matches
 [INFO  blflash::flasher] Skip segment addr: e000 size: 272 sha256 matches
 [INFO  blflash::flasher] Skip segment addr: f000 size: 272 sha256 matches
-[INFO  blflash::flasher] Erase flash addr: 10000 size: 118224
-[INFO  blflash::flasher] Program flash... bac8824299e4d6bb0cceb1f93323f43ae6f56500f39c827590eb011b057ec282
-[INFO  blflash::flasher] Program done 6.54650345s 17.64KB/s
+[INFO  blflash::flasher] Erase flash addr: 10000 size: 135808
+[INFO  blflash::flasher] Program flash... ed8a4cdacbc4c1543c74584d7297ad876b6731104856a10dff4166c123c6637d
+[INFO  blflash::flasher] Program done 7.40735771s 17.91KB/s
 [INFO  blflash::flasher] Skip segment addr: 1f8000 size: 5671 sha256 matches
 [INFO  blflash] Success
 + sleep 5
@@ -524,9 +495,3 @@ Building Finish. To flash build output.
 ----- Run BL602 Firmware
 + open -a CoolTerm
 + exit
-
-Rust Build:
-
-cargo build -v \
-    --target riscv32imacf-unknown-none-elf.json \
-    -Z build-std=core
