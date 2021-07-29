@@ -108,7 +108,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
     _argc: i32,              //  Number of command line args (int)
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {    
-    //  Array that will store last 1,000 ADC Samples
+    //  Array that will store last 100 ADC Samples
     let mut adc_data: [u32; ADC_SAMPLES]
         = [0; ADC_SAMPLES];  //  Init array to zeroes
 
