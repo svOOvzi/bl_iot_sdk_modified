@@ -139,7 +139,7 @@ extern "C" fn read_adc(   //  Declare `extern "C"` because it will be called by 
         return;
     }
 
-    //  Copy the read ADC Samples to the static array
+    //  Copy the read ADC Samples to the array
     unsafe {                        //  Unsafe because we are copying raw memory
         core::ptr::copy(            //  Copy the memory...
             (*ctx).channel_data,    //  From Source (ADC DMA data)
