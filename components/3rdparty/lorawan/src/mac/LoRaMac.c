@@ -2212,9 +2212,12 @@ PrepareFrame(LoRaMacHeader_t *macHdr, LoRaMacFrameCtrl_t *fCtrl, uint8_t fPort,
             LoRaMacBuffer[LoRaMacBufferPktLen++] = (mic >> 24) & 0xFF;
             break;
         case FRAME_TYPE_DATA_CONFIRMED_UP:
-            LM_F_NODE_ACK_REQ() = 1;
-            //Intentional fallthrough
+            ////  Previously intentional fallthrough: LM_F_NODE_ACK_REQ() = 1;
         case FRAME_TYPE_DATA_UNCONFIRMED_UP:
+            ////  Fix intentional fallthrough
+            if (macHdr->Bits.MType == FRAME_TYPE_DATA_CONFIRMED_UP) {
+                LM_F_NODE_ACK_REQ() = 1;                
+            }
             // Adr next request
             adrNext.UpdateChanMask = true;
             adrNext.AdrEnabled = fCtrl->Bits.Adr;

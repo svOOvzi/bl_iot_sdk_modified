@@ -635,7 +635,7 @@ err:
 #if (LORA_NODE_LOG_CLI) == 1
 
 #if (LORA_NODE_LOG_CLI) == 1
-static int lora_cli_log_cmd(int argc, char **argv);
+int lora_cli_log_cmd(int argc, char **argv);
 
 #ifdef TODO  //  Convert to BL602 CLI
 static struct shell_cmd lora_node_log_cmd = {
