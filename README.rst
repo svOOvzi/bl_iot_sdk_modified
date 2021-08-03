@@ -49,37 +49,37 @@ Changes
 
 - Capture built firmware from GitHub Actions Workflow as Artifacts
 
-- "jtag" branch contains a modified Hello World app that remaps the JTAG port: https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld
+- "jtag" branch contains a modified Hello World app that remaps the JTAG port: `sdk_app_helloworld <https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld>`_
 
-- "master" branch contains a modified PWM Demo Firmware that runs without Device Tree: https://github.com/lupyuen/bl_iot_sdk/pull/1
+- Modified PWM Demo Firmware that runs without Device Tree: `sdk_app_pwm <https://github.com/lupyuen/bl_iot_sdk/pull/1>`_
 
-- "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c/
+- "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: `sdk_app_i2c <https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c>`_
 
-- "master" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_spi/
+- New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
 
-- "master" branch contains a new Demo Firmware for ST7789 SPI Display + LVGL Graphics Library: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_st7789/
+- New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
-- "master" branch contains a new Demo Firmware for Grove E-Ink Display with UART Interface: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_uart_eink/
+- New Firmware for Grove E-Ink Display with UART Interface: `sdk_app_uart_eink <customer_app/sdk_app_uart_eink>`_
 
-- "master" branch contains a new Demo Firmware that transmits and receives LoRa packets: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lora/
+- New Firmware that transmits and receives LoRa packets: `sdk_app_lora <customer_app/sdk_app_lora>`_
 
-- "master" branch contains a new Demo Firmware for LoRa Ping: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_loraping/
+- New Firmware for LoRa Ping: `sdk_app_loraping <customer_app/sdk_app_loraping>`_
 
-- "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/nimble-porting-layer and https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1276
+- New Library for NimBLE and SX1276: `nimble-porting-layer <components/3rdparty/nimble-porting-layer>`_ and `lora-sx1276 <components/3rdparty/lora-sx1276>`_
 
-- "master" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lorawan/
+- New LoRaWAN Driver and Firmware: `lorawan <components/3rdparty/lorawan>`_ and `sdk_app_lorawan <customer_app/sdk_app_lorawan>`_
 
-- "master" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1262
+- New Driver for LoRa SX1262: `lora-sx1262 <components/3rdparty/lora-sx1262>`_
 
-- "master" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_rust/
+- New Rust Library and Firmware: `rust-app <components/3rdparty/rust-app>`_ and `sdk_app_rust <customer_app/sdk_app_rust>`_
 
-- "master" branch contains Blinky Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_blinky
+- New Blinky Firmware: `sdk_app_blinky <customer_app/sdk_app_blinky>`_
 
-- "master" branch contains uLisp Library and uLisp Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (ulisp-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_ulisp/
+- New uLisp Library and Firmware: `ulisp-bl602 <components/3rdparty>`_ and `sdk_app_ulisp <customer_app/sdk_app_ulisp>`_
 
-- "master" branch contains TensorFlow Lite Library and Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (tflite-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_tflite/
+- New TensorFlow Lite Library and Firmware: `tflite-bl602 <components/3rdparty>`_ and `sdk_app_tflite <customer_app/sdk_app_tflite>`_
 
-- "master" branch contains ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_, `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
+- New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
 
 BL602 SDK (Pine64 version)
 ==========================
