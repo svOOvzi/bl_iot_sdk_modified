@@ -1,4 +1,4 @@
-# sdk_app_spi
+# sdk_app_spi_demo
 
 SPI Demo Firmware for BME280
 

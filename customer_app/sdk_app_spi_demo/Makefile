@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := sdk_app_spi
+PROJECT_NAME := sdk_app_spi_demo
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
