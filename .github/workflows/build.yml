@@ -26,7 +26,11 @@ jobs:
         #  Recursive checkout needed for LVGL in sdk_app_st7789
         submodules: 'recursive'
 
-    - run: make
+    - run: |
+        #  TODO: Fix TFLite warnings for Ubuntu
+        rm -rf sdk_app_tflite
+        ls -l
+        make
       working-directory: customer_app
       env:
         BL60X_SDK_PATH: ${{ github.workspace }}
@@ -58,10 +62,10 @@ jobs:
         submodules: 'recursive'
 
     - run: |
-        #  TODO: Fix TFLite build for Windows
-        rm -rf D:\\a\\bl_iot_sdk\\bl_iot_sdk\\customer_app\\sdk_app_tflite
-        ls -l D:\\a\\bl_iot_sdk\\bl_iot_sdk\\customer_app
-        make --trace
+        #  TODO: Fix TFLite build for Windows (include not found)
+        rm -rf sdk_app_tflite
+        ls -l
+        make
       shell: msys2 {0}
       working-directory: customer_app
       env:
