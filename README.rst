@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Is It Sunny?" <https://lupyuen.github.io/articles/adc>`_
+
 - `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
 
 - `"Machine Learning on RISC-V BL602 with TensorFlow Lite" <https://lupyuen.github.io/articles/tflite>`_
@@ -77,7 +79,7 @@ Changes
 
 - "master" branch contains TensorFlow Lite Library and Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/ (tflite-bl602) and https://github.com/lupyuen/bl_iot_sdk/tree/master/customer_app/sdk_app_tflite/
 
-- "adc" branch contains ADC Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_adc , https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_adc2 , https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_rust_adc , https://github.com/lupyuen/bl_iot_sdk/tree/adc/customer_app/sdk_app_rust_gpio
+- "master" branch contains ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_, `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
 
 BL602 SDK (Pine64 version)
 ==========================
