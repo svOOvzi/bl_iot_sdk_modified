@@ -41,7 +41,6 @@
 #include <utils_log.h>
 #include <libfdt.h>
 #include <blog.h>
-#include <hal/soc/spi.h>
 #include <hal_spi.h>
 #include "demo.h"
 
