@@ -21,6 +21,7 @@ static SPI_Flash_Cfg_Type *pFlashCfg;
 PtTable_Stuff_Config ptTableStuff[2];
 PtTable_Entry_Config ptEntry={0};
 
+////  TODO: For Mynewt, main() should be commented out
 /*partiton need this*/
 void main(void)
 {

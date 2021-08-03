@@ -486,6 +486,7 @@ int bl_adc_start(void)
 
 int bl_adc_gpio_init(int gpio_num)
 {
+    ////  TODO: For Mynewt, adc_pin should have type GLB_GPIO_Type
     uint8_t adc_pin = gpio_num;
 
     GLB_GPIO_Func_Init(GPIO_FUN_ANALOG, &adc_pin, 1);
