@@ -22,6 +22,8 @@
         "*.tcc": "c",
         "istream": "cpp",
         "ostream": "cpp",
-        "constants.h": "c"
+        "constants.h": "c",
+        "vfs_spi.h": "c",
+        "spi.h": "c"
     }
 }
