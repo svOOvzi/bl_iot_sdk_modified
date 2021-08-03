@@ -81,6 +81,8 @@ Changes
 
 - New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
 
+- "pinedio" branch contains upstream updates for testing on PineDio Stack
+
 BL602 SDK (Pine64 version)
 ==========================
 
