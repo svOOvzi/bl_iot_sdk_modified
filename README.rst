@@ -55,7 +55,7 @@ Changes
 
 - "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: `sdk_app_i2c <https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c>`_
 
-- New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
+- New SPI Firmware that uses the SPI HAL: `sdk_app_spi_demo <customer_app/sdk_app_spi_demo>`_
 
 - New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
