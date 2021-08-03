@@ -24,7 +24,7 @@
 #include "node/lora_band.h"
 
 //  TODO: Implement with NimBLE Mutex
-#warning Implement critical section
+//// #warning Implement critical section
 #define OS_ENTER_CRITICAL(x) 
 #define OS_EXIT_CRITICAL(x) 
 
@@ -428,7 +428,7 @@ lora_mac_txq_timer_cb(struct ble_npl_event *ev)
 void
 lora_mac_task(void *arg)
 {
-    #warning Process LoRa events
+    //// #warning Process LoRa events
     /* Process events */
     while (1) {
         //  Previously: os_eventq_run(&g_lora_mac_data.lm_evq);

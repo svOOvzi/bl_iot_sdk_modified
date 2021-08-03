@@ -22,7 +22,7 @@
 #include "node/lora_utilities.h"
 #include "node/lora_priv.h"
 
-#warning Implement TimerGetCurrentTime, TimerGetElapsedTime
+//// #warning Implement TimerGetCurrentTime, TimerGetElapsedTime
 
 int32_t
 randr(int32_t min, int32_t max)

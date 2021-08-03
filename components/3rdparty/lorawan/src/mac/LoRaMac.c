@@ -244,7 +244,7 @@ lora_mac_rx_disable(void)
     struct ble_npl_eventq *evq;
 
     /* Disable reception (if not receiving) */
-    #warning Radio.RxDisable
+    //// #warning Radio.RxDisable
     printf("TODO: Radio.RxDisable\r\n");
     // Radio.RxDisable();
 

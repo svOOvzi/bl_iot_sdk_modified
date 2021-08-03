@@ -34,7 +34,7 @@ static int lora_cli_tx(int argc, char **argv);
 static int lora_cli_rx(int argc, char **argv);
 static int lora_cli_max_payload_len(int argc, char **argv);
 
-#warning Convert to BL602 CLI
+//// #warning Convert to BL602 CLI
 
 /**
  * Parses a long long within an imposed range.
@@ -646,7 +646,7 @@ static struct shell_cmd lora_node_log_cmd = {
 
 #endif
 
-#warning Convert lora_cli_log_cmd to BL602 CLI
+//// #warning Convert lora_cli_log_cmd to BL602 CLI
 int
 lora_cli_log_cmd(int argc, char **argv)
 {

@@ -25,7 +25,7 @@
 #include "node/pbuf_queue.h"
 
 //  TODO: Implement with NimBLE Mutex
-#warning Implement critical section
+//// #warning Implement critical section
 #define OS_ENTER_CRITICAL(x) 
 #define OS_EXIT_CRITICAL(x) 
 

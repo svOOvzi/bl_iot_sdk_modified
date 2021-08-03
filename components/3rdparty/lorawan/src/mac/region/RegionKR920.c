@@ -880,7 +880,7 @@ LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_
             j = ( j + 1 ) % nbEnabledChannels;
 
             //// TODO: Carrier Sensing needs to fixed because Radio.IsChannelFree has different parameters for SX1262 and SX1276
-            #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
+            //// #warning Radio.IsChannelFree interface is different for SX1262 and SX1276
             printf("Radio.IsChannelFree interface is different for SX1262 and SX1276\r\n");
             printf("See https://github.com/Lora-net/LoRaMac-node/blob/master/src/mac/region/RegionKR920.c#L807-L832\r\n");
             assert(false);

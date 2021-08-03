@@ -303,7 +303,7 @@ void SX126xReset( void )
 
 void SX126xReset(void)
 {
-    #warning Check SX126xReset
+    //// #warning Check SX126xReset
 
     printf("SX126xReset\r\n");
 
