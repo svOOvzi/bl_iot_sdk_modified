@@ -1,5 +1,7 @@
 # Rust Firmware for BL602 IoT SDK
 
+[__UPDATE: See the updated firmware in `sdk_app_rust_gpio`__](../sdk_app_rust_gpio)
+
 This BL602 firmware shows how we may create Rust firmware with the BL602 IoT SDK. Read the article...
 
 -   [__"Run Rust RISC-V Firmware with BL602 IoT SDK"__](https://lupyuen.github.io/articles/rust)
