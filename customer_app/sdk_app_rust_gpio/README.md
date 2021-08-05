@@ -2,13 +2,13 @@
 
 This BL602 firmware shows how we may create Rust firmware with the BL602 IoT SDK. Read the article...
 
--   [__"Run Rust RISC-V Firmware with BL602 IoT SDK"__](https://lupyuen.github.io/articles/rust)
+- [__"Rust on RISC-V BL602: Is It Sunny?"__](https://lupyuen.github.io/articles/adc)
 
 Rust source code for the BL602 firmware is here...
 
 - [`rust`: Rust source code](rust)
 
-- [`rust_main`: Rust main function](rust/src/lib.rs)
+- [`rust/src/lib.rs`: Rust commands](rust/src/lib.rs)
 
 Run this script to build, flash and run the BL602 Rust firmware...
 
