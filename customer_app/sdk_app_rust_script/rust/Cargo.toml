@@ -10,7 +10,7 @@ version = "0.0.1"
 [dependencies]
 bl602-sdk = "0.0.6"  # Rust Wrapper for BL602 IoT SDK: https://crates.io/crates/bl602-sdk
 rhai      = { version = "1.0.0", features = [ "no_std" ], default_features = false }  #  Rhai Scripting Engine: https://crates.io/crates/rhai
-wee_alloc = { version = "0.4.5", default_features = false }  # WEE Allocator: https://crates.io/crates/wee_alloc
+wee_alloc = { version = "0.4.5", features = [ "static_array_backend" ], default_features = false }  # WEE Allocator: https://crates.io/crates/wee_alloc
 
 # Build this module as a Rust library, not a Rust application.  We will link this library with the BL602 firmware.
 [lib]

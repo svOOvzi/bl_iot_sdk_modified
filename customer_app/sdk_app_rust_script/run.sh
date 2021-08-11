@@ -39,8 +39,8 @@ echo ; echo "----- Building Rust app and BL602 firmware for $rust_build_target_f
 #  rust_build_target=riscv32imac-unknown-none-elf
 #  rust_build_target_folder=riscv32imac-unknown-none-elf
 
-#  Rust build options: Build the Rust Core Library for our custom target
-rust_build_options="--target $rust_build_target -Z build-std=core"
+#  Rust build options: Build the Rust Core and Alloc Libraries for our custom target
+rust_build_options="--target $rust_build_target -Z build-std=core,alloc"
 if [ "$rust_build_profile" == 'release' ]; then
     # Build for release
     rust_build_options="--release $rust_build_options"

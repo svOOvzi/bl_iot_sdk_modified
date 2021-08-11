@@ -1,6 +1,15 @@
 //!  Blink the LED connected to a GPIO Pin
 #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
 
+#![feature(alloc_error_handler, start, core_intrinsics, lang_items, link_cfg)]
+
+extern crate alloc;
+extern crate wee_alloc;
+
+//  Use `wee_alloc` as the global allocator
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
 //  Import Libraries
 use core::{            //  Rust Core Library
     panic::PanicInfo,  //  Panic Handler
