@@ -1,11 +1,11 @@
 //!  Blink the LED connected to a GPIO Pin
 
-// TODO: For BL602:
-// #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
-// #![feature(alloc_error_handler, start, core_intrinsics, lang_items, link_cfg)]
+//  TODO: For BL602:
+#![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
+#![feature(alloc_error_handler, start, core_intrinsics, lang_items, link_cfg)]
 
-// TODO: For WebAssembly:
-#![feature(libc)]  //  Allow C Standard Library, which will be mapped by emscripten to JavaScript
+//  TODO: For WebAssembly:
+//  #![feature(libc)]  //  Allow C Standard Library, which will be mapped by emscripten to JavaScript
 
 extern crate alloc;
 extern crate wee_alloc;
