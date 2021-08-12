@@ -104,6 +104,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handle
 #[alloc_error_handler]
 #[cfg(not(target_arch = "wasm32"))]              //  For WebAssembly: Use the default alloc error handler
 fn foo(_: core::alloc::Layout) -> ! {
+    puts("TODO: Rust alloc error"); 
     core::intrinsics::abort();
 }
 

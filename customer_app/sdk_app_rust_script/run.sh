@@ -22,9 +22,12 @@ export BLFLASH_PATH=$PWD/../../../blflash
 #  Where GCC is located
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
+#  Memory size for WEE Allocator
+export WEE_ALLOC_STATIC_ARRAY_BACKEND_BYTES=8192
+
 #  Rust build profile: debug or release
-rust_build_profile=debug
-#  rust_build_profile=release
+#  rust_build_profile=debug
+rust_build_profile=release
 
 #  Rust target: Custom target for llvm-abiname=ilp32f
 #  https://docs.rust-embedded.org/embedonomicon/compiler-support.html#built-in-target
@@ -100,11 +103,11 @@ set -x  #  Enable echo
 make
 
 #  Generate the disassembly
-$GCC_PATH/bin/riscv-none-embed-objdump \
-    -t -S --demangle --line-numbers --wide \
-    build_out/$APP_NAME.elf \
-    >build_out/$APP_NAME.S \
-    2>&1
+# $GCC_PATH/bin/riscv-none-embed-objdump \
+#     -t -S --demangle --line-numbers --wide \
+#     build_out/$APP_NAME.elf \
+#     >build_out/$APP_NAME.S \
+#     2>&1
 
 #  Copy firmware to blflash
 cp build_out/$APP_NAME.bin $BLFLASH_PATH
