@@ -1,7 +1,11 @@
 //!  Blink the LED connected to a GPIO Pin
-#![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
 
-#![feature(alloc_error_handler, start, core_intrinsics, lang_items, link_cfg)]
+// TODO: For BL602:
+// #![no_std]  //  Use the Rust Core Library instead of the Rust Standard Library, which is not compatible with embedded systems
+// #![feature(alloc_error_handler, start, core_intrinsics, lang_items, link_cfg)]
+
+// TODO: For WebAssembly:
+#![feature(libc)]  //  Allow C Standard Library, which will be mapped by emscripten to JavaScript
 
 extern crate alloc;
 extern crate wee_alloc;
@@ -77,6 +81,7 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
 
 /// This function is called on panic, like an assertion failure
 #[panic_handler]
+#[cfg(not(target_arch = "wasm32"))]              //  For WebAssembly: Use the default panic handler
 fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handler will never return
     //  TODO: Implement the complete panic handler like this:
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
@@ -88,7 +93,9 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handle
     loop {}
 }
 
+/// This function is called when the Global Allocator fails
 #[alloc_error_handler]
+#[cfg(not(target_arch = "wasm32"))]              //  For WebAssembly: Use the default alloc error handler
 fn foo(_: core::alloc::Layout) -> ! {
     core::intrinsics::abort();
 }
