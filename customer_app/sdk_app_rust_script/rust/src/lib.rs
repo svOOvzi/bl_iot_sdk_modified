@@ -12,13 +12,18 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 //  Import Libraries
 use core::{            //  Rust Core Library
-    panic::PanicInfo,  //  Panic Handler
+    fmt::Write,        //  String Formatting    
+};
+use rhai::{            //  Rhai Scripting Engine
+    Engine, 
+    INT
 };
 use bl602_sdk::{       //  Rust Wrapper for BL602 IoT SDK
     gpio,              //  GPIO HAL
     puts,              //  Console Output
     time_delay,        //  NimBLE Time Functions
     time_ms_to_ticks32,
+    String,            //  Strings (limited to 64 chars)
 };
 
 /// This function will be called by the BL602 command-line interface
@@ -31,6 +36,19 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
 ) {
     //  Show a message on the serial console
     puts("Hello from Rust!");
+
+    //  Notice that this is a _raw_ engine.
+    //  To do anything useful, load a few packages from `rhai::packages`.
+    let engine = Engine::new_raw();
+
+    //  Evaluate a simple expression: 40 + 2
+    let result = engine.eval_expression::<INT>("40 + 2").unwrap() as isize;
+
+    //  Format the output and display it
+    let mut buf = String::new();
+    write!(buf, "result: {}", result)
+        .expect("buf overflow");
+    puts(&buf);
 
     //  PineCone Blue LED is connected on BL602 GPIO 11
     const LED_GPIO: u8 = 11;  //  `u8` is 8-bit unsigned integer
@@ -59,7 +77,7 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
 
 /// This function is called on panic, like an assertion failure
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never return
+fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handler will never return
     //  TODO: Implement the complete panic handler like this:
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
@@ -68,6 +86,11 @@ fn panic(_info: &PanicInfo) -> ! {  //  `!` means that panic handler will never 
 
 	//  Loop forever, do not pass go, do not collect $200
     loop {}
+}
+
+#[alloc_error_handler]
+fn foo(_: core::alloc::Layout) -> ! {
+    core::intrinsics::abort();
 }
 
 /* Output Log
