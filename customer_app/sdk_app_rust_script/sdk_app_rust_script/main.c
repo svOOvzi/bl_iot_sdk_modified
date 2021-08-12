@@ -267,7 +267,7 @@ static void system_thread_init()
 void bfl_main()
 {
     ////static StackType_t aos_loop_proc_stack[1024];
-    static StackType_t aos_loop_proc_stack[2048]; //// TODO
+    static StackType_t aos_loop_proc_stack[16384]; //// TODO
     static StaticTask_t aos_loop_proc_task;
 
     /*Init UART In the first place*/
