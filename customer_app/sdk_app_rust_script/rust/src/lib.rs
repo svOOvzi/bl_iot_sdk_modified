@@ -39,18 +39,25 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
     _argv: *const *const u8  //  Array of command line args (char **)
 ) {
     //  Show a message on the serial console
-    puts("Hello from Rust!");
+    puts("Hello from Rust!\r\n");
 
     //  Notice that this is a _raw_ engine.
     //  To do anything useful, load a few packages from `rhai::packages`.
     let engine = Engine::new_raw();
 
-    //  Evaluate a simple expression: 40 + 2
-    let result = engine.eval_expression::<INT>("40 + 2").unwrap() as isize;
+    //  Evaluate a simple Rhai Script: 40 + 2
+    let result = engine.eval::<INT>(
+        //  Rhai Script to be evaluated
+        r#" 
+            let a = 40; 
+            let b = 2;
+            a + b 
+        "#
+    ).unwrap() as isize;
 
     //  Format the output and display it
     let mut buf = String::new();
-    write!(buf, "result: {}", result)
+    write!(buf, "Result of Rhai Script: {}", result)
         .expect("buf overflow");
     puts(&buf);
 
