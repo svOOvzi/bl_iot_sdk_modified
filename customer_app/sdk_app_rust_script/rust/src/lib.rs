@@ -44,16 +44,21 @@ extern "C" fn rust_main(  //  Declare `extern "C"` because it will be called by 
     //  Notice that this is a _raw_ engine.
     //  To do anything useful, load a few packages from `rhai::packages`.
     let engine = Engine::new_raw();
+    puts("a\r\n");
 
     //  Evaluate a simple Rhai Script: 40 + 2
-    let result = engine.eval::<INT>(
+    let result = engine.eval_expression::<INT>(
         //  Rhai Script to be evaluated
+        "40 + 2"
+        /*
         r#" 
             let a = 40; 
             let b = 2;
             a + b 
         "#
+        */
     ).unwrap() as isize;
+    puts("b\r\n");
 
     //  Format the output and display it
     let mut buf = String::new();

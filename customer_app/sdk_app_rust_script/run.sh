@@ -23,7 +23,7 @@ export BLFLASH_PATH=$PWD/../../../blflash
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
 #  Memory size for WEE Allocator
-export WEE_ALLOC_STATIC_ARRAY_BACKEND_BYTES=8192
+export WEE_ALLOC_STATIC_ARRAY_BACKEND_BYTES=16384
 
 #  Rust build profile: debug or release
 #  rust_build_profile=debug

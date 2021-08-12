@@ -266,7 +266,8 @@ static void system_thread_init()
 
 void bfl_main()
 {
-    static StackType_t aos_loop_proc_stack[1024];
+    ////static StackType_t aos_loop_proc_stack[1024];
+    static StackType_t aos_loop_proc_stack[2048]; //// TODO
     static StaticTask_t aos_loop_proc_task;
 
     /*Init UART In the first place*/
@@ -281,7 +282,10 @@ void bfl_main()
     system_thread_init();
 
     puts("[OS] Starting aos_loop_proc task...\r\n");
-    xTaskCreateStatic(aos_loop_proc, (char*)"event_loop", 1024, NULL, 15, aos_loop_proc_stack, &aos_loop_proc_task);
+    ////xTaskCreateStatic(aos_loop_proc, (char*)"event_loop", 1024, NULL, 15, aos_loop_proc_stack, &aos_loop_proc_task);
+    xTaskCreateStatic(aos_loop_proc, (char*)"event_loop", 
+        sizeof(aos_loop_proc_stack) / sizeof(aos_loop_proc_stack[0]), 
+        NULL, 15, aos_loop_proc_stack, &aos_loop_proc_task); //// TODO
 
     puts("[OS] Starting OS Scheduler...\r\n");
     vTaskStartScheduler();
