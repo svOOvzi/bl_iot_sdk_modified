@@ -99,7 +99,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handle
     //  https://github.com/lupyuen/pinetime-rust-mynewt/blob/master/rust/app/src/lib.rs#L115-L146
 
     //  For now we display a message
-    puts("TODO: Rust panic"); 
+    puts("TODO: Rust panic\r\n"); 
 
 	//  Loop forever, do not pass go, do not collect $200
     loop {}
@@ -109,8 +109,13 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {  //  `!` means that panic handle
 #[alloc_error_handler]
 #[cfg(not(target_arch = "wasm32"))]              //  For WebAssembly: Use the default alloc error handler
 fn foo(_: core::alloc::Layout) -> ! {
-    puts("TODO: Rust alloc error"); 
-    core::intrinsics::abort();
+    //  For now we display a message
+    puts("TODO: Rust alloc error\r\n"); 
+
+	//  Loop forever, do not pass go, do not collect $200
+    loop {}
+
+    //  TODO: core::intrinsics::abort();
 }
 
 /* Output Log
