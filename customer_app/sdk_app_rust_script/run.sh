@@ -103,11 +103,11 @@ set -x  #  Enable echo
 make
 
 #  Generate the disassembly
-# $GCC_PATH/bin/riscv-none-embed-objdump \
-#     -t -S --demangle --line-numbers --wide \
-#     build_out/$APP_NAME.elf \
-#     >build_out/$APP_NAME.S \
-#     2>&1
+$GCC_PATH/bin/riscv-none-embed-objdump \
+    -t -S --demangle --line-numbers --wide \
+    build_out/$APP_NAME.elf \
+    >build_out/$APP_NAME.S \
+    2>&1
 
 #  Copy firmware to blflash
 cp build_out/$APP_NAME.bin $BLFLASH_PATH
