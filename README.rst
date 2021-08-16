@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
+
 - `"Rust on RISC-V BL602: Is It Sunny?" <https://lupyuen.github.io/articles/adc>`_
 
 - `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
