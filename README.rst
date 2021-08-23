@@ -85,6 +85,8 @@ Changes
 
 - New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
 
+- New PineDio Stack BL604 Blinky Firmware: `pinedio_blinky <customer_app/pinedio_blinky>`_
+
 BL602 SDK (Pine64 version)
 ==========================
 
