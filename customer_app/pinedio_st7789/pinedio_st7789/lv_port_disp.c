@@ -77,7 +77,7 @@ void lv_port_disp_init(void)
      * */
 
     static lv_disp_buf_t disp_buf_1;
-    lv_disp_buf_init(&disp_buf_1, spi_tx_buf, NULL, LV_HOR_RES_MAX * BUFFER_ROWS);   /*Initialize the display buffer*/
+    lv_disp_buf_init(&disp_buf_1, spi_unpacked_buf, NULL, LV_HOR_RES_MAX * BUFFER_ROWS);   /*Initialize the display buffer*/
 
     /*-----------------------------------
      * Register the display in LVGL
@@ -147,6 +147,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
         2;                             //  2 bytes per pixel
     rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
     rc = write_data((const uint8_t *) color_p, len); assert(rc == 0);
+    rc = flush_display(); assert(rc == 0);
 
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/

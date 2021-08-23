@@ -16,7 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  Display Driver for ST7789 SPI. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/display.c
+//  Display Driver for ST7789 SPI in 3-Wire (9-bit) Mode.
+//  Normally we connect to ST7789 in 4-Wire (8-bit) Mode: https://lupyuen.github.io/images/st7789-4wire.jpg
+//  But for PineDio Stack we use 3-Wire (9-bit) Mode: https://lupyuen.github.io/images/st7789-3wire.jpg
+//  This means we will pack 9-bit data into bytes for transmitting over 8-bit SPI.
+//  We will send in multiples of 9 bytes (9 bits x 8), padded with the NOP Command (code 0x00).
+//  Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/display.c
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -70,6 +75,7 @@ extern spi_dev_t spi_device;
 #define LandscapeSwapped 0xA0  //  Invert page and page/column order
 
 static int set_orientation(uint8_t orientation);
+static void set_data_command(uint8_t data_command0);
 static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 
@@ -79,14 +85,18 @@ static const uint8_t image_data[] = {  //  Should be 115,200 bytes
 #include "image.inc"
 };
 
-/// SPI Transmit Buffer. We always copy pixels from Flash ROM to RAM
+/// SPI Buffer for unpacked 8-bit data. We always copy pixels from Flash ROM to RAM
 /// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-uint8_t spi_tx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+uint8_t spi_unpacked_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+
+/// SPI Buffer for packed 9-bit data
+/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
+uint8_t spi_packed_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 2];  //  TODO
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
+static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 2];  //  TODO
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
@@ -118,31 +128,31 @@ int init_display(void) {
     //  Software Reset: Reset the display controller through firmware (ST7789 Datasheet Page 163)
     //  https://www.rhydolabz.com/documents/33/ST7789.pdf
     rc = write_command(SWRESET, NULL, 0);  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0);
+    rc = flush_display();  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
     //  Sleep Out: Disable sleep (ST7789 Datasheet Page 184)
     rc = write_command(SLPOUT, NULL, 0);  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0);
+    rc = flush_display();  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
 
     //  Vertical Scrolling Definition: 0 TSA, 320 VSA, 0 BSA (ST7789 Datasheet Page 208)
     static const uint8_t VSCRDER_PARA[] = { 0x00, 0x00, 0x14, 0x00, 0x00, 0x00 };
     rc = write_command(VSCRDER, VSCRDER_PARA, sizeof(VSCRDER_PARA));  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0);  ////
+    rc = flush_display();  assert(rc == 0);  ////
 
     //  Normal Display Mode On (ST7789 Datasheet Page 187)
     rc = write_command(NORON, NULL, 0);  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0);
+    rc = flush_display();  assert(rc == 0);
     delay_ms(10);  //  Need to wait at least 10 milliseconds
 
     //  Display Inversion: Invert the display colours (light becomes dark and vice versa) (ST7789 Datasheet Pages 188, 190)
     if (INVERTED) {
         rc = write_command(INVON, NULL, 0);  assert(rc == 0);
-        rc = flush_spi();  assert(rc == 0); ////
+        rc = flush_display();  assert(rc == 0); ////
     } else {
         rc = write_command(INVOFF, NULL, 0);  assert(rc == 0);
-        rc = flush_spi();  assert(rc == 0); ////
+        rc = flush_display();  assert(rc == 0); ////
     }
 
     //  Set display orientation to Portrait
@@ -151,11 +161,11 @@ int init_display(void) {
     //  Interface Pixel Format: 16-bit RGB565 colour (ST7789 Datasheet Page 224)
     static const uint8_t COLMOD_PARA[] = { 0x55 };
     rc = write_command(COLMOD, COLMOD_PARA, sizeof(COLMOD_PARA));  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0); ////
+    rc = flush_display();  assert(rc == 0); ////
     
     //  Display On: Turn on display (ST7789 Datasheet Page 196)
     rc = write_command(DISPON, NULL, 0);  assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0);
+    rc = flush_display();  assert(rc == 0);
     delay_ms(200);  //  Need to wait at least 200 milliseconds
     return 0;
 }
@@ -178,15 +188,15 @@ int display_image(void) {
         uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
         //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
-        memcpy(spi_tx_buf, image_data + offset, len);
+        memcpy(spi_unpacked_buf, image_data + offset, len);
 
         //  Set the display window
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
 
         //  Memory Write: Write the bytes from RAM to display (ST7789 Datasheet Page 202)
-        rc = write_command(RAMWR, NULL, 0); assert(rc == 0);
-        rc = write_data(spi_tx_buf, len);   assert(rc == 0);
-        rc = flush_spi();                   assert(rc == 0);
+        rc = write_command(RAMWR, NULL, 0);   assert(rc == 0);
+        rc = write_data(spi_unpacked_buf, len);  assert(rc == 0);
+        rc = flush_display();  assert(rc == 0);
     }
     printf("Image displayed\r\n");
     return 0;
@@ -201,13 +211,13 @@ int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom) {
     int rc = write_command(CASET, NULL, 0); assert(rc == 0);
     uint8_t col_para[4] = { 0x00, left, 0x00, right };
     rc = write_data(col_para, 4); assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0); ////
+    rc = flush_display();  assert(rc == 0); ////
 
     //  Set Address Window Rows (ST7789 Datasheet Page 200)
     rc = write_command(RASET, NULL, 0); assert(rc == 0);
     uint8_t row_para[4] = { 0x00, top, 0x00, bottom };
     rc = write_data(row_para, 4); assert(rc == 0);
-    rc = flush_spi();  assert(rc == 0); ////
+    rc = flush_display();  assert(rc == 0); ////
     return 0;
 }
 
@@ -217,16 +227,16 @@ static int set_orientation(uint8_t orientation) {
     if (RGB) {
         uint8_t orientation_para[1] = { orientation };
         int rc = write_command(MADCTL, orientation_para, 1);  assert(rc == 0);
-        rc = flush_spi();  assert(rc == 0); ////
+        rc = flush_display();  assert(rc == 0); ////
     } else {
         uint8_t orientation_para[1] = { orientation | 0x08 };
         int rc = write_command(MADCTL, orientation_para, 1); assert(rc == 0);
-        rc = flush_spi();  assert(rc == 0); ////
+        rc = flush_display();  assert(rc == 0); ////
     }
     return 0;
 }
 
-/// Transmit ST7789 command and parameters. `params` is the array of parameter bytes, `len` is the number of parameters.
+/// Write ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     //  Set Data / Command Bit to Low to tell ST7789 this is a command
     set_data_command(0);
@@ -243,7 +253,7 @@ int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     return 0;
 }
 
-/// Transmit data to ST7789. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
+/// Write ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len) {
     //  Set Data / Command Bit to High to tell ST7789 this is data
     set_data_command(1);
@@ -252,6 +262,23 @@ int write_data(const uint8_t *data, uint16_t len) {
     int rc = transmit_spi(data, len);
     assert(rc == 0);
     return 0;
+}
+
+/// 0 if we sending a command byte, 1 if we are sending data bytes
+static uint8_t data_command = 0;
+
+/// 0 if we sending a command byte, 1 if we are sending data bytes
+static void set_data_command(uint8_t data_command0) {
+    assert(data_command0 == 0 || data_command0 == 1);
+    data_command = data_command0;
+
+    //  Previously for 4-Wire 8-bit mode:
+    //  int rc = bl_gpio_output_set(DISPLAY_DC_PIN, data_command0); assert(rc == 0);
+}
+
+/// Transmit the ST7789 SPI Buffer
+int flush_display(void) {
+    #warning flush_display() not implemented
 }
 
 /// Write to the SPI port. `data` is the array of bytes to be written. `len` is the number of bytes.

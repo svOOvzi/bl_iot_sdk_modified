@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//  PineDio Stack Demo Firmware for ST7789 SPI
+//  PineDio Stack Demo Firmware for ST7789 SPI in 3-Wire (9-bit) Mode
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>

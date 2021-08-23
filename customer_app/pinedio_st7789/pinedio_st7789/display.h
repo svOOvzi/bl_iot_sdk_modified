@@ -74,10 +74,10 @@
 /// Number of rows in SPI Transmit and Receive Buffers. Used by display.c and lv_port_disp.c
 #define BUFFER_ROWS             (10)
 
-/// SPI Transmit Buffer. We always copy pixels from Flash ROM to RAM
+/// SPI Buffer for unpacked 8-bit data. We always copy pixels from Flash ROM to RAM
 /// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-extern uint8_t spi_tx_buf[];
+extern uint8_t spi_unpacked_buf[];
 
 /// Initialise the ST7789 display controller
 int init_display(void);
@@ -88,11 +88,14 @@ int display_image(void);
 /// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
 int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom);
 
-/// Transmit ST7789 command
+/// Write ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len);
 
-/// Transmit ST7789 data
+/// Write ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len);
+
+/// Transmit the ST7789 SPI Buffer
+int flush_display(void);
 
 /// Switch on backlight
 int backlight_on(void);
