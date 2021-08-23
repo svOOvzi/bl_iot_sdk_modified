@@ -76,7 +76,7 @@ extern spi_dev_t spi_device;
 
 static int set_orientation(uint8_t orientation);
 static void set_data_command(uint8_t data_command0);
-static int transmit_spi(const uint8_t *data, uint16_t len);
+static int transmit_unpacked(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
 
 /// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
@@ -236,13 +236,13 @@ static int set_orientation(uint8_t orientation) {
     return 0;
 }
 
-/// Write ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
+/// Write unpacked 8-bit ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     //  Set Data / Command Bit to Low to tell ST7789 this is a command
     set_data_command(0);
 
     //  Transmit the command byte
-    int rc = transmit_spi(&command, 1);
+    int rc = transmit_unpacked(&command, 1);
     assert(rc == 0);
 
     //  Transmit the parameters as data bytes
@@ -253,13 +253,13 @@ int write_command(uint8_t command, const uint8_t *params, uint16_t len) {
     return 0;
 }
 
-/// Write ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
+/// Write unpacked 8-bit ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len) {
     //  Set Data / Command Bit to High to tell ST7789 this is data
     set_data_command(1);
 
     //  Transmit the data bytes
-    int rc = transmit_spi(data, len);
+    int rc = transmit_unpacked(data, len);
     assert(rc == 0);
     return 0;
 }
@@ -276,16 +276,23 @@ static void set_data_command(uint8_t data_command0) {
     //  int rc = bl_gpio_output_set(DISPLAY_DC_PIN, data_command0); assert(rc == 0);
 }
 
-/// Transmit the ST7789 SPI Buffer
-int flush_display(void) {
-    #warning flush_display() not implemented
+/// Write unpacked 8-bit data to the SPI Buffer. `data` is the array of bytes to be written. `len` is the number of bytes.
+static int transmit_unpacked(const uint8_t *data, uint16_t len) {
+    #warning transmit_unpacked() not implemented
+    return 0;  //  TODO
 }
 
-/// Write to the SPI port. `data` is the array of bytes to be written. `len` is the number of bytes.
-static int transmit_spi(const uint8_t *data, uint16_t len) {
+/// Transmit the packed SPI Buffer to ST7789
+int flush_display(void) {
+    #warning flush_display() not implemented
+    return 0;  //  TODO
+}
+
+/// Write packed data to the SPI port. `data` is the array of bytes to be written. `len` is the number of bytes.
+static int transmit_packed(const uint8_t *data, uint16_t len) {
     assert(data != NULL);
     if (len == 0) { return 0; }
-    if (len > sizeof(spi_rx_buf)) { printf("transmit_spi error: Too much data %d\r\n", len); return 1; }
+    if (len > sizeof(spi_rx_buf)) { printf("transmit_unpacked error: Too much data %d\r\n", len); return 1; }
 
     //  Clear the receive buffer
     memset(&spi_rx_buf, 0, sizeof(spi_rx_buf));

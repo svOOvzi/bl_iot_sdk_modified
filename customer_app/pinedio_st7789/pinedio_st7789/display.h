@@ -88,13 +88,13 @@ int display_image(void);
 /// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
 int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom);
 
-/// Write ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
+/// Write unpacked 8-bit ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len);
 
-/// Write ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
+/// Write unpacked 8-bit ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len);
 
-/// Transmit the ST7789 SPI Buffer
+/// Transmit the packed SPI Buffer to ST7789
 int flush_display(void);
 
 /// Switch on backlight
