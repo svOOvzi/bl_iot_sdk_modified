@@ -6,10 +6,10 @@
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
 #include "demo.h"
 
-/// PineDio Stack: Red LED is connected on GPIO 13, LCD Backlight is connected on GPIO 21
+/// PineDio Stack: LCD Backlight is connected on GPIO 21
 /// PineCone: Blue LED is connected on GPIO 11
 /// TODO: Change the LED GPIO Pin Number for your BL602 / BL604 board
-#define LED_GPIO 13
+#define LED_GPIO 21
 
 /// Blink the LED
 void blinky(char *buf, int len, int argc, char **argv) {
