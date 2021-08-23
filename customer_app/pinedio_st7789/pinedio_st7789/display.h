@@ -27,10 +27,49 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef __DEMO_H__
-#define __DEMO_H__
+#ifndef __DISPLAY_H__
+#define __DISPLAY_H__
 
-/// Init the command-line interface
-int cli_init(void);
+/* Connect PineDio Stack to ST7789 SPI Display
+| BL602 Pin     | ST7789 SPI
+|:--------------|:--------------------
+| __`GPIO 21`__ | Backlight
+| __`GPIO 20`__ | `CS`
+| __`GPIO 11`__ | `SCK`
+| __`GPIO 0`__  | `MISO`
+| __`GPIO 17`__ | `MOSI`
+| __`3V3`__     | `3.3V`
+| __`GND`__     | `GND`
+*/
+
+/// GPIO for Backlight
+#define DISPLAY_BLK_PIN  21
+
+/// GPIO for ST7789 SPI Chip Select Pin. We control Chip Select ourselves via GPIO, not SPI.
+#define DISPLAY_CS_PIN   20
+
+/// GPIO for ST7789 SPI SCK Pin
+#define DISPLAY_SCK_PIN  11
+
+/// GPIO for ST7789 SPI MISO Pin
+#define DISPLAY_MISO_PIN  0
+
+/// GPIO for ST7789 SPI MOSI Pin
+#define DISPLAY_MOSI_PIN 17
+
+/// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
+#define DISPLAY_UNUSED_CS_PIN 8
+
+/// Initialise the ST7789 display controller
+int init_display(void);
+
+/// Display image on ST7789 display controller
+int display_image(void);
+
+/// Switch on backlight
+int backlight_on(void);
+
+/// Switch off backlight
+int backlight_off(void);
 
 #endif

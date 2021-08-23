@@ -108,7 +108,7 @@ int init_display(void) {
     rc = bl_gpio_enable_output(DISPLAY_RST_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
 
-    //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
+    //  Set Chip Select pin to High, to deactivate SPI Peripheral
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
 
@@ -264,7 +264,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     transfer.rx_buf = (uint32_t) spi_rx_buf;  //  Receive Buffer
     transfer.len    = len;                    //  How many bytes
 
-    //  Select the SPI Peripheral (not used for ST7789)
+    //  Select the SPI Peripheral
     printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
     int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
     assert(rc == 0);
@@ -281,7 +281,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     //  hal_spi_transfer will wait for the SPI Transfer to complete before returning.
     //  Now that we're done with the SPI Transfer...
 
-    //  De-select the SPI Peripheral (not used for ST7789)
+    //  De-select the SPI Peripheral
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);

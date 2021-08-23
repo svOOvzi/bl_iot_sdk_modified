@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//  BL602 Demo Firmware for ST7789 SPI
+//  PineDio Stack Demo Firmware for ST7789 SPI
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -35,29 +35,14 @@
 #include <task.h>
 #include <semphr.h>
 
-#include "demo.h"            //  For display pins
-#include "lv_port_disp.h"    //  For display functions
+#include "demo.h"            //  For Command-Line Interface
+#include "display.h"         //  For Display Pins and Functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
-
-/* Connect BL602 to ST7789 SPI Display. See demo.h
-| BL602 Pin     | ST7789 SPI          | Wire Colour 
-|:--------------|:--------------------|:-------------------
-| __`GPIO 1`__  | Do Not <br> Connect <br> _(MISO)_ |
-| __`GPIO 2`__  | Do Not <br> Connect |
-| __`GPIO 3`__  | `SCL`               | Yellow 
-| __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `DC`                | White
-| __`GPIO 11`__ | `RST`               | Orange
-| __`GPIO 12`__ | `BLK`               | Purple
-| __`GPIO 14`__ | Do Not <br> Connect |
-| __`3V3`__     | `3.3V`              | Red
-| __`GND`__     | `GND`               | Black
-*/
 
 /// Use SPI Port Number 0
 #define SPI_PORT   0
@@ -84,10 +69,10 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
-        3,   //  (Yellow) SPI Clock Pin 
-        2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
-        1,   //  (Green)  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
-        4    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
+        DISPLAY_SCK_PIN,        //  SPI Clock Pin 
+        DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
+        DISPLAY_MISO_PIN,       //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
+        DISPLAY_MOSI_PIN        //  SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 
@@ -143,6 +128,7 @@ static void test_backlight_off(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
+#ifdef NOTUSED
 /// Command to init LVGL. Should be done after `display_init`
 static void test_lvgl_init(char *buf, int len, int argc, char **argv)
 {
@@ -170,6 +156,7 @@ static void test_lvgl_render(char *buf, int len, int argc, char **argv)
     int rc = lvgl_render();
     assert(rc == 0);
 }
+#endif  //  NOTUSED
 
 /// Command to init display, display image
 static void test_1(char *buf, int len, int argc, char **argv) {
@@ -177,6 +164,7 @@ static void test_1(char *buf, int len, int argc, char **argv) {
     test_display_image("", 0, 0, NULL);
 }
 
+#ifdef NOTUSED
 /// Command to init display, init LVGL, create LVGL widgets, render LVGL display
 static void test_2(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
@@ -190,6 +178,7 @@ static void test_3(char *buf, int len, int argc, char **argv) {
     test_lvgl_update("", 0, 0, NULL);
     test_lvgl_render("", 0, 0, NULL);
 }
+#endif  //  NOTUSED
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
@@ -198,13 +187,13 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_result", "Show result",   test_display_result},
     {"backlight_on",   "Backlight on",  test_backlight_on},
     {"backlight_off",  "Backlight off", test_backlight_off},
-    {"lvgl_init",      "Init LVGL",            test_lvgl_init},
-    {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
-    {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
-    {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
+    //  {"lvgl_init",      "Init LVGL",            test_lvgl_init},
+    //  {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
+    //  {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
+    //  {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
     {"1",              "Init display, display image", test_1},
-    {"2",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_2},
-    {"3",              "Update LVGL widgets, render LVGL display", test_3},
+    //  {"2",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_2},
+    //  {"3",              "Update LVGL widgets, render LVGL display", test_3},
 };
 
 /// Init the command-line interface
