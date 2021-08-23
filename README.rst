@@ -1,3 +1,5 @@
+This is the 3wire branch for testing ST7789 SPI Display connected to PineDio Stack BL604 in 3-Wire, 9-Bit Mode
+
 Pine64 BL602 SDK modded for the articles...
 
 - `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
