@@ -21,12 +21,10 @@
    Graphical settings
  *====================*/
 
-/// Number of rows in SPI Transmit and Receive Buffers. Used by display.c and lv_port_disp.c
-#define BUFFER_ROWS             (10)
-
 /* Maximal horizontal and vertical resolution to support by the library.*/
-#define LV_HOR_RES_MAX          (240)
-#define LV_VER_RES_MAX          (240)
+//  Moved to display.h
+//  #define LV_HOR_RES_MAX          (240)
+//  #define LV_VER_RES_MAX          (240)
 
 /* Color depth:
  * - 1:  1 byte per pixel
@@ -34,7 +32,8 @@
  * - 16: RGB565
  * - 32: ARGB8888
  */
-#define LV_COLOR_DEPTH     16
+//  Moved to display.h
+//  #define LV_COLOR_DEPTH     16
 
 /* Swap the 2 bytes of RGB565 color.
  * Useful if the display has a 8 bit interface (e.g. SPI)*/

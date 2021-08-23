@@ -56,35 +56,6 @@ extern "C" {
 void lv_port_disp_init(void);
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Defined in display.c
-
-/// SPI Transmit Buffer. We always copy pixels from Flash ROM to RAM
-/// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
-/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-extern uint8_t spi_tx_buf[];
-
-/// Initialise the ST7789 display controller
-int init_display(void);
-
-/// Display image on ST7789 display controller
-int display_image(void);
-
-/// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
-int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom);
-
-/// Transmit ST7789 command
-int write_command(uint8_t command, const uint8_t *params, uint16_t len);
-
-/// Transmit ST7789 data
-int write_data(const uint8_t *data, uint16_t len);
-
-/// Switch on backlight
-int backlight_on(void);
-
-/// Switch off backlight
-int backlight_off(void);
-
-///////////////////////////////////////////////////////////////////////////////
 //  Defined in lvgl.c
 
 /// Init the LVGL library
