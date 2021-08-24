@@ -276,15 +276,124 @@ static void set_data_command(uint8_t data_command0) {
     //  int rc = bl_gpio_output_set(DISPLAY_DC_PIN, data_command0); assert(rc == 0);
 }
 
-/// Write unpacked 8-bit data to the SPI Buffer. `data` is the array of bytes to be written. `len` is the number of bytes.
+/// Number of bytes used in spi_unpacked_buf
+static uint16_t spi_unpacked_len = 0;
+
+/// Number of bytes used in spi_packed_buf
+static uint16_t spi_packed_len   = 0;
+
+/// Write unpacked 8-bit data to the packed SPI Buffer. `data` is the array of bytes to be written. `len` is the number of bytes.
 static int transmit_unpacked(const uint8_t *data, uint16_t len) {
-    #warning transmit_unpacked() not implemented
-    return 0;  //  TODO
+    if (len == 0) { return 0; }  //  Nothing to transmit
+    for (uint16_t i = 0; i < len; i++) {
+        //  Pack the byte into the packed SPI Buffer
+        pack_byte(data[i]);
+    }
+    return 0;
+}
+
+/*
+To pack 9-bit data into bytes, we do this for every 8 bytes of unpacked data:
+
+If Unpacked Length mod 8 is...
+
+0: 
+DC -> P0 bit 7
+U bits 1 to 7 -> P0 bits 0 to 6,
+U bits 0 to 0 -> P1 bits 7 to 7
+
+1:
+DC -> P0 bit 6
+U bits 2 to 7 -> P0 bits 0 to 5
+U bits 0 to 1 -> P1 bits 6 to 7
+
+2:
+DC -> P0 bit 5
+U bits 3 to 7 -> P0 bits 0 to 4
+U bits 0 to 2 -> P1 bits 5 to 7
+
+...
+
+6:
+DC -> P0 bit 1
+U bits 7 to 7 -> P0 bits 0 to 0
+U bits 0 to 6 -> P1 bits 1 to 7
+
+7:
+DC -> P0 bit 0
+U bits 0 to 7 -> P0 bits 0 to 7
+(No change to P1)
+
+Where...
+  DC is the Data/Command bit (0 = command, 1 = data)
+  U is the unpacked 8-bit data byte,
+  P0 is the current byte of the packed data,
+  P1 is the next byte of the packed data.
+*/
+
+/// Pack the unpacked byte into the packed SPI Buffer
+static void pack_byte(uint8_t u) {
+    //  MOD is the unpacked length mod 8
+    uint8_t mod = spi_unpacked_len % 8;
+    spi_unpacked_len += 1;
+
+    //  For MOD=0: We will write 2 new packed bytes (partial).
+    //  For MOD=1 to 6: We will write 1 new packed byte (partial).
+    //  For MOD=7: We will update the last packed byte. (No new packed bytes)
+    if (mod == 0)     { spi_packed_len += 2; }
+    else if (mod < 7) { spi_packed_len += 1; }
+
+    //  P0 is the current byte of the packed data,
+    //  P1 is the next byte of the packed data.
+    uint16_t p0_index = (mod < 7) 
+        ? (spi_packed_len - 2)   //  For MOD=0 to 6: P0 is the second last byte of the packed data
+        : (spi_packed_len - 1);  //  For MOD=7: P0 is the last byte of the packed data
+    uint16_t p1_index = p0_index + 1;
+
+    assert(p0_index < spi_packed_len);
+    uint8_t p0 = spi_packed_buf[p0_index];
+    uint8_t p1 = spi_packed_buf[p1_index];
+
+    //  For MOD=0: DC -> P0 bit 7
+    //  For MOD=1: DC -> P0 bit 6
+    //  For MOD=6: DC -> P0 bit 1
+    //  For MOD=7: DC -> P0 bit 0
+    uint8_t dc_bit = 7 - mod;
+    copy_bits(         //  Copy the bits...
+        data_command,  //  From Data/Command bit (0 = command, 1 = data)
+        0,             //  Start at bit 0
+        0,             //  End at bit 0
+        p0_index,      //  To destination P0
+        dc_bit         //  At DC Bit
+    );    
+
+    //  For MOD=0: U bits 1 to 7 -> P0 bits 0 to 6,
+    //  For MOD=1: U bits 2 to 7 -> P0 bits 0 to 5
+    //  For MOD=6: U bits 7 to 7 -> P0 bits 0 to 0
+    //  For MOD=7: U bits 0 to 7 -> P0 bits 0 to 7
+
+    //  For MOD=0: U bits 0 to 0 -> P1 bits 7 to 7
+    //  For MOD=1: U bits 0 to 1 -> P1 bits 6 to 7
+    //  For MOD=6: U bits 0 to 6 -> P1 bits 1 to 7
+    //  For MOD=7: No change to P1
+}
+
+/// Copy the bits from src, starting at bit src_start_bit, ending at bit src_end_bit,
+/// to spi_packed_buf[dest_index], starting at dest_start_bit.
+static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit, 
+    uint16_t dest_index, uint8_t dest_start_bit) {
+    assert(dest_index < spi_packed_len);
 }
 
 /// Transmit the packed SPI Buffer to ST7789
 int flush_display(void) {
-    #warning flush_display() not implemented
+    if (spi_packed_len == 0) { return 0; }  //  Nothing to transmit
+
+    //  TODO: Erase the remaining data up to the end of the of the 9-byte chunk
+    
+    //  Reset the unpacked and packed lengths
+    spi_unpacked_len = 0;
+    spi_packed_len   = 0;
     return 0;  //  TODO
 }
 
