@@ -77,6 +77,9 @@ extern spi_dev_t spi_device;
 static int set_orientation(uint8_t orientation);
 static void set_data_command(uint8_t data_command0);
 static int transmit_unpacked(const uint8_t *data, uint16_t len);
+static void pack_byte(uint8_t u);
+static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit, 
+    uint16_t dest_index, uint8_t dest_start_bit);
 static void delay_ms(uint32_t ms);
 
 /// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
@@ -294,6 +297,7 @@ static int transmit_unpacked(const uint8_t *data, uint16_t len) {
 
 /*
 To pack 9-bit data into bytes, we do this for every 8 bytes of unpacked data:
+(Most Significant Bit first)
 
 If Unpacked Length mod 8 is...
 
@@ -322,7 +326,7 @@ U bits 0 to 6 -> P1 bits 1 to 7
 7:
 DC -> P0 bit 0
 U bits 0 to 7 -> P0 bits 0 to 7
-(No change to P1)
+No change to P1
 
 Where...
   DC is the Data/Command bit (0 = command, 1 = data)
@@ -349,10 +353,7 @@ static void pack_byte(uint8_t u) {
         ? (spi_packed_len - 2)   //  For MOD=0 to 6: P0 is the second last byte of the packed data
         : (spi_packed_len - 1);  //  For MOD=7: P0 is the last byte of the packed data
     uint16_t p1_index = p0_index + 1;
-
     assert(p0_index < spi_packed_len);
-    uint8_t p0 = spi_packed_buf[p0_index];
-    uint8_t p1 = spi_packed_buf[p1_index];
 
     //  For MOD=0: DC -> P0 bit 7
     //  For MOD=1: DC -> P0 bit 6
@@ -371,18 +372,73 @@ static void pack_byte(uint8_t u) {
     //  For MOD=1: U bits 2 to 7 -> P0 bits 0 to 5
     //  For MOD=6: U bits 7 to 7 -> P0 bits 0 to 0
     //  For MOD=7: U bits 0 to 7 -> P0 bits 0 to 7
+    uint8_t u_start  = (mod + 1) % 8;
+    uint8_t u_end    = 7;
+    uint8_t p0_start = 0;
+    copy_bits(     //  Copy the bits...
+        u,         //  From unpacked byte
+        u_start,   //  Start at this bit
+        u_end,     //  End at this bit
+        p0_index,  //  To destination P0
+        p0_start   //  Start at this bit
+    );    
 
     //  For MOD=0: U bits 0 to 0 -> P1 bits 7 to 7
     //  For MOD=1: U bits 0 to 1 -> P1 bits 6 to 7
     //  For MOD=6: U bits 0 to 6 -> P1 bits 1 to 7
     //  For MOD=7: No change to P1
+    if (mod < 7) {
+        uint8_t u_start  = 0;
+        uint8_t u_end    = mod;
+        uint8_t p1_start = 7 - mod;
+        copy_bits(     //  Copy the bits...
+            u,         //  From unpacked byte
+            u_start,   //  Start at this bit
+            u_end,     //  End at this bit
+            p1_index,  //  To destination P1
+            p1_start   //  Start at this bit
+        );    
+    }
 }
 
 /// Copy the bits from src, starting at bit src_start_bit, ending at bit src_end_bit,
 /// to spi_packed_buf[dest_index], starting at dest_start_bit.
 static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit, 
     uint16_t dest_index, uint8_t dest_start_bit) {
+    uint8_t num_bits = src_end_bit - src_start_bit + 1;
+    assert(num_bits <= 8);
+    assert(src_end_bit <= 7);
+    assert(src_start_bit <= 7);
+    assert(src_start_bit <= src_end_bit);
+    assert(dest_start_bit + num_bits <= 8);
     assert(dest_index < spi_packed_len);
+
+    //  Assume src_start_bit=2, src_end_bit=5, dest_start_bit=3, num_bits=4
+    //  If the Src Bits are ??xxxx??, shift the bits to become 00??xxxx
+    uint8_t src_shift = src >> src_start_bit;
+
+    //  Mask out the Src Bits: 00??xxxx becomes 0000xxxx
+    uint8_t src_mask = (1 << num_bits) - 1;
+    src_shift &= src_mask;
+
+    //  Shift the bits 0000xxxx to match the Dest Start Bit: 0xxxx000
+    uint8_t dest_shift = src_shift << dest_start_bit;
+
+    //  Get the Dest Byte y????yyy
+    uint8_t dest = spi_packed_buf[dest_index];
+
+    //  Compute the Dest Mask 01111000
+    uint8_t dest_mask = ((1 << num_bits) - 1)
+        << dest_start_bit;
+
+    //  Mask out the Dest Bits: y????yyy becomes y0000yyy
+    dest &= ~dest_mask;
+
+    //  Merge with the shifted bits to become yxxxxyyy
+    dest |= dest_shift;
+
+    //  Update the Dest Byte
+    spi_packed_buf[dest_index] = dest;
 }
 
 /// Transmit the packed SPI Buffer to ST7789
