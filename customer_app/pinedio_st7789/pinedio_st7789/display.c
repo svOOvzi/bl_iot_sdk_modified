@@ -77,6 +77,7 @@ extern spi_dev_t spi_device;
 static int set_orientation(uint8_t orientation);
 static void set_data_command(uint8_t data_command0);
 static int transmit_unpacked(const uint8_t *data, uint16_t len);
+static int transmit_packed(const uint8_t *data, uint16_t len);
 static void pack_byte(uint8_t u);
 static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit, 
     uint16_t dest_index, uint8_t dest_start_bit);
@@ -347,13 +348,12 @@ static void pack_byte(uint8_t u) {
     if (mod == 0)     { spi_packed_len += 2; }
     else if (mod < 7) { spi_packed_len += 1; }
 
-    //  P0 is the current byte of the packed data,
-    //  P1 is the next byte of the packed data.
+    //  P0 is the current byte of the packed data
     uint16_t p0_index = (mod < 7) 
         ? (spi_packed_len - 2)   //  For MOD=0 to 6: P0 is the second last byte of the packed data
         : (spi_packed_len - 1);  //  For MOD=7: P0 is the last byte of the packed data
-    uint16_t p1_index = p0_index + 1;
     assert(p0_index < spi_packed_len);
+    assert(p0_index < sizeof(spi_packed_buf));
 
     //  For MOD=0: DC -> P0 bit 7
     //  For MOD=1: DC -> P0 bit 6
@@ -388,9 +388,13 @@ static void pack_byte(uint8_t u) {
     //  For MOD=6: U bits 0 to 6 -> P1 bits 1 to 7
     //  For MOD=7: No change to P1
     if (mod < 7) {
-        uint8_t u_start  = 0;
-        uint8_t u_end    = mod;
-        uint8_t p1_start = 7 - mod;
+        //  P1 is the next byte of the packed data.
+        uint16_t p1_index = p0_index + 1;
+        assert(p1_index < sizeof(spi_packed_buf));
+
+        uint8_t u_start   = 0;
+        uint8_t u_end     = mod;
+        uint8_t p1_start  = 7 - mod;
         copy_bits(     //  Copy the bits...
             u,         //  From unpacked byte
             u_start,   //  Start at this bit
@@ -412,6 +416,7 @@ static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit,
     assert(src_start_bit <= src_end_bit);
     assert(dest_start_bit + num_bits <= 8);
     assert(dest_index < spi_packed_len);
+    assert(dest_index < sizeof(spi_packed_buf));
 
     //  Assume src_start_bit=2, src_end_bit=5, dest_start_bit=3, num_bits=4
     //  If the Src Bits are ??xxxx??, shift the bits to become 00??xxxx
@@ -445,19 +450,34 @@ static void copy_bits(uint8_t src, uint8_t src_start_bit, uint8_t src_end_bit,
 int flush_display(void) {
     if (spi_packed_len == 0) { return 0; }  //  Nothing to transmit
 
-    //  TODO: Erase the remaining data up to the end of the of the 9-byte chunk
+    //  Fill the remaining packed data with NOP (0x00) 
+    //  up to the end of the of the 8-byte unpacked chunk
+    //  TODO: Optimise this
+    data_command = 0;  //  Sending a NOP Command
+    while (spi_unpacked_len % 8 != 0) {
+        pack_byte(0x00);  //  Command NOP
+    }
+
+    //  We only transmit in chunks of 8 bytes of unpacked data,
+    //  equivalent to 9 bytes of packed data.
+    assert(spi_unpacked_len % 8 == 0);
+    assert(spi_packed_len   % 9 == 0);
+    assert(spi_packed_len <= sizeof(spi_packed_buf));
+
+    //  Tranmsit the packed data
+    int rc = transmit_packed(spi_packed_buf, spi_packed_len);
     
     //  Reset the unpacked and packed lengths
     spi_unpacked_len = 0;
     spi_packed_len   = 0;
-    return 0;  //  TODO
+    return rc;
 }
 
 /// Write packed data to the SPI port. `data` is the array of bytes to be written. `len` is the number of bytes.
 static int transmit_packed(const uint8_t *data, uint16_t len) {
     assert(data != NULL);
     if (len == 0) { return 0; }
-    if (len > sizeof(spi_rx_buf)) { printf("transmit_unpacked error: Too much data %d\r\n", len); return 1; }
+    if (len > sizeof(spi_rx_buf)) { printf("transmit_packed error: Too much data %d\r\n", len); return 1; }
 
     //  Clear the receive buffer
     memset(&spi_rx_buf, 0, sizeof(spi_rx_buf));
