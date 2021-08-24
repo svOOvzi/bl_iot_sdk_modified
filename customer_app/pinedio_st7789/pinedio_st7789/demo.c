@@ -228,8 +228,79 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 # display_init
 Set CS pin 20 to high
 Set BLK pin 21 to high
-Flush: 8 bytes:
- 00 80 00 00 00 00 00 00
-Assertion Failed "spi_packed_len % 9 == 0": file "/Users/Luppy/pinecone/bl_iot_sdk/customer_app/pinedio_st7789/pinedio_st7789/display.c", line 472, function: flush_display
+SPI Tx: 9 bytes:
+ 00 80 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+TODO Delay 200
+SPI Tx: 9 bytes:
+ 08 80 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+TODO Delay 200
+SPI Tx: 9 bytes:
+ 19 c0 20 11 48 04 02 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 09 80 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+TODO Delay 10
+SPI Tx: 9 bytes:
+ 10 80 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 1b 40 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 1d 55 40 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 14 80 00 00 00 00 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+TODO Delay 200
+
+# display_image
+Displaying image...
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 15 c0 20 10 08 48 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 5409 bytes:
+ 16 69 66 b6 ba 6d 0a 93 74 88 6d 7a f4 a9 4e 0f 9f ef ce f7...
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 15 c0 21 50 08 98 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 5409 bytes:
+ 16 63 32 5b 5e bd 6b 97 21 92 56 e1 97 48 86 b7 af ef de f1...
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 9 bytes:
+ 15 c0 22 90 08 e8 00 00 00
+Set CS pin 20 to low
+Set CS pin 20 to high
+SPI Tx: 5409 bytes:
+ 16 50 b5 56 3d 7d cf 9f 29 a2 c8 64 98 cd 96 d7 af 9c fa 5a...
+Set CS pin 20 to low
 
 */
