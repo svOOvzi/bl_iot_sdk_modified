@@ -96,11 +96,11 @@ uint8_t spi_unpacked_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
 /// SPI Buffer for packed 9-bit data
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-uint8_t spi_packed_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 2];  //  TODO
+uint8_t spi_packed_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  TODO
 
 /// SPI Receive Buffer. We don't actually receive data, but SPI Transfer needs this.
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 2];  //  TODO
+static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  TODO
 
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
