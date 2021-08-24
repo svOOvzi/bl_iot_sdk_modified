@@ -72,7 +72,8 @@
 #define LV_COLOR_DEPTH     16
 
 /// Number of rows in SPI Transmit and Receive Buffers. Used by display.c and lv_port_disp.c
-#define BUFFER_ROWS             (10)
+////#define BUFFER_ROWS             (10)
+#define BUFFER_ROWS             (1) ////
 
 /// SPI Buffer for unpacked 8-bit data. We always copy pixels from Flash ROM to RAM
 /// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.

@@ -192,7 +192,8 @@ int display_image(void) {
         uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
         //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
-        memcpy(spi_unpacked_buf, image_data + offset, len);
+        ////memcpy(spi_unpacked_buf, image_data + offset, len);
+        memset(spi_unpacked_buf, 0b10101010, len); ////
 
         //  Set the display window
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
@@ -531,9 +532,9 @@ static int hard_reset(void) {
 
 /// Switch on backlight
 int backlight_on(void) {
-    //  Set the Backlight Pin to High
-    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
-    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
+    //  Set the Backlight Pin to Low
+    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
     return 0;
 
@@ -545,9 +546,9 @@ int backlight_on(void) {
 
 /// Switch off backlight
 int backlight_off(void) {
-    //  Set the Backlight Pin to Low
-    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
-    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
+    //  Set the Backlight Pin to High
+    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
     assert(rc == 0);
     return 0;
 }
