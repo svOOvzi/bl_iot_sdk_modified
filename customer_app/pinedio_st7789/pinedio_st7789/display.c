@@ -304,7 +304,7 @@ If Unpacked Length mod 8 is...
 
 0: 
 DC -> P0 bit 7
-U bits 1 to 7 -> P0 bits 0 to 6,
+U bits 1 to 7 -> P0 bits 0 to 6
 U bits 0 to 0 -> P1 bits 7 to 7
 
 1:
@@ -326,8 +326,7 @@ U bits 0 to 6 -> P1 bits 1 to 7
 
 7:
 DC -> P0 bit 0
-U bits 0 to 7 -> P0 bits 0 to 7
-No change to P1
+U bits 0 to 7 -> P1 bits 0 to 7
 
 Where...
   DC is the Data/Command bit (0 = command, 1 = data)
@@ -342,18 +341,21 @@ static void pack_byte(uint8_t u) {
     uint8_t mod = spi_unpacked_len % 8;
     spi_unpacked_len += 1;
 
+    //  Grow the packed data length.
     //  For MOD=0: We will write 2 new packed bytes (partial).
-    //  For MOD=1 to 6: We will write 1 new packed byte (partial).
-    //  For MOD=7: We will update the last packed byte. (No new packed bytes)
-    if (mod == 0)     { spi_packed_len += 2; }
-    else if (mod < 7) { spi_packed_len += 1; }
+    //  For MOD=1 to 7: We will write 1 new packed byte (partial or full).
+    if (mod == 0) { spi_packed_len += 2; }
+    else          { spi_packed_len += 1; }
 
-    //  P0 is the current byte of the packed data
-    uint16_t p0_index = (mod < 7) 
-        ? (spi_packed_len - 2)   //  For MOD=0 to 6: P0 is the second last byte of the packed data
-        : (spi_packed_len - 1);  //  For MOD=7: P0 is the last byte of the packed data
+    //  P0 is the second-last byte of the packed data
+    uint16_t p0_index = spi_packed_len - 2;
     assert(p0_index < spi_packed_len);
     assert(p0_index < sizeof(spi_packed_buf));
+
+    //  P1 is the last byte of the packed data
+    uint16_t p1_index = p0_index + 1;
+    assert(p1_index < spi_packed_len);
+    assert(p1_index < sizeof(spi_packed_buf));
 
     //  For MOD=0: DC -> P0 bit 7
     //  For MOD=1: DC -> P0 bit 6
@@ -368,41 +370,37 @@ static void pack_byte(uint8_t u) {
         dc_bit         //  At DC Bit
     );    
 
-    //  For MOD=0: U bits 1 to 7 -> P0 bits 0 to 6,
+    //  For MOD=0: U bits 1 to 7 -> P0 bits 0 to 6
     //  For MOD=1: U bits 2 to 7 -> P0 bits 0 to 5
     //  For MOD=6: U bits 7 to 7 -> P0 bits 0 to 0
-    //  For MOD=7: U bits 0 to 7 -> P0 bits 0 to 7
-    uint8_t u_start  = (mod + 1) % 8;
-    uint8_t u_end    = 7;
-    uint8_t p0_start = 0;
-    copy_bits(     //  Copy the bits...
-        u,         //  From unpacked byte
-        u_start,   //  Start at this bit
-        u_end,     //  End at this bit
-        p0_index,  //  To destination P0
-        p0_start   //  Start at this bit
-    );    
-
-    //  For MOD=0: U bits 0 to 0 -> P1 bits 7 to 7
-    //  For MOD=1: U bits 0 to 1 -> P1 bits 6 to 7
-    //  For MOD=6: U bits 0 to 6 -> P1 bits 1 to 7
-    //  For MOD=7: No change to P1
+    //  For MOD=7: No change to P0
     if (mod < 7) {
-        //  P1 is the next byte of the packed data.
-        uint16_t p1_index = p0_index + 1;
-        assert(p1_index < sizeof(spi_packed_buf));
-
-        uint8_t u_start   = 0;
-        uint8_t u_end     = mod;
-        uint8_t p1_start  = 7 - mod;
+        uint8_t u_start  = (mod + 1) % 8;
+        uint8_t u_end    = 7;
+        uint8_t p0_start = 0;
         copy_bits(     //  Copy the bits...
             u,         //  From unpacked byte
             u_start,   //  Start at this bit
             u_end,     //  End at this bit
-            p1_index,  //  To destination P1
-            p1_start   //  Start at this bit
+            p0_index,  //  To destination P0
+            p0_start   //  Start at this bit
         );    
     }
+
+    //  For MOD=0: U bits 0 to 0 -> P1 bits 7 to 7
+    //  For MOD=1: U bits 0 to 1 -> P1 bits 6 to 7
+    //  For MOD=6: U bits 0 to 6 -> P1 bits 1 to 7
+    //  For MOD=7: U bits 0 to 7 -> P1 bits 0 to 7
+    uint8_t u_start   = 0;
+    uint8_t u_end     = mod;
+    uint8_t p1_start  = 7 - mod;
+    copy_bits(     //  Copy the bits...
+        u,         //  From unpacked byte
+        u_start,   //  Start at this bit
+        u_end,     //  End at this bit
+        p1_index,  //  To destination P1
+        p1_start   //  Start at this bit
+    );    
 }
 
 /// Copy the bits from src, starting at bit src_start_bit, ending at bit src_end_bit,
@@ -457,14 +455,6 @@ int flush_display(void) {
     while (spi_unpacked_len % 8 != 0) {
         pack_byte(0x00);  //  Command NOP
     }
-
-    //  Dump the data
-    const uint8_t *data = spi_packed_buf;
-    uint16_t len        = spi_packed_len;
-    printf("Flush: %d bytes:\r\n", (int) len); int i;
-    for (i = 0; i < 20 && i < len; i++) { printf(" %02x", data[i]); }
-    if (i < len) { printf("..."); }
-    printf("\r\n");
 
     //  We only transmit in chunks of 8 bytes of unpacked data,
     //  equivalent to 9 bytes of packed data.
