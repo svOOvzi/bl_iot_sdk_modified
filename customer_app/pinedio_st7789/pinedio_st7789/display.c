@@ -479,6 +479,12 @@ static int transmit_packed(const uint8_t *data, uint16_t len) {
     if (len == 0) { return 0; }
     if (len > sizeof(spi_rx_buf)) { printf("transmit_packed error: Too much data %d\r\n", len); return 1; }
 
+    //  Dump the data
+    printf("SPI Tx: %d bytes:\r\n", (int) len);
+    for (int i = 0; i < 20 && i < len; i++) { printf(" %02x", data[i]); }
+    if (i < len) { printf("..."); }
+    printf("\r\n");
+
     //  Clear the receive buffer
     memset(&spi_rx_buf, 0, sizeof(spi_rx_buf));
 
