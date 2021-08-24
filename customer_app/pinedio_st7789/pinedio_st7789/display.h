@@ -60,6 +60,9 @@
 /// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
 #define DISPLAY_UNUSED_CS_PIN 8
 
+/// For Debug Only: GPIO for SPI Chip Select Pin that is exposed on GPIO Connector and can be connected to Logic Analyser
+#define DISPLAY_DEBUG_CS_PIN 5
+
 /// Maximal horizontal and vertical resolution
 ////#define LV_HOR_RES_MAX          (240)
 #define LV_HOR_RES_MAX          2 ////

@@ -106,9 +106,10 @@ static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  T
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
     //  Configure Chip Select, Backlight pins as GPIO Pins
-    GLB_GPIO_Type pins[2];
+    GLB_GPIO_Type pins[3];  //  TODO: Init with pins
     pins[0] = DISPLAY_CS_PIN;
     pins[1] = DISPLAY_BLK_PIN;
+    pins[2] = DISPLAY_DEBUG_CS_PIN;  //  TODO: Remove in production
     BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
     assert(rc2 == SUCCESS);
 
@@ -116,10 +117,15 @@ int init_display(void) {
     int rc;
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
 
     //  Set Chip Select pin to High, to deactivate SPI Peripheral
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
+
+    //  TODO: Remove in production
+    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
     //  Switch on backlight
     rc = backlight_on();  assert(rc == 0);
@@ -499,6 +505,11 @@ static int transmit_packed(const uint8_t *data, uint16_t len) {
     int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
     assert(rc == 0);
 
+    //  TODO: Remove in production
+    printf("Set Debug CS pin %d to low\r\n", DISPLAY_DEBUG_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 0);
+    assert(rc == 0);
+
     //  Execute the SPI Transfer with the DMA Controller
     rc = hal_spi_transfer(
         &spi_device,  //  SPI Device
@@ -515,6 +526,12 @@ static int transmit_packed(const uint8_t *data, uint16_t len) {
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+
+    //  TODO: Remove in production
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);
+    assert(rc == 0);
+    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
+
     return 0;
 }
 
