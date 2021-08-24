@@ -222,3 +222,14 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 	//  Loop forever, do not pass go, do not collect $200
 	for (;;) {}
 }
+
+/* Output Log:
+
+# display_init
+Set CS pin 20 to high
+Set BLK pin 21 to high
+Flush: 8 bytes:
+ 00 80 00 00 00 00 00 00
+Assertion Failed "spi_packed_len % 9 == 0": file "/Users/Luppy/pinecone/bl_iot_sdk/customer_app/pinedio_st7789/pinedio_st7789/display.c", line 472, function: flush_display
+
+*/
