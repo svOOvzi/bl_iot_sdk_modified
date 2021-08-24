@@ -458,6 +458,14 @@ int flush_display(void) {
         pack_byte(0x00);  //  Command NOP
     }
 
+    //  Dump the data
+    const uint8_t *data = spi_packed_buf;
+    uint16_t len        = spi_packed_len;
+    printf("Flush: %d bytes:\r\n", (int) len); int i;
+    for (i = 0; i < 20 && i < len; i++) { printf(" %02x", data[i]); }
+    if (i < len) { printf("..."); }
+    printf("\r\n");
+
     //  We only transmit in chunks of 8 bytes of unpacked data,
     //  equivalent to 9 bytes of packed data.
     assert(spi_unpacked_len % 8 == 0);
