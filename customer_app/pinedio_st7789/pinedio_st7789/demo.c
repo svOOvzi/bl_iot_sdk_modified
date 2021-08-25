@@ -73,7 +73,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         DISPLAY_SCK_PIN,        //  SPI Clock Pin 
         DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
         DISPLAY_MOSI_PIN,       //  SPI Serial Data Out Pin (formerly MOSI)
-        DISPLAY_MISO_PIN,       //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
+        DISPLAY_MISO_PIN        //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
     );
     assert(rc == 0);
 
