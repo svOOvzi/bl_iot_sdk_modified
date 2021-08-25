@@ -64,10 +64,8 @@
 #define DISPLAY_DEBUG_CS_PIN 5
 
 /// Maximal horizontal and vertical resolution
-////#define LV_HOR_RES_MAX          (240)
-#define LV_HOR_RES_MAX          2 ////
-////#define LV_VER_RES_MAX          (240)
-#define LV_VER_RES_MAX          10 ////
+#define LV_HOR_RES_MAX          (240)
+#define LV_VER_RES_MAX          (240)
 
 /// Color depth:
 /// 1:  1 byte per pixel

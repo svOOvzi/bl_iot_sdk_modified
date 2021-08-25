@@ -198,8 +198,7 @@ int display_image(void) {
         uint16_t len    = (bottom - top + 1) * (right - left + 1) * BYTES_PER_PIXEL;
 
         //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
-        ////memcpy(spi_unpacked_buf, image_data + offset, len);
-        memset(spi_unpacked_buf, 0b10101010, len); ////
+        memcpy(spi_unpacked_buf, image_data + offset, len);
 
         //  Set the display window
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
