@@ -53,6 +53,21 @@ spi_dev_t spi_device;
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
+    //  TODO: For debugging
+    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    int rc;
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
+
+    //  Set Chip Select pin to High, to deactivate SPI Peripheral
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
+
+    //  TODO: Remove in production
+    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
+
     //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 
@@ -61,7 +76,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     //  See https://lupyuen.github.io/articles/spi#spi-data-pins-are-flipped
 
     //  Configure the SPI Port
-    int rc = spi_init(
+    rc = spi_init(
         &spi_device, //  SPI Device
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
