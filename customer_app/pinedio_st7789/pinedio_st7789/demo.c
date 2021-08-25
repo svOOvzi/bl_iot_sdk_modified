@@ -68,6 +68,9 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
+    //  TODO: Testing swap of MOSI and MISO
+    rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
+
     //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 

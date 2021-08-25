@@ -52,10 +52,12 @@
 #define DISPLAY_SCK_PIN  11
 
 /// GPIO for ST7789 SPI MISO Pin
-#define DISPLAY_MISO_PIN  0
+////#define DISPLAY_MISO_PIN  0
+#define DISPLAY_MISO_PIN 1  //// TODO: Testing old settings
 
 /// GPIO for ST7789 SPI MOSI Pin
-#define DISPLAY_MOSI_PIN 17
+////#define DISPLAY_MOSI_PIN 17
+#define DISPLAY_MOSI_PIN 4  //// TODO: Testing old settings
 
 /// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
 #define DISPLAY_UNUSED_CS_PIN 8
