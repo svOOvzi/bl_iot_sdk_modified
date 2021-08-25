@@ -105,6 +105,7 @@ static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  T
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
+#ifdef NOTUSED
     //  Configure Chip Select, Backlight pins as GPIO Pins
     GLB_GPIO_Type pins[3];  //  TODO: Init with pins
     pins[0] = DISPLAY_CS_PIN;
@@ -126,9 +127,10 @@ int init_display(void) {
     //  TODO: Remove in production
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
+#endif  //  NOTUSED
 
     //  Switch on backlight
-    rc = backlight_on();  assert(rc == 0);
+    int rc = backlight_on();  assert(rc == 0);
 
 #ifdef NOTUSED
     //  Reset the display controller through the Reset Pin
