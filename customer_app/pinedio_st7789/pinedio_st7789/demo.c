@@ -53,12 +53,12 @@ spi_dev_t spi_device;
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
-    //  Note: The Chip Select Pin below (2) must NOT be the same as DISPLAY_CS_PIN (14). 
+    //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 
-    //  TODO: The pins for Serial Data In and Serial Data Out seem to be flipped,
-    //  when observed with a Logic Analyser. This contradicts the 
-    //  BL602 Reference Manual. Why ???
+    //  NOTE: The settings below were tested on PineDio Stack BL604.
+    //  For BL602: The pins for Serial Data In and Serial Data Out seem to be swapped.
+    //  See https://lupyuen.github.io/articles/spi#spi-data-pins-are-flipped
 
     //  Configure the SPI Port
     int rc = spi_init(
@@ -72,8 +72,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         3,   //  Receive DMA Channel
         DISPLAY_SCK_PIN,        //  SPI Clock Pin 
         DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
+        DISPLAY_MOSI_PIN,       //  SPI Serial Data Out Pin (formerly MOSI)
         DISPLAY_MISO_PIN,       //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
-        DISPLAY_MOSI_PIN        //  SPI Serial Data Out Pin (formerly MOSI)
     );
     assert(rc == 0);
 
