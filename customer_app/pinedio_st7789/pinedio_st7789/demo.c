@@ -53,9 +53,16 @@ spi_dev_t spi_device;
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
-    //  TODO: For debugging
-    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     int rc;
+    printf("SPI MOSI GPIO:  %d\r\n", DISPLAY_MOSI_PIN);
+    printf("SPI MISO GPIO:  %d\r\n", DISPLAY_MISO_PIN);
+    printf("SPI SCK GPIO:   %d\r\n", DISPLAY_SCK_PIN);
+    printf("SPI CS GPIO:    %d\r\n", DISPLAY_CS_PIN);
+    printf("Debug CS GPIO:  %d\r\n", DISPLAY_DEBUG_CS_PIN);
+    printf("Unused CS GPIO: %d\r\n", DISPLAY_UNUSED_CS_PIN);
+    printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
+
+    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
@@ -68,15 +75,12 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
-    //  TODO: Testing swap of MOSI and MISO
+    //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
     printf("Swap MISO and MOSI\r\n");
     rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
 
     //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
-
-    //  NOTE: The pins for Serial Data In and Serial Data Out have been swapped.
-    //  See https://lupyuen.github.io/articles/spi#spi-data-pins-are-flipped
 
     //  Configure the SPI Port
     rc = spi_init(
@@ -91,8 +95,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         3,   //  Receive DMA Channel
         DISPLAY_SCK_PIN,        //  SPI Clock Pin 
         DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
-        DISPLAY_MISO_PIN,       //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
-        DISPLAY_MOSI_PIN        //  SPI Serial Data Out Pin (formerly MOSI)
+        DISPLAY_MOSI_PIN,       //  SPI Serial Data Out Pin (formerly MOSI)
+        DISPLAY_MISO_PIN        //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
     );
     assert(rc == 0);
 

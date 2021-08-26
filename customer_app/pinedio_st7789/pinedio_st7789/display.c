@@ -105,29 +105,7 @@ static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  T
 /// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
     //  Assume that SPI port 0 has been initialised.
-#ifdef NOTUSED
-    //  Configure Chip Select, Backlight pins as GPIO Pins
-    GLB_GPIO_Type pins[3];  //  TODO: Init with pins
-    pins[0] = DISPLAY_CS_PIN;
-    pins[1] = DISPLAY_BLK_PIN;
-    pins[2] = DISPLAY_DEBUG_CS_PIN;  //  TODO: Remove in production
-    BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
-    assert(rc2 == SUCCESS);
-
-    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
-    int rc;
-    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
-
-    //  Set Chip Select pin to High, to deactivate SPI Peripheral
-    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
-
-    //  TODO: Remove in production
-    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
-#endif  //  NOTUSED
+    //  Assume that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured.
 
     //  Switch on backlight
     int rc = backlight_on();  assert(rc == 0);
