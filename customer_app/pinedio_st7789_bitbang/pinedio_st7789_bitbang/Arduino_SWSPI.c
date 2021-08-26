@@ -6,6 +6,7 @@
 ////#include "Arduino_SWSPI.h"
 #include <inttypes.h>
 #include <bl_gpio.h>         //  For bl_gpio_output_set
+#include "Arduino_ST7789.h"
 
 #define pinMode(x,y) {}
 #define HIGH 1
@@ -25,6 +26,7 @@ static void digitalWrite(int8_t pin, int8_t val) {
   }
 }
 
+void ////
 Arduino_SWSPI_Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */)
     ////: _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso)
 {

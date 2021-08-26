@@ -4,9 +4,13 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
-////#include "Arduino_ST7789.h"
-////#include "SPI.h"
 #include <inttypes.h>
+#include <stdbool.h>
+#include "Arduino_ST7789.h"
+////#include "SPI.h"
+
+void Arduino_ST7789_tftInit();
+void Arduino_ST7789_setRotation(uint8_t r);
 
 static int8_t _rst;
 static uint8_t _r;
@@ -17,6 +21,8 @@ static uint8_t _col_offset1;
 static uint8_t _row_offset1;
 static uint8_t _col_offset2;
 static uint8_t _row_offset2;
+static uint8_t _override_datamode = -1;
+static uint8_t _rotation;
 
 static void Arduino_TFT_begin(int32_t speed)
 {
@@ -26,14 +32,17 @@ static void Arduino_TFT_begin(int32_t speed)
   }
   else
   {
-    Arduino_SWSPI_begin(speed);
+    Arduino_SWSPI_begin(speed
+    , _override_datamode  ////
+    );
   }
 
-  tftInit();
-  ////setRotation(_rotation); // apply the setting rotation to the display
-  ////setAddrWindow(0, 0, _width, _height);
+  Arduino_ST7789_tftInit();
+  Arduino_ST7789_setRotation(_rotation); // apply the setting rotation to the display
+  ////Arduino_ST7789_setAddrWindow(0, 0, _width, _height);
 }
 
+void ////
 Arduino_ST7789_Arduino_ST7789(
     ////Arduino_DataBus *bus,
     int8_t rst, uint8_t r,
@@ -68,7 +77,7 @@ void Arduino_ST7789_begin(int32_t speed)
 /**************************************************************************/
 void Arduino_ST7789_setRotation(uint8_t r)
 {
-  Arduino_TFT_setRotation(r);
+  ////Arduino_TFT_setRotation(r);
   switch (_rotation)
   {
   case 0:

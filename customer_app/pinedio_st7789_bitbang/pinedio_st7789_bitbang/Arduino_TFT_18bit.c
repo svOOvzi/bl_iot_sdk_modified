@@ -7,6 +7,7 @@
 ////#include "Arduino_GFX.h"
 ////#include "Arduino_TFT_18bit.h"
 #include <inttypes.h>
+#include "Arduino_ST7789.h"
 
 static int8_t _rst = -1;
 static uint8_t _r;
@@ -18,6 +19,7 @@ static uint8_t _row_offset1;
 static uint8_t _col_offset2;
 static uint8_t _row_offset2;
 
+void ////
 Arduino_TFT_18bit_Arduino_TFT_18bit(
     ////Arduino_DataBus *bus, 
     int8_t rst, uint8_t r,
