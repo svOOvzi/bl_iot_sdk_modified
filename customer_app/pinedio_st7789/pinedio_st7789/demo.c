@@ -61,6 +61,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Debug CS GPIO:  %d\r\n", DISPLAY_DEBUG_CS_PIN);
     printf("Unused CS GPIO: %d\r\n", DISPLAY_UNUSED_CS_PIN);
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
+    printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
     //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
@@ -249,8 +250,14 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 
 /* Output Log:
 
-
 # display_init
+SPI MOSI GPIO:  17
+SPI MISO GPIO:  0
+SPI SCK GPIO:   11
+SPI CS GPIO:    20
+Debug CS GPIO:  5
+Unused CS GPIO: 8
+Backlight GPIO: 21
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 Swap MISO and MOSI
@@ -327,7 +334,7 @@ SPI Tx: 549 bytes:
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set Debug CS pin 5to high
+Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
@@ -484,7 +491,7 @@ Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
-SPI Tx: 549 byts:
+SPI Tx: 549 bytes:
  16 6b 6e b6 bc 75 0a 53 31 c2 df 22 1a 5b b7 bf 7d bd fc 52...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
@@ -756,7 +763,8 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 6b 6a 99 4c 96 12 63 a5 bb 6d 7e f4 ab 55 6e 17 74 88 5c...
-Set CS pin 20 to lDebug CS pin 5 to low
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
@@ -773,7 +781,7 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 5c f1 d7 be 7d ef 9d 7b f7 e9 6a b8 cd 9d 4b 95 5a f6 50...
-Set CS pin 20 to lw
+Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
@@ -886,9 +894,9 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 0 20 10 0f 78 00 00 00
+ 15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
-Set Debug CS pin 5 to low
+Set Debu CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
@@ -914,7 +922,7 @@ SPI Tx: 9 bytes:
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set Debug S pin 5 to high
+Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 69 6a b7 3d 7d cf 1d 6b b6 df 22 1a 59 ae 33 65 73 e7 d4...
 Set CS pin 20 to low
@@ -942,7 +950,7 @@ Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
-Set Debug CS pin 5 to low
+Set DebuS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
@@ -980,7 +988,7 @@ SPI Tx: 9 bytes:
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set Debug CS pin 5 to high
+et Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 c0 24 b0 09 28 00 00 00
 Set CS pin 20 to low
@@ -1013,7 +1021,7 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
+Set CSpin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
@@ -1025,7 +1033,8 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 6b 72 f9 4e 9d f2 21 84 98 df 22 18 cc 96 d7 f1 a5 cb 5e...
-Set CS pin 20 to lebug CS pin 5 to low
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
@@ -1034,7 +1043,7 @@ Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
+SPITx: 9 bytes:
  15 c0 25 10 09 40 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
@@ -1047,7 +1056,7 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 5 40 20 10 0f 78 00 00 00
+ 15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -1124,7 +1133,7 @@ Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
-SP Tx: 9 bytes:
+SPI Tx: 9 bytes:
  15 c0 25 b0 09 68 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
@@ -1135,7 +1144,7 @@ SPI Tx: 549 bytes:
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set Debug CS pin 5to high
+Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
@@ -1287,13 +1296,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 26 d0 09 b0 00 00 00
+ 15 c0 26 d0 09 b000 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 6b 76 fa 5a ae 73 e9 84 8 e7 66 b8 49 8d 6e 19 84 99 61...
+ 16 6b 76 fa 5a ae 73 e9 84 98 e7 66 b8 49 8d 6e 19 84 99 61...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -1995,14 +2004,14 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 48 68 90 8a 0c 43 47 19 91 e3 31 b7 48 64 02 01 31 e2 d6...
+ 16 48 68 90 8a 0c 43 47 9 91 e3 31 b7 48 64 02 01 31 e2 d6...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
+Set CS pin 20 tolow
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
@@ -2014,12 +2023,188 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 44 34 50 8b 0c 86 49 42 a4 e5 3a 78 4c 84 87 05 29 d2 44...
+Set CS pin 20 to lo Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00Set CS pin 20 to high
+ 15 c0 2b f0 0a f8 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 46 3c 72 9c 2c e7 cf 29 c2 c4 60 52 9e 25 2b 8d 42 a3 42...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c 10 0b 00 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 48 64 93 1d 2c ea 4f 63 a6 ce ad 12 9e 25 2b 91 31 f3 42...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c 30 0b 08 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 4e a0 f3 1d 2c a7 4d 29 d3 d4 bd 54 ae 44 86 cb 21 b2 4e...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c 50 0b 10 00 00 0
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 48 6c 92 9b 24 63 87 19 81 ca 78 b3 aa 34 86 49 3a a2 dd...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set DebuS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c 70 0b 18 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 44 30 50 8a 0c 43 45 21 a2 42 34 55 af 2e 12 4f 6b e3 da...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c 90 0b 20 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 44 34 51 8e 1c 43 45 21 a1 c2 34 34 ab 25 4b 89 19 90 ce...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c b0 0b 28 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 46 3c 73 1d 34 c7 4f 21 a2 c6 64 52 9e 2c ea 4d 39 f2 46...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c d0 0b 30 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 4c 74 b2 9c 34 ea 55 3a 84 cc 78 d2 9c 25 2b 0f 6b a4 52...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2c f0 0b 38 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 4a 70 93 a8 44 c7 93 42 a5 5f 21 f3 1d 2c 63 c5 21 a1 48...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 2d 10 0b 40 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 56 e1 34 ae 4d 2b 4f 73 f6 f1 af 15 2f 44 66 05 10 c1 48...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
@@ -2041,7 +2226,7 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
-Set CS in 20 to low
+Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
@@ -2052,9 +2237,9 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 61 29 97 cb 5d 6e cf 21 a1 40 20 11 19 04 eb 09 53 94 c...
+ 16 61 29 97 cb 5d 6e cf 21 a1 40 20 11 19 04 eb 09 53 94 4c...
 Set CS pin 20 to low
-Set Debu CS pin 5 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
@@ -2114,17 +2299,22 @@ Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
+Set DebuSet CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2d d0 0b 70 00 00 00
+ 15 c0 2f f0 0b f8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 54 bd 32 1c 24 c7 8b 18 f1 c6 60 33 ab 2c 66 07 00 80 46...
+ 16 46 3c 71 8f 1c 86 47 10 d 4c 74 b3 9e 34 a6 8b 29 b2 cc...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2136,13 +2326,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2d f0 0b 78 00 00 00
+ 15 c0 30 10 0c 00 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 63 36 14 2b 3c 43 45 00 80 54 e0 f3 2a 24 02 01 31 f2 54...
+ 16 46 3c 72 18 1c a6 c9 10 e1 4e 7c b5 2b 44 c7 0d 29 a2 c8...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2154,31 +2344,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e 10 0b 80 00 00 00
+ 15 c0 30 30 0c 08 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c a0 d3 aa 3c 43 45 08 b0 d2 b8 f6 3c 55 2b 51 3a 92 c8...
-St CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 2e 30 0b 88 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 4a 74 92 9d 24 a7 4b 19 81 c8 64 77 ca 6e 96 e3 31 d2 c0...
+ 16 42 2c 32 19 24 86 49 00 a0 4c 7c b4 28 34 a6 8b 18 f1 c6...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2190,31 +2362,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e 50 0b 90 00 00 00
+ 15 c0 30 50 0c 10 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 70 b3 1f 34 86 c9 10 e1 44 3c 52 1b 1d 2a cf 21 81 c0...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin  to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 2e 70 0b 98 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 42 30 51 8f 14 43 85 21 b2 4a 78 b1 0e 14 23 03 00 a0 c4...
+ 16 42 24 31 8d 1c 42 c5 08 b0 d4 b1 14 28 34 a6 89 21 82 46...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2226,13 +2380,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e 90 0b a0 00 00 00
+ 15 c0 30 70 0c 18 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 48 68 92 19 24 a7 09 32 82 c6 38 70 8d 0c a7 87 10 d1 44...
+ 16 4e a8 b3 ab 34 43 45 00 a0 d4 b1 13 1d 2c 43 85 18 e1 c2...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2244,13 +2398,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e b0 0b a8 00 00 00
+ 15 c0 30 90 0c 20 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 48 6c 92 1a 25 0a cd 32 82 c8 68 92 9d 1c a7 47 18 e1 c6...
+ 16 56 ed 34 ad 3c 63 87 21 81 d6 b5 32 9c 2c c7 4b 21 91 c4...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2262,13 +2416,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e d0 0b b0 00 00 00
+ 15 c0 30 b0 0c 28 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c 78 b3 28 25 2b 8d 29 c2 42 34 36 38 4d 6b 11 08 c0 c4...
+ 16 58 f5 53 a8 34 43 05 39 d3 54 b1 12 9c 25 2b 11 31 b2 ca...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2280,13 +2434,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2e f0 0b b8 00 00 00
+ 15 c0 30 d0 0c 30 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 58 ed 55 2f 34 ea 89 29 d2 42 30 35 ab 45 ee d7 08 d0 c8...
+ 16 50 b8 f1 9a 1c 02 01 39 e3 58 bd 54 29 2d 4b d1 3a b3 50...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2298,13 +2452,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2f 10 0b c0 00 00 00
+ 15 c0 30 f0 0c 38 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 58 e9 33 1e 2c a7 49 3a 93 46 64 94 1e 35 ab d3 21 91 c4...
+ 16 50 ac d4 2a 35 2b 4f 63 d5 5c fd 97 3f 65 f2 97 8d 87 5f...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2316,19 +2470,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 2f 30 0b c8 00 00 00
+ 15 c0 31 10 0c 40 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c 74 b4 2a 3c 43 87 08 b1 44 38 53 1d 2c ea 0d 4a d4 4c...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debughigh
-SPI Tx: 549 bytes:
- 16 50 b8 b3 a9 2d 0b 8d 3a c1 cc a8 53 ad 0c eb 87 29 e2 4c...
+ 16 54 e0 f6 c8 5d d2 d5 6b e5 58 f9 14 ba 35 4e 11 74 95 e1...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2340,13 +2488,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 33 d0 0c f0 00 00 00
+ 15 c0 31 30 0c 48 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c a4 72 1b 1c a7 89 4b b1 d2 e8 53 2d 0c cb 03 32 82 cc...
+ 16 52 e0 f6 3d 55 d2 15 5b a3 50 a8 b2 ab 05 0b 0b 4b 93 58...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2358,13 +2506,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 33 f0 0c f8 00 00 00
+ 15 c0 31 50 0c 50 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 52 e0 b2 1b 1c 66 85 32 b0 d4 f0 96 4a 34 ee 05 10 f0 c8...
+ 16 48 70 74 ab 45 d2 95 5b f2 c8 74 70 8f 04 ca 45 29 d2 4e...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2376,31 +2524,27 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 10 0d 00 00 00 00
+ 15 c0 31 70 0c 58 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 54 f8 73 29 1c ea c5 42 f1 56 f0 f5 bd 44 87 c3 2a 81 d0...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
+SPI Tx: Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
-Set CSpin 20 to low
+Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 30 0d 08 00 00 00
+ 15 c0 36 70 0d 98 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 5d 2d 14 ba 1d 4e c9 5b d2 d4 e8 f2 1b 24 46 03 11 90 52...
+ 16 56 e1 71 0d 14 22 c1 4a c4 ce a8 d3 a8 2d 0a 4d 39 f2 c8...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2412,13 +2556,31 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 50 0d 10 00 00 00
+ 15 c0 36 90 0d a0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 56 e9 34 38 0d 6f 8f 53 93 c8 6c 91 0e 14 86 85 4a d4 d6...
+ 16 4c 70 d3 a9 3d 2b d1 6b f6 da fd 94 2c 3c e7 8b 29 b1 cc...
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 40 20 10 0f 78 00 00 00
+Set S pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 9 bytes:
+ 15 c0 36 b0 0d a8 00 00 00
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+SPI Tx: 549 bytes:
+ 16 67 3a 76 3b 65 2b d1 42 e4 54 e1 36 be 5d f2 9b 5b 85 4a...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2430,13 +2592,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 70 0d 18 00 00 00
+ 15 c0 36 d0 0d b0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a a4 73 ab 35 6e 8f 42 d3 c4 38 30 08 04 66 85 73 f7 56...
+ 16 6d 72 98 cc 7d 2b 11 21 b1 ce a4 d5 b8 5d 4e 57 9d ca 69...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2448,13 +2610,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 90 0d 20 00 00 00
+ 15 c0 36 f0 0d b8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4e b4 93 28 3c ea 8b 21 d1 cc 7c b4 ac 44 c7 cb 29 c2 4e...
+ 16 5f 25 7a 5b 8e 96 a1 84 a6 5d 21 54 ab 34 43 c5 00 d1 50...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2466,13 +2628,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 b0 0d 28 00 00 00
+ 15 c0 37 10 0d c0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 5a f9 34 ae 2d 6e 51 52 e4 52 b5 58 4b 75 cf 97 29 91 c0...
+ 16 58 f1 57 3e 56 12 57 8c e6 65 3d 9b 5d 86 76 1d 5a f4 4c...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2484,31 +2646,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 34 d0 0d 30 00 00 00
+ 15 c0 37 30 0d c8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 58 f0 f5 b9 35 6e 4d 63 94 d6 e5 57 3f 76 12 d7 52 f3 4e...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 34 f0 0d 38 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 5f 29 96 bb 4d 4b 8b 2a 90 52 bc 96 bc 4d d2 17 7c 95 d8...
+ 16 58 f1 35 38 45 6e d1 6b d4 56 e8 d8 cb 5e 96 1d b5 d869...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2520,13 +2664,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 35 10 0d 40 00 00 00
+ 15 c0 37 50 0d d0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 61 35 b6 bc 55 6e 11 42 e2 d2 bc 94 2c 1d af 57 8c c6 dc...
+ 16 56 e5 15 38 3d 6e 91 6b e4 d4 bc b8 49 56 33 17 94 e6 5c...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2538,13 +2682,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 35 30 0d 48 00 00 00
+ 15 c0 37 70 0d d8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 5f 21 56 bd 4d d2 15 6b f4 dc fd 76 3c 45 4e 4d 53 82 d6...
+ 16 54 bd 14 af 3d 8f 13 6b f4 d2 b4 b8 49 56 53 57 94 e6 58...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2556,121 +2700,18 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 35 50 0d 50 00 00 00
+ 15 c0 37 90 0d e0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 58 ec d6 39 3d 0b 45 53 91 56 ec d5 bb 35 2b 09 4a d2 50...
+ 16 54 bc f4 ae 35 6e 91 5b a4 4e a4 98 4a 56 96 9d 7c a5 58...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 35 70 0d 58 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 52 bc d6 3a 3c a7 43 3a a1 4e a8 54 2b 24 e7 c9 52 f3 58...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 35 90 0d 60 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 50 b0 d2 9d 1c 86 03 29 c1 ce a0 b3 1c 25 0a 4b 42 a2 d2...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 35 b0 0d 68 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 52 b5 14 2a 34 a6 85 21 81 48 68 71 98 14 86 87 31 c2 4c...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 35 d0 0d 70 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 4e a0 d2 9d 24 c7 89 21 b1 ca 6c 72 1a 1c 86 47 21 a1 4c...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 35 f0 0d 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 54 bd 11 8e 0c 23 01 29 b1 c8 64 52 19 1d 2a cd 3a 82 4e...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 36 10 0d 80 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 48 60 52 19 14 86 c7 21 b1 c4 3c 31 0e 0c 43 c3 9 bytes:
  15 40 20 10 0f 78 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
@@ -2756,9 +2797,7 @@ Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
  16 4c 7c 75 ba 3d 8e d3 53 83 da ec f2 99 0c ea 8b 4a d3 58...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
+Set CS pin 20 to lSet CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
  15 40 20 10 0f 78 00 00 00
@@ -2767,13 +2806,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 50 0e 10 00 00 00
+ 15 c0 3b 10 0e c0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c a0 75 b9 3d 6e 51 74 85 52 b0 d0 8c 0d 0b 0b 4a d3 50...
+ 16 50 a8 b3 1e 24 86 85 29 c1 cc 78 b3 a8 2c ea 4b 4a b2 d2...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2785,14 +2824,14 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 70 0e 18 00 00 00
+ 15 c0 3b 30 0e c8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 6c 74 29 2c ea 09 6b d4 50 a8 b1 0e 15 4b cd 5b a4 56...
-Set CS pin 20 t low
+ 16 50 a8 b4 2a 2d 0b 0d 42 b2 c8 60 33 a8 2d 6e 51 52 d3 d0...
+Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
@@ -2803,13 +2842,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 90 0e 20 00 00 00
+ 15 c0 3b 50 0e d0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 68 73 1e 24 c7 87 32 82 46 64 53 1f 1d 6e 4f 63 d4 5f...
+ 16 4c 78 93 a9 25 0b 0d 53 94 50 ac d3 a8 2c a7 07 5a f4 4a...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2821,13 +2860,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 b0 0e 28 00 00 00
+ 15 c0 3b 70 0e d8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c 78 93 a9 24 ca 09 42 d3 4e a8 b3 28 1d 4e 0d 6b d4 56...
+ 16 40 20 13 1e 24 c7 47 4a e3 5f 2d 76 be 4c e7 8b 21 91 4e...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2839,13 +2878,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 d0 0e 30 00 00 00
+ 15 c0 3b 90 0e e0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 74 93 a9 2c a7 45 3a 92 d2 b4 d4 ac 35 6e 0f 52 d3 4c...
+ 16 4e a4 b2 1a 14 86 05 3a 82 4c 7c 95 2f 3d 8f 53 3a 82 d0...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2857,13 +2896,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 38 f0 0e 38 00 00 00
+ 15 c0 3b b0 0e e8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c 78 92 1b 14 63 85 21 b1 d0 b0 b4 2b 34 c7 89 29 c1 cc...
+ 16 65 3d 75 39 25 4b 8d 21 91 c8 64 72 19 1c c7 89 42 c3 52...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2875,13 +2914,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 10 0e 40 00 00 00
+ 15 c0 3b d0 0e f0 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 52 b4 d5 b9 44 66 45 19 81 4a 70 71 0d 0c 43 c3 31 f2 50...
+ 16 61 25 38 cd 5d cf 93 63 a4 56 e8 f5 2f 3d 6e 93 52 f4 4e...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2893,13 +2932,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 30 0e 48 00 00 00
+ 15 c0 3b f0 0e f8 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 56 e5 13 1e 24 86 47 19 81 46 60 72 1a 1c c7 49 42 92 54...
+ 16 4e 78 96 ba 4e 33 59 94 f6 5f 31 38 4b 4e 13 17 6b d4 d0...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2911,13 +2950,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 50 0e 50 00 00 00
+ 15 c0 3c 10 0f 00 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 70 70 8b 04 a6 87 29 c1 c4 38 52 1a 1c a7 49 29 c1 cc...
+ 16 4a 74 97 c9 5d af 11 5b 93 58 e8 f6 bd 4d ae d1 29 c2 4a...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2929,13 +2968,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 70 0e 58 00 00 00
+ 15 c0 3c 30 0f 08 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4c 7c 93 a8 2c c7 89 29 c2 48 68 72 1b 1d 0a 8b 4a b3 4a...
+ 16 54 bc d7 be 55 8e 51 4a c1 df 25 77 3f 5e 56 1f 8c c7 d6...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2947,13 +2986,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 90 0e 60 00 00 00
+ 15 c0 3c 50 0f 10 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 52 b0 d3 a9 2c ea 0b 42 a3 4e a0 b2 9d 14 c7 c7 29 e1 c8...
+ 16 54 bc d2 9b 1d af 15 94 f7 56 e8 b5 39 25 8f 51 9d a7 e5...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2965,13 +3004,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 b0 0e 68 00 00 00
+ 15 c0 3c 70 0f 18 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 44 38 33 1d 24 ea 4b 29 d2 48 6c 72 1a 1c 66 45 29 c1 c6...
+ 16 4e a0 95 2f 35 0a 89 6b d5 5a f1 34 2a 15 6e 8d 7c b5 5c...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -2983,13 +3022,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 d0 0e 70 00 00 00
+ 15 c0 3c 90 0f 20 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4a 6c 93 1e 24 ea 87 3a 92 46 64 71 0e 14 46 05 29 c1 ca...
+ 16 4c 7c 94 ad 35 0a c9 63 a4 61 29 d4 ac 2d 2b 4b 52 f2 54...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -3001,13 +3040,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 39 f0 0e 78 00 00 00
+ 15 c0 3c b0 0f 28 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 5d 21 15 ba 2d b2 11 53 82 ca 74 52 9a 1c a7 09 21 a1 c6...
+ 16 4e a0 b1 98 15 0a 8b 63 a4 56 e4 f5 2f 3c c7 87 5b 83 e1...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -3019,13 +3058,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 3a 10 0e 80 00 00 00
+ 15 c0 3c d0 0f 30 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 58 f0 d5 39 2d 2b cb 4a d2 56 e8 f5 b8 45 07 cb 10 e1 4a...
+ 16 4a 6c 92 9b 1c a6 c7 21 91 4a 6c 55 38 3d 6e d1 73 e5 5c...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -3037,13 +3076,13 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 3a 30 0e 88 00 00 00
+ 15 c0 3c f0 0f 38 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4e a0 73 aa 1c a7 87 3a 92 54 e0 d5 2f 3d 4e 0d 42 c1 d4...
+ 16 4c 74 93 9f 24 86 45 31 d2 4c 78 93 a8 2d 4b 8f 39 e2 50...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
@@ -3055,82 +3094,16 @@ Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 9 bytes:
- 15 c0 3a 50 0e 90 00 00 00
+ 15 c0 3d 10 0f 40 00 00 00
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 SPI Tx: 549 bytes:
- 16 4e a4 b4 ac 2c ea 49 31 f2 4c 78 75 b9 45 4e 0d 42 d0 d8...
+ 16 56 e1 15 af 45 8f 13 42 a2 d2 b0 f2 9b 24 63 85 42 93 54...
 Set CS pin 20 to low
 Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 3a 70 0e 98 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 4e a4 b3 1f 24 c7 c9 31 f2 4a 74 73 28 25 6e cf 42 d1 cc...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 3a 90 0e a0 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 46 3c 52 9b 1c a7 49 31 e2 48 68 53 1f 25 af 95 63 c4 4e...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 3a b0 0e a8 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 549 bytes:
- 16 48 60 72 1a 1c c7 c9 39 f2 c8 68 74 ad 34 86 c5 3a a2 50...
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 40 20 10 0f 78 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set Debug CS pin 5 to high
-SPI Tx: 9 bytes:
- 15 c0 3a d0 0e b0 00 00 00
-Set CS pin 20 to low
-Set Debug CS pin 5 to low
-Set CS pin 20 to high
-Set 
+Set Debug
 # 
 */
