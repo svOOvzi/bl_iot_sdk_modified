@@ -60,6 +60,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("SPI CS GPIO:    %d\r\n", DISPLAY_CS_PIN);
     printf("Debug CS GPIO:  %d\r\n", DISPLAY_DEBUG_CS_PIN);
     printf("Unused CS GPIO: %d\r\n", DISPLAY_UNUSED_CS_PIN);
+    printf("Flash CS GPIO:  %d\r\n", FLASH_CS_PIN);
+    printf("SX1262 CS GPIO: %d\r\n", SX1262_CS_PIN);
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
@@ -67,12 +69,20 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
+    rc = bl_gpio_enable_output(FLASH_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SX1262_CS_PIN, 0, 0);  assert(rc == 0);
 
-    //  Set Chip Select pin to High, to deactivate SPI Peripheral
+    //  Set Chip Select pin to High, to deactivate SPI Flash and SX1262
+    printf("Set Flash CS pin %d to high\r\n", FLASH_CS_PIN);
+    rc = bl_gpio_output_set(FLASH_CS_PIN, 1);  assert(rc == 0);
+    printf("Set SX1262 CS pin %d to high\r\n", SX1262_CS_PIN);
+    rc = bl_gpio_output_set(SX1262_CS_PIN, 1);  assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate ST7789
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
 
-    //  TODO: Remove in production
+    //  TODO: Remove Debug CS pin in production
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 

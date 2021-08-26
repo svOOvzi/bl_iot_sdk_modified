@@ -63,6 +63,12 @@
 /// For Debug Only: GPIO for SPI Chip Select Pin that is exposed on GPIO Connector and can be connected to Logic Analyser
 #define DISPLAY_DEBUG_CS_PIN 5
 
+/// GPIO for SPI Flash Chip Select Pin. We must set this to High to deselect SPI Flash.
+#define FLASH_CS_PIN 14
+
+/// GPIO for SX1262 SPI Chip Select Pin. We must set this to High to deselect SX1262.
+#define SX1262_CS_PIN 15
+
 /// Maximal horizontal and vertical resolution
 ////#define LV_HOR_RES_MAX          (240)
 #define LV_HOR_RES_MAX          2 ////
