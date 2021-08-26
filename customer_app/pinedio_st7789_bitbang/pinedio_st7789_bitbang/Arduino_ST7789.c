@@ -38,6 +38,12 @@ static uint8_t _col_offset2;
 static uint8_t _row_offset2;
 static int8_t _override_datamode = -1;
 static uint8_t _rotation;
+static int16_t _currentX;
+static int16_t _currentY;
+static int16_t _currentW;
+static int16_t _currentH;
+static int16_t _xStart;
+static int16_t _yStart;
 
 static void Arduino_TFT_begin(int32_t speed)
 {
@@ -147,13 +153,13 @@ void Arduino_ST7789_invertDisplay(bool i)
 void Arduino_ST7789_displayOn(void)
 {
   Arduino_SWSPI_sendCommand(ST7789_SLPOUT);
-  delay(ST7789_SLPOUT_DELAY);
+  Arduino_SWSPI_delay(ST7789_SLPOUT_DELAY);
 }
 
 void Arduino_ST7789_displayOff(void)
 {
   Arduino_SWSPI_sendCommand(ST7789_SLPIN);
-  delay(ST7789_SLPIN_DELAY);
+  Arduino_SWSPI_delay(ST7789_SLPIN_DELAY);
 }
 
 // Companion code to the above tables.  Reads and issues
@@ -164,17 +170,17 @@ void Arduino_ST7789_tftInit()
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);
-    delay(100);
+    Arduino_SWSPI_delay(100);
     digitalWrite(_rst, LOW);
-    delay(ST7789_RST_DELAY);
+    Arduino_SWSPI_delay(ST7789_RST_DELAY);
     digitalWrite(_rst, HIGH);
-    delay(ST7789_RST_DELAY);
+    Arduino_SWSPI_delay(ST7789_RST_DELAY);
   }
   // else
   // {
   // Software Rest
   Arduino_SWSPI_sendCommand(ST7789_SWRESET);
-  delay(ST7789_RST_DELAY);
+  Arduino_SWSPI_delay(ST7789_RST_DELAY);
   // }
 
   uint8_t st7789_init_operations[] = {

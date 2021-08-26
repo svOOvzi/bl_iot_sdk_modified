@@ -13,6 +13,20 @@
 #define pinMode(x,y) {}
 #define HIGH 1
 #define LOW  0
+#define UNUSED(x)
+#define INLINE
+
+void Arduino_SWSPI_write16(uint16_t d);
+void Arduino_SWSPI_writeCommand16(uint16_t c);
+void Arduino_SWSPI_DC_HIGH(void);
+void Arduino_SWSPI_DC_LOW(void);
+void Arduino_SWSPI_CS_HIGH(void);
+void Arduino_SWSPI_CS_LOW(void);
+void Arduino_SWSPI_SPI_MOSI_HIGH(void);
+void Arduino_SWSPI_SPI_MOSI_LOW(void);
+void Arduino_SWSPI_SPI_SCK_HIGH(void);
+void Arduino_SWSPI_SPI_SCK_LOW(void);
+bool Arduino_SWSPI_SPI_MISO_READ(void);
 
 static void digitalWrite(int8_t pin, int8_t val) {
   if (val == 0) {
@@ -495,27 +509,27 @@ void Arduino_SWSPI_beginWrite()
 {
   if (_dc >= 0)
   {
-    DC_HIGH();
+    Arduino_SWSPI_DC_HIGH();
   }
-  CS_LOW();
+  Arduino_SWSPI_CS_LOW();
 }
 
 void Arduino_SWSPI_endWrite()
 {
-  CS_HIGH();
+  Arduino_SWSPI_CS_HIGH();
 }
 
 void Arduino_SWSPI_writeCommand(uint8_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BITCOMMAND(c);
+    Arduino_SWSPI_WRITE9BITCOMMAND(c);
   }
   else
   {
-    DC_LOW();
-    WRITE(c);
-    DC_HIGH();
+    Arduino_SWSPI_DC_LOW();
+    Arduino_SWSPI_WRITE(c);
+    Arduino_SWSPI_DC_HIGH();
   }
 }
 
@@ -524,14 +538,14 @@ void Arduino_SWSPI_writeCommand16(uint16_t c)
   if (_dc < 0) // 9-bit SPI
   {
     _data16.value = c;
-    WRITE9BITCOMMAND(_data16.msb);
-    WRITE9BITCOMMAND(_data16.lsb);
+    Arduino_SWSPI_WRITE9BITCOMMAND(_data16.msb);
+    Arduino_SWSPI_WRITE9BITCOMMAND(_data16.lsb);
   }
   else
   {
-    DC_LOW();
-    WRITE16(c);
-    DC_HIGH();
+    Arduino_SWSPI_DC_LOW();
+    Arduino_SWSPI_WRITE16(c);
+    Arduino_SWSPI_DC_HIGH();
   }
 }
 
@@ -539,11 +553,11 @@ void Arduino_SWSPI_write(uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BITDATA(d);
+    Arduino_SWSPI_WRITE9BITDATA(d);
   }
   else
   {
-    WRITE(d);
+    Arduino_SWSPI_WRITE(d);
   }
 }
 
@@ -552,12 +566,12 @@ void Arduino_SWSPI_write16(uint16_t d)
   if (_dc < 0) // 9-bit SPI
   {
     _data16.value = d;
-    WRITE9BITDATA(_data16.msb);
-    WRITE9BITDATA(_data16.lsb);
+    Arduino_SWSPI_WRITE9BITDATA(_data16.msb);
+    Arduino_SWSPI_WRITE9BITDATA(_data16.lsb);
   }
   else
   {
-    WRITE16(d);
+    Arduino_SWSPI_WRITE16(d);
   }
 }
 
@@ -569,13 +583,13 @@ void Arduino_SWSPI_writeRepeat(uint16_t p, uint32_t len)
 #if defined(ESP8266)
     while (len > (ESP8266SAFEBATCHBITSIZE / 9))
     {
-      WRITE9BITREPEAT(p, ESP8266SAFEBATCHBITSIZE / 9);
+      Arduino_SWSPI_WRITE9BITREPEAT(p, ESP8266SAFEBATCHBITSIZE / 9);
       len -= ESP8266SAFEBATCHBITSIZE / 9;
       yield();
     }
-    WRITE9BITREPEAT(p, len);
+    Arduino_SWSPI_WRITE9BITREPEAT(p, len);
 #else
-    WRITE9BITREPEAT(p, len);
+    Arduino_SWSPI_WRITE9BITREPEAT(p, len);
 #endif
   }
   else
@@ -583,13 +597,13 @@ void Arduino_SWSPI_writeRepeat(uint16_t p, uint32_t len)
 #if defined(ESP8266)
     while (len > (ESP8266SAFEBATCHBITSIZE / 8))
     {
-      WRITEREPEAT(p, ESP8266SAFEBATCHBITSIZE / 8);
+      Arduino_SWSPI_WRITEREPEAT(p, ESP8266SAFEBATCHBITSIZE / 8);
       len -= ESP8266SAFEBATCHBITSIZE / 8;
       yield();
     }
-    WRITEREPEAT(p, len);
+    Arduino_SWSPI_WRITEREPEAT(p, len);
 #else
-    WRITEREPEAT(p, len);
+    Arduino_SWSPI_WRITEREPEAT(p, len);
 #endif
   }
 }
@@ -598,7 +612,7 @@ void Arduino_SWSPI_writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
-    WRITE16(*data++);
+    Arduino_SWSPI_WRITE16(*data++);
   }
 }
 
@@ -607,7 +621,7 @@ void Arduino_SWSPI_writeBytes(uint8_t *data, uint32_t len)
 {
   while (len--)
   {
-    WRITE(*data++);
+    Arduino_SWSPI_WRITE(*data++);
   }
 }
 
@@ -617,7 +631,7 @@ void Arduino_SWSPI_writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
   {
     for (uint8_t i = 0; i < len; i++)
     {
-      WRITE(data[i]);
+      Arduino_SWSPI_WRITE(data[i]);
     }
   }
 }
@@ -626,48 +640,48 @@ void Arduino_SWSPI_writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 INLINE void Arduino_SWSPI_WRITE9BITCOMMAND(uint8_t c)
 {
   // D/C bit, command
-  SPI_MOSI_LOW();
-  SPI_SCK_HIGH();
-  SPI_SCK_LOW();
+  Arduino_SWSPI_SPI_MOSI_LOW();
+  Arduino_SWSPI_SPI_SCK_HIGH();
+  Arduino_SWSPI_SPI_SCK_LOW();
 
   uint8_t bit = 0x80;
   while (bit)
   {
     if (c & bit)
     {
-      SPI_MOSI_HIGH();
+      Arduino_SWSPI_SPI_MOSI_HIGH();
     }
     else
     {
-      SPI_MOSI_LOW();
+      Arduino_SWSPI_SPI_MOSI_LOW();
     }
-    SPI_SCK_HIGH();
+    Arduino_SWSPI_SPI_SCK_HIGH();
     bit >>= 1;
-    SPI_SCK_LOW();
+    Arduino_SWSPI_SPI_SCK_LOW();
   }
 }
 
 INLINE void Arduino_SWSPI_WRITE9BITDATA(uint8_t d)
 {
   // D/C bit, data
-  SPI_MOSI_HIGH();
-  SPI_SCK_HIGH();
-  SPI_SCK_LOW();
+  Arduino_SWSPI_SPI_MOSI_HIGH();
+  Arduino_SWSPI_SPI_SCK_HIGH();
+  Arduino_SWSPI_SPI_SCK_LOW();
 
   uint8_t bit = 0x80;
   while (bit)
   {
     if (d & bit)
     {
-      SPI_MOSI_HIGH();
+      Arduino_SWSPI_SPI_MOSI_HIGH();
     }
     else
     {
-      SPI_MOSI_LOW();
+      Arduino_SWSPI_SPI_MOSI_LOW();
     }
-    SPI_SCK_HIGH();
+    Arduino_SWSPI_SPI_SCK_HIGH();
     bit >>= 1;
-    SPI_SCK_LOW();
+    Arduino_SWSPI_SPI_SCK_LOW();
   }
 }
 
@@ -678,15 +692,15 @@ INLINE void Arduino_SWSPI_WRITE(uint8_t d)
   {
     if (d & bit)
     {
-      SPI_MOSI_HIGH();
+      Arduino_SWSPI_SPI_MOSI_HIGH();
     }
     else
     {
-      SPI_MOSI_LOW();
+      Arduino_SWSPI_SPI_MOSI_LOW();
     }
-    SPI_SCK_HIGH();
+    Arduino_SWSPI_SPI_SCK_HIGH();
     bit >>= 1;
-    SPI_SCK_LOW();
+    Arduino_SWSPI_SPI_SCK_LOW();
   }
 }
 
@@ -697,15 +711,15 @@ INLINE void Arduino_SWSPI_WRITE16(uint16_t d)
   {
     if (d & bit)
     {
-      SPI_MOSI_HIGH();
+      Arduino_SWSPI_SPI_MOSI_HIGH();
     }
     else
     {
-      SPI_MOSI_LOW();
+      Arduino_SWSPI_SPI_MOSI_LOW();
     }
-    SPI_SCK_HIGH();
+    Arduino_SWSPI_SPI_SCK_HIGH();
     bit >>= 1;
-    SPI_SCK_LOW();
+    Arduino_SWSPI_SPI_SCK_LOW();
   }
 }
 
@@ -713,12 +727,12 @@ INLINE void Arduino_SWSPI_WRITE9BITREPEAT(uint16_t p, uint32_t len)
 {
   if (p == 0xffff) // no need to set MOSI level while filling white
   {
-    SPI_MOSI_HIGH();
+    Arduino_SWSPI_SPI_MOSI_HIGH();
     len *= 18; // 9-bit * 2
     while (len--)
     {
-      SPI_SCK_HIGH();
-      SPI_SCK_LOW();
+      Arduino_SWSPI_SPI_SCK_HIGH();
+      Arduino_SWSPI_SPI_SCK_LOW();
     }
   }
   else
@@ -726,8 +740,8 @@ INLINE void Arduino_SWSPI_WRITE9BITREPEAT(uint16_t p, uint32_t len)
     _data16.value = p;
     while (len--)
     {
-      WRITE9BITDATA(_data16.msb);
-      WRITE9BITDATA(_data16.lsb);
+      Arduino_SWSPI_WRITE9BITDATA(_data16.msb);
+      Arduino_SWSPI_WRITE9BITDATA(_data16.lsb);
     }
   }
 }
@@ -738,24 +752,24 @@ INLINE void Arduino_SWSPI_WRITEREPEAT(uint16_t p, uint32_t len)
   {
     if (p)
     {
-      SPI_MOSI_HIGH();
+      Arduino_SWSPI_SPI_MOSI_HIGH();
     }
     else
     {
-      SPI_MOSI_LOW();
+      Arduino_SWSPI_SPI_MOSI_LOW();
     }
     len *= 16;
     while (len--)
     {
-      SPI_SCK_HIGH();
-      SPI_SCK_LOW();
+      Arduino_SWSPI_SPI_SCK_HIGH();
+      Arduino_SWSPI_SPI_SCK_LOW();
     }
   }
   else
   {
     while (len--)
     {
-      WRITE16(p);
+      Arduino_SWSPI_WRITE16(p);
     }
   }
 }

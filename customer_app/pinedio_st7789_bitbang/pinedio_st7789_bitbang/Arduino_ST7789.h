@@ -66,3 +66,4 @@ void Arduino_SWSPI_write(uint8_t d);
 void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len);
 void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
 void Arduino_SWSPI_sendCommand(uint8_t c);
+void Arduino_SWSPI_delay(uint32_t d);
