@@ -91,7 +91,9 @@
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
 extern uint8_t spi_unpacked_buf[];
 
-/// Initialise the ST7789 display controller
+/// Initialise the ST7789 display controller and switch on backlight.
+/// Assumes that SPI port 0 has been initialised.
+/// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
 int init_display(void);
 
 /// Display image on ST7789 display controller

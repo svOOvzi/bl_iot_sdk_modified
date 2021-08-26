@@ -102,11 +102,11 @@ uint8_t spi_packed_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  TODO
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
 static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL * 4];  //  TODO
 
-/// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
+/// Initialise the ST7789 display controller and switch on backlight.
+/// Assumes that SPI port 0 has been initialised.
+/// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
+/// Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
-    //  Assume that SPI port 0 has been initialised.
-    //  Assume that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured.
-
     //  Switch on backlight
     int rc = backlight_on();  assert(rc == 0);
 
