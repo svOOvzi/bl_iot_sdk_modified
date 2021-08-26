@@ -7,8 +7,10 @@
 ////#include "Arduino_GFX.h"
 ////#include "Arduino_TFT_18bit.h"
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "Arduino_ST7789.h"
+#define LITTLE_FOOT_PRINT
 
 static int8_t _rst = -1;
 static uint8_t _r;
@@ -48,7 +50,7 @@ void Arduino_TFT_18bit_writeColor(uint16_t color)
 
 void Arduino_TFT_18bit_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-  writeAddrWindow(x, y, 1, 1);
+  Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
   Arduino_SWSPI_write((color & 0xF800) >> 8);
   Arduino_SWSPI_write((color & 0x07E0) >> 3);
   Arduino_SWSPI_write(color << 3);

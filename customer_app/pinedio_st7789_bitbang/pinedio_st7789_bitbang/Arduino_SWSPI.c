@@ -5,6 +5,7 @@
  */
 ////#include "Arduino_SWSPI.h"
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
 #include <bl_gpio.h>         //  For bl_gpio_output_set
@@ -18,6 +19,12 @@
 
 void Arduino_SWSPI_write16(uint16_t d);
 void Arduino_SWSPI_writeCommand16(uint16_t c);
+void Arduino_SWSPI_WRITE9BITCOMMAND(uint8_t c);
+void Arduino_SWSPI_WRITE9BITDATA(uint8_t d);
+void Arduino_SWSPI_WRITE(uint8_t d);
+void Arduino_SWSPI_WRITE16(uint16_t d);
+void Arduino_SWSPI_WRITE9BITREPEAT(uint16_t p, uint32_t len);
+void Arduino_SWSPI_WRITEREPEAT(uint16_t p, uint32_t len);
 void Arduino_SWSPI_DC_HIGH(void);
 void Arduino_SWSPI_DC_LOW(void);
 void Arduino_SWSPI_CS_HIGH(void);
@@ -944,6 +951,9 @@ INLINE void Arduino_SWSPI_SPI_SCK_LOW(void)
 */
 INLINE bool Arduino_SWSPI_SPI_MISO_READ(void)
 {
+  return 0; ////
+#ifdef NOTUSED
+
 #if defined(USE_FAST_PINIO)
 #if defined(KINETISK)
   return *_misoPort;
@@ -953,4 +963,6 @@ INLINE bool Arduino_SWSPI_SPI_MISO_READ(void)
 #else  // !USE_FAST_PINIO
   return digitalRead(_miso);
 #endif // end !USE_FAST_PINIO
+
+#endif  //  NOTUSED
 }

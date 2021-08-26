@@ -57,6 +57,17 @@ typedef enum
     DELAY,
 } spi_operation_type_t;
 
+union
+{
+    uint16_t value;
+    struct
+    {
+        uint8_t lsb;
+        uint8_t msb;
+    };
+} _data16;
+
+void Arduino_ST7789_writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
 void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode);
 void Arduino_SWSPI_beginWrite();
 void Arduino_SWSPI_endWrite();
