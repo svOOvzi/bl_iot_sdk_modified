@@ -5,6 +5,7 @@
  */
 ////#include "Arduino_SWSPI.h"
 #include <inttypes.h>
+#include <stdio.h>
 #include <assert.h>
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include "Arduino_ST7789.h"
@@ -18,6 +19,106 @@ static void digitalWrite(int8_t pin, int8_t val) {
     int rc = bl_gpio_output_set(pin, 0);  assert(rc == 0);
   } else {
     int rc = bl_gpio_output_set(pin, 1);  assert(rc == 0);
+  }
+}
+
+void Arduino_SWSPI_writeC8D8(uint8_t c, uint8_t d)
+{
+  Arduino_SWSPI_writeCommand(c);
+  Arduino_SWSPI_write(d);
+}
+
+void Arduino_SWSPI_writeC8D16(uint8_t c, uint16_t d)
+{
+  Arduino_SWSPI_writeCommand(c);
+  Arduino_SWSPI_write16(d);
+}
+
+void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  Arduino_SWSPI_writeCommand(c);
+  Arduino_SWSPI_write16(d1);
+  Arduino_SWSPI_write16(d2);
+}
+
+void Arduino_SWSPI_sendCommand(uint8_t c)
+{
+  Arduino_SWSPI_beginWrite();
+  Arduino_SWSPI_writeCommand(c);
+  Arduino_SWSPI_endWrite();
+}
+
+void Arduino_SWSPI_sendCommand16(uint16_t c)
+{
+  Arduino_SWSPI_beginWrite();
+  Arduino_SWSPI_writeCommand16(c);
+  Arduino_SWSPI_endWrite();
+}
+
+void Arduino_SWSPI_sendData(uint8_t d)
+{
+  Arduino_SWSPI_beginWrite();
+  Arduino_SWSPI_write(d);
+  Arduino_SWSPI_endWrite();
+}
+
+void Arduino_SWSPI_sendData16(uint16_t d)
+{
+  Arduino_SWSPI_beginWrite();
+  Arduino_SWSPI_write16(d);
+  Arduino_SWSPI_endWrite();
+}
+
+void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
+{
+  for (size_t i = 0; i < len; ++i)
+  {
+    uint8_t l = 0;
+    switch (batch[i])
+    {
+    case BEGIN_WRITE:
+      Arduino_SWSPI_beginWrite();
+      break;
+    case WRITE_C8_D16:
+      l++;
+      /* fall through */
+    case WRITE_C8_D8:
+      l++;
+      /* fall through */
+    case WRITE_COMMAND_8:
+      Arduino_SWSPI_writeCommand(batch[++i]);
+      break;
+    case WRITE_C16_D16:
+      l = 2;
+      /* fall through */
+    case WRITE_COMMAND_16:
+      _data16.msb = batch[++i];
+      _data16.lsb = batch[++i];
+      Arduino_SWSPI_writeCommand16(_data16.value);
+      break;
+    case WRITE_DATA_8:
+      l = 1;
+      break;
+    case WRITE_DATA_16:
+      l = 2;
+      break;
+    case WRITE_BYTES:
+      l = batch[++i];
+      break;
+    case END_WRITE:
+      Arduino_SWSPI_endWrite();
+      break;
+    case DELAY:
+      Arduino_SWSPI_delay(batch[++i]);
+      break;
+    default:
+      printf("Unknown operation id at %d: %d", i, batch[i]);
+      break;
+    }
+    while (l--)
+    {
+      Arduino_SWSPI_write(batch[++i]);
+    }
   }
 }
 

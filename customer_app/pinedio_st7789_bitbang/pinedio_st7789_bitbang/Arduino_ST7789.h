@@ -42,8 +42,27 @@
 #define ST7789_RDID3 0xDC
 #define ST7789_RDID4 0xDD
 
+typedef enum
+{
+    BEGIN_WRITE,
+    WRITE_COMMAND_8,
+    WRITE_COMMAND_16,
+    WRITE_DATA_8,
+    WRITE_DATA_16,
+    WRITE_BYTES,
+    WRITE_C8_D8,
+    WRITE_C8_D16,
+    WRITE_C16_D16,
+    END_WRITE,
+    DELAY,
+} spi_operation_type_t;
+
 void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode);
 void Arduino_SWSPI_beginWrite();
 void Arduino_SWSPI_endWrite();
 void Arduino_SWSPI_writeCommand(uint8_t c);
 void Arduino_SWSPI_write(uint8_t d);
+
+void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len);
+void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
+void Arduino_SWSPI_sendCommand(uint8_t c);

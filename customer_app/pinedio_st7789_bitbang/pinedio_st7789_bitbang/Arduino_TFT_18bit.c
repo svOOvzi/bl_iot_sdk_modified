@@ -7,6 +7,7 @@
 ////#include "Arduino_GFX.h"
 ////#include "Arduino_TFT_18bit.h"
 #include <inttypes.h>
+#include <stdio.h>
 #include "Arduino_ST7789.h"
 
 static int8_t _rst = -1;

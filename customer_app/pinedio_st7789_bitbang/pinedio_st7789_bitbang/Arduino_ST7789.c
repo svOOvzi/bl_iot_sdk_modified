@@ -5,6 +5,7 @@
  * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
 #include <inttypes.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <bl_gpio.h>         //  For bl_gpio_output_set
