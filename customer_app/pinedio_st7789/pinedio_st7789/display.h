@@ -61,7 +61,7 @@
 #define DISPLAY_UNUSED_CS_PIN 8
 
 /// For Debug Only: GPIO for SPI Chip Select Pin that is exposed on GPIO Connector and can be connected to Logic Analyser
-#define DISPLAY_DEBUG_CS_PIN 8
+#define DISPLAY_DEBUG_CS_PIN 5
 
 /// Maximal horizontal and vertical resolution
 ////#define LV_HOR_RES_MAX          (240)
