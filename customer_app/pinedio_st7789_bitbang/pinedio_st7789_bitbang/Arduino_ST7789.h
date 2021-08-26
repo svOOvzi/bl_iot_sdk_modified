@@ -43,3 +43,7 @@
 #define ST7789_RDID4 0xDD
 
 void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode);
+void Arduino_SWSPI_beginWrite();
+void Arduino_SWSPI_endWrite();
+void Arduino_SWSPI_writeCommand(uint8_t c);
+void Arduino_SWSPI_write(uint8_t d);

@@ -5,18 +5,13 @@
  */
 ////#include "Arduino_SWSPI.h"
 #include <inttypes.h>
+#include <assert.h>
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include "Arduino_ST7789.h"
 
 #define pinMode(x,y) {}
 #define HIGH 1
 #define LOW  0
-
-static int8_t _dc = -1;
-static int8_t _cs = -1;
-static int8_t _sck = -1;
-static int8_t _mosi = -1;
-static int8_t _miso = -1;
 
 static void digitalWrite(int8_t pin, int8_t val) {
   if (val == 0) {
@@ -25,6 +20,12 @@ static void digitalWrite(int8_t pin, int8_t val) {
     int rc = bl_gpio_output_set(pin, 1);  assert(rc == 0);
   }
 }
+
+static int8_t _dc = -1;
+static int8_t _cs = -1;
+static int8_t _sck = -1;
+static int8_t _mosi = -1;
+static int8_t _miso = -1;
 
 void ////
 Arduino_SWSPI_Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */)

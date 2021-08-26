@@ -6,8 +6,22 @@
  */
 #include <inttypes.h>
 #include <stdbool.h>
+#include <assert.h>
+#include <bl_gpio.h>         //  For bl_gpio_output_set
 #include "Arduino_ST7789.h"
 ////#include "SPI.h"
+
+#define pinMode(x,y) {}
+#define HIGH 1
+#define LOW  0
+
+static void digitalWrite(int8_t pin, int8_t val) {
+  if (val == 0) {
+    int rc = bl_gpio_output_set(pin, 0);  assert(rc == 0);
+  } else {
+    int rc = bl_gpio_output_set(pin, 1);  assert(rc == 0);
+  }
+}
 
 void Arduino_ST7789_tftInit();
 void Arduino_ST7789_setRotation(uint8_t r);
@@ -21,7 +35,7 @@ static uint8_t _col_offset1;
 static uint8_t _row_offset1;
 static uint8_t _col_offset2;
 static uint8_t _row_offset2;
-static uint8_t _override_datamode = -1;
+static int8_t _override_datamode = -1;
 static uint8_t _rotation;
 
 static void Arduino_TFT_begin(int32_t speed)
