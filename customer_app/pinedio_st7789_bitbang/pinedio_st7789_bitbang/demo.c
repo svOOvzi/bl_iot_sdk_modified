@@ -139,7 +139,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
     for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
-        for (int16_t y = 0; x < LV_VER_RES_MAX; x++) {
+        for (int16_t y = 0; y < LV_VER_RES_MAX; y++) {
             Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
         }
     }
