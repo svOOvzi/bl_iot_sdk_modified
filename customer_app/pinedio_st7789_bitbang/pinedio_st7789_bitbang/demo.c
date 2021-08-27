@@ -66,7 +66,7 @@ static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t colo
 {
     Arduino_SWSPI_beginWrite();  ////
     Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
-    printf("  d:%04x\r\n", color);
+    debug_st7789("  d:%04x\r\n", color);
     Arduino_SWSPI_write16(color);
     Arduino_SWSPI_endWrite();  ////
 }
