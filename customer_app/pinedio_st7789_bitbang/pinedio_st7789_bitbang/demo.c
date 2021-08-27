@@ -148,19 +148,6 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
 //  End Common Code
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Command to display image. Should be done after `display_init`
-static void test_display_image(char *buf, int len, int argc, char **argv)
-{
-    for (int16_t y = 0; y < LV_VER_RES_MAX; y++) {
-        for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
-            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
-        }
-    }
-}
-
-//  End Common Code
-///////////////////////////////////////////////////////////////////////////////
-
 /// Command to show the interrupt counters
 static void test_display_result(char *buf, int len, int argc, char **argv)
 {
