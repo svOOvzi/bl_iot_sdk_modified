@@ -65,8 +65,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         -1,                //  dc
         DISPLAY_CS_PIN,    //  cs
         DISPLAY_SCK_PIN,   //  sck
-        DISPLAY_MISO_PIN,  //  mosi
-        DISPLAY_MOSI_PIN,  //  miso
+        DISPLAY_MOSI_PIN,  //  mosi
+        DISPLAY_MISO_PIN,  //  miso
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
     Arduino_ST7789_Arduino_ST7789(

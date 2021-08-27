@@ -117,8 +117,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         -1,                //  dc
         DISPLAY_CS_PIN,    //  cs
         DISPLAY_SCK_PIN,   //  sck
-        DISPLAY_MISO_PIN,  //  mosi
-        DISPLAY_MOSI_PIN,  //  miso
+        DISPLAY_MOSI_PIN,  //  mosi
+        DISPLAY_MISO_PIN,  //  miso
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
     Arduino_ST7789_Arduino_ST7789(
@@ -134,6 +134,19 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     );
     Arduino_ST7789_begin(1000000);
 }
+
+/// Command to display image. Should be done after `display_init`
+static void test_display_image(char *buf, int len, int argc, char **argv)
+{
+    for (int16_t y = 0; y < LV_VER_RES_MAX; y++) {
+        for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
+            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
+        }
+    }
+}
+
+//  End Common Code
+///////////////////////////////////////////////////////////////////////////////
 
 /// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
