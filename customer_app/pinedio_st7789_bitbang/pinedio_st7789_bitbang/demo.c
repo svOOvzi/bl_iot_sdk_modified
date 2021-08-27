@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//  PineDio Stack Demo Firmware for ST7789 SPI in 3-Wire (9-bit) Mode
+//  PineDio Stack Demo Firmware for ST7789 SPI in 3-Wire (9-bit) Mode, bit-banging with GFX Library
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -112,7 +112,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
-    //  Init GFX Driver
+    //  Init GFX Driver for Bit-Banging 9-bit data
     Arduino_SWSPI_Arduino_SWSPI(
         -1,                //  dc
         DISPLAY_CS_PIN,    //  cs
@@ -138,9 +138,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
 /// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
+    //  Call GFX Library to render a box of color 0xAAAA, by Bit-Banging 9-bit data
     for (int16_t y = 0; y < LV_VER_RES_MAX; y++) {
         for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
-            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
+            Arduino_TFT_writePixelPreclipped(x, y, 0xAAAA);
+            Arduino_SWSPI_delay(10);
         }
     }
 }

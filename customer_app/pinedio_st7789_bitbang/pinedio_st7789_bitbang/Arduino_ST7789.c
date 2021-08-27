@@ -132,8 +132,8 @@ void Arduino_ST7789_setRotation(uint8_t r)
     break;
   }
 
-  printf("MADCTL\r\n");
-  printf("c:%02x\r\n", ST7789_MADCTL);
+  debug_st7789("MADCTL\r\n");
+  debug_st7789("c:%02x\r\n", ST7789_MADCTL);
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_writeCommand(ST7789_MADCTL);
   Arduino_SWSPI_write(r);
@@ -147,7 +147,7 @@ void Arduino_ST7789_writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h
     _currentX = x;
     _currentW = w;
     x += _xStart;
-    printf("CASET\r\n");
+    debug_st7789("CASET\r\n");
     Arduino_SWSPI_writeC8D16D16(ST7789_CASET, x, x + w - 1);
   }
 
@@ -156,12 +156,12 @@ void Arduino_ST7789_writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h
     _currentY = y;
     _currentH = h;
     y += _yStart;
-    printf("RASET\r\n");
+    debug_st7789("RASET\r\n");
     Arduino_SWSPI_writeC8D16D16(ST7789_RASET, y, y + h - 1);
   }
 
-  printf("RAMWR\r\n");
-  printf("c:%02x\r\n", ST7789_RAMWR);
+  debug_st7789("RAMWR\r\n");
+  debug_st7789("c:%02x\r\n", ST7789_RAMWR);
   Arduino_SWSPI_writeCommand(ST7789_RAMWR); // write to RAM
 }
 

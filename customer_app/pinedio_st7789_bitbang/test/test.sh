@@ -6,6 +6,7 @@ set -x  #  Echo commands
 
 gcc \
     -o test \
+    -D DEBUG_ST7789 \
     -I . \
     -I ../pinedio_st7789_bitbang \
     test.c \

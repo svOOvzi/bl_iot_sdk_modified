@@ -100,3 +100,9 @@ void Arduino_TFT_18bit_Arduino_TFT_18bit(
 );
 void Arduino_TFT_18bit_writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
 #endif  //  NOTUSED
+
+#ifdef DEBUG_ST7789
+#define debug_st7789(...) printf(__VA_ARGS__)
+#else
+#define debug_st7789(...) {}
+#endif  //  DEBUG_ST7789

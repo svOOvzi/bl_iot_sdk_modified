@@ -44,21 +44,21 @@ static void digitalWrite(int8_t pin, int8_t val) {
 
 void Arduino_SWSPI_writeC8D8(uint8_t c, uint8_t d)
 {
-  printf("c:%02x d:%02x\r\n", c, d);
+  debug_st7789("c:%02x d:%02x\r\n", c, d);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write(d);
 }
 
 void Arduino_SWSPI_writeC8D16(uint8_t c, uint16_t d)
 {
-  printf("c:%02x d:%04x\r\n", c, d);
+  debug_st7789("c:%02x d:%04x\r\n", c, d);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write16(d);
 }
 
 void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
-  printf("c:%02x d:%04x %04x\r\n", c, d1, d2);
+  debug_st7789("c:%02x d:%04x %04x\r\n", c, d1, d2);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write16(d1);
   Arduino_SWSPI_write16(d2);
@@ -66,7 +66,7 @@ void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_SWSPI_sendCommand(uint8_t c)
 {
-  printf("c:%02x\r\n", c);
+  debug_st7789("c:%02x\r\n", c);
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_endWrite();
@@ -82,7 +82,7 @@ void Arduino_SWSPI_sendCommand16(uint16_t c)
 
 void Arduino_SWSPI_sendData(uint8_t d)
 {
-  printf("  d:%02x\r\n", d);
+  debug_st7789("  d:%02x\r\n", d);
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_write(d);
   Arduino_SWSPI_endWrite();
@@ -113,7 +113,7 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
       l++;
       /* fall through */
     case WRITE_COMMAND_8:
-      printf("c:%02x\r\n", batch[i + 1]);
+      debug_st7789("c:%02x\r\n", batch[i + 1]);
       Arduino_SWSPI_writeCommand(batch[++i]);
       break;
     case WRITE_C16_D16:
@@ -140,12 +140,12 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
       Arduino_SWSPI_delay(batch[++i]);
       break;
     default:
-      printf("Unknown operation id at %d: %d", i, batch[i]);
+      debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
       break;
     }
     while (l--)
     {
-      printf("  d:%02x\r\n", batch[i + 1]);
+      debug_st7789("  d:%02x\r\n", batch[i + 1]);
       Arduino_SWSPI_write(batch[++i]);
     }
   }
@@ -854,13 +854,13 @@ INLINE void Arduino_SWSPI_CS_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, HIGH);
-    printf("- cs %d disable\r\n", _cs);
+    debug_st7789("- cs %d disable\r\n", _cs);
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
   {
     digitalWrite(_cs2, HIGH);
-    printf("- cs2 %d disable\r\n", _cs2);
+    debug_st7789("- cs2 %d disable\r\n", _cs2);
   }
 }
 
@@ -879,13 +879,13 @@ INLINE void Arduino_SWSPI_CS_LOW(void)
     *_csPort &= _csPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
-    printf("+ cs %d enable\r\n", _cs);
+    debug_st7789("+ cs %d enable\r\n", _cs);
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
   {
-    printf("+ cs2 %d enable\r\n", _cs2);
+    debug_st7789("+ cs2 %d enable\r\n", _cs2);
     digitalWrite(_cs2, LOW);
   }
 }

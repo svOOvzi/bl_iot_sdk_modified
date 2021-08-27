@@ -60,7 +60,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
-    //  Init GFX Driver
+    //  Init GFX Driver for Bit-Banging 9-bit data
     Arduino_SWSPI_Arduino_SWSPI(
         -1,                //  dc
         DISPLAY_CS_PIN,    //  cs
@@ -86,9 +86,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
 /// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
+    //  Call GFX Library to render a box of color 0xAAAA, by Bit-Banging 9-bit data
     for (int16_t y = 0; y < LV_VER_RES_MAX; y++) {
         for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
-            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
+            Arduino_TFT_writePixelPreclipped(x, y, 0xAAAA);
+            Arduino_SWSPI_delay(10);
         }
     }
 }
@@ -116,10 +118,10 @@ void main() {
 
 /* Output Log
 
-+ gcc -o test -I . -I ../pinedio_st7789_bitbang test.c ../pinedio_st7789_bitbang/Arduino_ST7789.c ../pinedio_st7789_bitbang/Arduino_SWSPI.c
++ gcc -o test -D DEBUG_ST7789 -I . -I ../pinedio_st7789_bitbang test.c ../pinedio_st7789_bitbang/Arduino_ST7789.c ../pinedio_st7789_bitbang/Arduino_SWSPI.c
 test.c: In function ‘main’:
-test.c:111:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
-  111 |     test_display_init("", 0, 0, &"");
+test.c:113:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
+  113 |     test_display_init("", 0, 0, &"");
       |                                 ^~~
       |                                 |
       |                                 char (*)[1]       
@@ -127,8 +129,8 @@ test.c:23:68: note: expected ‘char **’ but argument is of type ‘char (*)[1
    23 | t(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
-test.c:114:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
-  114 |     test_display_image("", 0, 0, &"");
+test.c:116:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
+  116 |     test_display_image("", 0, 0, &"");
       |                                  ^~~
       |                                  |
       |                                  char (*)[1]      
@@ -136,12 +138,21 @@ test.c:87:69: note: expected ‘char **’ but argument is of type ‘char (*)[1
    87 | e(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
+In file included from ../pinedio_st7789_bitbang/Arduino_SWSPI.c:12:
 ../pinedio_st7789_bitbang/Arduino_SWSPI.c: In function ‘Arduino_SWSPI_batchOperation’:
-../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:40: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
-  143 |       printf("Unknown operation id at %d: %d", i, batch[i]);
-      |                                       ~^       ~  
-      |                                        |       |  
-      |                                        int     size_t {aka long unsigned int}
+../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:20: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
+  143 |       debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~
+      |                                                      |
+      |                                                      size_t {aka long unsigned int}
+../pinedio_st7789_bitbang/Arduino_ST7789.h:105:34: note: in definition of macro ‘debug_st7789’
+  105 | #define debug_st7789(...) printf(__VA_ARGS__)     
+      |                                  ^~~~~~~~~~~      
+../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:46: note: format string is defined here
+  143 | debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
+      |                                       ~^
+      |                                        |
+      |                                        int        
       |                                       %ld
 + ./test
 *** test_display_init
@@ -255,45 +266,50 @@ RASET
 c:2b d:0000 0000
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -302,45 +318,50 @@ RASET
 c:2b d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -349,45 +370,50 @@ RASET
 c:2b d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -396,45 +422,50 @@ RASET
 c:2b d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -443,45 +474,50 @@ RASET
 c:2b d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -490,45 +526,50 @@ RASET
 c:2b d:0005 0005
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -537,45 +578,50 @@ RASET
 c:2b d:0006 0006
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -584,45 +630,50 @@ RASET
 c:2b d:0007 0007
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -631,45 +682,50 @@ RASET
 c:2b d:0008 0008
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
@@ -678,43 +734,48 @@ RASET
 c:2b d:0009 0009
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
-  d:a0a0
+  d:aaaa
 - cs 20 disable
 - cs2 5 disable
+Sleep 10 ms
 */
