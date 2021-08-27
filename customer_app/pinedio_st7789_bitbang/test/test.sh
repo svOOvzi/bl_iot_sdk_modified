@@ -11,7 +11,6 @@ gcc \
     test.c \
     ../pinedio_st7789_bitbang/Arduino_ST7789.c \
     ../pinedio_st7789_bitbang/Arduino_SWSPI.c \
-    ../pinedio_st7789_bitbang/Arduino_TFT_18bit.c \
 
 ./test
 rm test

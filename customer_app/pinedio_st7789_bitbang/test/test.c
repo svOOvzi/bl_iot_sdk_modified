@@ -5,6 +5,14 @@
 #include "Arduino_ST7789.h"
 #include "display.h"
 
+//  From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
+static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
+{
+    Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
+    printf("  d:%04x\r\n", color);
+    Arduino_SWSPI_write16(color);
+}
+
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
@@ -19,6 +27,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("SX1262 CS GPIO: %d\r\n", SX1262_CS_PIN);
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
+
+    //  Configure SPI pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_SCK_PIN,  0, 0);  assert(rc == 0);
 
     //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
@@ -69,7 +82,7 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
 {
     for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
         for (int16_t y = 0; x < LV_VER_RES_MAX; x++) {
-            Arduino_TFT_18bit_writePixelPreclipped(x, y, 0xA0A0);
+            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
         }
     }
 }
@@ -91,3 +104,190 @@ void main() {
     printf("\r\n*** test_display_image\r\n");
     test_display_image("", 0, 0, &"");
 }
+
+/* Output Log
+
++ gcc -o test -I . -I ../pinedio_st7789_bitbang test.c ../pinedio_st7789_bitbang/Arduino_ST7789.c ../pinedio_st7789_bitbang/Arduino_SWSPI.c
+test.c: In function ‘main’:
+test.c:102:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
+  102 |     test_display_init("", 0, 0, &"");
+      |                                 ^~~
+      |                                 |
+      |                                 char (*)[1]       
+test.c:17:68: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+   17 | t(char *buf, int len, int argc, char **argv)      
+      |                                 ~~~~~~~^~~~       
+
+test.c:105:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
+  105 |     test_display_image("", 0, 0, &"");
+      |                                  ^~~
+      |                                  |
+      |                                  char (*)[1]      
+test.c:81:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+   81 | e(char *buf, int len, int argc, char **argv)      
+      |                                 ~~~~~~~^~~~       
+
+../pinedio_st7789_bitbang/Arduino_SWSPI.c: In function ‘Arduino_SWSPI_batchOperation’:
+../pinedio_st7789_bitbang/Arduino_SWSPI.c:144:40: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
+  144 |       printf("Unknown operation id at %d: %d", i, batch[i]);
+      |                                       ~^       ~  
+      |                                        |       |  
+      |                                        int     size_t {aka long unsigned int}
+      |                                       %ld
++ ./test
+*** test_display_init
+SPI MOSI GPIO:  17
+SPI MISO GPIO:  0
+SPI SCK GPIO:   11
+SPI CS GPIO:    20
+Debug CS GPIO:  5
+Unused CS GPIO: 8
+Flash CS GPIO:  14
+SX1262 CS GPIO: 15
+Backlight GPIO: 21
+Resolution:     10 x 2
+Set Flash CS pin 14 to high
+Set SX1262 CS pin 15 to high
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+c:01
++ cs 20 enable
++ cs2 5 enable
+- cs 20 disable
+- cs2 5 disable
+Sleep 120 ms
++ cs 20 enable
++ cs2 5 enable
+c:11
+- cs 20 disable
+- cs2 5 disable
+Sleep 120 ms
++ cs 20 enable
++ cs2 5 enable
+c:3a
+  d:55
+c:36
+  d:00
+c:b2
+  d:0c
+  d:0c
+  d:00
+  d:33
+  d:33
+c:b7
+  d:35
+c:bb
+  d:19
+c:c0
+  d:2c
+c:c2
+  d:01
+c:c3
+  d:12
+c:c4
+  d:20
+c:c6
+  d:0f
+c:d0
+  d:a4
+  d:a1
+c:e0
+  d:f0
+  d:09
+  d:13
+  d:12
+  d:12
+  d:2b
+  d:3c
+  d:44
+  d:4b
+  d:1b
+  d:18
+  d:17
+  d:1d
+  d:21
+c:e1
+  d:f0
+  d:09
+  d:13
+  d:0c
+  d:0d
+  d:27
+  d:3b
+  d:44
+  d:4d
+  d:0b
+  d:17
+  d:17
+  d:1d
+  d:21
+c:13
+- cs 20 disable
+- cs2 5 disable
+Sleep 10 ms
++ cs 20 enable
++ cs2 5 enable
+c:29
+- cs 20 disable
+- cs2 5 disable
+MADCTL
+c:36
++ cs 20 enable
++ cs2 5 enable
+- cs 20 disable
+- cs2 5 disable
+
+*** test_display_image
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0000 0000
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0005 0005
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0006 0006
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0007 0007
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0008 0008
+RAMWR
+c:2c
+  d:a0a0
+CASET
+c:2a d:0009 0009
+RAMWR
+c:2c
+  d:a0a0
+*/

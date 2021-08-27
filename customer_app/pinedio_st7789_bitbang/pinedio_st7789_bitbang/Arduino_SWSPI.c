@@ -17,7 +17,6 @@
 #define UNUSED(x)
 #define INLINE
 
-void Arduino_SWSPI_write16(uint16_t d);
 void Arduino_SWSPI_writeCommand16(uint16_t c);
 void Arduino_SWSPI_WRITE9BITCOMMAND(uint8_t c);
 void Arduino_SWSPI_WRITE9BITDATA(uint8_t d);
@@ -45,18 +44,21 @@ static void digitalWrite(int8_t pin, int8_t val) {
 
 void Arduino_SWSPI_writeC8D8(uint8_t c, uint8_t d)
 {
+  printf("c:%02x d:%02x\r\n", c, d);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write(d);
 }
 
 void Arduino_SWSPI_writeC8D16(uint8_t c, uint16_t d)
 {
+  printf("c:%02x d:%04x\r\n", c, d);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write16(d);
 }
 
 void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
+  printf("c:%02x d:%04x %04x\r\n", c, d1, d2);
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_write16(d1);
   Arduino_SWSPI_write16(d2);
@@ -64,6 +66,7 @@ void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_SWSPI_sendCommand(uint8_t c)
 {
+  printf("c:%02x\r\n", c);
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_writeCommand(c);
   Arduino_SWSPI_endWrite();
@@ -71,6 +74,7 @@ void Arduino_SWSPI_sendCommand(uint8_t c)
 
 void Arduino_SWSPI_sendCommand16(uint16_t c)
 {
+  assert(false); ////
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_writeCommand16(c);
   Arduino_SWSPI_endWrite();
@@ -78,6 +82,7 @@ void Arduino_SWSPI_sendCommand16(uint16_t c)
 
 void Arduino_SWSPI_sendData(uint8_t d)
 {
+  printf("  d:%02x\r\n", d);
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_write(d);
   Arduino_SWSPI_endWrite();
@@ -85,6 +90,7 @@ void Arduino_SWSPI_sendData(uint8_t d)
 
 void Arduino_SWSPI_sendData16(uint16_t d)
 {
+  assert(false); ////
   Arduino_SWSPI_beginWrite();
   Arduino_SWSPI_write16(d);
   Arduino_SWSPI_endWrite();
@@ -107,6 +113,7 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
       l++;
       /* fall through */
     case WRITE_COMMAND_8:
+      printf("c:%02x\r\n", batch[i + 1]);
       Arduino_SWSPI_writeCommand(batch[++i]);
       break;
     case WRITE_C16_D16:
@@ -138,6 +145,7 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
     }
     while (l--)
     {
+      printf("  d:%02x\r\n", batch[i + 1]);
       Arduino_SWSPI_write(batch[++i]);
     }
   }
@@ -702,6 +710,7 @@ INLINE void Arduino_SWSPI_WRITE9BITDATA(uint8_t d)
 
 INLINE void Arduino_SWSPI_WRITE(uint8_t d)
 {
+  assert(false); ////  9-bit only
   uint8_t bit = 0x80;
   while (bit)
   {
@@ -721,6 +730,7 @@ INLINE void Arduino_SWSPI_WRITE(uint8_t d)
 
 INLINE void Arduino_SWSPI_WRITE16(uint16_t d)
 {
+  assert(false); ////  9-bit only
   uint16_t bit = 0x8000;
   while (bit)
   {
@@ -763,6 +773,7 @@ INLINE void Arduino_SWSPI_WRITE9BITREPEAT(uint16_t p, uint32_t len)
 
 INLINE void Arduino_SWSPI_WRITEREPEAT(uint16_t p, uint32_t len)
 {
+  assert(false); ////  9-bit only
   if ((p == 0x0000) || (p == 0xffff)) // no need to set MOSI level while filling black or white
   {
     if (p)
@@ -793,6 +804,7 @@ INLINE void Arduino_SWSPI_WRITEREPEAT(uint16_t p, uint32_t len)
 
 INLINE void Arduino_SWSPI_DC_HIGH(void)
 {
+  assert(false); ////  9-bit only
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(KINETISK)
@@ -810,6 +822,7 @@ INLINE void Arduino_SWSPI_DC_HIGH(void)
 
 INLINE void Arduino_SWSPI_DC_LOW(void)
 {
+  assert(false); ////  9-bit only
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(KINETISK)
@@ -840,13 +853,13 @@ INLINE void Arduino_SWSPI_CS_HIGH(void)
     *_csPort |= _csPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
-    printf("CS %d Disable\r\n", _cs);
+    printf("- cs %d disable\r\n", _cs);
     digitalWrite(_cs, HIGH);
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
   {
-    printf("CS2 %d Disable\r\n", _cs2);
+    printf("- cs2 %d disable\r\n", _cs2);
     digitalWrite(_cs2, HIGH);
   }
 }
@@ -866,13 +879,13 @@ INLINE void Arduino_SWSPI_CS_LOW(void)
     *_csPort &= _csPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
-    printf("CS %d Enable\r\n", _cs);
+    printf("+ cs %d enable\r\n", _cs);
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
   {
-    printf("CS2 %d Enable\r\n", _cs2);
+    printf("+ cs2 %d enable\r\n", _cs2);
     digitalWrite(_cs2, LOW);
   }
 }

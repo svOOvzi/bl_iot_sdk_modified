@@ -9,6 +9,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <assert.h>
 #include "Arduino_ST7789.h"
 #define LITTLE_FOOT_PRINT
 
@@ -43,6 +44,7 @@ Arduino_TFT_18bit_Arduino_TFT_18bit(
 
 void Arduino_TFT_18bit_writeColor(uint16_t color)
 {
+  assert(false); ////
   Arduino_SWSPI_write((color & 0xF800) >> 8);
   Arduino_SWSPI_write((color & 0x07E0) >> 3);
   Arduino_SWSPI_write(color << 3);
@@ -51,6 +53,10 @@ void Arduino_TFT_18bit_writeColor(uint16_t color)
 void Arduino_TFT_18bit_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
+  printf("  d:%02x %02x %02x\r\n", 
+    0xff & ((color & 0xF800) >> 8),
+    0xff & ((color & 0x07E0) >> 3),
+    0xff & (color << 3));
   Arduino_SWSPI_write((color & 0xF800) >> 8);
   Arduino_SWSPI_write((color & 0x07E0) >> 3);
   Arduino_SWSPI_write(color << 3);
@@ -58,6 +64,7 @@ void Arduino_TFT_18bit_writePixelPreclipped(int16_t x, int16_t y, uint16_t color
 
 void Arduino_TFT_18bit_writeRepeat(uint16_t color, uint32_t len)
 {
+  assert(false); ////
 #if defined(ESP8266) || defined(ESP32)
   uint8_t c[3] = {(uint8_t)((color & 0xF800) >> 8), (uint8_t)((color & 0x07E0) >> 3), (uint8_t)((color & 0x001F) << 3)};
   Arduino_SWSPI_writePattern(c, 3, len);

@@ -57,6 +57,14 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
     vTaskDelay(millisec / portTICK_PERIOD_MS);
 }
 
+//  From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
+static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
+{
+    Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
+    printf("  d:%04x\r\n", color);
+    Arduino_SWSPI_write16(color);
+}
+
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
@@ -71,6 +79,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("SX1262 CS GPIO: %d\r\n", SX1262_CS_PIN);
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
+
+    //  Configure SPI pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_SCK_PIN,  0, 0);  assert(rc == 0);
 
     //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
@@ -121,7 +134,7 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
 {
     for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
         for (int16_t y = 0; x < LV_VER_RES_MAX; x++) {
-            Arduino_TFT_18bit_writePixelPreclipped(x, y, 0xA0A0);
+            Arduino_TFT_writePixelPreclipped(x, y, 0xA0A0);
         }
     }
 }
