@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <FreeRTOS.h>        //  For vTaskDelay
+#include <task.h>            //  For vTaskDelay
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <bl_gpio.h>         //  For bl_gpio_output_set
@@ -179,7 +181,7 @@ int display_image(void) {
 
         //  Copy the image pixels from Flash ROM to RAM, because Flash ROM may be too slow for DMA at 4 MHz
         ////memcpy(spi_unpacked_buf, image_data + offset, len);
-        memset(spi_unpacked_buf, 0xAA, len); ////  TODO: Test RGB565 colour 0xAA
+        memset(spi_unpacked_buf, 0xAA, len); ////  TODO: Test RGB565 colour 0xAAAA
 
         //  Set the display window
         int rc = set_window(left, top, right, bottom); assert(rc == 0);
@@ -188,6 +190,8 @@ int display_image(void) {
         rc = write_command(RAMWR, NULL, 0);   assert(rc == 0);
         rc = write_data(spi_unpacked_buf, len);  assert(rc == 0);
         rc = flush_display();  assert(rc == 0);
+
+        delay_ms(10);  ////  TODO: Remove this delay
     }
     printf("Image displayed\r\n");
     return 0;
@@ -551,7 +555,7 @@ int backlight_off(void) {
 }
 
 /// Delay for the specified number of milliseconds
-static void delay_ms(uint32_t ms) {
-    //  TODO: Implement delay. For now we write to console, which also introduces a delay.
-    printf("TODO Delay %d\r\n", ms);
+static void delay_ms(uint32_t millisec) {
+    printf("Sleep %d ms\r\n", millisec);
+    vTaskDelay(millisec / portTICK_PERIOD_MS);
 }
