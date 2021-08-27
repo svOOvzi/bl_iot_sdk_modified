@@ -43,12 +43,19 @@
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
+#include "Arduino_ST7789.h"  //  For ST7789 GFX Library
 
 /// Use SPI Port Number 0
 #define SPI_PORT   0
 
 /// SPI Device Instance. Used by display.c
 spi_dev_t spi_device;
+
+/// Sleep for the specified milliseconds
+void Arduino_SWSPI_delay(uint32_t millisec) {
+    printf("Sleep %d ms\r\n", millisec);
+    vTaskDelay(millisec / portTICK_PERIOD_MS);
+}
 
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
@@ -86,51 +93,37 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
-    //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
-    printf("Swap MISO and MOSI\r\n");
-    rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
-
-    //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
-    //  Because the SPI Pin Function will override the GPIO Pin Function!
-
-    //  Configure the SPI Port
-    rc = spi_init(
-        &spi_device, //  SPI Device
-        SPI_PORT,    //  SPI Port
-        0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
-        ////3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        0,           //  SPI Polar Phase. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        ////4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
-        1 * 1000 * 1000,  //  SPI Frequency (1 MHz, reduce this in case of problems)
-        2,   //  Transmit DMA Channel
-        3,   //  Receive DMA Channel
-        DISPLAY_SCK_PIN,        //  SPI Clock Pin 
-        DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
-        DISPLAY_MOSI_PIN,       //  SPI Serial Data Out Pin (formerly MOSI)
-        DISPLAY_MISO_PIN        //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
+    //  Init GFX Driver
+    Arduino_SWSPI_Arduino_SWSPI(
+        -1,                //  dc
+        DISPLAY_CS_PIN,    //  cs
+        DISPLAY_SCK_PIN,   //  sck
+        DISPLAY_MISO_PIN,  //  mosi
+        DISPLAY_MOSI_PIN,  //  miso
+        DISPLAY_DEBUG_CS_PIN  //  cs2
     );
-    assert(rc == 0);
-
-    //  Init the display controller and switch on backlight
-    rc = init_display();
-    assert(rc == 0);
+    Arduino_ST7789_Arduino_ST7789(
+        -1,     //  rst, 
+        0,      //  r
+        false,  //  ips
+        LV_HOR_RES_MAX,  //  w
+        LV_VER_RES_MAX,  //  h
+        0, //  col_offset1
+        0, //  row_offset1
+        0, //  col_offset2
+        0  //  row_offset2
+    );
+    Arduino_ST7789_begin(1000000);
 }
-
-/* To troubleshoot SPI Transfers that hang, edit function hal_spi_dma_trans in components/hal_drv/bl602_hal/hal_spi.c...
-    uxBits = xEventGroupWaitBits(arg->spi_dma_event_group,
-        EVT_GROUP_SPI_DMA_TR,
-        pdTRUE,
-        pdTRUE,
-        //  Previously we wait forever: portMAX_DELAY
-        //  Now we wait max 100 milliseconds.
-        100 / portTICK_PERIOD_MS);
-*/
 
 /// Command to display image. Should be done after `display_init`
 static void test_display_image(char *buf, int len, int argc, char **argv)
 {
-    int rc = display_image();
-    assert(rc == 0);
+    for (int16_t x = 0; x < LV_HOR_RES_MAX; x++) {
+        for (int16_t y = 0; x < LV_VER_RES_MAX; x++) {
+            Arduino_TFT_18bit_writePixelPreclipped(x, y, 0xA0A0);
+        }
+    }
 }
 
 /// Command to show the interrupt counters

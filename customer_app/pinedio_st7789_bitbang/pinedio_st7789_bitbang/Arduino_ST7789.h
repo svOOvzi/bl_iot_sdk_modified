@@ -1,4 +1,5 @@
 #include <inttypes.h>
+#include <stdbool.h>
 
 #define ST7789_TFTWIDTH 240
 #define ST7789_TFTHEIGHT 240 //// 320
@@ -67,14 +68,32 @@ union
     };
 } _data16;
 
+void Arduino_ST7789_Arduino_ST7789(
+    int8_t rst, uint8_t r,
+    bool ips, int16_t w, int16_t h,
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2
+);
 void Arduino_ST7789_writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
+void Arduino_ST7789_begin(int32_t speed);
+
+void Arduino_SWSPI_Arduino_SWSPI(
+    int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */, 
+    int8_t cs2
+);
+
 void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode);
 void Arduino_SWSPI_beginWrite();
 void Arduino_SWSPI_endWrite();
 void Arduino_SWSPI_writeCommand(uint8_t c);
 void Arduino_SWSPI_write(uint8_t d);
-
 void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len);
 void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
 void Arduino_SWSPI_sendCommand(uint8_t c);
-void Arduino_SWSPI_delay(uint32_t d);
+void Arduino_SWSPI_delay(uint32_t millisec);
+
+void Arduino_TFT_18bit_Arduino_TFT_18bit(
+    int8_t rst, uint8_t r,
+    bool ips, int16_t w, int16_t h,
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2
+);
+void Arduino_TFT_18bit_writePixelPreclipped(int16_t x, int16_t y, uint16_t color);

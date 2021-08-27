@@ -148,9 +148,11 @@ static int8_t _cs = -1;
 static int8_t _sck = -1;
 static int8_t _mosi = -1;
 static int8_t _miso = -1;
+static int8_t _cs2 = -1;
 
 void ////
-Arduino_SWSPI_Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */)
+Arduino_SWSPI_Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */, 
+  int8_t cs2)////
     ////: _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso)
 {
   _dc = dc;
@@ -158,6 +160,7 @@ Arduino_SWSPI_Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_
   _sck = sck;
   _mosi = mosi;
   _miso = miso;
+  _cs2 = cs2;
 }
 
 void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode)
@@ -174,6 +177,11 @@ void Arduino_SWSPI_begin(int32_t speed, int8_t dataMode)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // Deselect
+  }
+  if (_cs2 >= 0)
+  {
+    pinMode(_cs2, OUTPUT);
+    digitalWrite(_cs2, HIGH); // Deselect
   }
   pinMode(_mosi, OUTPUT);
   digitalWrite(_mosi, LOW);
@@ -832,8 +840,14 @@ INLINE void Arduino_SWSPI_CS_HIGH(void)
     *_csPort |= _csPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
+    printf("CS %d Disable\r\n", _cs);
     digitalWrite(_cs, HIGH);
 #endif // end !USE_FAST_PINIO
+  }
+  if (_cs2 >= 0)
+  {
+    printf("CS2 %d Disable\r\n", _cs2);
+    digitalWrite(_cs2, HIGH);
   }
 }
 
@@ -852,8 +866,14 @@ INLINE void Arduino_SWSPI_CS_LOW(void)
     *_csPort &= _csPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
+    printf("CS %d Enable\r\n", _cs);
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
+  }
+  if (_cs2 >= 0)
+  {
+    printf("CS2 %d Enable\r\n", _cs2);
+    digitalWrite(_cs2, LOW);
   }
 }
 

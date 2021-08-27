@@ -80,6 +80,18 @@ Arduino_ST7789_Arduino_ST7789(
   _row_offset1 = row_offset1;
   _col_offset2 = col_offset2;
   _row_offset2 = row_offset2;  
+
+  Arduino_TFT_18bit_Arduino_TFT_18bit(
+    rst, 
+    r,
+    ips, 
+    w, 
+    h,
+    col_offset1, 
+    row_offset1, 
+    col_offset2, 
+    row_offset2
+  );
 }
 
 void Arduino_ST7789_begin(int32_t speed)
