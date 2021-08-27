@@ -34,9 +34,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
-    //  Configure SPI pins as GPIO Output Pins (instead of GPIO Input)
+    //  Configure MISO as GPIO Input Pin (instead of GPIO Output)
+    rc = bl_gpio_enable_input(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
+
+    //  Configure MOSI and SCK pins as GPIO Output Pins (instead of GPIO Input)
     rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_SCK_PIN,  0, 0);  assert(rc == 0);
 
     //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
@@ -106,6 +108,7 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
 }
 
 int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
+int bl_gpio_enable_input(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
 int bl_gpio_output_set(uint8_t pin, uint8_t value) { return 0; }
 
 void main() {
