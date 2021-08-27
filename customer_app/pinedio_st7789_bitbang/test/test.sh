@@ -14,3 +14,4 @@ gcc \
     ../pinedio_st7789_bitbang/Arduino_TFT_18bit.c \
 
 ./test
+rm test
