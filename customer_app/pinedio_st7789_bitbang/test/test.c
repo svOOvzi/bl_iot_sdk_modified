@@ -154,7 +154,7 @@ Unused CS GPIO: 8
 Flash CS GPIO:  14
 SX1262 CS GPIO: 15
 Backlight GPIO: 21
-Resolution:     10 x 2
+Resolution:     10 x 5
 Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
 Set CS pin 20 to high
@@ -297,7 +297,9 @@ c:2c
 + cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0005 0005
+c:2a d:0000 0000
+RASET
+c:2b d:0001 0001
 RAMWR
 c:2c
   d:a0a0
@@ -306,7 +308,7 @@ c:2c
 + cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0006 0006
+c:2a d:0001 0001
 RAMWR
 c:2c
   d:a0a0
@@ -315,7 +317,7 @@ c:2c
 + cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0007 0007
+c:2a d:0002 0002
 RAMWR
 c:2c
   d:a0a0
@@ -324,7 +326,7 @@ c:2c
 + cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0008 0008
+c:2a d:0003 0003
 RAMWR
 c:2c
   d:a0a0
@@ -333,7 +335,383 @@ c:2c
 + cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0009 0009
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0005 0005
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0006 0006
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0007 0007
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0008 0008
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0000 0000
+RASET
+c:2b d:0009 0009
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0001 0001
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0002 0002
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0003 0003
+RAMWR
+c:2c
+  d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
+CASET
+c:2a d:0004 0004
 RAMWR
 c:2c
   d:a0a0
