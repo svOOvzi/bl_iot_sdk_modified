@@ -853,14 +853,14 @@ INLINE void Arduino_SWSPI_CS_HIGH(void)
     *_csPort |= _csPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
-    printf("- cs %d disable\r\n", _cs);
     digitalWrite(_cs, HIGH);
+    printf("- cs %d disable\r\n", _cs);
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
   {
-    printf("- cs2 %d disable\r\n", _cs2);
     digitalWrite(_cs2, HIGH);
+    printf("- cs2 %d disable\r\n", _cs2);
   }
 }
 

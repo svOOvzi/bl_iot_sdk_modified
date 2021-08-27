@@ -5,12 +5,18 @@
 #include "Arduino_ST7789.h"
 #include "display.h"
 
-//  From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
+///////////////////////////////////////////////////////////////////////////////
+//  Begin Common Code
+
+/// Write a pixel to the display.
+/// From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
 static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
+    Arduino_SWSPI_beginWrite();  ////
     Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
     printf("  d:%04x\r\n", color);
     Arduino_SWSPI_write16(color);
+    Arduino_SWSPI_endWrite();  ////
 }
 
 /// Command to init the display
@@ -87,6 +93,9 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
     }
 }
 
+//  End Common Code
+///////////////////////////////////////////////////////////////////////////////
+
 //  Testing: For Linux only
 
 /// Sleep for the specified milliseconds
@@ -109,27 +118,27 @@ void main() {
 
 + gcc -o test -I . -I ../pinedio_st7789_bitbang test.c ../pinedio_st7789_bitbang/Arduino_ST7789.c ../pinedio_st7789_bitbang/Arduino_SWSPI.c
 test.c: In function ‘main’:
-test.c:102:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
-  102 |     test_display_init("", 0, 0, &"");
+test.c:111:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
+  111 |     test_display_init("", 0, 0, &"");
       |                                 ^~~
       |                                 |
       |                                 char (*)[1]       
-test.c:17:68: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
-   17 | t(char *buf, int len, int argc, char **argv)      
+test.c:23:68: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+   23 | t(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
-test.c:105:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
-  105 |     test_display_image("", 0, 0, &"");
+test.c:114:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
+  114 |     test_display_image("", 0, 0, &"");
       |                                  ^~~
       |                                  |
       |                                  char (*)[1]      
-test.c:81:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
-   81 | e(char *buf, int len, int argc, char **argv)      
+test.c:87:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+   87 | e(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
 ../pinedio_st7789_bitbang/Arduino_SWSPI.c: In function ‘Arduino_SWSPI_batchOperation’:
-../pinedio_st7789_bitbang/Arduino_SWSPI.c:144:40: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
-  144 |       printf("Unknown operation id at %d: %d", i, batch[i]);
+../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:40: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
+  143 |       printf("Unknown operation id at %d: %d", i, batch[i]);
       |                                       ~^       ~  
       |                                        |       |  
       |                                        int     size_t {aka long unsigned int}
@@ -238,6 +247,8 @@ c:36
 - cs2 5 disable
 
 *** test_display_image
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0000 0000
 RASET
@@ -245,49 +256,87 @@ c:2b d:0000 0000
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0001 0001
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0002 0002
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0003 0003
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0004 0004
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0005 0005
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0006 0006
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0007 0007
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0008 0008
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
++ cs 20 enable
++ cs2 5 enable
 CASET
 c:2a d:0009 0009
 RAMWR
 c:2c
   d:a0a0
+- cs 20 disable
+- cs2 5 disable
 */

@@ -57,12 +57,18 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
     vTaskDelay(millisec / portTICK_PERIOD_MS);
 }
 
-//  From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
+///////////////////////////////////////////////////////////////////////////////
+//  Begin Common Code
+
+/// Write a pixel to the display.
+/// From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
 static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
+    Arduino_SWSPI_beginWrite();  ////
     Arduino_ST7789_writeAddrWindow(x, y, 1, 1);
     printf("  d:%04x\r\n", color);
     Arduino_SWSPI_write16(color);
+    Arduino_SWSPI_endWrite();  ////
 }
 
 /// Command to init the display
@@ -138,6 +144,9 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
         }
     }
 }
+
+//  End Common Code
+///////////////////////////////////////////////////////////////////////////////
 
 /// Command to show the interrupt counters
 static void test_display_result(char *buf, int len, int argc, char **argv)
