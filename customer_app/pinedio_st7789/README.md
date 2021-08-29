@@ -1,5 +1,7 @@
 # PineDio Stack BL604 Firmware for ST7789 Display
 
+Read the article: https://lupyuen.github.io/articles/pinedio
+
 Demo Firmware for PineDio Stack BL604 with ST7789 SPI Display Controller in 3-Wire (9-bit) Mode.
 
 Normally we connect to ST7789 in 4-Wire (8-bit) Mode: https://lupyuen.github.io/images/st7789-4wire.jpg
