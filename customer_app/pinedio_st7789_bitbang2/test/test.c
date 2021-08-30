@@ -123,10 +123,10 @@ void main() {
 
 /* Output Log
 
-+ gcc -o test -D DEBUG_ST7789 -I . -I ../pinedio_st7789_bitbang test.c ../pinedio_st7789_bitbang/Arduino_ST7789.c ../pinedio_st7789_bitbang/Arduino_SWSPI.c
++ gcc -o test -D DEBUG_ST7789 -I . -I ../pinedio_st7789_bitbang2 test.c ../pinedio_st7789_bitbang2/Arduino_ST7789.c ../pinedio_st7789_bitbang2/Arduino_SWSPI.c
 test.c: In function ‘main’:
-test.c:113:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
-  113 |     test_display_init("", 0, 0, &"");
+test.c:118:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
+  118 |     test_display_init("", 0, 0, &"");
       |                                 ^~~
       |                                 |
       |                                 char (*)[1]       
@@ -134,26 +134,26 @@ test.c:23:68: note: expected ‘char **’ but argument is of type ‘char (*)[1
    23 | t(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
-test.c:116:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
-  116 |     test_display_image("", 0, 0, &"");
+test.c:121:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
+  121 |     test_display_image("", 0, 0, &"");
       |                                  ^~~
       |                                  |
       |                                  char (*)[1]      
-test.c:87:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
-   87 | e(char *buf, int len, int argc, char **argv)      
+test.c:91:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+   91 | e(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
-In file included from ../pinedio_st7789_bitbang/Arduino_SWSPI.c:12:
-../pinedio_st7789_bitbang/Arduino_SWSPI.c: In function ‘Arduino_SWSPI_batchOperation’:
-../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:20: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=] 
-  143 |       debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
+In file included from ../pinedio_st7789_bitbang2/Arduino_SWSPI.c:12:
+../pinedio_st7789_bitbang2/Arduino_SWSPI.c: In function ‘Arduino_SWSPI_batchOperation’:
+../pinedio_st7789_bitbang2/Arduino_SWSPI.c:143:20: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]  143 |       debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ~
       |                                                      |
       |                                                      size_t {aka long unsigned int}
-../pinedio_st7789_bitbang/Arduino_ST7789.h:105:34: note: in definition of macro ‘debug_st7789’
+../pinedio_st7789_bitbang2/Arduino_ST7789.h:105:34: note: 
+in definition of macro ‘debug_st7789’
   105 | #define debug_st7789(...) printf(__VA_ARGS__)     
       |                                  ^~~~~~~~~~~      
-../pinedio_st7789_bitbang/Arduino_SWSPI.c:143:46: note: format string is defined here
+../pinedio_st7789_bitbang2/Arduino_SWSPI.c:143:46: note: format string is defined here
   143 | debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
       |                                       ~^
       |                                        |
@@ -161,62 +161,94 @@ In file included from ../pinedio_st7789_bitbang/Arduino_SWSPI.c:12:
       |                                       %ld
 + ./test
 *** test_display_init
-SPI MOSI GPIO:  17
-SPI MISO GPIO:  0
-SPI SCK GPIO:   11
-SPI CS GPIO:    20
-Debug CS GPIO:  5
-Unused CS GPIO: 8
-Flash CS GPIO:  14
-SX1262 CS GPIO: 15
-Backlight GPIO: 21
+Display DC GPIO: 17
+SPI MOSI GPIO:   0
+SPI MISO GPIO:   8
+SPI SCK GPIO:    11
+SPI CS GPIO:     20
+Debug CS GPIO:   5
+Unused CS GPIO:  8
+Flash CS GPIO:   14
+SX1262 CS GPIO:  15
+Backlight GPIO:  21
 Resolution:     10 x 5
 Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
 c:01
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
+- dc 17 command
++ dc 17 data
 - cs 20 disable
 - cs2 5 disable
 Sleep 120 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 c:11
+- dc 17 command
++ dc 17 data
 - cs 20 disable
 - cs2 5 disable
 Sleep 120 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 c:3a
+- dc 17 command
++ dc 17 data
   d:55
 c:36
+- dc 17 command
++ dc 17 data
   d:00
 c:b2
+- dc 17 command
++ dc 17 data
   d:0c
   d:0c
   d:00
   d:33
   d:33
 c:b7
+- dc 17 command
++ dc 17 data
   d:35
 c:bb
+- dc 17 command
++ dc 17 data
   d:19
 c:c0
+- dc 17 command
++ dc 17 data
   d:2c
 c:c2
+- dc 17 command
++ dc 17 data
   d:01
 c:c3
+- dc 17 command
++ dc 17 data
   d:12
 c:c4
+- dc 17 command
++ dc 17 data
   d:20
 c:c6
+- dc 17 command
++ dc 17 data
   d:0f
 c:d0
+- dc 17 command
++ dc 17 data
   d:a4
   d:a1
 c:e0
+- dc 17 command
++ dc 17 data
   d:f0
   d:09
   d:13
@@ -232,6 +264,8 @@ c:e0
   d:1d
   d:21
 c:e1
+- dc 17 command
++ dc 17 data
   d:f0
   d:09
   d:13
@@ -247,538 +281,816 @@ c:e1
   d:1d
   d:21
 c:13
+- dc 17 command
++ dc 17 data
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 c:29
+- dc 17 command
++ dc 17 data
 - cs 20 disable
 - cs2 5 disable
 MADCTL
 c:36
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
+- dc 17 command
++ dc 17 data
 - cs 20 disable
 - cs2 5 disable
 
 *** test_display_image
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0000 0000
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0005 0005
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0006 0006
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0007 0007
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0008 0008
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 17 command
++ dc 17 data
 RASET
 c:2b d:0009 0009
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
++ dc 17 data
 + cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 17 command
++ dc 17 data
 RAMWR
 c:2c
+- dc 17 command
++ dc 17 data
   d:aaaa
 - cs 20 disable
 - cs2 5 disable
