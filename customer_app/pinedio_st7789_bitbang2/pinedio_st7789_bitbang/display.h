@@ -30,17 +30,11 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
-/* Connect PineDio Stack to ST7789 SPI Display
-| BL602 Pin     | ST7789 SPI
-|:--------------|:--------------------
-| __`GPIO 21`__ | Backlight
-| __`GPIO 20`__ | `CS`
-| __`GPIO 11`__ | `SCK`
-| __`GPIO 0`__  | `MISO`
-| __`GPIO 17`__ | `MOSI`
-| __`3V3`__     | `3.3V`
-| __`GND`__     | `GND`
-*/
+//  According to TL (30 Aug 2021):
+//  GPIO11-SCLK
+//  GPIO17-SDO (D/C )
+//  GPIO0-SDI
+//  GPIO20- CS
 
 /// GPIO for Backlight
 #define DISPLAY_BLK_PIN  21
@@ -51,11 +45,14 @@
 /// GPIO for ST7789 SPI SCK Pin
 #define DISPLAY_SCK_PIN  11
 
-/// GPIO for ST7789 SPI MISO Pin
-#define DISPLAY_MISO_PIN  0
+/// GPIO for ST7789 SPI MISO Pin (SDO, unused)
+#define DISPLAY_MISO_PIN  8
 
-/// GPIO for ST7789 SPI MOSI Pin
-#define DISPLAY_MOSI_PIN 17
+/// GPIO for ST7789 SPI MOSI Pin (SDI)
+#define DISPLAY_MOSI_PIN  0
+
+/// GPIO for ST7789 Data / Command Pin
+#define DISPLAY_DC_PIN   17
 
 /// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
 #define DISPLAY_UNUSED_CS_PIN 8

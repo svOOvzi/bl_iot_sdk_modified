@@ -23,25 +23,27 @@ static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t colo
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
     int rc;
-    printf("SPI MOSI GPIO:  %d\r\n", DISPLAY_MOSI_PIN);
-    printf("SPI MISO GPIO:  %d\r\n", DISPLAY_MISO_PIN);
-    printf("SPI SCK GPIO:   %d\r\n", DISPLAY_SCK_PIN);
-    printf("SPI CS GPIO:    %d\r\n", DISPLAY_CS_PIN);
-    printf("Debug CS GPIO:  %d\r\n", DISPLAY_DEBUG_CS_PIN);
-    printf("Unused CS GPIO: %d\r\n", DISPLAY_UNUSED_CS_PIN);
-    printf("Flash CS GPIO:  %d\r\n", FLASH_CS_PIN);
-    printf("SX1262 CS GPIO: %d\r\n", SX1262_CS_PIN);
-    printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
+    printf("Display DC GPIO: %d\r\n", DISPLAY_DC_PIN);
+    printf("SPI MOSI GPIO:   %d\r\n", DISPLAY_MOSI_PIN);
+    printf("SPI MISO GPIO:   %d\r\n", DISPLAY_MISO_PIN);
+    printf("SPI SCK GPIO:    %d\r\n", DISPLAY_SCK_PIN);
+    printf("SPI CS GPIO:     %d\r\n", DISPLAY_CS_PIN);
+    printf("Debug CS GPIO:   %d\r\n", DISPLAY_DEBUG_CS_PIN);
+    printf("Unused CS GPIO:  %d\r\n", DISPLAY_UNUSED_CS_PIN);
+    printf("Flash CS GPIO:   %d\r\n", FLASH_CS_PIN);
+    printf("SX1262 CS GPIO:  %d\r\n", SX1262_CS_PIN);
+    printf("Backlight GPIO:  %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
     //  Configure MISO as GPIO Input Pin (instead of GPIO Output)
     rc = bl_gpio_enable_input(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
 
     //  Configure MOSI and SCK pins as GPIO Output Pins (instead of GPIO Input)
-    rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_SCK_PIN,  0, 0);  assert(rc == 0);
 
-    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    //  Configure DC, Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
@@ -64,7 +66,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
 
     //  Init GFX Driver for Bit-Banging 9-bit data
     Arduino_SWSPI_Arduino_SWSPI(
-        -1,                //  dc
+        DISPLAY_DC_PIN,    //  dc
         DISPLAY_CS_PIN,    //  cs
         DISPLAY_SCK_PIN,   //  sck
         DISPLAY_MOSI_PIN,  //  mosi

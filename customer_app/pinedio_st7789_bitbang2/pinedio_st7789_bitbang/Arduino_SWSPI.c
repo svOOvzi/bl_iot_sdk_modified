@@ -710,7 +710,6 @@ INLINE void Arduino_SWSPI_WRITE9BITDATA(uint8_t d)
 
 INLINE void Arduino_SWSPI_WRITE(uint8_t d)
 {
-  assert(false); ////  9-bit only
   uint8_t bit = 0x80;
   while (bit)
   {
@@ -730,7 +729,6 @@ INLINE void Arduino_SWSPI_WRITE(uint8_t d)
 
 INLINE void Arduino_SWSPI_WRITE16(uint16_t d)
 {
-  assert(false); ////  9-bit only
   uint16_t bit = 0x8000;
   while (bit)
   {
@@ -804,7 +802,6 @@ INLINE void Arduino_SWSPI_WRITEREPEAT(uint16_t p, uint32_t len)
 
 INLINE void Arduino_SWSPI_DC_HIGH(void)
 {
-  assert(false); ////  9-bit only
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(KINETISK)
@@ -816,13 +813,13 @@ INLINE void Arduino_SWSPI_DC_HIGH(void)
   *_dcPort |= _dcPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
+  debug_st7789("+ dc %d data\r\n", _dc);
   digitalWrite(_dc, HIGH);
 #endif // end !USE_FAST_PINIO
 }
 
 INLINE void Arduino_SWSPI_DC_LOW(void)
 {
-  assert(false); ////  9-bit only
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(KINETISK)
@@ -834,6 +831,7 @@ INLINE void Arduino_SWSPI_DC_LOW(void)
   *_dcPort &= _dcPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
+  debug_st7789("- dc %d command\r\n", _dc);
   digitalWrite(_dc, LOW);
 #endif // end !USE_FAST_PINIO
 }

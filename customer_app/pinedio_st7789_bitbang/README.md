@@ -14,3 +14,10 @@ display_image
 ```
 
 Enter `help` to see all commands.
+
+To test on Linux..
+
+```text
+cd test
+./test.sh
+```
