@@ -45,14 +45,14 @@
 /// GPIO for ST7789 SPI SCK Pin
 #define DISPLAY_SCK_PIN  11
 
-/// GPIO for ST7789 SPI MISO Pin (Unused)
+/// GPIO for ST7789 SPI MISO Pin (SDO, unused)
 #define DISPLAY_MISO_PIN  8
 
-/// GPIO for ST7789 SPI MOSI Pin
-#define DISPLAY_MOSI_PIN 17
+/// GPIO for ST7789 SPI MOSI Pin (SDI)
+#define DISPLAY_MOSI_PIN  0
 
 /// GPIO for ST7789 Data / Command Pin
-#define DISPLAY_DC_PIN    0
+#define DISPLAY_DC_PIN   17
 
 /// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
 #define DISPLAY_UNUSED_CS_PIN 8
