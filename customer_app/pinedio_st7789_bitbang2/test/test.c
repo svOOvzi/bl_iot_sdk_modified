@@ -35,6 +35,26 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Backlight GPIO:  %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
+    //  Configure Chip Select, Data/Command, MOSI, SCK pins as GPIO Pins
+    GLB_GPIO_Type pins[] = {
+        DISPLAY_DC_PIN,
+        DISPLAY_MOSI_PIN,
+        DISPLAY_MISO_PIN,
+        DISPLAY_SCK_PIN,
+        DISPLAY_CS_PIN,
+        DISPLAY_DEBUG_CS_PIN,
+        DISPLAY_UNUSED_CS_PIN,
+        FLASH_CS_PIN,
+        SX1262_CS_PIN,
+        DISPLAY_BLK_PIN
+    };
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO, 
+        pins, 
+        sizeof(pins) / sizeof(pins[0])
+    );
+    assert(rc2 == SUCCESS);
+
     //  Configure MISO as GPIO Input Pin (instead of GPIO Output)
     rc = bl_gpio_enable_input(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
 
@@ -111,7 +131,14 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
 
 int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
 int bl_gpio_enable_input(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
-int bl_gpio_output_set(uint8_t pin, uint8_t value) { return 0; }
+int bl_gpio_output_set(uint8_t pin, uint8_t value) { 
+  if (pin == 0) { printf("%d\r\n", value); }
+  return 0; 
+}
+BL_Err_Type GLB_GPIO_Func_Init(GLB_GPIO_FUNC_Type gpioFun,GLB_GPIO_Type *pinList,uint8_t cnt) {
+    for (int i = 0; i < cnt; i++) { printf("GLB_GPIO_Func_Init %d\r\n", pinList[i]); }
+    return SUCCESS;
+}
 
 void main() {
     printf("*** test_display_init\r\n");
@@ -125,8 +152,8 @@ void main() {
 
 + gcc -o test -D DEBUG_ST7789 -I . -I ../pinedio_st7789_bitbang2 test.c ../pinedio_st7789_bitbang2/Arduino_ST7789.c ../pinedio_st7789_bitbang2/Arduino_SWSPI.c
 test.c: In function ‘main’:
-test.c:118:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
-  118 |     test_display_init("", 0, 0, &"");
+test.c:145:33: warning: passing argument 4 of ‘test_display_init’ from incompatible pointer type [-Wincompatible-pointer-types]
+  145 |     test_display_init("", 0, 0, &"");
       |                                 ^~~
       |                                 |
       |                                 char (*)[1]       
@@ -134,13 +161,13 @@ test.c:23:68: note: expected ‘char **’ but argument is of type ‘char (*)[1
    23 | t(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
-test.c:121:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
-  121 |     test_display_image("", 0, 0, &"");
+test.c:148:34: warning: passing argument 4 of ‘test_display_image’ from incompatible pointer type [-Wincompatible-pointer-types]
+  148 |     test_display_image("", 0, 0, &"");
       |                                  ^~~
       |                                  |
       |                                  char (*)[1]      
-test.c:91:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
-   91 | e(char *buf, int len, int argc, char **argv)      
+test.c:111:69: note: expected ‘char **’ but argument is of type ‘char (*)[1]’
+  111 | e(char *buf, int len, int argc, char **argv)      
       |                                 ~~~~~~~^~~~       
 
 In file included from ../pinedio_st7789_bitbang2/Arduino_SWSPI.c:12:
@@ -172,15 +199,34 @@ Flash CS GPIO:   14
 SX1262 CS GPIO:  15
 Backlight GPIO:  21
 Resolution:     10 x 5
+GLB_GPIO_Func_Init 17
+GLB_GPIO_Func_Init 0
+GLB_GPIO_Func_Init 8
+GLB_GPIO_Func_Init 11
+GLB_GPIO_Func_Init 20
+GLB_GPIO_Func_Init 5
+GLB_GPIO_Func_Init 8
+GLB_GPIO_Func_Init 14
+GLB_GPIO_Func_Init 15
+GLB_GPIO_Func_Init 21
 Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
+0
 c:01
 + dc 17 data
 + cs 20 enable
 + cs2 5 enable
 - dc 17 command
+0
+0
+0
+0
+0
+0
+0
+1
 + dc 17 data
 - cs 20 disable
 - cs2 5 disable
@@ -190,6 +236,14 @@ Sleep 120 ms
 + cs2 5 enable
 c:11
 - dc 17 command
+0
+0
+0
+1
+0
+0
+0
+1
 + dc 17 data
 - cs 20 disable
 - cs2 5 disable
@@ -199,89 +253,553 @@ Sleep 120 ms
 + cs2 5 enable
 c:3a
 - dc 17 command
+0
+0
+1
+1
+1
+0
+1
+0
 + dc 17 data
   d:55
+0
+1
+0
+1
+0
+1
+0
+1
 c:36
 - dc 17 command
+0
+0
+1
+1
+0
+1
+1
+0
 + dc 17 data
   d:00
+0
+0
+0
+0
+0
+0
+0
+0
 c:b2
 - dc 17 command
+1
+0
+1
+1
+0
+0
+1
+0
 + dc 17 data
   d:0c
+0
+0
+0
+0
+1
+1
+0
+0
   d:0c
+0
+0
+0
+0
+1
+1
+0
+0
   d:00
+0
+0
+0
+0
+0
+0
+0
+0
   d:33
+0
+0
+1
+1
+0
+0
+1
+1
   d:33
+0
+0
+1
+1
+0
+0
+1
+1
 c:b7
 - dc 17 command
+1
+0
+1
+1
+0
+1
+1
+1
 + dc 17 data
   d:35
+0
+0
+1
+1
+0
+1
+0
+1
 c:bb
 - dc 17 command
+1
+0
+1
+1
+1
+0
+1
+1
 + dc 17 data
   d:19
+0
+0
+0
+1
+1
+0
+0
+1
 c:c0
 - dc 17 command
+1
+1
+0
+0
+0
+0
+0
+0
 + dc 17 data
   d:2c
+0
+0
+1
+0
+1
+1
+0
+0
 c:c2
 - dc 17 command
+1
+1
+0
+0
+0
+0
+1
+0
 + dc 17 data
   d:01
+0
+0
+0
+0
+0
+0
+0
+1
 c:c3
 - dc 17 command
+1
+1
+0
+0
+0
+0
+1
+1
 + dc 17 data
   d:12
+0
+0
+0
+1
+0
+0
+1
+0
 c:c4
 - dc 17 command
+1
+1
+0
+0
+0
+1
+0
+0
 + dc 17 data
   d:20
+0
+0
+1
+0
+0
+0
+0
+0
 c:c6
 - dc 17 command
+1
+1
+0
+0
+0
+1
+1
+0
 + dc 17 data
   d:0f
+0
+0
+0
+0
+1
+1
+1
+1
 c:d0
 - dc 17 command
+1
+1
+0
+1
+0
+0
+0
+0
 + dc 17 data
   d:a4
+1
+0
+1
+0
+0
+1
+0
+0
   d:a1
+1
+0
+1
+0
+0
+0
+0
+1
 c:e0
 - dc 17 command
+1
+1
+1
+0
+0
+0
+0
+0
 + dc 17 data
   d:f0
+1
+1
+1
+1
+0
+0
+0
+0
   d:09
+0
+0
+0
+0
+1
+0
+0
+1
   d:13
+0
+0
+0
+1
+0
+0
+1
+1
   d:12
+0
+0
+0
+1
+0
+0
+1
+0
   d:12
+0
+0
+0
+1
+0
+0
+1
+0
   d:2b
+0
+0
+1
+0
+1
+0
+1
+1
   d:3c
+0
+0
+1
+1
+1
+1
+0
+0
   d:44
+0
+1
+0
+0
+0
+1
+0
+0
   d:4b
+0
+1
+0
+0
+1
+0
+1
+1
   d:1b
+0
+0
+0
+1
+1
+0
+1
+1
   d:18
+0
+0
+0
+1
+1
+0
+0
+0
   d:17
+0
+0
+0
+1
+0
+1
+1
+1
   d:1d
+0
+0
+0
+1
+1
+1
+0
+1
   d:21
+0
+0
+1
+0
+0
+0
+0
+1
 c:e1
 - dc 17 command
+1
+1
+1
+0
+0
+0
+0
+1
 + dc 17 data
   d:f0
+1
+1
+1
+1
+0
+0
+0
+0
   d:09
+0
+0
+0
+0
+1
+0
+0
+1
   d:13
+0
+0
+0
+1
+0
+0
+1
+1
   d:0c
+0
+0
+0
+0
+1
+1
+0
+0
   d:0d
+0
+0
+0
+0
+1
+1
+0
+1
   d:27
+0
+0
+1
+0
+0
+1
+1
+1
   d:3b
+0
+0
+1
+1
+1
+0
+1
+1
   d:44
+0
+1
+0
+0
+0
+1
+0
+0
   d:4d
+0
+1
+0
+0
+1
+1
+0
+1
   d:0b
+0
+0
+0
+0
+1
+0
+1
+1
   d:17
+0
+0
+0
+1
+0
+1
+1
+1
   d:17
+0
+0
+0
+1
+0
+1
+1
+1
   d:1d
+0
+0
+0
+1
+1
+1
+0
+1
   d:21
+0
+0
+1
+0
+0
+0
+0
+1
 c:13
 - dc 17 command
+0
+0
+0
+1
+0
+0
+1
+1
 + dc 17 data
 - cs 20 disable
 - cs2 5 disable
@@ -291,6 +809,14 @@ Sleep 10 ms
 + cs2 5 enable
 c:29
 - dc 17 command
+0
+0
+1
+0
+1
+0
+0
+1
 + dc 17 data
 - cs 20 disable
 - cs2 5 disable
@@ -300,7 +826,23 @@ c:36
 + cs 20 enable
 + cs2 5 enable
 - dc 17 command
+0
+0
+1
+1
+0
+1
+1
+0
 + dc 17 data
+1
+1
+0
+0
+0
+0
+0
+0
 - cs 20 disable
 - cs2 5 disable
 
@@ -311,16 +853,120 @@ c:36
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -330,12 +976,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -345,12 +1055,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -360,12 +1134,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -375,12 +1213,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -390,16 +1292,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -409,12 +1415,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -424,12 +1494,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -439,12 +1573,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -454,12 +1652,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -469,16 +1731,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -488,12 +1854,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -503,12 +1933,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -518,12 +2012,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -533,12 +2091,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -548,16 +2170,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -567,12 +2293,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -582,12 +2372,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -597,12 +2451,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -612,12 +2530,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -627,16 +2609,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -646,12 +2732,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -661,12 +2811,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -676,12 +2890,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -691,12 +2969,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -706,16 +3048,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0005 0005
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -725,12 +3171,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -740,12 +3250,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -755,12 +3329,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -770,12 +3408,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -785,16 +3487,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0006 0006
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -804,12 +3610,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -819,12 +3689,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -834,12 +3768,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -849,12 +3847,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -864,16 +3926,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0007 0007
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -883,12 +4049,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -898,12 +4128,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -913,12 +4207,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -928,12 +4286,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -943,16 +4365,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0008 0008
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -962,12 +4488,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -977,12 +4567,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -992,12 +4646,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1007,12 +4725,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1022,16 +4804,120 @@ Sleep 10 ms
 CASET
 c:2a d:0000 0000
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 RASET
 c:2b d:0009 0009
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+1
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1041,12 +4927,76 @@ Sleep 10 ms
 CASET
 c:2a d:0001 0001
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1056,12 +5006,76 @@ Sleep 10 ms
 CASET
 c:2a d:0002 0002
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1071,12 +5085,76 @@ Sleep 10 ms
 CASET
 c:2a d:0003 0003
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms
@@ -1086,12 +5164,76 @@ Sleep 10 ms
 CASET
 c:2a d:0004 0004
 - dc 17 command
+0
+0
+1
+0
+1
+0
+1
+0
 + dc 17 data
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
 RAMWR
 c:2c
 - dc 17 command
+0
+0
+1
+0
+1
+1
+0
+0
 + dc 17 data
   d:aaaa
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
 - cs 20 disable
 - cs2 5 disable
 Sleep 10 ms

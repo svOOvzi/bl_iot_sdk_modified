@@ -87,6 +87,26 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Backlight GPIO:  %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
+    //  Configure Chip Select, Data/Command, MOSI, SCK pins as GPIO Pins
+    GLB_GPIO_Type pins[] = {
+        DISPLAY_DC_PIN,
+        DISPLAY_MOSI_PIN,
+        DISPLAY_MISO_PIN,
+        DISPLAY_SCK_PIN,
+        DISPLAY_CS_PIN,
+        DISPLAY_DEBUG_CS_PIN,
+        DISPLAY_UNUSED_CS_PIN,
+        FLASH_CS_PIN,
+        SX1262_CS_PIN,
+        DISPLAY_BLK_PIN
+    };
+    BL_Err_Type rc2 = GLB_GPIO_Func_Init(
+        GPIO_FUN_SWGPIO, 
+        pins, 
+        sizeof(pins) / sizeof(pins[0])
+    );
+    assert(rc2 == SUCCESS);
+
     //  Configure MISO as GPIO Input Pin (instead of GPIO Output)
     rc = bl_gpio_enable_input(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
 
