@@ -126,7 +126,7 @@ static void test_display_image(char *buf, int len, int argc, char **argv)
 
 /// Sleep for the specified milliseconds
 void Arduino_SWSPI_delay(uint32_t millisec) {
-    printf("Sleep %d ms\r\n", millisec);
+    if (millisec > 10) { printf("Sleep %d ms\r\n", millisec); }
 }
 
 int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }

@@ -53,7 +53,6 @@ spi_dev_t spi_device;
 
 /// Sleep for the specified milliseconds
 void Arduino_SWSPI_delay(uint32_t millisec) {
-    printf("Sleep %d ms\r\n", millisec);
     vTaskDelay(millisec / portTICK_PERIOD_MS);
 }
 

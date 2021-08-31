@@ -949,6 +949,7 @@ INLINE void Arduino_SWSPI_SPI_SCK_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, HIGH);
+  Arduino_SWSPI_delay(10); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -973,6 +974,7 @@ INLINE void Arduino_SWSPI_SPI_SCK_LOW(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, LOW);
+  Arduino_SWSPI_delay(10); ////
 #endif // end !USE_FAST_PINIO
 }
 
