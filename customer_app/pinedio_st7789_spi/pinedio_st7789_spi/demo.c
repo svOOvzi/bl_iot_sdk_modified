@@ -87,8 +87,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
 
     //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
-    printf("Swap MISO and MOSI\r\n");
-    rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
+    ////printf("Swap MISO and MOSI\r\n");
+    ////rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
 
     //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
