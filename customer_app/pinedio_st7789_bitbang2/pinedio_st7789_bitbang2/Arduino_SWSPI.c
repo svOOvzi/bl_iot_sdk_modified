@@ -815,6 +815,7 @@ INLINE void Arduino_SWSPI_DC_HIGH(void)
 #else  // !USE_FAST_PINIO
   debug_st7789("+ dc %d data\r\n", _dc);
   digitalWrite(_dc, HIGH);
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -833,6 +834,7 @@ INLINE void Arduino_SWSPI_DC_LOW(void)
 #else  // !USE_FAST_PINIO
   debug_st7789("- dc %d command\r\n", _dc);
   digitalWrite(_dc, LOW);
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -853,6 +855,7 @@ INLINE void Arduino_SWSPI_CS_HIGH(void)
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, HIGH);
     debug_st7789("- cs %d disable\r\n", _cs);
+    Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
@@ -879,6 +882,7 @@ INLINE void Arduino_SWSPI_CS_LOW(void)
 #else  // !USE_FAST_PINIO
     debug_st7789("+ cs %d enable\r\n", _cs);
     digitalWrite(_cs, LOW);
+    Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
   }
   if (_cs2 >= 0)
@@ -905,6 +909,7 @@ INLINE void Arduino_SWSPI_SPI_MOSI_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, HIGH);
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -925,6 +930,7 @@ INLINE void Arduino_SWSPI_SPI_MOSI_LOW(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, LOW);
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -949,7 +955,7 @@ INLINE void Arduino_SWSPI_SPI_SCK_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, HIGH);
-  Arduino_SWSPI_delay(2); ////
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
@@ -974,7 +980,7 @@ INLINE void Arduino_SWSPI_SPI_SCK_LOW(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, LOW);
-  Arduino_SWSPI_delay(2); ////
+  Arduino_SWSPI_delay(1); ////
 #endif // end !USE_FAST_PINIO
 }
 
