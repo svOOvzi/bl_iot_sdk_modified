@@ -331,12 +331,13 @@ static void hal_spi_dma_trans(spi_hw_t *arg, uint8_t *TxData, uint8_t *RxData, u
         return;
     }
 
-    DMA_LLI_Init(arg->tx_dma_ch, &txllicfg);
     DMA_LLI_Init(arg->rx_dma_ch, &rxllicfg);
-    DMA_LLI_Update(arg->tx_dma_ch,(uint32_t)ptxlli);
     DMA_LLI_Update(arg->rx_dma_ch,(uint32_t)prxlli);
-    DMA_Channel_Enable(arg->tx_dma_ch);
     DMA_Channel_Enable(arg->rx_dma_ch);
+
+    DMA_LLI_Init(arg->tx_dma_ch, &txllicfg);
+    DMA_LLI_Update(arg->tx_dma_ch,(uint32_t)ptxlli);
+    DMA_Channel_Enable(arg->tx_dma_ch);
 
     ////  TODO: To troubleshoot SPI Transfers that hang (like ST7789 at 4 MHz), change...
     ////      portMAX_DELAY);
