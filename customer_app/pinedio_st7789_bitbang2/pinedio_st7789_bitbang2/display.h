@@ -30,11 +30,12 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
-//  According to TL (30 Aug 2021):
-//  GPIO11-SCLK
-//  GPIO17-SDO (D/C )
-//  GPIO0-SDI
-//  GPIO20- CS
+//  Discovered from Pogo Pin Probing (31 Aug 2021):
+//  | ST7789 Pin | BL604 GPIO |
+//  |:----------:|:----------:|
+//  | __SDA__    | GPIO 0     |
+//  | __DC__     | GPIO 17    |
+//  | __SCK__    | GPIO 11    |
 
 /// GPIO for Backlight
 #define DISPLAY_BLK_PIN  21
@@ -49,10 +50,10 @@
 #define DISPLAY_MISO_PIN  8
 
 /// GPIO for ST7789 SPI MOSI Pin
-#define DISPLAY_MOSI_PIN 17
+#define DISPLAY_MOSI_PIN  0
 
 /// GPIO for ST7789 Data / Command Pin
-#define DISPLAY_DC_PIN    0
+#define DISPLAY_DC_PIN   17
 
 /// GPIO for unused SPI Chip Select Pin. Unused because we control Chip Select ourselves via GPIO, not SPI.
 #define DISPLAY_UNUSED_CS_PIN 8

@@ -132,7 +132,7 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
 int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
 int bl_gpio_enable_input(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
 int bl_gpio_output_set(uint8_t pin, uint8_t value) { 
-  if (pin == 0) { printf("%d\r\n", value); }
+  //  if (pin == 0) { printf("%d\r\n", value); }
   return 0; 
 }
 BL_Err_Type GLB_GPIO_Func_Init(GLB_GPIO_FUNC_Type gpioFun,GLB_GPIO_Type *pinList,uint8_t cnt) {
