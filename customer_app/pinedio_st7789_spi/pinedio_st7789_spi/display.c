@@ -16,16 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//  Display Driver for ST7789 SPI. Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/display.c
+//  Display Driver for ST7789 SPI in 4-Wire (8-bit) Mode.
+//  Based on https://gitlab.com/lupyuen/pinetime_lvgl_mynewt/-/blob/master/src/pinetime/display.c
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <FreeRTOS.h>        //  For vTaskDelay
+#include <task.h>            //  For vTaskDelay
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
-#include "lv_port_disp.h"    //  For display and LVGL functions
+#include "display.h"         //  For Display Pins and Functions
 #include "demo.h"
 
 /// SPI Device Instance. TODO: Move to demo.h
@@ -69,10 +72,12 @@ extern spi_dev_t spi_device;
 #define PortraitSwapped  0xC0  //  Invert page and column order
 #define LandscapeSwapped 0xA0  //  Invert page and page/column order
 
-static int hard_reset(void);
 static int set_orientation(uint8_t orientation);
 static int transmit_spi(const uint8_t *data, uint16_t len);
 static void delay_ms(uint32_t ms);
+#ifdef NOTUSED
+static int hard_reset(void);
+#endif  //  NOTUSED
 
 /// RGB565 Image. Converted by https://github.com/lupyuen/pinetime-graphic
 /// from PNG file https://github.com/lupyuen/lupyuen.github.io/blob/master/images/display-jewel.png
@@ -89,34 +94,18 @@ uint8_t spi_tx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 /// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
 static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
-/// Initialise the ST7789 display controller. Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
+/// Initialise the ST7789 display controller and switch on backlight.
+/// Assumes that SPI port 0 has been initialised.
+/// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
+/// Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
-    //  Assume that SPI port 0 has been initialised.
-    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Pins
-    GLB_GPIO_Type pins[4];
-    pins[0] = DISPLAY_CS_PIN;
-    pins[1] = DISPLAY_DC_PIN;
-    pins[2] = DISPLAY_RST_PIN;
-    pins[3] = DISPLAY_BLK_PIN;
-    BL_Err_Type rc2 = GLB_GPIO_Func_Init(GPIO_FUN_SWGPIO, pins, sizeof(pins) / sizeof(pins[0]));
-    assert(rc2 == SUCCESS);
-
-    //  Configure Chip Select, Data/Command, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
-    int rc;
-    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_RST_PIN, 0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
-
-    //  Set Chip Select pin to High, to deactivate SPI Peripheral (not used for ST7789)
-    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
-
     //  Switch on backlight
-    rc = backlight_on();  assert(rc == 0);
+    int rc = backlight_on();  assert(rc == 0);
 
+#ifdef NOTUSED
     //  Reset the display controller through the Reset Pin
     rc = hard_reset();  assert(rc == 0);
+#endif  //  NOTUSED
 
     //  Software Reset: Reset the display controller through firmware (ST7789 Datasheet Page 163)
     //  https://www.rhydolabz.com/documents/33/ST7789.pdf
@@ -288,6 +277,7 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     return 0;
 }
 
+#ifdef NOTUSED
 /// Reset the display controller
 static int hard_reset(void) {
     //  Toggle the Reset Pin: High, Low, High
@@ -297,12 +287,13 @@ static int hard_reset(void) {
     rc = bl_gpio_output_set(DISPLAY_RST_PIN, 1);  assert(rc == 0);
     return 0;
 }
+#endif  //  NOTUSED
 
 /// Switch on backlight
 int backlight_on(void) {
-    //  Set the Backlight Pin to High
-    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
-    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
+    //  Set the Backlight Pin to Low
+    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
     assert(rc == 0);
     return 0;
 
@@ -314,15 +305,15 @@ int backlight_on(void) {
 
 /// Switch off backlight
 int backlight_off(void) {
-    //  Set the Backlight Pin to Low
-    printf("Set BLK pin %d to low\r\n", DISPLAY_BLK_PIN);
-    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 0);
+    //  Set the Backlight Pin to High
+    printf("Set BLK pin %d to high\r\n", DISPLAY_BLK_PIN);
+    int rc = bl_gpio_output_set(DISPLAY_BLK_PIN, 1);
     assert(rc == 0);
     return 0;
 }
 
 /// Delay for the specified number of milliseconds
-static void delay_ms(uint32_t ms) {
-    //  TODO: Implement delay. For now we write to console, which also introduces a delay.
-    printf("TODO Delay %d\r\n", ms);
+static void delay_ms(uint32_t millisec) {
+    printf("Sleep %d ms\r\n", millisec);
+    vTaskDelay(millisec / portTICK_PERIOD_MS);
 }

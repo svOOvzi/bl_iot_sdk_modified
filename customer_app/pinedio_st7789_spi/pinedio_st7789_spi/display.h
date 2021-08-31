@@ -29,6 +29,7 @@
  */
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
+#include <stdint.h>
 
 //  Discovered from Pogo Pin Probing (31 Aug 2021):
 //  | ST7789 Pin | BL604 GPIO |
@@ -47,7 +48,7 @@
 #define DISPLAY_SCK_PIN  11
 
 /// GPIO for ST7789 SPI MISO Pin (Unused)
-#define DISPLAY_MISO_PIN  8
+#define DISPLAY_MISO_PIN  1
 
 /// GPIO for ST7789 SPI MOSI Pin
 #define DISPLAY_MOSI_PIN  0
@@ -68,10 +69,8 @@
 #define SX1262_CS_PIN 15
 
 /// Maximal horizontal and vertical resolution
-////#define LV_HOR_RES_MAX          (240)
-#define LV_HOR_RES_MAX          5 ////
-////#define LV_VER_RES_MAX          (240)
-#define LV_VER_RES_MAX          10 ////
+#define LV_HOR_RES_MAX          (240)
+#define LV_VER_RES_MAX          (240)
 
 /// Color depth:
 /// 1:  1 byte per pixel
@@ -84,11 +83,6 @@
 ////#define BUFFER_ROWS             (10)
 #define BUFFER_ROWS             (1) ////
 
-/// SPI Buffer for unpacked 8-bit data. We always copy pixels from Flash ROM to RAM
-/// before transmitting, because Flash ROM may be too slow for DMA at 4 MHz.
-/// Contains 10 rows of 240 pixels of 2 bytes each (16-bit colour).
-extern uint8_t spi_unpacked_buf[];
-
 /// Initialise the ST7789 display controller and switch on backlight.
 /// Assumes that SPI port 0 has been initialised.
 /// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
@@ -100,10 +94,10 @@ int display_image(void);
 /// Set the ST7789 display window to the coordinates (left, top), (right, bottom)
 int set_window(uint8_t left, uint8_t top, uint8_t right, uint8_t bottom);
 
-/// Write unpacked 8-bit ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
+/// Write 8-bit ST7789 command and parameters to SPI Buffer. `params` is the array of parameter bytes, `len` is the number of parameters.
 int write_command(uint8_t command, const uint8_t *params, uint16_t len);
 
-/// Write unpacked 8-bit ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
+/// Write 8-bit ST7789 data to SPI Buffer. `data` is the array of bytes to be transmitted, `len` is the number of bytes.
 int write_data(const uint8_t *data, uint16_t len);
 
 /// Transmit the packed SPI Buffer to ST7789

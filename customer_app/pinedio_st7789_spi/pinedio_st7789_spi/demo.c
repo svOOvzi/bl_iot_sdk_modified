@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//  BL602 Demo Firmware for ST7789 SPI
+//  PineDio Stack Demo Firmware for ST7789 SPI in 4-Wire (8-bit) Mode
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -35,29 +35,14 @@
 #include <task.h>
 #include <semphr.h>
 
-#include "demo.h"            //  For display pins
-#include "lv_port_disp.h"    //  For display functions
+#include "demo.h"            //  For Command-Line Interface
+#include "display.h"         //  For Display Pins and Functions
 #include <device/vfs_spi.h>  //  For spi_ioc_transfer_t
 #include <hal/soc/spi.h>     //  For hal_spi_transfer
 #include <hal_spi.h>         //  For spi_init
 #include <bl_gpio.h>         //  For bl_gpio_output_set
 #include <bl602_glb.h>       //  For GLB_GPIO_Func_Init
 #include <cli.h>
-
-/* Connect BL602 to ST7789 SPI Display. See demo.h
-| BL602 Pin     | ST7789 SPI          | Wire Colour 
-|:--------------|:--------------------|:-------------------
-| __`GPIO 1`__  | Do Not <br> Connect <br> _(MISO)_ |
-| __`GPIO 2`__  | Do Not <br> Connect |
-| __`GPIO 3`__  | `SCL`               | Yellow 
-| __`GPIO 4`__  | `SDA` _(MOSI)_      | Blue
-| __`GPIO 5`__  | `DC`                | White
-| __`GPIO 11`__ | `RST`               | Orange
-| __`GPIO 12`__ | `BLK`               | Purple
-| __`GPIO 14`__ | Do Not <br> Connect |
-| __`3V3`__     | `3.3V`              | Red
-| __`GND`__     | `GND`               | Black
-*/
 
 /// Use SPI Port Number 0
 #define SPI_PORT   0
@@ -68,30 +53,65 @@ spi_dev_t spi_device;
 /// Command to init the display
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
-    //  Note: The Chip Select Pin below (2) must NOT be the same as DISPLAY_CS_PIN (14). 
+    int rc;
+    printf("SPI MOSI GPIO:  %d\r\n", DISPLAY_MOSI_PIN);
+    printf("SPI MISO GPIO:  %d\r\n", DISPLAY_MISO_PIN);
+    printf("SPI SCK GPIO:   %d\r\n", DISPLAY_SCK_PIN);
+    printf("SPI CS GPIO:    %d\r\n", DISPLAY_CS_PIN);
+    printf("Debug CS GPIO:  %d\r\n", DISPLAY_DEBUG_CS_PIN);
+    printf("Unused CS GPIO: %d\r\n", DISPLAY_UNUSED_CS_PIN);
+    printf("Flash CS GPIO:  %d\r\n", FLASH_CS_PIN);
+    printf("SX1262 CS GPIO: %d\r\n", SX1262_CS_PIN);
+    printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
+    printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
+
+    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
+    rc = bl_gpio_enable_output(FLASH_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SX1262_CS_PIN, 0, 0);  assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate SPI Flash and SX1262
+    printf("Set Flash CS pin %d to high\r\n", FLASH_CS_PIN);
+    rc = bl_gpio_output_set(FLASH_CS_PIN, 1);  assert(rc == 0);
+    printf("Set SX1262 CS pin %d to high\r\n", SX1262_CS_PIN);
+    rc = bl_gpio_output_set(SX1262_CS_PIN, 1);  assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deactivate ST7789
+    printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
+
+    //  TODO: Remove Debug CS pin in production
+    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);  assert(rc == 0);
+
+    //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
+    printf("Swap MISO and MOSI\r\n");
+    rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
+
+    //  Note: DISPLAY_UNUSED_CS_PIN must NOT be the same as DISPLAY_CS_PIN. 
     //  Because the SPI Pin Function will override the GPIO Pin Function!
 
-    //  TODO: The pins for Serial Data In and Serial Data Out seem to be flipped,
-    //  when observed with a Logic Analyser. This contradicts the 
-    //  BL602 Reference Manual. Why ???
-
     //  Configure the SPI Port
-    int rc = spi_init(
+    rc = spi_init(
         &spi_device, //  SPI Device
         SPI_PORT,    //  SPI Port
         0,           //  SPI Mode: 0 for Controller (formerly Master), 1 for Peripheral (formerly Slave)
-        3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
-        4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
+        ////3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
+        0,           //  SPI Polar Phase. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
+        ////4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
+        1 * 1000 * 1000,  //  SPI Frequency (1 MHz, reduce this in case of problems)
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
-        3,   //  (Yellow) SPI Clock Pin 
-        2,   //  (Unused) SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 14, SPI will override our GPIO!)
-        1,   //  (Green)  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
-        4    //  (Blue)   SPI Serial Data Out Pin (formerly MOSI)
+        DISPLAY_SCK_PIN,        //  SPI Clock Pin 
+        DISPLAY_UNUSED_CS_PIN,  //  Unused SPI Chip Select Pin (Unused because we control GPIO 14 ourselves as Chip Select Pin. This must NOT be set to 20, SPI will override our GPIO!)
+        DISPLAY_MOSI_PIN,       //  SPI Serial Data Out Pin (formerly MOSI)
+        DISPLAY_MISO_PIN        //  SPI Serial Data In Pin  (formerly MISO) (Unused for ST7789)
     );
     assert(rc == 0);
 
-    //  Configure the GPIO Pins, init the display controller and switch on backlight
+    //  Init the display controller and switch on backlight
     rc = init_display();
     assert(rc == 0);
 }
@@ -143,6 +163,7 @@ static void test_backlight_off(char *buf, int len, int argc, char **argv)
     assert(rc == 0);
 }
 
+#ifdef NOTUSED
 /// Command to init LVGL. Should be done after `display_init`
 static void test_lvgl_init(char *buf, int len, int argc, char **argv)
 {
@@ -170,6 +191,7 @@ static void test_lvgl_render(char *buf, int len, int argc, char **argv)
     int rc = lvgl_render();
     assert(rc == 0);
 }
+#endif  //  NOTUSED
 
 /// Command to init display, display image
 static void test_1(char *buf, int len, int argc, char **argv) {
@@ -177,6 +199,7 @@ static void test_1(char *buf, int len, int argc, char **argv) {
     test_display_image("", 0, 0, NULL);
 }
 
+#ifdef NOTUSED
 /// Command to init display, init LVGL, create LVGL widgets, render LVGL display
 static void test_2(char *buf, int len, int argc, char **argv) {
     test_display_init("", 0, 0, NULL);
@@ -190,6 +213,7 @@ static void test_3(char *buf, int len, int argc, char **argv) {
     test_lvgl_update("", 0, 0, NULL);
     test_lvgl_render("", 0, 0, NULL);
 }
+#endif  //  NOTUSED
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
@@ -198,13 +222,13 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"display_result", "Show result",   test_display_result},
     {"backlight_on",   "Backlight on",  test_backlight_on},
     {"backlight_off",  "Backlight off", test_backlight_off},
-    {"lvgl_init",      "Init LVGL",            test_lvgl_init},
-    {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
-    {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
-    {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
+    //  {"lvgl_init",      "Init LVGL",            test_lvgl_init},
+    //  {"lvgl_create",    "Create LVGL widgets",  test_lvgl_create},
+    //  {"lvgl_update",    "Update LVGL widgets",  test_lvgl_update},
+    //  {"lvgl_render",    "Render LVGL display",  test_lvgl_render},
     {"1",              "Init display, display image", test_1},
-    {"2",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_2},
-    {"3",              "Update LVGL widgets, render LVGL display", test_3},
+    //  {"2",              "Init display, init LVGL, create LVGL widgets, render LVGL display", test_2},
+    //  {"3",              "Update LVGL widgets, render LVGL display", test_3},
 };
 
 /// Init the command-line interface
@@ -233,3 +257,7 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 	//  Loop forever, do not pass go, do not collect $200
 	for (;;) {}
 }
+
+/* Output Log:
+
+*/
