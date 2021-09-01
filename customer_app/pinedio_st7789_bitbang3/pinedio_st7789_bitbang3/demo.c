@@ -78,8 +78,8 @@ static void read_id(void) {
     //  Set MOSI to Input Mode
     rc = bl_gpio_enable_input(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
 
-    //  Read MOSI for 24 clock cycles
-    for (int i = 0; i < 24; i++) {
+    //  Read MOSI for 25 clock cycles
+    for (int i = 0; i < 25; i++) {
         Arduino_SWSPI_SPI_SCK_HIGH();
         Arduino_SWSPI_delay(1); ////
         Arduino_SWSPI_SPI_SCK_LOW();
@@ -182,8 +182,10 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
 
-    //  Read the display ID
-    read_id();
+    //  Read the display ID repeatedly
+    for (int i = 0; i < 10; i++) {
+        read_id();
+    }
 
 #ifdef NOTUSED
     Arduino_ST7789_Arduino_ST7789(
