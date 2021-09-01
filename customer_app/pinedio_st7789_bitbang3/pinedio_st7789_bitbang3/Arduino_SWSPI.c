@@ -30,8 +30,6 @@ void Arduino_SWSPI_CS_HIGH(void);
 void Arduino_SWSPI_CS_LOW(void);
 void Arduino_SWSPI_SPI_MOSI_HIGH(void);
 void Arduino_SWSPI_SPI_MOSI_LOW(void);
-void Arduino_SWSPI_SPI_SCK_HIGH(void);
-void Arduino_SWSPI_SPI_SCK_LOW(void);
 bool Arduino_SWSPI_SPI_MISO_READ(void);
 
 static void digitalWrite(int8_t pin, int8_t val) {

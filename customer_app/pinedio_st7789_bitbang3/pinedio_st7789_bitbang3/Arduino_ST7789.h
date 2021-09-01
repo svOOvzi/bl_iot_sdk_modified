@@ -91,6 +91,8 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len);
 void Arduino_SWSPI_writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
 void Arduino_SWSPI_sendCommand(uint8_t c);
 void Arduino_SWSPI_delay(uint32_t millisec);
+void Arduino_SWSPI_SPI_SCK_HIGH(void);
+void Arduino_SWSPI_SPI_SCK_LOW(void);
 
 #ifdef NOTUSED
 void Arduino_TFT_18bit_Arduino_TFT_18bit(
