@@ -263,6 +263,7 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 /* Output Log:
 
 # display_init
+DC GPIO:        17
 SPI MOSI GPIO:  0
 SPI MISO GPIO:  1
 SPI SCK GPIO:   11
@@ -277,2675 +278,3353 @@ Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
 Set CS pin 20 to high
 Set Debug CS pin 5 to high
-Swap MISO and MOSI
 Set BLK pin 21 to low
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Sleep 200 ms
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Sleep 200 ms
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Sleep 10 ms
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
-Set S pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Sleep 200 ms
 
 # display_image
 Displaying image...
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to lw
 Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 t high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Set CS pin
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Set CS piow
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Set CS pin 20to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Set CS pito low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to lo
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin  to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
-Set CS pin 20 to high
-Set CSpin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug C pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Set CS pin 0 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
-Set CS pin 20 to high
+Set Debug CS pin 5 to low
+Set CS pin 20 to hig
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pi 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Se CS pin 20 to low
-Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+et CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 tolow
+Set Debug CS pin 5 to high
+Set CS pin 20 o low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set S pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Se CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set S pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 tohigh
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to ow
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
+Set Debug CS pin 5 to lSet CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to lo
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug C pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set ebug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 toSet CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set Co low
+Set Debug CS pin 5 to lowSet CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Deug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
+Set CS pin 20 to low
+Set Debug CS pin 5 to low
+Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to ow
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 toSet CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
+Set Debug CS pin 5 to low
+Set CS pin 20 to hih
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 tohigh
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
+Set D CS pin 5 to high
+Set CS pin 20ow
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
+Set Debug CS pin 5 to high
 Set CS pin 20 to low
+Set Debug CS pin 5 to low
 Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pn 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
-Set CS pin 20 to high
-Set CS pin 20 to low
+Set Debug CS pin 5 to high
+Image displayed
 
+# 
+# 
 # 
 # 
 */
