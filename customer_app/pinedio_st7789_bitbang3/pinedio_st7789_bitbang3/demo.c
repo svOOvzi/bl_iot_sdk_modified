@@ -59,6 +59,38 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
 ///////////////////////////////////////////////////////////////////////////////
 //  Begin Common Code
 
+/// Read the display ID
+static void read_id(void) {
+    //  Set MOSI to Output Mode
+    int rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
+
+    //  Set CS to low
+    Arduino_SWSPI_beginWrite();
+
+    //  Send command RDID1
+    uint8_t cmd = ST7789_RDID1;
+    debug_st7789("c:%02x\r\n", cmd);
+    Arduino_SWSPI_writeCommand(cmd);
+
+    //  Set MOSI to Input Mode
+    rc = bl_gpio_enable_input(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
+
+    //  Read MOSI for 8 clock cycles
+    for (int i = 0; i < 8; i++) {
+        Arduino_SWSPI_SPI_SCK_HIGH();
+        Arduino_SWSPI_SPI_SCK_LOW();
+    }
+
+    //  Set CS to high
+    Arduino_SWSPI_endWrite();
+
+    //  ST7789_RDID1
+    //  ST7789_RDID2
+    //  ST7789_RDID3
+    //  ST7789_RDID4
+
+}
+
 /// Write a pixel to the display.
 /// From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
 static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
@@ -86,7 +118,6 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Backlight GPIO:  %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
-#ifdef NOTUSED
     //  Configure Chip Select, Data/Command, MOSI, SCK pins as GPIO Pins
     GLB_GPIO_Type pins[] = {
         DISPLAY_DC_PIN,
@@ -106,7 +137,6 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         sizeof(pins) / sizeof(pins[0])
     );
     assert(rc2 == SUCCESS);
-#endif // NOTUSED
 
     //  Configure MISO as GPIO Input Pin (instead of GPIO Output)
     rc = bl_gpio_enable_input(DISPLAY_MISO_PIN,  0, 0);  assert(rc == 0);
@@ -146,6 +176,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         DISPLAY_MISO_PIN,  //  miso
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
+
+    //  Read the display ID
+    read_id();
+
+#ifdef NOTUSED
     Arduino_ST7789_Arduino_ST7789(
         -1,     //  rst, 
         0,      //  r
@@ -158,6 +193,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         0  //  row_offset2
     );
     Arduino_ST7789_begin(1000000);
+#endif  //  NOTUSED
 }
 
 /// Command to display image. Should be done after `display_init`

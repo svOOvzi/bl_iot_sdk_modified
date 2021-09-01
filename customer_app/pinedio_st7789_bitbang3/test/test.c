@@ -5,8 +5,83 @@
 #include "Arduino_ST7789.h"
 #include "display.h"
 
+#ifdef NOTUSED
+    case BEGIN_WRITE:
+      Arduino_SWSPI_beginWrite();
+      break;
+    case WRITE_C8_D16:
+      l++;
+      /* fall through */
+    case WRITE_C8_D8:
+      l++;
+      /* fall through */
+    case WRITE_COMMAND_8:
+      debug_st7789("c:%02x\r\n", batch[i + 1]);
+      Arduino_SWSPI_writeCommand(batch[++i]);
+      break;
+    case WRITE_C16_D16:
+      l = 2;
+      /* fall through */
+    case WRITE_COMMAND_16:
+      _data16.msb = batch[++i];
+      _data16.lsb = batch[++i];
+      Arduino_SWSPI_writeCommand16(_data16.value);
+      break;
+    case WRITE_DATA_8:
+      l = 1;
+      break;
+    case WRITE_DATA_16:
+      l = 2;
+      break;
+    case WRITE_BYTES:
+      l = batch[++i];
+      break;
+    case END_WRITE:
+      Arduino_SWSPI_endWrite();
+      break;
+    case DELAY:
+      Arduino_SWSPI_delay(batch[++i]);
+      break;
+    default:
+      debug_st7789("Unknown operation id at %d: %d", i, batch[i]);
+      break;
+    }
+#endif  //  NOTUSED
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Begin Common Code
+
+/// Read the display ID
+static void read_id(void) {
+    //  Set MOSI to Output Mode
+    int rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
+
+    //  Set CS to low
+    Arduino_SWSPI_beginWrite();
+
+    //  Send command RDID1
+    uint8_t cmd = ST7789_RDID1;
+    debug_st7789("c:%02x\r\n", cmd);
+    Arduino_SWSPI_writeCommand(cmd);
+
+    //  Set MOSI to Input Mode
+    rc = bl_gpio_enable_input(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
+
+    //  Read MOSI for 8 clock cycles
+    for (int i = 0; i < 8; i++) {
+        Arduino_SWSPI_SPI_SCK_HIGH();
+        Arduino_SWSPI_SPI_SCK_LOW();
+    }
+
+    //  Set CS to high
+    Arduino_SWSPI_endWrite();
+
+    //  ST7789_RDID1
+    //  ST7789_RDID2
+    //  ST7789_RDID3
+    //  ST7789_RDID4
+
+}
 
 /// Write a pixel to the display.
 /// From https://github.com/moononournation/Arduino_GFX/blob/master/src/Arduino_TFT.cpp#L49-L53
@@ -93,6 +168,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         DISPLAY_MISO_PIN,  //  miso
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
+
+    //  Read the display ID
+    read_id();
+
+#ifdef NOTUSED
     Arduino_ST7789_Arduino_ST7789(
         -1,     //  rst, 
         0,      //  r
@@ -105,6 +185,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         0  //  row_offset2
     );
     Arduino_ST7789_begin(1000000);
+#endif  //  NOTUSED
 }
 
 /// Command to display image. Should be done after `display_init`
@@ -129,10 +210,16 @@ void Arduino_SWSPI_delay(uint32_t millisec) {
     if (millisec > 10) { printf("Sleep %d ms\r\n", millisec); }
 }
 
-int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
-int bl_gpio_enable_input(uint8_t pin, uint8_t pullup, uint8_t pulldown) { return 0; }
+int bl_gpio_enable_output(uint8_t pin, uint8_t pullup, uint8_t pulldown) { 
+    if (pin == DISPLAY_MOSI_PIN) { printf("mosi out\r\n"); }
+    return 0; 
+}
+int bl_gpio_enable_input(uint8_t pin, uint8_t pullup, uint8_t pulldown) { 
+    if (pin == DISPLAY_MOSI_PIN) { printf("mosi in\r\n"); }
+    return 0; 
+}
 int bl_gpio_output_set(uint8_t pin, uint8_t value) { 
-  //  if (pin == 0) { printf("%d\r\n", value); }
+  if (pin == DISPLAY_SCK_PIN) { printf("%d\r\n", value); }
   return 0; 
 }
 BL_Err_Type GLB_GPIO_Func_Init(GLB_GPIO_FUNC_Type gpioFun,GLB_GPIO_Type *pinList,uint8_t cnt) {
@@ -144,8 +231,8 @@ void main() {
     printf("*** test_display_init\r\n");
     test_display_init("", 0, 0, &"");
 
-    printf("\r\n*** test_display_image\r\n");
-    test_display_image("", 0, 0, &"");
+    //  printf("\r\n*** test_display_image\r\n");
+    //  test_display_image("", 0, 0, &"");
 }
 
 /* Output Log
