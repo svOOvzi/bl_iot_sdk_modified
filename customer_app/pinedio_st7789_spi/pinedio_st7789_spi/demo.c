@@ -101,7 +101,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         ////3,           //  SPI Polar Phase: Must be 3 for ST7789. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
         0,           //  SPI Polar Phase. Valid values: 0 (CPOL=0, CPHA=0), 1 (CPOL=0, CPHA=1), 2 (CPOL=1, CPHA=0) or 3 (CPOL=1, CPHA=1)
         ////4 * 1000 * 1000,  //  SPI Frequency (4 MHz, reduce this in case of problems)
-        1 * 1000 * 1000,  //  SPI Frequency (1 MHz, reduce this in case of problems)
+        512 * 1000,  //  SPI Frequency
         2,   //  Transmit DMA Channel
         3,   //  Receive DMA Channel
         DISPLAY_SCK_PIN,        //  SPI Clock Pin 

@@ -253,9 +253,14 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     transfer.rx_buf = (uint32_t) spi_rx_buf;  //  Receive Buffer
     transfer.len    = len;                    //  How many bytes
 
-    //  Select the SPI Peripheral (not used for ST7789)
+    //  Select the SPI Peripheral
     printf("Set CS pin %d to low\r\n", DISPLAY_CS_PIN);
     int rc = bl_gpio_output_set(DISPLAY_CS_PIN, 0);
+    assert(rc == 0);
+
+    //  TODO: Remove in production
+    printf("Set Debug CS pin %d to low\r\n", DISPLAY_DEBUG_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 0);
     assert(rc == 0);
 
     //  Execute the SPI Transfer with the DMA Controller
@@ -270,11 +275,14 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     //  hal_spi_transfer will wait for the SPI Transfer to complete before returning.
     //  Now that we're done with the SPI Transfer...
 
-    //  De-select the SPI Peripheral (not used for ST7789)
     rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);
     assert(rc == 0);
     printf("Set CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    return 0;
+
+    //  TODO: Remove in production
+    rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);
+    assert(rc == 0);
+    printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
 }
 
 #ifdef NOTUSED
