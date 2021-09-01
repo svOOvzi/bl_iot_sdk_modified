@@ -56,21 +56,26 @@ static void read_id(void) {
     //  Set MOSI to Output Mode
     int rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
 
+    //  Sleep a while
+    Arduino_SWSPI_delay(200);
+
     //  Set CS to low
     Arduino_SWSPI_beginWrite();
 
-    //  Send command RDID1
-    uint8_t cmd = ST7789_RDID1;
+    //  Send command RDDID
+    uint8_t cmd = ST7789_RDDID;
     debug_st7789("c:%02x\r\n", cmd);
     Arduino_SWSPI_writeCommand(cmd);
 
     //  Set MOSI to Input Mode
     rc = bl_gpio_enable_input(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
 
-    //  Read MOSI for 8 clock cycles
-    for (int i = 0; i < 8; i++) {
+    //  Read MOSI for 24 clock cycles
+    for (int i = 0; i < 24; i++) {
         Arduino_SWSPI_SPI_SCK_HIGH();
+        Arduino_SWSPI_delay(1); ////
         Arduino_SWSPI_SPI_SCK_LOW();
+        Arduino_SWSPI_delay(1); ////
     }
 
     //  Set CS to high
