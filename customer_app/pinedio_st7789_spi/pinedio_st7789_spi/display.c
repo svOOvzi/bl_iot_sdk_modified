@@ -283,6 +283,8 @@ static int transmit_spi(const uint8_t *data, uint16_t len) {
     rc = bl_gpio_output_set(DISPLAY_DEBUG_CS_PIN, 1);
     assert(rc == 0);
     printf("Set Debug CS pin %d to high\r\n", DISPLAY_DEBUG_CS_PIN);
+
+    return 0;
 }
 
 #ifdef NOTUSED
