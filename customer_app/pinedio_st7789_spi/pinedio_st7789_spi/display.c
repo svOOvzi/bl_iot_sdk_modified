@@ -96,7 +96,7 @@ static uint8_t spi_rx_buf[BUFFER_ROWS * COL_COUNT * BYTES_PER_PIXEL];
 
 /// Initialise the ST7789 display controller and switch on backlight.
 /// Assumes that SPI port 0 has been initialised.
-/// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
+/// Assumes that DISPLAY_DC_PIN, DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
 /// Based on https://github.com/almindor/st7789/blob/master/src/lib.rs
 int init_display(void) {
     //  Switch on backlight

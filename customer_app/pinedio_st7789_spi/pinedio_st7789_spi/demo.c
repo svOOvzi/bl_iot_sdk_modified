@@ -54,6 +54,7 @@ spi_dev_t spi_device;
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
     int rc;
+    printf("DC GPIO:        %d\r\n", DISPLAY_DC_PIN);
     printf("SPI MOSI GPIO:  %d\r\n", DISPLAY_MOSI_PIN);
     printf("SPI MISO GPIO:  %d\r\n", DISPLAY_MISO_PIN);
     printf("SPI SCK GPIO:   %d\r\n", DISPLAY_SCK_PIN);
@@ -65,7 +66,8 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     printf("Backlight GPIO: %d\r\n", DISPLAY_BLK_PIN);
     printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
-    //  Configure Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    //  Configure Data / Command, Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production

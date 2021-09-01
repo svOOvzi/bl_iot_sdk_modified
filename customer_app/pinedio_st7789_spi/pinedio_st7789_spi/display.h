@@ -85,7 +85,7 @@
 
 /// Initialise the ST7789 display controller and switch on backlight.
 /// Assumes that SPI port 0 has been initialised.
-/// Assumes that DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
+/// Assumes that DISPLAY_DC_PIN, DISPLAY_CS_PIN, DISPLAY_BLK_PIN, DISPLAY_DEBUG_CS_PIN have been configured for GPIO Output.
 int init_display(void);
 
 /// Display image on ST7789 display controller
