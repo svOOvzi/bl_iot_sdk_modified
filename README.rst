@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Rhai Scripting" <https://lupyuen.github.io/articles/rhai>`_
+
 - `"PineDio Stack BL604 RISC-V Board: Testing The Prototype" <https://lupyuen.github.io/articles/pinedio>`_
 
 - `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
