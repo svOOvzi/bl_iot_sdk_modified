@@ -19,15 +19,33 @@ export BLFLASH_PATH=$PWD/../../../blflash
 #  Where GCC is located
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
+#  Remove the firmware file
+if [ -f build_out/$APP_NAME.bin ]
+then
+    rm build_out/$APP_NAME.bin
+fi
+
 #  Build the firmware
-make
+make -j || echo "Checking build for error..."
+
+#  Fail if the firmware file doesn't exist
+if [ -f build_out/$APP_NAME.bin ]
+then
+    echo "Build OK"
+else 
+    echo "Build failed"
+    exit 1
+fi
 
 #  Generate the disassembly
-$GCC_PATH/bin/riscv-none-embed-objdump \
-    -t -S --demangle --line-numbers --wide \
-    build_out/$APP_NAME.elf \
-    >build_out/$APP_NAME.S \
-    2>&1
+if [ -f $GCC_PATH/bin/riscv-none-embed-objdump ]
+then
+    $GCC_PATH/bin/riscv-none-embed-objdump \
+        -t -S --demangle --line-numbers --wide \
+        build_out/$APP_NAME.elf \
+        >build_out/$APP_NAME.S \
+        2>&1
+fi
 
 #  Copy firmware to blflash
 cp build_out/$APP_NAME.bin $BLFLASH_PATH
