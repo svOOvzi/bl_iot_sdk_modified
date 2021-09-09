@@ -93,6 +93,8 @@ Changes
 
 - New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
 
+- "pinedio" branch contains upstream updates for testing on PineDio Stack
+
 BL602 SDK (Pine64 version)
 ==========================
 
