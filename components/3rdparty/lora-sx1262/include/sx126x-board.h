@@ -33,6 +33,7 @@ extern "C"
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (timer functions)
 #include "sx126x.h"
 
+//  Below are the pin numbers for PineDio Stack BL604 with onboard SX1262.
 //  TODO: Change the pin numbers for your SX1262 connection to BL602 / BL604
 
 #define SX126X_SPI_IDX           0  //  SPI Port 0
