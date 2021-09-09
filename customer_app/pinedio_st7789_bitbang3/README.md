@@ -1,8 +1,8 @@
-# PineDio Stack BL604 Firmware for ST7789 Display: Bit Banging Test
+# PineDio Stack BL604 Firmware for ST7789 Display: Read ID Bit Banging Test
 
 Read the article: https://lupyuen.github.io/articles/pinedio
 
-Demo Firmware for PineDio Stack BL604 with ST7789 SPI Display Controller in 3-Wire (9-bit) Mode, via Bit Banging (instead of SPI).
+Demo Firmware for PineDio Stack BL604 with ST7789 SPI Display Controller, reading ID in 4-Wire (8-bit) Mode, via Bit Banging (instead of SPI).
 
 Based on https://github.com/moononournation/Arduino_GFX
 
