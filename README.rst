@@ -1,5 +1,11 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Rhai Scripting" <https://lupyuen.github.io/articles/rhai>`_
+
+- `"PineDio Stack BL604 RISC-V Board: Testing The Prototype" <https://lupyuen.github.io/articles/pinedio>`_
+
+- `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
+
 - `"Rust on RISC-V BL602: Is It Sunny?" <https://lupyuen.github.io/articles/adc>`_
 
 - `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
@@ -80,6 +86,10 @@ Changes
 - New TensorFlow Lite Library and Firmware: `tflite-bl602 <components/3rdparty>`_ and `sdk_app_tflite <customer_app/sdk_app_tflite>`_
 
 - New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
+
+- New PineDio Stack BL604 Blinky Firmware: `pinedio_blinky <customer_app/pinedio_blinky>`_
+
+- New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
 
 - "pinedio" branch contains upstream updates for testing on PineDio Stack
 
