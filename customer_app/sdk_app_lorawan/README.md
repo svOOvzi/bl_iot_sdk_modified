@@ -1,6 +1,6 @@
 # LoRaWAN Firmware for BL602
 
-LoRaWAN Firmware with command-line interface, ported from to BL602 from Apache Mynewt OS...
+LoRaWAN Firmware with command-line interface, ported to BL602 from Apache Mynewt OS...
 
 https://mynewt.apache.org/latest/tutorials/lora/lorawanapp.html
 
