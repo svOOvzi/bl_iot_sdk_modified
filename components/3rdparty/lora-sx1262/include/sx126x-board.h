@@ -33,20 +33,7 @@ extern "C"
 #include "nimble_npl.h"  //  For NimBLE Porting Layer (timer functions)
 #include "sx126x.h"
 
-/* Connect BL602 to SX1262 LoRa Transceiver
-| BL602 Pin     | SX1262 Pin          | Wire Colour 
-|:--------------|:--------------------|:-------------------
-| __`GPIO 0`__  | `BUSY`              | Dark Green
-| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
-| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
-| __`GPIO 3`__  | `SCK`               | Yellow (Top)
-| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
-| __`GPIO 11`__ | `DIO1`              | Yellow (Bottom)
-| __`GPIO 14`__ | `NSS`               | Orange
-| __`GPIO 17`__ | `RST`               | White
-| __`3V3`__     | `3.3V`              | Red
-| __`GND`__     | `GND`               | Black
-*/
+//  TODO: Change the pin numbers for your SX1262 connection to BL602 / BL604
 
 #define SX126X_SPI_IDX           0  //  SPI Port 0
 #define SX126X_SPI_SDI_PIN       1  //  SPI Serial Data In Pin  (formerly MISO)

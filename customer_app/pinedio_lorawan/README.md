@@ -1,4 +1,6 @@
-# LoRaWAN Firmware for BL602
+# LoRaWAN Firmware for PineDio Stack BL604
+
+Based on [`sdk_app_lorawan`](../sdk_app_lorawan)
 
 LoRaWAN Firmware with command-line interface, ported to BL602 from Apache Mynewt OS...
 
@@ -14,11 +16,7 @@ And the Semtech SX1262 Driver...
 
 - [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
 
-Follow the updates in this Twitter Thread...
-
-https://twitter.com/MisterTechBlog/status/1379926160377851910
-
-Read the (upcoming) article...
+Read the article...
 
 https://lupyuen.github.io/articles/lorawan
 
