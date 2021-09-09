@@ -37,14 +37,14 @@ extern "C"
 //  TODO: Change the pin numbers for your SX1262 connection to BL602 / BL604
 
 #define SX126X_SPI_IDX           0  //  SPI Port 0
-#define SX126X_SPI_SDI_PIN       1  //  SPI Serial Data In Pin  (formerly MISO)
-#define SX126X_SPI_SDO_PIN       4  //  SPI Serial Data Out Pin (formerly MOSI)
-#define SX126X_SPI_CLK_PIN       3  //  SPI Clock Pin
-#define SX126X_SPI_CS_PIN       14  //  SPI Chip Select Pin
-#define SX126X_SPI_CS_OLD        2  //  Unused SPI Chip Select Pin
-#define SX126X_NRESET           17  //  Reset Pin
-#define SX126X_DIO1             11  //  DIO1
-#define SX126X_BUSY_PIN          0  //  Busy Pin
+#define SX126X_SPI_SDI_PIN       0  //  SPI Serial Data In Pin  (formerly MISO)
+#define SX126X_SPI_SDO_PIN      17  //  SPI Serial Data Out Pin (formerly MOSI)
+#define SX126X_SPI_CLK_PIN      11  //  SPI Clock Pin
+#define SX126X_SPI_CS_PIN       15  //  SPI Chip Select Pin
+#define SX126X_SPI_CS_OLD        8  //  Unused SPI Chip Select Pin
+#define SX126X_NRESET           18  //  Reset Pin
+#define SX126X_DIO1             19  //  DIO1
+#define SX126X_BUSY_PIN         10  //  Busy Pin
 #define SX126X_TCXO_WAKEUP_TIME  5  //  Time required for the TCXO to wakeup (milliseconds)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 
