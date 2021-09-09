@@ -63,6 +63,8 @@ Changes
 
 - New SPI Firmware that uses the SPI HAL: `sdk_app_spi_demo <customer_app/sdk_app_spi_demo>`_
 
+- (TO BE RENAMED: sdk_app_spi_demo) New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
+
 - New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
 - New Firmware for Grove E-Ink Display with UART Interface: `sdk_app_uart_eink <customer_app/sdk_app_uart_eink>`_
