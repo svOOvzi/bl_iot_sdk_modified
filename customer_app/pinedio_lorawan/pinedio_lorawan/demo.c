@@ -108,17 +108,24 @@ struct {
 int deselect_spi(void) {
     //  Configure Chip Select pins as GPIO Output Pins (instead of GPIO Input)
     int rc;
-    rc = bl_gpio_enable_output(FLASH_CS_PIN,  0, 0);    assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(SX126X_SPI_CS_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(FLASH_CS_PIN,      0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,    0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(SX126X_SPI_CS_PIN, 0, 0);  assert(rc == 0);
+    if (SX126X_DEBUG_CS_PIN >= 0) {  //  Mirror SX126X_SPI_CS_PIN
+        rc = bl_gpio_enable_output(SX126X_DEBUG_CS_PIN, 0, 0);  assert(rc == 0);
+    }
 
     //  Set Chip Select pins to High, to deselect SX1262, SPI Flash and ST7789
     printf("Set Flash CS pin %d to high\r\n",  FLASH_CS_PIN);
-    rc = bl_gpio_output_set(FLASH_CS_PIN, 1);    assert(rc == 0);
+    rc = bl_gpio_output_set(FLASH_CS_PIN,      1);  assert(rc == 0);
     printf("Set ST7789 CS pin %d to high\r\n", DISPLAY_CS_PIN);
-    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN,    1);  assert(rc == 0);
     printf("Set SX1262 CS pin %d to high\r\n", SX126X_SPI_CS_PIN);
     rc = bl_gpio_output_set(SX126X_SPI_CS_PIN, 1);  assert(rc == 0);
+    if (SX126X_DEBUG_CS_PIN >= 0) {  //  Mirror SX126X_SPI_CS_PIN
+        printf("Set Debug CS pin %d to high\r\n", SX126X_DEBUG_CS_PIN);
+        rc = bl_gpio_output_set(SX126X_DEBUG_CS_PIN, 1);  assert(rc == 0);
+    }
     return 0;
 }
 

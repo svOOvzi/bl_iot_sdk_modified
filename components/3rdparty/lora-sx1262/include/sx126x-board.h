@@ -45,6 +45,7 @@ extern "C"
 #define SX126X_NRESET           18  //  Reset Pin
 #define SX126X_DIO1             19  //  DIO1
 #define SX126X_BUSY_PIN         10  //  Busy Pin
+#define SX126X_DEBUG_CS_PIN      5  //  Debug Chip Select Pin, mirrors the High / Low State of SX1262 Chip Select Pin. Set to -1 if not needed.
 #define SX126X_TCXO_WAKEUP_TIME  5  //  Time required for the TCXO to wakeup (milliseconds)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 
