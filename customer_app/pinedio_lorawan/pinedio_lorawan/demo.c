@@ -34,6 +34,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include <task.h>
 #include <semphr.h>
 #include <cli.h>
+#include <bl_gpio.h>                //  For bl_gpio_output_set
 #include "radio.h"
 #include "rxinfo.h"
 #include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
@@ -156,10 +157,27 @@ static void read_registers(char *buf, int len, int argc, char **argv)
     }
 }
 
+/// GPIO for SPI Flash Chip Select Pin. We must set this to High to deselect SPI Flash.
+#define FLASH_CS_PIN     14
+
+/// GPIO for ST7789 SPI Chip Select Pin. We must set this to High to deselect ST7789 Display.
+#define DISPLAY_CS_PIN   20
+
 /// Command to initialise the LoRa Transceiver driver.
 /// Assume that create_task has been called to init the Event Queue.
 static void init_driver(char *buf, int len, int argc, char **argv)
 {
+    //  Configure Chip Select pins as GPIO Output Pins (instead of GPIO Input)
+    int rc;
+    rc = bl_gpio_enable_output(FLASH_CS_PIN,  0, 0);    assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
+
+    //  Set Chip Select pin to High, to deselect SPI Flash and ST7789
+    printf("Set Flash CS pin %d to high\r\n",  FLASH_CS_PIN);
+    rc = bl_gpio_output_set(FLASH_CS_PIN, 1);    assert(rc == 0);
+    printf("Set ST7789 CS pin %d to high\r\n", DISPLAY_CS_PIN);
+    rc = bl_gpio_output_set(DISPLAY_CS_PIN, 1);  assert(rc == 0);
+
     //  Set the LoRa Callback Functions
     RadioEvents_t radio_events;
     memset(&radio_events, 0, sizeof(radio_events));  //  Must init radio_events to null, because radio_events lives on stack!
