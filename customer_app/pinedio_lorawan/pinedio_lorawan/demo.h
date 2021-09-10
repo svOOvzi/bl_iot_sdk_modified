@@ -38,4 +38,7 @@ void test_pbuf(char *buf0, int len0, int argc, char **argv);
 /// Same as test_pbuf, but with actual LoRaWAN Header and Payload sizes. Defined in pbuf.c
 void test_pbuf2(char *buf0, int len0, int argc, char **argv);
 
+/// Set Chip Select pins to High, to deselect SX1262, SPI Flash and ST7789
+int deselect_spi(void);
+
 #endif

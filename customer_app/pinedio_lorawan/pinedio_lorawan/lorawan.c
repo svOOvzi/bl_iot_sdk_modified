@@ -24,6 +24,7 @@
 #include "node/lora_priv.h"
 #include "node/lora.h"
 #include "parse.h"
+#include "demo.h"
 
 void las_cmd_disp_byte_str(uint8_t *bytes, int len);
 
@@ -164,6 +165,10 @@ static struct mib_pair lora_mib[] = {
 };
 
 void init_lorawan(char *buf0, int len0, int argc, char **argv) {
+    //  Set Chip Select pins to High, to deselect SX1262, SPI Flash and ST7789
+    deselect_spi();
+
+    //  Init the LoRaWAN node
     lora_node_init();
 }
 
