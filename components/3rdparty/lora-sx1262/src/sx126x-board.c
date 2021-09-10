@@ -191,8 +191,9 @@ void SX126xIoInit( void )
         3,                    //  Receive DMA Channel
         SX126X_SPI_CLK_PIN,   //  SPI Clock Pin 
         SX126X_SPI_CS_OLD,    //  Unused SPI Chip Select Pin
-        SX126X_SPI_SDI_PIN,   //  SPI Serial Data In Pin  (formerly MISO)
-        SX126X_SPI_SDO_PIN    //  SPI Serial Data Out Pin (formerly MOSI)
+        //  TODO: SDO and SDI may need to be swapped
+        SX126X_SPI_SDO_PIN,   //  SPI Serial Data Out Pin (formerly MOSI)
+        SX126X_SPI_SDI_PIN    //  SPI Serial Data In Pin  (formerly MISO)
     );
     assert(rc == 0);
 }
