@@ -177,8 +177,12 @@ void SX126xIoInit( void )
     ////GpioInitInput( SX126X_DEVICE_SEL_PIN, 0, 0 );
     if (SX126X_DEBUG_CS_PIN >= 0) { GpioInitOutput( SX126X_DEBUG_CS_PIN, 1 ); }
 
+    //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
+    printf("Swap MISO and MOSI\r\n");
+    int rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
+
     //  Configure the SPI Port
-    int rc = spi_init(
+    rc = spi_init(
         &spi_device,     //  SPI Device
         SX126X_SPI_IDX,  //  SPI Port
         0,               //  SPI Mode: 0 for Controller
@@ -191,7 +195,6 @@ void SX126xIoInit( void )
         3,                    //  Receive DMA Channel
         SX126X_SPI_CLK_PIN,   //  SPI Clock Pin 
         SX126X_SPI_CS_OLD,    //  Unused SPI Chip Select Pin
-        //  TODO: SDO and SDI may need to be swapped
         SX126X_SPI_SDO_PIN,   //  SPI Serial Data Out Pin (formerly MOSI)
         SX126X_SPI_SDI_PIN    //  SPI Serial Data In Pin  (formerly MISO)
     );
