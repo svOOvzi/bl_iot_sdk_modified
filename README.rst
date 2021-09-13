@@ -1,5 +1,23 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Rhai Scripting" <https://lupyuen.github.io/articles/rhai>`_
+
+- `"PineDio Stack BL604 RISC-V Board: Testing The Prototype" <https://lupyuen.github.io/articles/pinedio>`_
+
+- `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
+
+- `"Rust on RISC-V BL602: Is It Sunny?" <https://lupyuen.github.io/articles/adc>`_
+
+- `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
+
+- `"Machine Learning on RISC-V BL602 with TensorFlow Lite" <https://lupyuen.github.io/articles/tflite>`_
+
+- `"BL602 Bootloader" <https://lupyuen.github.io/articles/boot>`_
+
+- `"Simulate RISC-V BL602 with WebAssembly, uLisp and Blockly" <https://lupyuen.github.io/articles/wasm>`_
+
+- `"uLisp and Blockly on PineCone BL602 RISC-V Board" <https://lupyuen.github.io/articles/lisp>`_
+
 - `"Run Rust RISC-V Firmware with BL602 IoT SDK" <https://lupyuen.github.io/articles/rust>`_
 
 - `"PineCone BL602 RISC-V Board Receives LoRa Packets" <https://lupyuen.github.io/articles/lora2>`_
@@ -37,43 +55,64 @@ Changes
 
 - Capture built firmware from GitHub Actions Workflow as Artifacts
 
-- "jtag" branch contains a modified Hello World app that remaps the JTAG port: https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld
+- "jtag" branch contains a modified Hello World app that remaps the JTAG port: `sdk_app_helloworld <https://github.com/lupyuen/bl_iot_sdk/tree/jtag/customer_app/sdk_app_helloworld>`_
 
-- "master" branch contains a modified PWM Demo Firmware that runs without Device Tree: https://github.com/lupyuen/bl_iot_sdk/pull/1
+- Modified PWM Demo Firmware that runs without Device Tree: `sdk_app_pwm <https://github.com/lupyuen/bl_iot_sdk/pull/1>`_
 
-- "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c/
+- "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: `sdk_app_i2c <https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c>`_
 
-- "master" branch contains a new SPI Demo Firmware that uses the SPI HAL: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_spi/
+- New SPI Firmware that uses the SPI HAL: `sdk_app_spi_demo <customer_app/sdk_app_spi_demo>`_
 
-- "master" branch contains a new Demo Firmware for ST7789 SPI Display + LVGL Graphics Library: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_st7789/
+- (TO BE RENAMED: sdk_app_spi_demo) New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
 
-- "master" branch contains a new Demo Firmware for Grove E-Ink Display with UART Interface: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_uart_eink/
+- New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
-- "master" branch contains a new Demo Firmware that transmits and receives LoRa packets: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_lora/
+- New Firmware for Grove E-Ink Display with UART Interface: `sdk_app_uart_eink <customer_app/sdk_app_uart_eink>`_
 
-- "master" branch contains a new Demo Firmware for LoRa Ping: https://github.com/lupyuen/bl_iot_sdk/blob/master/customer_app/sdk_app_loraping/
+- New Firmware that transmits and receives LoRa packets: `sdk_app_lora <customer_app/sdk_app_lora>`_
 
-- "master" branch contains reorganised library source files for NimBLE and SX1276: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/nimble-porting-layer and https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1276
+- New Firmware for LoRa Ping: `sdk_app_loraping <customer_app/sdk_app_loraping>`_
 
-- "lorawan" branch contains LoRaWAN Driver and LoRaWAN Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/lorawan/components/3rdparty/lorawan and https://github.com/lupyuen/bl_iot_sdk/blob/lorawan/customer_app/sdk_app_lorawan/
+- New Library for NimBLE and SX1276: `nimble-porting-layer <components/3rdparty/nimble-porting-layer>`_ and `lora-sx1276 <components/3rdparty/lora-sx1276>`_
 
-- "master" branch contains the driver for LoRa SX1262: https://github.com/lupyuen/bl_iot_sdk/tree/master/components/3rdparty/lora-sx1262
+- New LoRaWAN Driver and Firmware: `lorawan <components/3rdparty/lorawan>`_ and `sdk_app_lorawan <customer_app/sdk_app_lorawan>`_
 
-- "rust" branch contains Rust Library and Rust Firmware: https://github.com/lupyuen/bl_iot_sdk/tree/rust/components/3rdparty/rust-app and https://github.com/lupyuen/bl_iot_sdk/tree/rust/customer_app/sdk_app_rust/
+- New Driver for LoRa SX1262: `lora-sx1262 <components/3rdparty/lora-sx1262>`_
+
+- New Rust Library and Firmware: `rust-app <components/3rdparty/rust-app>`_ and `sdk_app_rust <customer_app/sdk_app_rust>`_
+
+- New Blinky Firmware: `sdk_app_blinky <customer_app/sdk_app_blinky>`_
+
+- New uLisp Library and Firmware: `ulisp-bl602 <components/3rdparty>`_ and `sdk_app_ulisp <customer_app/sdk_app_ulisp>`_
+
+- New TensorFlow Lite Library and Firmware: `tflite-bl602 <components/3rdparty>`_ and `sdk_app_tflite <customer_app/sdk_app_tflite>`_
+
+- New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
+
+- New PineDio Stack BL604 Blinky Firmware: `pinedio_blinky <customer_app/pinedio_blinky>`_
+
+- New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
+
+- "pinedio" branch contains upstream updates for testing on PineDio Stack
 
 BL602 SDK (Pine64 version)
 ==========================
 
-Join us on `Discord <https://discord.gg/89VWQVH>`_, `Telegram <https://t.me/joinchat/Kmi2S0nOsT240emHk-aO6g>`_, `Matrix <https://matrix.to/#/#pine64-nutcracker:matrix.org>`_
+Join us on
+`Discord <https://discord.gg/89VWQVH>`_,
+`Telegram <https://t.me/joinchat/Kmi2S0nOsT240emHk-aO6g>`_,
+`Matrix <https://matrix.to/#/#pine64-nutcracker:matrix.org>`_
 
 This repository contains the Pine64 fork of Bouffalo Lab's SDK for their BL602
 Wi-Fi/BLE Combo RISC-V SoC. Documentation, including upstream documentation,
 translations, mirrored technical documentation, and original reverse engineered
 documentation is at `bl602-docs <https://github.com/pine64/bl602-docs>`_, which
-is cloned as a submodule of this repository at ``docs``. Use `git submodule update --init` to initialize the submodule. 
+is cloned as a submodule of this repository at ``docs``. Use ``git submodule
+update --init`` to initialize the submodule.
 
 This repository is the central focus of Pine64's
-`Nutcracker Challenge <https://www.pine64.org/2020/10/28/nutcracker-challenge-blob-free-wifi-ble/>`_. The main task is to reverse engineer the following files:
+`Nutcracker Challenge <https://www.pine64.org/2020/10/28/nutcracker-challenge-blob-free-wifi-ble/>`_.
+The main task is to reverse engineer the following files:
 
     - `components/bl602/bl602_wifi/lib/libbl602_wifi.a <https://github.com/pine64/bl_iot_sdk/blob/master/components/bl602/bl602_wifi/lib/libbl602_wifi.a>`_
     - `components/network/ble/blecontroller/lib/libblecontroller.a <https://github.com/pine64/bl_iot_sdk/blob/master/components/network/ble/blecontroller/lib/libblecontroller.a>`_
@@ -84,7 +123,10 @@ This is being done at `bl602-re <https://github.com/pine64/bl602-re>`_.
 
 Documentation
 ------------
-You can find a lot of documentation on `PINE64 Documentation Website <https://pine64.github.io/bl602-docs/>`_ and `PINE64 Documentation Repository <https://github.com/pine64/bl602-docs>`_, where you can find Datasheets, Reference Manuals and various other documentation materials.
+You can find a lot of documentation on `PINE64 Documentation Website <https://pine64.github.io/bl602-docs/>`_
+and `PINE64 Documentation Repository <https://github.com/pine64/bl602-docs>`_,
+where you can find Datasheets, Reference Manuals and various other documentation
+materials.
 
 Quick Start
 -----------
@@ -123,6 +165,15 @@ you will need to define a few variables in order to compile it::
 
    export BL60X_SDK_PATH=/path/to/this/repo
    export CONFIG_CHIP_NAME=bl602 
+
+Docker
+====
+
+To set up a development environment in Docker, and do a full build of all the example projects, using the bundled toolchain::
+
+    docker build -t bl602sdk -f Dockerfile.bundled
+    docker run -t -i --rm bl602sdk
+    # make
 
 Hardware
 --------

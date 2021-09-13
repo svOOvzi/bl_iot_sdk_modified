@@ -1,0 +1,89 @@
+{
+	"files": [
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/bl_cmds.c",
+			"bookmarks": [
+				{
+					"line": 65,
+					"column": 19,
+					"label": ""
+				},
+				{
+					"line": 132,
+					"column": 21,
+					"label": ""
+				},
+				{
+					"line": 295,
+					"column": 13,
+					"label": ""
+				},
+				{
+					"line": 302,
+					"column": 30,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/ipc_host.c",
+			"bookmarks": [
+				{
+					"line": 138,
+					"column": 17,
+					"label": ""
+				},
+				{
+					"line": 165,
+					"column": 21,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "components/bl602/bl602_wifidrv/bl60x_wifi_driver/reg_ipc_app.h",
+			"bookmarks": [
+				{
+					"line": 65,
+					"column": 34,
+					"label": ""
+				},
+				{
+					"line": 67,
+					"column": 10,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "components/hal_drv/bl602_hal/hal_wifi.c",
+			"bookmarks": [
+				{
+					"line": 40,
+					"column": 25,
+					"label": ""
+				},
+				{
+					"line": 45,
+					"column": 25,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "customer_app/bl602_demo_wifi/bl602_demo_wifi/main.c",
+			"bookmarks": [
+				{
+					"line": 728,
+					"column": 18,
+					"label": ""
+				},
+				{
+					"line": 741,
+					"column": 24,
+					"label": ""
+				}
+			]
+		}
+	]
+}

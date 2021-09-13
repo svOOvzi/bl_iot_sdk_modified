@@ -34,6 +34,82 @@ static int lora_cli_tx(int argc, char **argv);
 static int lora_cli_rx(int argc, char **argv);
 static int lora_cli_max_payload_len(int argc, char **argv);
 
+#warning Convert to BL602 CLI
+
+/**
+ * Parses a long long within an imposed range.
+ *
+ * @param sval                  The string to parse.
+ * @param min                   Values less than this are rejected.
+ * @param max                   Values greater than this are rejected.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+long long
+parse_ll_bounds(const char *sval, long long min, long long max,
+                int *out_status);
+
+/**
+ * Parses an unsigned long long within an imposed range.
+ *
+ * @param sval                  The string to parse.
+ * @param min                   Values less than this are rejected.
+ * @param max                   Values greater than this are rejected.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+unsigned long long
+parse_ull_bounds(const char *sval,
+                 unsigned long long min, unsigned long long max,
+                 int *out_status);
+
+/**
+ * Parses an unsigned long long.
+ *
+ * @param sval                  The string to parse.
+ * @param out_status            Written on completion;
+ *                                  0: success;
+ *                                  SYS_EINVAL: invalid string or number out of
+ *                                      range.
+ *
+ * @return                      The parsed number on success;
+ *                              unspecified on error.
+ */
+unsigned long long
+parse_ull(const char *sval, int *out_status);
+
+/**
+ * @brief Parses a stream of bytes using ':' or '-' as delimiters.
+ *
+ * Parses a stream of bytes using ':' or '-' as delimiters.
+ * The base of each byte string is inferred from the text (base 16 if prefixed
+ * with "0x", base 10 otherwise).
+ *
+ * @param sval                  The string to parse.
+ * @param max_len               The maximum number of bytes to write.
+ * @param dst                   The destination buffer to write bytes to.
+ * @param out_len               Written on success; total number of bytes
+ *                                  written to the destination buffer.
+ *
+ * @return                      0 on success;
+ *                              SYS_EINVAL on invalid byte stream;
+ *                              SYS_ERANGE if result only partially written to
+ *                                  buffer due to insufficient space.
+ */
+int
+parse_byte_stream(const char *sval, int max_len, uint8_t *dst, int *out_len);
+
+#ifdef TODO
 static struct shell_cmd lora_cli_cmd = {
     .sc_cmd = "lora",
     .sc_cmd_func = lora_cli_cmd_fn,
@@ -110,6 +186,7 @@ err:
 
     return rc;
 }
+#endif  //  TODO
 
 static int
 lora_cli_set_freq(int argc, char **argv)
@@ -569,6 +646,7 @@ static struct shell_cmd lora_node_log_cmd = {
 
 #endif
 
+#warning Convert lora_cli_log_cmd to BL602 CLI
 int
 lora_cli_log_cmd(int argc, char **argv)
 {
@@ -712,9 +790,14 @@ lora_cli_init(void)
 
     (void)rc;
 #if (LORA_NODE_CLI)
+
+#ifdef TODO  //  Convert to BL602 CLI
     rc = shell_cmd_register(&lora_cli_cmd);
     SYSINIT_PANIC_ASSERT_MSG(rc == 0, "Failed to register lora CLI command");
+#endif  //  TODO
+
 #endif
+
 #if (LORA_NODE_LOG_CLI)
 
 #ifdef TODO  //  Convert to BL602 CLI

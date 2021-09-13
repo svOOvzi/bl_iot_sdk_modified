@@ -7,3 +7,13 @@
 void rust_main(char *buf, int len, int argc, char **argv) {
     printf("Build Error: components/3rdparty/rust-app not replaced by Rust compiled code\r\n");
 }
+
+/// TODO: Sync with customer_app/sdk_app_rust_adc/sdk_app_rust_adc/demo.c
+void init_adc(char *buf, int len, int argc, char **argv) {
+    printf("Build Error: components/3rdparty/rust-app not replaced by Rust compiled code\r\n");
+}
+
+/// TODO: Sync with customer_app/sdk_app_rust_adc/sdk_app_rust_adc/demo.c
+void read_adc(char *buf, int len, int argc, char **argv) {
+    printf("Build Error: components/3rdparty/rust-app not replaced by Rust compiled code\r\n");
+}

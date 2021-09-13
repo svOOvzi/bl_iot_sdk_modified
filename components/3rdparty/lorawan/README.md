@@ -25,6 +25,10 @@ Semtech LoRaWAN endpoint stack, ported to BL602 from Apache Mynewt OS...
 
 https://github.com/apache/mynewt-core/tree/master/net/lora/node
 
+BL602 LoRaWAN firmware with command-line interface is here...
+
+[`sdk_app_lorawan`: BL602 LoRaWAN Firmware](../../../customer_app/sdk_app_lorawan)
+
 Follow the updates in this Twitter Thread...
 
 https://twitter.com/MisterTechBlog/status/1379926160377851910

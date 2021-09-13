@@ -11,6 +11,17 @@
         "pbuf.h": "c",
         "sx126x.h": "c",
         "string.h": "c",
-        "sx126x-board.h": "c"
+        "sx126x-board.h": "c",
+        "pbuf_queue.h": "c",
+        "rope": "c",
+        "regex": "c",
+        "lora_utilities.h": "c",
+        "regioncommon.h": "c",
+        "lora_priv.h": "c",
+        "*.def": "c",
+        "*.tcc": "c",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "constants.h": "c"
     }
 }

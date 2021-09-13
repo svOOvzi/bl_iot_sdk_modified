@@ -38,6 +38,7 @@ Description: Ping-Pong implementation.  Adapted to run in the MyNewt OS.
 #include "rxinfo.h"
 #include "nimble_npl.h"             //  For NimBLE Porting Layer (multitasking functions)
 #include "nimble_port_freertos.h"   //  For nimble_port_freertos_init
+#include "lorawan.h"                //  For LoRaWAN command line functions
 #include "demo.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
@@ -96,6 +97,34 @@ struct {
 } loraping_stats;
 
 ///////////////////////////////////////////////////////////////////////////////
+//  Send LoRaWAN Message
+
+//  Uncomment this if "send_message" command will send a LoRaWAN Join Network Request
+//  #define SEND_LORAWAN_MESSAGE
+
+#ifdef SEND_LORAWAN_MESSAGE
+#define RF_FREQUENCY                923200000
+#define LORAPING_TX_OUTPUT_POWER           22         /* dBm */
+
+#define LORAPING_BANDWIDTH                  0         /* [0: 125 kHz, */
+                                                      /*  1: 250 kHz, */
+                                                      /*  2: 500 kHz, */
+                                                      /*  3: Reserved] */
+#define LORAPING_SPREADING_FACTOR          10         /* [SF7..SF12] */
+#define LORAPING_CODINGRATE                 1         /* [1: 4/5, */
+                                                      /*  2: 4/6, */
+                                                      /*  3: 4/7, */
+                                                      /*  4: 4/8] */
+#define LORAPING_PREAMBLE_LENGTH            8         /* Same for Tx and Rx */
+#define LORAPING_SYMBOL_TIMEOUT             5         /* Symbols */
+#define LORAPING_FIX_LENGTH_PAYLOAD_ON      false
+#define LORAPING_IQ_INVERSION_ON            false
+
+#define LORAPING_TX_TIMEOUT_MS              3000    /* ms */
+#define LORAPING_RX_TIMEOUT_MS              5000    /* ms */
+#endif  //  SEND_LORAWAN_MESSAGE
+
+///////////////////////////////////////////////////////////////////////////////
 //  LoRa Commands
 
 void SX126xIoInit(void);  //  Defined in sx126x-board.c
@@ -109,7 +138,7 @@ static void on_tx_timeout(void);
 static void on_rx_timeout(void);
 static void on_rx_error(void);
 
-/// Read SX1276 / RF96 registers
+/// Read LoRa Transceiver registers
 static void read_registers(char *buf, int len, int argc, char **argv)
 {
     //  Init the SPI port
@@ -127,18 +156,18 @@ static void read_registers(char *buf, int len, int argc, char **argv)
     }
 }
 
-/// Command to initialise the SX1276 / RF96 driver.
+/// Command to initialise the LoRa Transceiver driver.
 /// Assume that create_task has been called to init the Event Queue.
 static void init_driver(char *buf, int len, int argc, char **argv)
 {
     //  Set the LoRa Callback Functions
     RadioEvents_t radio_events;
     memset(&radio_events, 0, sizeof(radio_events));  //  Must init radio_events to null, because radio_events lives on stack!
-    radio_events.TxDone    = on_tx_done;
-    radio_events.RxDone    = on_rx_done;
-    radio_events.TxTimeout = on_tx_timeout;
-    radio_events.RxTimeout = on_rx_timeout;
-    radio_events.RxError   = on_rx_error;
+    radio_events.TxDone    = on_tx_done;     //  Packet has been transmitted
+    radio_events.RxDone    = on_rx_done;     //  Packet has been received
+    radio_events.TxTimeout = on_tx_timeout;  //  Transmit Timeout
+    radio_events.RxTimeout = on_rx_timeout;  //  Receive Timeout
+    radio_events.RxError   = on_rx_error;    //  Receive Error
 
     //  Init the SPI Port and the LoRa Transceiver
     Radio.Init(&radio_events);
@@ -182,7 +211,7 @@ static void init_driver(char *buf, int len, int argc, char **argv)
     );    
 }
 
-/// Command to send a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
+/// Command to send a LoRa message. Assume that the LoRa Transceiver driver has been initialised.
 static void send_message(char *buf, int len, int argc, char **argv)
 {
     //  Send the "PING" message
@@ -204,11 +233,17 @@ static void send_once(int is_ping)
         loraping_buffer[i] = i - 4;
     }
 
+#ifndef SEND_LORAWAN_MESSAGE
     //  Send the transmit buffer (64 bytes)
     Radio.Send(loraping_buffer, sizeof loraping_buffer);
+#else
+    //  Replay a LoRaWAN Join Network Request
+    static uint8_t replay[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5b, 0xb1, 0x7b, 0x37, 0xe7, 0x5e, 0xc1, 0x4b, 0xb4, 0xb1, 0xb8, 0x30, 0xe9, 0x8c};
+    Radio.Send(replay, sizeof replay);
+#endif  //  !SEND_LORAWAN_MESSAGE
 }
 
-/// Command to receive a LoRa message. Assume that SX1276 / RF96 driver has been initialised.
+/// Command to receive a LoRa message. Assume that LoRa Transceiver driver has been initialised.
 /// Assume that create_task has been called to init the Event Queue.
 static void receive_message(char *buf, int len, int argc, char **argv)
 {
@@ -219,7 +254,7 @@ static void receive_message(char *buf, int len, int argc, char **argv)
 /// Show the interrupt counters, status and error codes
 static void spi_result(char *buf, int len, int argc, char **argv)
 {
-    //  SX1276 Interrupt Counters defined in sx1276-board.c
+    //  Interrupt Counters defined in sx126x-board.c and sx1276-board.c
     extern int g_dio0_counter, g_dio1_counter, g_dio2_counter, g_dio3_counter, g_dio4_counter, g_dio5_counter, g_nodio_counter;
     printf("DIO0 Interrupts: %d\r\n",   g_dio0_counter);
     printf("DIO1 Interrupts: %d\r\n",   g_dio1_counter);
@@ -307,13 +342,31 @@ static void handle_event(struct ble_npl_event *ev) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"create_task",      "Create a task",          create_task},
+    //  LoRa
     {"put_event",        "Add an event",           put_event},
     {"init_driver",      "Init LoRa driver",       init_driver},
     {"send_message",     "Send LoRa message",      send_message},
     {"receive_message",  "Receive LoRa message",   receive_message},
     {"read_registers",   "Read registers",         read_registers},
     {"spi_result",       "Show SPI counters",      spi_result},
+
+    //  LoRaWAN
+    {"create_task",     "Create LoRaWAN task",                  create_task},
+    {"init_lorawan",    "Init LoRaWAN driver",                  init_lorawan},
+    {"las_wr_mib",      "Write LoRaWAN MIB",                    las_cmd_wr_mib},
+    {"las_rd_mib",      "Read LoRaWAN MIB",                     las_cmd_rd_mib},
+    {"las_rd_dev_eui",  "Read LoRaWAN device EUI",              las_cmd_rd_dev_eui},
+    {"las_wr_dev_eui",  "Write LoRaWAN device EUI",             las_cmd_wr_dev_eui},
+    {"las_rd_app_eui",  "Read LoRaWAN application EUI",         las_cmd_rd_app_eui},
+    {"las_wr_app_eui",  "Write LoRaWAN application EUI",        las_cmd_wr_app_eui},
+    {"las_rd_app_key",  "Read LoRaWAN application key",         las_cmd_rd_app_key},
+    {"las_wr_app_key",  "Write LoRaWAN application key",        las_cmd_wr_app_key},
+    {"las_app_port",    "Open/close LoRaWAN application port",  las_cmd_app_port},
+    {"las_app_tx",      "Transmit on LoRaWAN application port", las_cmd_app_tx},
+    {"las_join",        "Perform a LoRaWAN OTA join",           las_cmd_join},
+    {"las_link_chk",    "Perform a LoRaWAN link check",         las_cmd_link_chk},
+
+    //  pbuf
     {"test_pbuf",        "Test LWIP pbuf",         test_pbuf},
     {"test_pbuf2",       "Test LWIP pbuf (large)", test_pbuf2},
 };                                                                                   
@@ -494,135 +547,3 @@ void dump_stack(void)
     }
     printf("=== stack end ===\r\n\r\n");
 }
-
-#ifdef NOTUSED
-
-# create_task
-
-# 
-# 
-# init_driver
-SX126xReset
-SX126xIoInit
-SX126X interrupt init
-SX126X register handler: GPIO 11
-SX126xWakeup
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xGetDeviceId: SX1262
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBuy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xSetRfTxPower
-SX126xGetDeviceId: SX1262
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-
-# 
-# 
-# send_message
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-SX126xWriteCommand
-SX126xWaitOnBusy
-SX126xWaitOnBusy
-
-# RadioOnTxTimeoutIrq
-Tx timeout
-SX126xWriteCommand
-SX126xWaitOnBusy
-
-# 
-# 
-# 
-#endif  //  NOTUSED
