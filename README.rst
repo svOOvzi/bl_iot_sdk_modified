@@ -1,5 +1,11 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Rust on RISC-V BL602: Rhai Scripting" <https://lupyuen.github.io/articles/rhai>`_
+
+- `"PineDio Stack BL604 RISC-V Board: Testing The Prototype" <https://lupyuen.github.io/articles/pinedio>`_
+
+- `"Rust on RISC-V BL602: Simulated with WebAssembly" <https://lupyuen.github.io/articles/rustsim>`_
+
 - `"Rust on RISC-V BL602: Is It Sunny?" <https://lupyuen.github.io/articles/adc>`_
 
 - `"Reverse Engineering WiFi on RISC-V BL602" <https://lupyuen.github.io/articles/wifi>`_
@@ -55,7 +61,9 @@ Changes
 
 - "i2c" branch contains a modified I2C Demo Firmware that uses the Low Level I2C HAL: `sdk_app_i2c <https://github.com/lupyuen/bl_iot_sdk/blob/i2c/customer_app/sdk_app_i2c>`_
 
-- New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
+- New SPI Firmware that uses the SPI HAL: `sdk_app_spi_demo <customer_app/sdk_app_spi_demo>`_
+
+- (TO BE RENAMED: sdk_app_spi_demo) New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
 
 - New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
@@ -81,19 +89,30 @@ Changes
 
 - New ADC Firmware: `sdk_app_adc <customer_app/sdk_app_adc>`_, `sdk_app_adc2 <customer_app/sdk_app_adc2>`_, `sdk_app_rust_adc <customer_app/sdk_app_rust_adc>`_ and `sdk_app_rust_gpio <customer_app/sdk_app_rust_gpio>`_
 
+- New PineDio Stack BL604 Blinky Firmware: `pinedio_blinky <customer_app/pinedio_blinky>`_
+
+- New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
+
+- "pinedio" branch contains upstream updates for testing on PineDio Stack
+
 BL602 SDK (Pine64 version)
 ==========================
 
-Join us on `Discord <https://discord.gg/89VWQVH>`_, `Telegram <https://t.me/joinchat/Kmi2S0nOsT240emHk-aO6g>`_, `Matrix <https://matrix.to/#/#pine64-nutcracker:matrix.org>`_
+Join us on
+`Discord <https://discord.gg/89VWQVH>`_,
+`Telegram <https://t.me/joinchat/Kmi2S0nOsT240emHk-aO6g>`_,
+`Matrix <https://matrix.to/#/#pine64-nutcracker:matrix.org>`_
 
 This repository contains the Pine64 fork of Bouffalo Lab's SDK for their BL602
 Wi-Fi/BLE Combo RISC-V SoC. Documentation, including upstream documentation,
 translations, mirrored technical documentation, and original reverse engineered
 documentation is at `bl602-docs <https://github.com/pine64/bl602-docs>`_, which
-is cloned as a submodule of this repository at ``docs``. Use `git submodule update --init` to initialize the submodule. 
+is cloned as a submodule of this repository at ``docs``. Use ``git submodule
+update --init`` to initialize the submodule.
 
 This repository is the central focus of Pine64's
-`Nutcracker Challenge <https://www.pine64.org/2020/10/28/nutcracker-challenge-blob-free-wifi-ble/>`_. The main task is to reverse engineer the following files:
+`Nutcracker Challenge <https://www.pine64.org/2020/10/28/nutcracker-challenge-blob-free-wifi-ble/>`_.
+The main task is to reverse engineer the following files:
 
     - `components/bl602/bl602_wifi/lib/libbl602_wifi.a <https://github.com/pine64/bl_iot_sdk/blob/master/components/bl602/bl602_wifi/lib/libbl602_wifi.a>`_
     - `components/network/ble/blecontroller/lib/libblecontroller.a <https://github.com/pine64/bl_iot_sdk/blob/master/components/network/ble/blecontroller/lib/libblecontroller.a>`_
@@ -104,7 +123,10 @@ This is being done at `bl602-re <https://github.com/pine64/bl602-re>`_.
 
 Documentation
 ------------
-You can find a lot of documentation on `PINE64 Documentation Website <https://pine64.github.io/bl602-docs/>`_ and `PINE64 Documentation Repository <https://github.com/pine64/bl602-docs>`_, where you can find Datasheets, Reference Manuals and various other documentation materials.
+You can find a lot of documentation on `PINE64 Documentation Website <https://pine64.github.io/bl602-docs/>`_
+and `PINE64 Documentation Repository <https://github.com/pine64/bl602-docs>`_,
+where you can find Datasheets, Reference Manuals and various other documentation
+materials.
 
 Quick Start
 -----------
@@ -143,6 +165,15 @@ you will need to define a few variables in order to compile it::
 
    export BL60X_SDK_PATH=/path/to/this/repo
    export CONFIG_CHIP_NAME=bl602 
+
+Docker
+====
+
+To set up a development environment in Docker, and do a full build of all the example projects, using the bundled toolchain::
+
+    docker build -t bl602sdk -f Dockerfile.bundled
+    docker run -t -i --rm bl602sdk
+    # make
 
 Hardware
 --------

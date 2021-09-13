@@ -29,7 +29,10 @@ jobs:
     - run: |
         #  TODO: Fix TFLite warnings for Ubuntu
         rm -rf sdk_app_tflite
-        ls -l
+        #  TODO: Fix Bit Bang warnings
+        rm -rf pinedio_st7789_bitbang
+        rm -rf pinedio_st7789_bitbang2
+        rm -rf pinedio_st7789_bitbang3
         make
       working-directory: customer_app
       env:
@@ -64,7 +67,10 @@ jobs:
     - run: |
         #  TODO: Fix TFLite build for Windows (include not found)
         rm -rf sdk_app_tflite
-        ls -l
+        #  TODO: Fix Bit Bang warnings
+        rm -rf pinedio_st7789_bitbang
+        rm -rf pinedio_st7789_bitbang2
+        rm -rf pinedio_st7789_bitbang3
         make
       shell: msys2 {0}
       working-directory: customer_app
