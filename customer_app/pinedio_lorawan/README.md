@@ -26,7 +26,9 @@ https://lupyuen.github.io/articles/lora2
 
 # LoRaWAN Commands
 
-```text
+Run these commands to join the LoRaWAN Network and send data to the network...
+
+```bash
 #  Start LoRa background task
 create_task
 
@@ -42,8 +44,38 @@ las_wr_app_eui 0x00:0x00:0x00:0x00:0x00:0x00:0x00:0x00
 #  App Key: Copy from ChirpStack: Applications -> app -> Devices -> device_otaa_class_a -> Keys (OTAA) -> Application Key
 las_wr_app_key 0xaa:0xff:0xad:0x5c:0x7e:0x87:0xf6:0x4d:0xe3:0xf0:0x87:0x32:0xfc:0x1d:0xd2:0x5d
 
-#  Join LoRaWAN network, try 3 times
-las_join 3
+#  Join LoRaWAN network, try 1 time
+las_join 1
+
+#  Open LoRaWAN port 2 (App Port)
+las_app_port open 2
+
+#  Send data to LoRaWAN port 2, 5 bytes, unconfirmed (0)
+las_app_tx 2 5 0
+```
+
+# LoRaWAN Commands for The Things Network
+
+Run these commands to join The Things Network and send data to the network...
+
+```bash
+#  Start LoRa background task
+create_task
+
+#  Init LoRaWAN driver
+init_lorawan
+
+#  Device EUI: Copy from End Devices -> (Your Device) -> DevEUI
+las_wr_dev_eui 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+
+#  App EUI: Copy from End Devices -> (Your Device) -> JoinEUI
+las_wr_app_eui 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+
+#  App Key: Copy from End Devices -> (Your Device) -> AppKey
+las_wr_app_key 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+
+#  Join LoRaWAN network, try 1 time
+las_join 1
 
 #  Open LoRaWAN port 2 (App Port)
 las_app_port open 2
