@@ -65,22 +65,25 @@ create_task
 #  Init LoRaWAN driver
 init_lorawan
 
-#  Device EUI: Copy from End Devices -> (Your Device) -> DevEUI
-las_wr_dev_eui 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+#  Copy the following values from The Things Network Console -> 
+#  Applications -> (Your App) -> End Devices -> (Your Device)...
 
-#  App EUI: Copy from End Devices -> (Your Device) -> JoinEUI
-las_wr_app_eui 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+#  Device EUI: Copy from (Your Device) -> DevEUI
+las_wr_dev_eui 0xAB:0xBA:0xDA:0xBA:0xAB:0xBA:0xDA:0xBA
 
-#  App Key: Copy from End Devices -> (Your Device) -> AppKey
-las_wr_app_key 0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??:0x??
+#  App EUI: Copy from (Your Device) -> JoinEUI
+las_wr_app_eui 0x00:0x00:0x00:0x00:0x00:0x00:0x00:0x00
 
-#  Join LoRaWAN network, try 1 time
+#  App Key: Copy from (Your Device) -> AppKey
+las_wr_app_key 0xAB:0xBA:0xDA:0xBA:0xAB:0xBA:0xDA:0xBA0xAB:0xBA:0xDA:0xBA:0xAB:0xBA:0xDA:0xBA
+
+#  Join The Things Network, try 1 time
 las_join 1
 
-#  Open LoRaWAN port 2 (App Port)
+#  Open The Things Network port 2 (App Port)
 las_app_port open 2
 
-#  Send data to LoRaWAN port 2, 5 bytes, unconfirmed (0)
+#  Send data to The Things Network port 2, 5 bytes, unconfirmed (0)
 las_app_tx 2 5 0
 ```
 
