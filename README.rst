@@ -1,5 +1,9 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"The Things Network on PineDio Stack BL604 RISC-V Board" <https://lupyuen.github.io/articles/ttn>`_
+
+- `"LoRaWAN on PineDio Stack BL604 RISC-V Board" <https://lupyuen.github.io/articles/lorawan2>`_
+
 - `"Rust on RISC-V BL602: Rhai Scripting" <https://lupyuen.github.io/articles/rhai>`_
 
 - `"PineDio Stack BL604 RISC-V Board: Testing The Prototype" <https://lupyuen.github.io/articles/pinedio>`_
