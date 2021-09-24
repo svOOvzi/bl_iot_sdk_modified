@@ -58,7 +58,8 @@ static void test_cbor(char *buf, int len, int argc, char **argv) {
     );
     printf("CBOR Output: %d bytes\r\n", output_len);
 
-    //  Dump the encoded CBOR output
+    //  Dump the encoded CBOR output (6 bytes):
+    //  0xa1 0x61 0x74 0x19 0x04 0xd2
     for (int i = 0; i < output_len; i++) {
         printf("  0x%02x\r\n", output[i]);
     }
@@ -130,7 +131,8 @@ static void test_cbor2(char *buf, int len, int argc, char **argv) {
     );
     printf("CBOR Output: %d bytes\r\n", output_len);
 
-    //  Dump the encoded CBOR output
+    //  Dump the encoded CBOR output (11 bytes):
+    //  0xa2 0x61 0x74 0x19 0x04 0xd2 0x61 0x6c 0x19 0x09 0x29
     for (int i = 0; i < output_len; i++) {
         printf("  0x%02x\r\n", output[i]);
     }
