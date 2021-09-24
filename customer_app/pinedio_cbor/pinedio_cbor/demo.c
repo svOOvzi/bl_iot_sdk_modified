@@ -51,8 +51,15 @@ static void test_cbor(char *buf, int len, int argc, char **argv) {
     );
     assert(res == CborNoError);
 
+    //  How many bytes were encoded
+    size_t output_len = cbor_encoder_get_buffer_size(
+        &encoder,  //  CBOR Encoder
+        output     //  Output Buffer
+    );
+    printf("CBOR Output: %d bytes\r\n", output_len);
+
     //  Dump the encoded CBOR output
-    for (int i = 0; i < sizeof(output); i++) {
+    for (int i = 0; i < output_len; i++) {
         printf("  0x%02x\r\n", output[i]);
     }
 }
@@ -116,8 +123,15 @@ static void test_cbor2(char *buf, int len, int argc, char **argv) {
     );
     assert(res == CborNoError);
 
+    //  How many bytes were encoded
+    size_t output_len = cbor_encoder_get_buffer_size(
+        &encoder,  //  CBOR Encoder
+        output     //  Output Buffer
+    );
+    printf("CBOR Output: %d bytes\r\n", output_len);
+
     //  Dump the encoded CBOR output
-    for (int i = 0; i < sizeof(output); i++) {
+    for (int i = 0; i < output_len; i++) {
         printf("  0x%02x\r\n", output[i]);
     }
 }
