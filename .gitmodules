@@ -10,3 +10,6 @@
 [submodule "components/3rdparty/tflite-bl602"]
 	path = components/3rdparty/tflite-bl602
 	url = https://github.com/lupyuen/tflite-bl602
+[submodule "components/3rdparty/tinycbor"]
+	path = components/3rdparty/tinycbor
+	url = https://github.com/intel/tinycbor
