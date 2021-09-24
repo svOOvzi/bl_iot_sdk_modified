@@ -21,9 +21,6 @@ endif
 # Tiny CBOR Library for encoding sensor data
 COMPONENTS_TINYCBOR := tinycbor-bl602
 
-# NimBLE Porting Layer needed for mulitasking functions
-COMPONENTS_NPL     := nimble-porting-layer 
-
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
 COMPONENTS_BLE     := 
@@ -34,7 +31,6 @@ INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
 INCLUDE_COMPONENTS += $(COMPONENTS_TINYCBOR)
-INCLUDE_COMPONENTS += $(COMPONENTS_NPL)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
 
 include $(BL60X_SDK_PATH)/make_scripts_riscv/project.mk

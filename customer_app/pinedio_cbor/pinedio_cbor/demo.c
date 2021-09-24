@@ -1,46 +1,61 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
-#include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
-#include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
+#include "cbor.h"     //  For Tiny CBOR Library
 #include "demo.h"
 
-/// PineDio Stack: LCD Backlight is connected on GPIO 21
-/// PineCone: Blue LED is connected on GPIO 11
-/// TODO: Change the LED GPIO Pin Number for your BL602 / BL604 board
-#define LED_GPIO 21
+/// Test CBOR Encoding
+void test_cbor(char *buf, int len, int argc, char **argv) {
+    //  Encode with CBOR: { "t": 1234 }
+    //  Max output size is 50 bytes (which fits in a LoRa packet)
+    uint8_t output[50];
 
-/// Blink the LED
-void blinky(char *buf, int len, int argc, char **argv) {
-    //  Show a message on the serial console
-    puts("Hello from Blinky!");
+    //  Our CBOR Encoder and Map Encoder
+    CborEncoder encoder, mapEncoder;
 
-    //  Configure the LED GPIO for output (instead of input)
-    int rc = bl_gpio_enable_output(
-        LED_GPIO,  //  GPIO pin number
-        0,         //  No GPIO pullup
-        0          //  No GPIO pulldown
+    //  Init our CBOR Encoder
+    cbor_encoder_init(
+        &encoder,        //  CBOR Encoder
+        output,          //  Output Buffer
+        sizeof(output),  //  Output Buffer Size
+        0                //  Options
     );
-    assert(rc == 0);  //  Halt on error
 
-    //  Blink the LED 5 times
-    for (int i = 0; i < 10; i++) {
+    //  Create a Map Encoder that maps keys to values
+    CborError res = cbor_encoder_create_map(
+        &encoder,     //  CBOR Encoder
+        &mapEncoder,  //  Map Encoder
+        1             //  Number of Key-Value Pairs
+    );    
+    assert(res == CborNoError);
 
-        //  Toggle the LED GPIO between 0 (on) and 1 (off)
-        rc = bl_gpio_output_set(  //  Set the GPIO output (from BL602 GPIO HAL)
-            LED_GPIO,             //  GPIO pin number
-            i % 2                 //  0 for low, 1 for high
-        );
-        assert(rc == 0);  //  Halt on error
+    //  First Key-Value Pair: Map the Key
+    res = cbor_encode_text_stringz(
+        &mapEncoder,  //  Map Encoder
+        "t"           //  Key
+    );    
+    assert(res == CborNoError);
 
-        //  Sleep 1 second
-        time_delay(                   //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(1000)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
-        );
+    //  First Key-Value Pair: Map the Value
+    res = cbor_encode_int(
+        &mapEncoder,  //  Map Encoder 
+        1234          //  Value
+    );
+    assert(res == CborNoError);
+
+    //  Close the Map Encoder
+    res = cbor_encoder_close_container(
+        &encoder,    //  CBOR Encoder
+        &mapEncoder  //  Map Encoder
+    );
+    assert(res == CborNoError);
+
+    //  Dump the encoded CBOR output
+    for (int i = 0; i < sizeof(output); i++) {
+        printf("  0x%02x\r\n", output[i]);
     }
-
-    //  Return to the command-line interface
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,7 +63,7 @@ void blinky(char *buf, int len, int argc, char **argv) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"blinky",        "Blink the LED",          blinky},
+    {"test_cbor",        "Test CBOR Encoding",          test_cbor},
 };                                                                                   
 
 /// Init the command-line interface
@@ -119,16 +134,16 @@ hexdump                  : dump file
 cat                      : cat file
 
 ====User Commands====
-blinky                   : Blink the LED
+test_cbor                   : Blink the LED
 blogset                  : blog pri set level
 blogdump                 : blog info dump
 bl_sys_time_now          : sys time now
 
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
+# test_cbor
+Hello from test_cbor!
+# test_cbor
+Hello from test_cbor!
+# test_cbor
+Hello from test_cbor!
 
 */
