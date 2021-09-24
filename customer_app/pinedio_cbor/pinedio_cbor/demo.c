@@ -6,9 +6,8 @@
 #include "cbor.h"     //  For Tiny CBOR Library
 #include "demo.h"
 
-/// Test CBOR Encoding
-void test_cbor(char *buf, int len, int argc, char **argv) {
-    //  Encode with CBOR: { "t": 1234 }
+/// Test CBOR Encoding for { "t": 1234 }
+static void test_cbor(char *buf, int len, int argc, char **argv) {
     //  Max output size is 50 bytes (which fits in a LoRa packet)
     uint8_t output[50];
 
@@ -58,12 +57,78 @@ void test_cbor(char *buf, int len, int argc, char **argv) {
     }
 }
 
+/// Test CBOR Encoding for { "t": 1234, "l": 2345 }
+static void test_cbor2(char *buf, int len, int argc, char **argv) {
+    //  Max output size is 50 bytes (which fits in a LoRa packet)
+    uint8_t output[50];
+
+    //  Our CBOR Encoder and Map Encoder
+    CborEncoder encoder, mapEncoder;
+
+    //  Init our CBOR Encoder
+    cbor_encoder_init(
+        &encoder,        //  CBOR Encoder
+        output,          //  Output Buffer
+        sizeof(output),  //  Output Buffer Size
+        0                //  Options
+    );
+
+    //  Create a Map Encoder that maps keys to values
+    CborError res = cbor_encoder_create_map(
+        &encoder,     //  CBOR Encoder
+        &mapEncoder,  //  Map Encoder
+        2             //  Number of Key-Value Pairs
+    );    
+    assert(res == CborNoError);
+
+    //  First Key-Value Pair: Map the Key
+    res = cbor_encode_text_stringz(
+        &mapEncoder,  //  Map Encoder
+        "t"           //  Key
+    );    
+    assert(res == CborNoError);
+
+    //  First Key-Value Pair: Map the Value
+    res = cbor_encode_int(
+        &mapEncoder,  //  Map Encoder 
+        1234          //  Value
+    );
+    assert(res == CborNoError);
+
+    //  Second Key-Value Pair: Map the Key
+    res = cbor_encode_text_stringz(
+        &mapEncoder,  //  Map Encoder
+        "l"           //  Key
+    );    
+    assert(res == CborNoError);
+
+    //  Second Key-Value Pair: Map the Value
+    res = cbor_encode_int(
+        &mapEncoder,  //  Map Encoder 
+        2345          //  Value
+    );
+    assert(res == CborNoError);
+
+    //  Close the Map Encoder
+    res = cbor_encoder_close_container(
+        &encoder,    //  CBOR Encoder
+        &mapEncoder  //  Map Encoder
+    );
+    assert(res == CborNoError);
+
+    //  Dump the encoded CBOR output
+    for (int i = 0; i < sizeof(output); i++) {
+        printf("  0x%02x\r\n", output[i]);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Command Line Interface
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"test_cbor",        "Test CBOR Encoding",          test_cbor},
+    {"test_cbor2",       "Test CBOR Encoding",          test_cbor2},
 };                                                                                   
 
 /// Init the command-line interface
