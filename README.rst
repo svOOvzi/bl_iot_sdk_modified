@@ -97,6 +97,8 @@ Changes
 
 - New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
 
+- New CBOR Firmware: `pinedio_cbor <customer_app/pinedio_cbor>`_
+
 - "pinedio" branch contains upstream updates for testing on PineDio Stack
 
 - "cbor" branch transmits sensor data encoded with CBOR over LoRaWAN
