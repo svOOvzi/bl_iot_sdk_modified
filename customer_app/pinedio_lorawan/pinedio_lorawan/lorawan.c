@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
+#include "cbor.h"     //  For Tiny CBOR Library
 #include "node/lora_priv.h"
 #include "node/lora.h"
 #include "parse.h"
@@ -885,6 +886,147 @@ cmd_app_tx_err:
     printf("\tlen = size n bytes of app data\r\n");
     printf("\ttype = 0 for unconfirmed, 1 for confirmed\r\n");
     printf("\tex: las_app_tx 10 20 1\r\n");
+
+    return;
+}
+
+/// Transmit CBOR payload to LoRaWAN
+void
+las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
+{
+    int rc;
+    uint8_t port;
+    uint8_t pkt_type;
+    struct pbuf *om;
+    Mcps_t mcps_type;
+
+    if (argc < 3) {
+        printf("Invalid # of arguments\r\n");
+        goto cmd_app_tx_cbor_err;
+    }
+
+    port = parse_ull_bounds(argv[1], 1, 255, &rc);
+    if (rc != 0) {
+        printf("Invalid port %s. Must be 1 - 255\r\n", argv[2]);
+        return;
+    }
+    pkt_type = parse_ull_bounds(argv[2], 0, 1, &rc);
+    if (rc != 0) {
+        printf("Invalid type. Must be 0 (unconfirmed) or 1 (confirmed)"
+                       "\r\n");
+        return;
+    }
+
+    //  Encode into CBOR for { "t": 1234, "l": 2345 }
+    //  Max output size is 50 bytes (which fits in a LoRa packet)
+    uint8_t output[50];
+
+    //  Our CBOR Encoder and Map Encoder
+    CborEncoder encoder, mapEncoder;
+
+    //  Init our CBOR Encoder
+    cbor_encoder_init(
+        &encoder,        //  CBOR Encoder
+        output,          //  Output Buffer
+        sizeof(output),  //  Output Buffer Size
+        0                //  Options
+    );
+
+    //  Create a Map Encoder that maps keys to values
+    CborError res = cbor_encoder_create_map(
+        &encoder,     //  CBOR Encoder
+        &mapEncoder,  //  Map Encoder
+        2             //  Number of Key-Value Pairs
+    );    
+    assert(res == CborNoError);
+
+    //  First Key-Value Pair: Map the Key
+    res = cbor_encode_text_stringz(
+        &mapEncoder,  //  Map Encoder
+        "t"           //  Key
+    );    
+    assert(res == CborNoError);
+
+    //  First Key-Value Pair: Map the Value
+    res = cbor_encode_int(
+        &mapEncoder,  //  Map Encoder 
+        1234          //  Value
+    );
+    assert(res == CborNoError);
+
+    //  Second Key-Value Pair: Map the Key
+    res = cbor_encode_text_stringz(
+        &mapEncoder,  //  Map Encoder
+        "l"           //  Key
+    );    
+    assert(res == CborNoError);
+
+    //  Second Key-Value Pair: Map the Value
+    res = cbor_encode_int(
+        &mapEncoder,  //  Map Encoder 
+        2345          //  Value
+    );
+    assert(res == CborNoError);
+
+    //  Close the Map Encoder
+    res = cbor_encoder_close_container(
+        &encoder,    //  CBOR Encoder
+        &mapEncoder  //  Map Encoder
+    );
+    assert(res == CborNoError);
+
+    //  How many bytes were encoded
+    size_t output_len = cbor_encoder_get_buffer_size(
+        &encoder,  //  CBOR Encoder
+        output     //  Output Buffer
+    );
+    printf("CBOR Output: %d bytes\r\n", output_len);
+
+    //  Dump the encoded CBOR output (11 bytes):
+    //  0xa2 0x61 0x74 0x19 0x04 0xd2 0x61 0x6c 0x19 0x09 0x29
+    for (int i = 0; i < output_len; i++) {
+        printf("  0x%02x\r\n", output[i]);
+    }    
+
+    if (lora_app_mtu() < output_len) {
+        printf("Can send at max %d bytes\r\n", lora_app_mtu());
+        return;
+    }
+
+    /* Attempt to allocate a mbuf */
+    om = lora_pkt_alloc(output_len);
+    if (!om) {
+        printf("Unable to allocate mbuf\r\n");
+        return;
+    }
+
+    /* Get correct packet type. */
+    if (pkt_type == 0) {
+        mcps_type = MCPS_UNCONFIRMED;
+    } else {
+        mcps_type = MCPS_CONFIRMED;
+    }
+
+    rc = pbuf_copyinto(om, 0, output, output_len);
+    assert(rc == 0);
+
+    rc = lora_app_port_send(port, mcps_type, om);
+    if (rc) {
+        printf("Failed to send to port %u err=%d\r\n", port, rc);
+        pbuf_free(om);
+    } else {
+        printf("Packet sent on port %u\r\n", port);
+    }
+
+    return;
+
+cmd_app_tx_cbor_err:
+    printf("Usage:\r\n");
+    printf("\tlas_app_tx_cbor <port> <type>\r\n");
+    printf("Where:\r\n");
+    printf("\tport = port number on which to send\r\n");
+    printf("\ttype = 0 for unconfirmed, 1 for confirmed\r\n");
+    printf("\tex: las_app_tx_cbor 2 0\r\n");
 
     return;
 }
