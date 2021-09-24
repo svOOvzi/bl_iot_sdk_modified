@@ -99,6 +99,8 @@ Changes
 
 - "pinedio" branch contains upstream updates for testing on PineDio Stack
 
+- "cbor" branch transmits sensor data encoded with CBOR over LoRaWAN
+
 BL602 SDK (Pine64 version)
 ==========================
 
