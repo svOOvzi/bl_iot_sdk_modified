@@ -192,37 +192,27 @@ void dump_stack(void)
 
 /* Output Log
 
-# help
-====Build-in Commands====
-====Support 4 cmds once, seperate by ; ====
-help                     : print this
-p                        : print memory
-m                        : modify memory
-echo                     : echo for command
-exit                     : close CLI
-devname                  : print device name
-sysver                   : system version
-reboot                   : reboot system
-poweroff                 : poweroff system
-reset                    : system reset
-time                     : system time
-ota                      : system ota
-ps                       : thread dump
-ls                       : file list
-hexdump                  : dump file
-cat                      : cat file
+# test_cbor
+CBOR Output: 6 bytes
+  0xa1
+  0x61
+  0x74
+  0x19
+  0x04
+  0xd2
 
-====User Commands====
-test_cbor                   : Blink the LED
-blogset                  : blog pri set level
-blogdump                 : blog info dump
-bl_sys_time_now          : sys time now
-
-# test_cbor
-Hello from test_cbor!
-# test_cbor
-Hello from test_cbor!
-# test_cbor
-Hello from test_cbor!
+# test_cbor2
+CBOR Output: 11 bytes
+  0xa2
+  0x61
+  0x74
+  0x19
+  0x04
+  0xd2
+  0x61
+  0x6c
+  0x19
+  0x09
+  0x29
 
 */
