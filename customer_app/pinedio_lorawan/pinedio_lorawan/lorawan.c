@@ -890,34 +890,46 @@ cmd_app_tx_err:
     return;
 }
 
-/// Transmit CBOR payload to LoRaWAN
+/// Transmit CBOR payload to LoRaWAN. The command
+///   las_app_tx_cbor 2 0 1234 2345
+/// Will transmit the CBOR payload
+///   { "t": 1234, "l": 2345 }
+/// To port 2, unconfirmed (0).
 void
 las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
 {
     int rc;
-    uint8_t port;
-    uint8_t pkt_type;
-    struct pbuf *om;
-    Mcps_t mcps_type;
-
-    if (argc < 3) {
+    //  Validate number of arguments
+    if (argc < 5) {
         printf("Invalid # of arguments\r\n");
         goto cmd_app_tx_cbor_err;
     }
-
-    port = parse_ull_bounds(argv[1], 1, 255, &rc);
+    //  Get port number
+    uint8_t port = parse_ull_bounds(argv[1], 1, 255, &rc);
     if (rc != 0) {
-        printf("Invalid port %s. Must be 1 - 255\r\n", argv[2]);
+        printf("Invalid port %s. Must be 1 - 255\r\n", argv[1]);
         return;
     }
-    pkt_type = parse_ull_bounds(argv[2], 0, 1, &rc);
+    //  Get unconfirmed / confirmed packet type
+    uint8_t pkt_type = parse_ull_bounds(argv[2], 0, 1, &rc);
     if (rc != 0) {
-        printf("Invalid type. Must be 0 (unconfirmed) or 1 (confirmed)"
-                       "\r\n");
+        printf("Invalid type. Must be 0 (unconfirmed) or 1 (confirmed)\r\n");
+        return;
+    }
+    //  Get t value
+    uint16_t t = parse_ull_bounds(argv[3], 0, 65535, &rc);
+    if (rc != 0) {
+        printf("Invalid t value %s. Must be 0 - 65535\r\n", argv[3]);
+        return;
+    }
+    //  Get l value
+    uint16_t l = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    if (rc != 0) {
+        printf("Invalid l value %s. Must be 0 - 65535\r\n", argv[4]);
         return;
     }
 
-    //  Encode into CBOR for { "t": 1234, "l": 2345 }
+    //  Encode into CBOR for { "t": ????, "l": ???? }
     //  Max output size is 50 bytes (which fits in a LoRa packet)
     uint8_t output[50];
 
@@ -950,7 +962,7 @@ las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
     //  First Key-Value Pair: Map the Value
     res = cbor_encode_int(
         &mapEncoder,  //  Map Encoder 
-        1234          //  Value
+        t             //  Value
     );
     assert(res == CborNoError);
 
@@ -964,7 +976,7 @@ las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
     //  Second Key-Value Pair: Map the Value
     res = cbor_encode_int(
         &mapEncoder,  //  Map Encoder 
-        2345          //  Value
+        l             //  Value
     );
     assert(res == CborNoError);
 
@@ -988,28 +1000,32 @@ las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
         printf("  0x%02x\r\n", output[i]);
     }    
 
+    //  Validate the output size
     if (lora_app_mtu() < output_len) {
         printf("Can send at max %d bytes\r\n", lora_app_mtu());
         return;
     }
 
-    /* Attempt to allocate a mbuf */
-    om = lora_pkt_alloc(output_len);
+    //  Attempt to allocate a pbuf
+    struct pbuf *om = lora_pkt_alloc(output_len);
     if (!om) {
-        printf("Unable to allocate mbuf\r\n");
+        printf("Unable to allocate pbuf\r\n");
         return;
     }
 
-    /* Get correct packet type. */
+    //  Set unconfirmed / confirmed packet type
+    Mcps_t mcps_type;
     if (pkt_type == 0) {
         mcps_type = MCPS_UNCONFIRMED;
     } else {
         mcps_type = MCPS_CONFIRMED;
     }
 
+    //  Copy the encoded CBOR into the pbuf
     rc = pbuf_copyinto(om, 0, output, output_len);
     assert(rc == 0);
 
+    //  Send the pbuf
     rc = lora_app_port_send(port, mcps_type, om);
     if (rc) {
         printf("Failed to send to port %u err=%d\r\n", port, rc);
@@ -1022,11 +1038,13 @@ las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv)
 
 cmd_app_tx_cbor_err:
     printf("Usage:\r\n");
-    printf("\tlas_app_tx_cbor <port> <type>\r\n");
+    printf("\tlas_app_tx_cbor <port> <type> <t> <l>\r\n");
     printf("Where:\r\n");
     printf("\tport = port number on which to send\r\n");
     printf("\ttype = 0 for unconfirmed, 1 for confirmed\r\n");
-    printf("\tex: las_app_tx_cbor 2 0\r\n");
+    printf("\tt    = Value for t\r\n");
+    printf("\tl    = Value for l\r\n");
+    printf("\tex: las_app_tx_cbor 2 0 1234 2345\r\n");
 
     return;
 }
