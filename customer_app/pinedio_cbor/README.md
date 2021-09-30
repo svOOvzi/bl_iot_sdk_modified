@@ -1,5 +1,9 @@
 # Tiny CBOR Demo Firmware for BL602 and BL604
 
+Read the article...
+
+-   ["Encode Sensor Data with CBOR on BL602"](https://lupyuen.github.io/articles/cbor)
+
 This firmware calls the [`tinycbor-bl602`](https://github.com/lupyuen/tinycbor-bl602) Library to encode the following data into [CBOR (Concise Binary Object Representation)](https://en.wikipedia.org/wiki/CBOR) Format...
 
 ```text
