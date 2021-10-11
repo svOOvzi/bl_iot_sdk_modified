@@ -6,6 +6,8 @@
 #include <bl_adc.h>     //  For BL602 Internal Temperature Sensor
 #include <bl602_adc.h>  //  For BL602 ADC Standard Driver
 #include <bl602_glb.h>  //  For BL602 Global Register Standard Driver
+#include <FreeRTOS.h>   //  For FreeRTOS
+#include <task.h>       //  For vTaskDelay
 #include "demo.h"
 
 static int get_tsen_adc(float *temp, uint8_t log_flag);
@@ -93,6 +95,9 @@ static int get_tsen_adc(
             printf("read efuse data failed\r\n");
         }
         assert(ADC_Trim_TSEN(&tsen_offset) != ERROR);
+
+        //  Must wait 100 milliseconds or returned temperature will be negative
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
     val = TSEN_Get_Temp(tsen_offset);
     if (log_flag) {
@@ -161,32 +166,27 @@ void dump_stack(void)
     printf("=== stack end ===\r\n\r\n");
 }
 
-/* Output Log
-
-
-# read_tsen
-[     11706][[32mINFO  [0m: bl_adc.c: 269] offset = 2175
-temperature = 41.790276 Celsius
-Returned Temperature = 41 Celsius
-
-# read_tsen2
-offset = 2175
-temperature = -54.043594 Celsius
-Returned Temperature = -54.043594 Celsius
+/* Output Log read_tsen:
 
 # read_tsen
-temperature = 44.756866 Celsius
-Returned Temperature = 44 Celsius
+[      6832][[32mINFO  [0m: bl_adc.c: 269] offset = 2175
+temperature = -90.932541 Celsius
+Returned Temperature = -90 Celsius
 
-# read_tsen2
-offset = 2175
-temperature = 42.951115 Celsius
-Returned Temperature = 42.951115 Celsius
+# read_tsen
+temperature = 43.467045 Celsius
+Returned Temperature = 43 Celsius
 
-# read_tsen2
-offset = 2175
-temperature = 42.048241 Celsius
-Returned Temperature = 42.048241 Celsius
+# read_tsen
+temperature = 45.530762 Celsius
+Returned Temperature = 45 Celsius
+
+# read_tsen
+temperature = 43.209080 Celsius
+Returned Temperature = 43 Celsius
+
+Output Log for read_tsen2:
+
 
 # read_tsen2
 offset = 2175
@@ -195,11 +195,16 @@ Returned Temperature = 44.369923 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 42.048241 Celsius
-Returned Temperature = 42.048241 Celsius
+temperature = 43.596027 Celsius
+Returned Temperature = 43.596027 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 43.209080 Celsius
-Returned Temperature = 43.209080 Celsius
+temperature = 44.498905 Celsius
+Returned Temperature = 44.498905 Celsius
+
+# read_tsen2
+offset = 2175
+temperature = 43.853992 Celsius
+Returned Temperature = 43.853992 Celsius
 */
