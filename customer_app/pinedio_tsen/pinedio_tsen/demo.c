@@ -23,7 +23,7 @@ void read_tsen(char *buf, int len, int argc, char **argv) {
     assert(rc == 0);
 
     //  Show the temperature
-    printf("Returned Temperaure = %d Celsius\r\n", temp);
+    printf("Returned Temperature = %d Celsius\r\n", temp);
 }
 
 /// Read BL602 / BL604's Internal Temperature Sensor as Float
@@ -39,7 +39,7 @@ void read_tsen2(char *buf, int len, int argc, char **argv) {
     assert(rc == 0);
 
     //  Show the temperature
-    printf("Returned Temperaure = %f Celsius\r\n", temp);
+    printf("Returned Temperature = %f Celsius\r\n", temp);
 }
 
 /// Read the Internal Temperature Sensor as Float. Returns 0 if successful.
