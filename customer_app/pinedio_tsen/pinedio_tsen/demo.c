@@ -19,7 +19,7 @@ void read_tsen(char *buf, int len, int argc, char **argv) {
     assert(rc == 0);
 
     //  Show the temperature
-    printf("read_tsen: Temperaure = %d Celsius\r\n", temp);
+    printf("Returned Temperaure = %d Celsius\r\n", temp);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
