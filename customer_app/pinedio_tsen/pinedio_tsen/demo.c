@@ -1,46 +1,25 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <cli.h>
-#include <bl_gpio.h>     //  For BL602 GPIO Hardware Abstraction Layer
-#include "nimble_npl.h"  //  For NimBLE Porting Layer (mulitasking functions)
+#include <bl_adc.h>     //  For BL602 Internal Temperature Sensor
 #include "demo.h"
 
-/// PineDio Stack: LCD Backlight is connected on GPIO 21
-/// PineCone: Blue LED is connected on GPIO 11
-/// TODO: Change the LED GPIO Pin Number for your BL602 / BL604 board
-#define LED_GPIO 21
+/// Read BL602 / BL604's Internal Temperature Sensor
+void read_tsen(char *buf, int len, int argc, char **argv) {
+    //  Temperature in Celsius
+    int16_t temp = 0;
 
-/// Blink the LED
-void blinky(char *buf, int len, int argc, char **argv) {
-    //  Show a message on the serial console
-    puts("Hello from Blinky!");
-
-    //  Configure the LED GPIO for output (instead of input)
-    int rc = bl_gpio_enable_output(
-        LED_GPIO,  //  GPIO pin number
-        0,         //  No GPIO pullup
-        0          //  No GPIO pulldown
+    //  Read the Internal Temperature Sensor
+    int rc = bl_tsen_adc_get(
+        &temp,  //  Temperature in Celsius
+        1       //  0 to disable logging, 1 to enable logging
     );
-    assert(rc == 0);  //  Halt on error
+    assert(rc == 0);
 
-    //  Blink the LED 5 times
-    for (int i = 0; i < 10; i++) {
-
-        //  Toggle the LED GPIO between 0 (on) and 1 (off)
-        rc = bl_gpio_output_set(  //  Set the GPIO output (from BL602 GPIO HAL)
-            LED_GPIO,             //  GPIO pin number
-            i % 2                 //  0 for low, 1 for high
-        );
-        assert(rc == 0);  //  Halt on error
-
-        //  Sleep 1 second
-        time_delay(                   //  Sleep by number of ticks (from NimBLE Porting Layer)
-            time_ms_to_ticks32(1000)  //  Convert 1,000 milliseconds to ticks (from NimBLE Porting Layer)
-        );
-    }
-
-    //  Return to the command-line interface
+    //  Show the temperature
+    printf("read_tsen: Temperaure = %d Celsius\r\n", temp);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,7 +27,7 @@ void blinky(char *buf, int len, int argc, char **argv) {
 
 /// List of commands. STATIC_CLI_CMD_ATTRIBUTE makes this(these) command(s) static
 const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"blinky",        "Blink the LED",          blinky},
+    {"read_tsen",        "Read internal temperature sensor",          read_tsen},
 };                                                                                   
 
 /// Init the command-line interface
