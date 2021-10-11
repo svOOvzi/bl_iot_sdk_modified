@@ -10,4 +10,10 @@ At the BL604 Command Prompt, enter...
 read_tsen
 ```
 
+To read the temperature as float (instead of integer)...
+
+```text
+read_tsen2
+```
+
 See [`pinedio_tsen/demo.c`](pinedio_tsen/demo.c)

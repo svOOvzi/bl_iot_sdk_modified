@@ -25,6 +25,7 @@
         "constants.h": "c",
         "vfs_spi.h": "c",
         "spi.h": "c",
-        "hal_spi.h": "c"
+        "hal_spi.h": "c",
+        "bl602_adc.h": "c"
     }
 }
