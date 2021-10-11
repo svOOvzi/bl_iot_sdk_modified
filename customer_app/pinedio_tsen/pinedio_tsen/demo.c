@@ -48,6 +48,7 @@ static int get_tsen_adc(
     float *temp,      //  Pointer to float to store the temperature
     uint8_t log_flag  //  0 to disable logging, 1 to enable logging
 ) {
+    assert(temp != NULL);
     static uint16_t tsen_offset = 0xFFFF;
     float val = 0.0;
 
