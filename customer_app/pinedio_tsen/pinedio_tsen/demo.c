@@ -43,7 +43,7 @@ void read_tsen2(char *buf, int len, int argc, char **argv) {
 }
 
 /// Read the Internal Temperature Sensor as Float. Returns 0 if successful.
-/// Based on https://github.com/lupyuen/bl_iot_sdk/blob/tsen/components/hal_drv/bl602_hal/bl_adc.c#L224-L282
+/// Based on bl_tsen_adc_get in https://github.com/lupyuen/bl_iot_sdk/blob/tsen/components/hal_drv/bl602_hal/bl_adc.c#L224-L282
 static int get_tsen_adc(
     float *temp,      //  Pointer to float to store the temperature
     uint8_t log_flag  //  0 to disable logging, 1 to enable logging
