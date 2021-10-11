@@ -93,6 +93,9 @@ COMPONENTS_LORA    := lora-sx1262 nimble-porting-layer
 # Components needed for LoRaWAN (We need pbuf from LWIP)
 COMPONENTS_LORAWAN := lorawan lwip
 
+# Tiny CBOR Library for encoding sensor data
+COMPONENTS_TINYCBOR := tinycbor-bl602
+
 # Other Components
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
@@ -105,6 +108,7 @@ INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
 INCLUDE_COMPONENTS += $(COMPONENTS_LORA)
 INCLUDE_COMPONENTS += $(COMPONENTS_LORAWAN)
+INCLUDE_COMPONENTS += $(COMPONENTS_TINYCBOR)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
 
 include $(BL60X_SDK_PATH)/make_scripts_riscv/project.mk
