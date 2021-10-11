@@ -77,37 +77,4 @@ void dump_stack(void)
 
 /* Output Log
 
-# help
-====Build-in Commands====
-====Support 4 cmds once, seperate by ; ====
-help                     : print this
-p                        : print memory
-m                        : modify memory
-echo                     : echo for command
-exit                     : close CLI
-devname                  : print device name
-sysver                   : system version
-reboot                   : reboot system
-poweroff                 : poweroff system
-reset                    : system reset
-time                     : system time
-ota                      : system ota
-ps                       : thread dump
-ls                       : file list
-hexdump                  : dump file
-cat                      : cat file
-
-====User Commands====
-blinky                   : Blink the LED
-blogset                  : blog pri set level
-blogdump                 : blog info dump
-bl_sys_time_now          : sys time now
-
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
-# blinky
-Hello from Blinky!
-
 */
