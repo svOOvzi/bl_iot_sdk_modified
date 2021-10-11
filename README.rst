@@ -99,9 +99,11 @@ Changes
 
 - New CBOR Firmware: `pinedio_cbor <customer_app/pinedio_cbor>`_
 
+- New Internal Temperature Sensor Firmware: `pinedio_tsen <customer_app/pinedio_tsen>`_
+
 - "pinedio" branch contains upstream updates for testing on PineDio Stack
 
-- "cbor" branch transmits sensor data encoded with CBOR over LoRaWAN
+- "tsen" branch reads the Internal Temperature Sensor and transmits over LoRaWAN
 
 BL602 SDK (Pine64 version)
 ==========================
