@@ -14,7 +14,7 @@ We should see...
 
 ```text
 temperature = 43.725010 Celsius
-Returned Temperaure = 43 Celsius
+Returned Temperature = 43 Celsius
 ```
 
 To read the temperature as float (instead of integer)...
@@ -28,7 +28,7 @@ We should see...
 ```text
 offset = 2175
 temperature = 45.143814 Celsius
-Returned Temperaure = 45.143814 Celsius
+Returned Temperature = 45.143814 Celsius
 ```
 
 See [`pinedio_tsen/demo.c`](pinedio_tsen/demo.c)
