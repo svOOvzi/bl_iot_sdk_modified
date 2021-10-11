@@ -163,47 +163,43 @@ void dump_stack(void)
 
 /* Output Log
 
-# read_tsen
-[     14505][[32mINFO  [0m: bl_adc.c: 269] offset = 2175
-temperature = 43.725010 Celsius
-Returned Temperaure = 43 Celsius
-
-# read_tsen2
-offset = 2175
-temperature = -36.501999 Celsius
-Returned Temperaure = -36.501999 Celsius
-
-# read_tsen2
-offset = 2175
-temperature = 45.788727 Celsius
-Returned Temperaure = 45.788727 Celsius
 
 # read_tsen
-temperature = 43.725010 Celsius
-Returned Temperaure = 43 Celsius
+[     11706][[32mINFO  [0m: bl_adc.c: 269] offset = 2175
+temperature = 41.790276 Celsius
+Returned Temperature = 41 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 45.143814 Celsius
-Returned Temperaure = 45.143814 Celsius
+temperature = -54.043594 Celsius
+Returned Temperature = -54.043594 Celsius
+
+# read_tsen
+temperature = 44.756866 Celsius
+Returned Temperature = 44 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 47.078548 Celsius
-Returned Temperaure = 47.078548 Celsius
+temperature = 42.951115 Celsius
+Returned Temperature = 42.951115 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 46.562622 Celsius
-Returned Temperaure = 46.562622 Celsius
+temperature = 42.048241 Celsius
+Returned Temperature = 42.048241 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 46.949570 Celsius
-Returned Temperaure = 46.949570 Celsius
+temperature = 44.369923 Celsius
+Returned Temperature = 44.369923 Celsius
 
 # read_tsen2
 offset = 2175
-temperature = 44.885849 Celsius
-Returned Temperaure = 44.885849 Celsius
+temperature = 42.048241 Celsius
+Returned Temperature = 42.048241 Celsius
+
+# read_tsen2
+offset = 2175
+temperature = 43.209080 Celsius
+Returned Temperature = 43.209080 Celsius
 */
