@@ -1104,7 +1104,7 @@ las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
 
         //  Scale the temperature up 100 times and truncate
         int16_t t = temp * 100;
-        printf("Encode to CBOR: { t: %d, l: %d }\r\n", t, l);
+        printf("Encode CBOR: { t: %d, l: %d }\r\n", t, l);
 
         //  Encode into CBOR for { "t": ????, "l": ???? }
         //  Max output size is 50 bytes (which fits in a LoRa packet)
@@ -1169,13 +1169,14 @@ las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
             &encoder,  //  CBOR Encoder
             output     //  Output Buffer
         );
-        printf("CBOR Output: %d bytes\r\n", output_len);
+        printf("CBOR Output: %d bytes\r\n  ", output_len);
 
         //  Dump the encoded CBOR output (11 bytes):
         //  0xa2 0x61 0x74 0x19 0x04 0xd2 0x61 0x6c 0x19 0x09 0x29
         for (int i = 0; i < output_len; i++) {
-            printf("  0x%02x\r\n", output[i]);
+            printf("0x%02x ", output[i]);
         }    
+        printf("\r\n");
 
         //  Validate the output size
         if (lora_app_mtu() < output_len) {
