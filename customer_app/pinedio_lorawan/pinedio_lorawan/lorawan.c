@@ -1078,7 +1078,7 @@ las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
     if (rc != 0) { printf("Invalid type %s. Must be 0 (unconfirmed) or 1 (confirmed)\r\n", argv[2]); return; }
 
     //  Get l value
-    uint16_t l = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    uint16_t l = parse_ull_bounds(argv[3], 0, 65535, &rc);
     if (rc != 0) { printf("Invalid l value %s. Must be 0 - 65535\r\n", argv[3]); return; }
 
     //  Get count
@@ -1086,7 +1086,7 @@ las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
     if (rc != 0) { printf("Invalid count %s. Must be 0 - 65535\r\n", argv[4]); return; }
 
     //  Get interval
-    uint16_t interval = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    uint16_t interval = parse_ull_bounds(argv[5], 0, 65535, &rc);
     if (rc != 0) { printf("Invalid interval %s. Must be 0 - 65535\r\n", argv[5]); return; }
 
     //  Repeat count times
@@ -1104,6 +1104,7 @@ las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
 
         //  Scale the temperature up 100 times and truncate
         int16_t t = temp * 100;
+        printf("Encode to CBOR: { t: %d, l: %d }\r\n", t, l);
 
         //  Encode into CBOR for { "t": ????, "l": ???? }
         //  Max output size is 50 bytes (which fits in a LoRa packet)
