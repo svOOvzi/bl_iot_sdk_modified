@@ -33,6 +33,7 @@ void las_cmd_rd_app_key(char *buf0, int len0, int argc, char **argv);
 void las_cmd_app_port(char *buf0, int len0, int argc, char **argv);
 void las_cmd_app_tx(char *buf0, int len0, int argc, char **argv);
 void las_cmd_app_tx_cbor(char *buf0, int len0, int argc, char **argv);
+void las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv);
 void las_cmd_join(char *buf0, int len0, int argc, char **argv);
 void las_cmd_link_chk(char *buf0, int len0, int argc, char **argv);
 

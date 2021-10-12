@@ -10,19 +10,21 @@ https://github.com/apache/mynewt-core/tree/master/apps/lora_app_shell
 
 This firmware calls the LoRaWAN Driver...
 
-- [`lorawan`: BL602 LoRaWAN Driver](../../components/3rdparty/lorawan)
+-   [`lorawan`: BL602 LoRaWAN Driver](../../components/3rdparty/lorawan)
 
 And the Semtech SX1262 Driver...
 
-- [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
+-   [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
 
-Read the article...
+Read the articles...
 
-https://lupyuen.github.io/articles/lorawan
+-   ["PineCone BL602 Talks LoRaWAN"](https://lupyuen.github.io/articles/lorawan)
 
-What is LoRaWAN? See this...
+-   ["LoRaWAN on PineDio Stack BL604 RISC-V Board"](https://lupyuen.github.io/articles/lorawan2)
 
-https://lupyuen.github.io/articles/lora2
+-   ["The Things Network on PineDio Stack BL604 RISC-V Board"](https://lupyuen.github.io/articles/ttn)
+
+-   ["Encode Sensor Data with CBOR on BL602"](https://lupyuen.github.io/articles/cbor)
 
 # LoRaWAN Commands
 
@@ -52,6 +54,14 @@ las_app_port open 2
 
 #  Send data to LoRaWAN port 2, 5 bytes, unconfirmed (0)
 las_app_tx 2 5 0
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0)
+las_app_tx_cbor 2 0 1234 2345
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0), 
+#  for 10 times, with a 60 second interval. Assuming that the Internal Temperature Sensor
+#  returns 12.34 degrees Celsius.
+las_app_tx_tsen 2 0 2345 10 60
 ```
 
 # LoRaWAN Commands for The Things Network
@@ -85,6 +95,14 @@ las_app_port open 2
 
 #  Send data to The Things Network port 2, 5 bytes, unconfirmed (0)
 las_app_tx 2 5 0
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0)
+las_app_tx_cbor 2 0 1234 2345
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0), 
+#  for 10 times, with a 60 second interval. Assuming that the Internal Temperature Sensor
+#  returns 12.34 degrees Celsius.
+las_app_tx_tsen 2 0 2345 10 60
 ```
 
 # Message Integrity Code Errors

@@ -21,13 +21,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
-#include "cbor.h"     //  For Tiny CBOR Library
+#include <bl_adc.h>     //  For BL602 ADC HAL
+#include <bl602_adc.h>  //  For BL602 ADC Standard Driver
+#include <bl602_glb.h>  //  For BL602 Global Register Standard Driver
+#include <FreeRTOS.h>   //  For FreeRTOS
+#include <task.h>       //  For vTaskDelay
+#include "cbor.h"       //  For Tiny CBOR Library
 #include "node/lora_priv.h"
 #include "node/lora.h"
 #include "parse.h"
 #include "demo.h"
+#include "lorawan.h"
 
 void las_cmd_disp_byte_str(uint8_t *bytes, int len);
+static int get_tsen_adc(float *temp, uint8_t log_flag);
 
 ///////////////////////////////////////////////////////////////////////////////
 //  LoRaWAN Callbacks
@@ -1049,6 +1056,174 @@ cmd_app_tx_cbor_err:
     return;
 }
 
+/// Transmit Internal Temperature Sensor Data to LoRaWAN, encoded with CBOR. The command
+///   las_app_tx_tsen 2 0 2345 10 60
+/// Will transmit the CBOR payload
+///   { "t": 1234, "l": 2345 }
+/// To port 2, unconfirmed (0), for 10 times, with a 60 second interval.
+/// Assuming that the Internal Temperature Sensor returns 12.34 degrees Celsius.
+void
+las_cmd_app_tx_tsen(char *buf0, int len0, int argc, char **argv)
+{
+    int rc = 0;
+    //  Validate number of arguments
+    if (argc < 6) { printf("Invalid # of arguments\r\n"); goto cmd_app_tx_tsen_err; }
+
+    //  Get port number
+    uint8_t port = parse_ull_bounds(argv[1], 1, 255, &rc);
+    if (rc != 0) { printf("Invalid port %s. Must be 1 - 255\r\n", argv[1]); return;}
+
+    //  Get unconfirmed / confirmed packet type
+    uint8_t pkt_type = parse_ull_bounds(argv[2], 0, 1, &rc);
+    if (rc != 0) { printf("Invalid type %s. Must be 0 (unconfirmed) or 1 (confirmed)\r\n", argv[2]); return; }
+
+    //  Get l value
+    uint16_t l = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    if (rc != 0) { printf("Invalid l value %s. Must be 0 - 65535\r\n", argv[3]); return; }
+
+    //  Get count
+    uint16_t count = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    if (rc != 0) { printf("Invalid count %s. Must be 0 - 65535\r\n", argv[4]); return; }
+
+    //  Get interval
+    uint16_t interval = parse_ull_bounds(argv[4], 0, 65535, &rc);
+    if (rc != 0) { printf("Invalid interval %s. Must be 0 - 65535\r\n", argv[5]); return; }
+
+    //  Repeat count times
+    for (int i = 0; i < count; i++) {
+        //  Wait for interval seconds
+        if (i > 0) { vTaskDelay(interval * 1000 / portTICK_PERIOD_MS); }
+
+        //  Read Internal Temperature Sensor as a Float
+        float temp = 0;
+        int rc = get_tsen_adc(
+            &temp,  //  Temperature in Celsius
+            1       //  0 to disable logging, 1 to enable logging
+        );
+        assert(rc == 0);
+
+        //  Scale the temperature up 100 times and truncate
+        int16_t t = temp * 100;
+
+        //  Encode into CBOR for { "t": ????, "l": ???? }
+        //  Max output size is 50 bytes (which fits in a LoRa packet)
+        uint8_t output[50];
+
+        //  Our CBOR Encoder and Map Encoder
+        CborEncoder encoder, mapEncoder;
+
+        //  Init our CBOR Encoder
+        cbor_encoder_init(
+            &encoder,        //  CBOR Encoder
+            output,          //  Output Buffer
+            sizeof(output),  //  Output Buffer Size
+            0                //  Options
+        );
+
+        //  Create a Map Encoder that maps keys to values
+        CborError res = cbor_encoder_create_map(
+            &encoder,     //  CBOR Encoder
+            &mapEncoder,  //  Map Encoder
+            2             //  Number of Key-Value Pairs
+        );    
+        assert(res == CborNoError);
+
+        //  First Key-Value Pair: Map the Key
+        res = cbor_encode_text_stringz(
+            &mapEncoder,  //  Map Encoder
+            "t"           //  Key
+        );    
+        assert(res == CborNoError);
+
+        //  First Key-Value Pair: Map the Value
+        res = cbor_encode_int(
+            &mapEncoder,  //  Map Encoder 
+            t             //  Value
+        );
+        assert(res == CborNoError);
+
+        //  Second Key-Value Pair: Map the Key
+        res = cbor_encode_text_stringz(
+            &mapEncoder,  //  Map Encoder
+            "l"           //  Key
+        );    
+        assert(res == CborNoError);
+
+        //  Second Key-Value Pair: Map the Value
+        res = cbor_encode_int(
+            &mapEncoder,  //  Map Encoder 
+            l             //  Value
+        );
+        assert(res == CborNoError);
+
+        //  Close the Map Encoder
+        res = cbor_encoder_close_container(
+            &encoder,    //  CBOR Encoder
+            &mapEncoder  //  Map Encoder
+        );
+        assert(res == CborNoError);
+
+        //  How many bytes were encoded
+        size_t output_len = cbor_encoder_get_buffer_size(
+            &encoder,  //  CBOR Encoder
+            output     //  Output Buffer
+        );
+        printf("CBOR Output: %d bytes\r\n", output_len);
+
+        //  Dump the encoded CBOR output (11 bytes):
+        //  0xa2 0x61 0x74 0x19 0x04 0xd2 0x61 0x6c 0x19 0x09 0x29
+        for (int i = 0; i < output_len; i++) {
+            printf("  0x%02x\r\n", output[i]);
+        }    
+
+        //  Validate the output size
+        if (lora_app_mtu() < output_len) {
+            printf("Can send at max %d bytes\r\n", lora_app_mtu());
+            return;
+        }
+
+        //  Attempt to allocate a pbuf
+        struct pbuf *om = lora_pkt_alloc(output_len);
+        if (!om) {
+            printf("Unable to allocate pbuf\r\n");
+            return;
+        }
+
+        //  Set unconfirmed / confirmed packet type
+        Mcps_t mcps_type;
+        if (pkt_type == 0) {
+            mcps_type = MCPS_UNCONFIRMED;
+        } else {
+            mcps_type = MCPS_CONFIRMED;
+        }
+
+        //  Copy the encoded CBOR into the pbuf
+        rc = pbuf_copyinto(om, 0, output, output_len);
+        assert(rc == 0);
+
+        //  Send the pbuf
+        rc = lora_app_port_send(port, mcps_type, om);
+        if (rc) {
+            printf("Failed to send to port %u err=%d\r\n", port, rc);
+            pbuf_free(om);
+        } else {
+            printf("Packet sent on port %u\r\n", port);
+        }        
+    }
+    return;
+
+cmd_app_tx_tsen_err:
+    printf("Transmit Internal Temperature Sensor Data to LoRaWAN, encoded with CBOR. Usage:\r\n");
+    printf("\tlas_app_tx_tsen <port> <type> <l> <count> <delay>\r\n");
+    printf("Where:\r\n");
+    printf("\tport  = Port number on which to send\r\n");
+    printf("\ttype  = 0 for unconfirmed, 1 for confirmed\r\n");
+    printf("\tl     = Value for l\r\n");
+    printf("\tcount = Number of messages to transmit\r\n");
+    printf("\tdelay = Delay between transmissions (seconds)\r\n");
+    printf("\tex: las_app_tx_tsen 2 0 2345 10 60\r\n");
+}
+
 void
 las_cmd_link_chk(char *buf0, int len0, int argc, char **argv)
 {
@@ -1122,4 +1297,72 @@ las_cmd_init(void)
     for (i = 0; i < LORA_APP_SHELL_MAX_APP_PAYLOAD; ++i) {
         las_cmd_app_tx_buf[i] = i;
     }
+}
+
+/// Read the Internal Temperature Sensor as Float. Returns 0 if successful.
+/// Based on bl_tsen_adc_get in https://github.com/lupyuen/bl_iot_sdk/blob/tsen/components/hal_drv/bl602_hal/bl_adc.c#L224-L282
+static int get_tsen_adc(
+    float *temp,      //  Pointer to float to store the temperature
+    uint8_t log_flag  //  0 to disable logging, 1 to enable logging
+) {
+    assert(temp != NULL);
+    static uint16_t tsen_offset = 0xFFFF;
+    float val = 0.0;
+
+    if (0xFFFF == tsen_offset) {
+        tsen_offset = 0;
+        ADC_CFG_Type adcCfg = {
+            .v18Sel=ADC_V18_SEL_1P82V,                /*!< ADC 1.8V select */
+            .v11Sel=ADC_V11_SEL_1P1V,                 /*!< ADC 1.1V select */
+            .clkDiv=ADC_CLK_DIV_32,                   /*!< Clock divider */
+            .gain1=ADC_PGA_GAIN_1,                    /*!< PGA gain 1 */
+            .gain2=ADC_PGA_GAIN_1,                    /*!< PGA gain 2 */
+            .chopMode=ADC_CHOP_MOD_AZ_PGA_ON,         /*!< ADC chop mode select */
+            .biasSel=ADC_BIAS_SEL_MAIN_BANDGAP,       /*!< ADC current form main bandgap or aon bandgap */
+            .vcm=ADC_PGA_VCM_1V,                      /*!< ADC VCM value */
+            .vref=ADC_VREF_2V,                        /*!< ADC voltage reference */
+            .inputMode=ADC_INPUT_SINGLE_END,          /*!< ADC input signal type */
+            .resWidth=ADC_DATA_WIDTH_16_WITH_256_AVERAGE,  /*!< ADC resolution and oversample rate */
+            .offsetCalibEn=0,                         /*!< Offset calibration enable */
+            .offsetCalibVal=0,                        /*!< Offset calibration value */
+        };
+
+
+        ADC_FIFO_Cfg_Type adcFifoCfg = {
+            .fifoThreshold = ADC_FIFO_THRESHOLD_1,
+            .dmaEn = DISABLE,
+        };
+
+        GLB_Set_ADC_CLK(ENABLE,GLB_ADC_CLK_96M, 7);
+
+        ADC_Disable();
+        ADC_Enable();
+
+        ADC_Reset();
+
+        ADC_Init(&adcCfg);
+        ADC_Channel_Config(ADC_CHAN_TSEN_P, ADC_CHAN_GND, 0);
+        ADC_Tsen_Init(ADC_TSEN_MOD_INTERNAL_DIODE);
+
+        ADC_FIFO_Cfg(&adcFifoCfg);
+
+        if (ADC_Trim_TSEN(&tsen_offset) == ERROR) {
+            printf("read efuse data failed\r\n");
+        }
+        assert(ADC_Trim_TSEN(&tsen_offset) != ERROR);
+
+        //  Must wait 100 milliseconds or returned temperature will be negative
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+    val = TSEN_Get_Temp(tsen_offset);
+    if (log_flag) {
+        printf("offset = %d\r\n", tsen_offset);
+        printf("temperature = %f Celsius\r\n", val);
+    }
+
+    if (temp) {
+        *temp = val;
+    }
+
+    return 0;
 }
