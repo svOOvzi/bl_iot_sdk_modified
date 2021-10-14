@@ -10,19 +10,23 @@ https://github.com/apache/mynewt-core/tree/master/apps/lora_app_shell
 
 This firmware calls the LoRaWAN Driver...
 
-- [`lorawan`: BL602 LoRaWAN Driver](../../components/3rdparty/lorawan)
+-   [`lorawan`: BL602 LoRaWAN Driver](../../components/3rdparty/lorawan)
 
 And the Semtech SX1262 Driver...
 
-- [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
+-   [`lora-sx1262`: Semtech SX1262 Driver](../../components/3rdparty/lora-sx1262)
 
-Read the article...
+Read the articles...
 
-https://lupyuen.github.io/articles/lorawan
+-   ["PineCone BL602 Talks LoRaWAN"](https://lupyuen.github.io/articles/lorawan)
 
-What is LoRaWAN? See this...
+-   ["LoRaWAN on PineDio Stack BL604 RISC-V Board"](https://lupyuen.github.io/articles/lorawan2)
 
-https://lupyuen.github.io/articles/lora2
+-   ["The Things Network on PineDio Stack BL604 RISC-V Board"](https://lupyuen.github.io/articles/ttn)
+
+-   ["Encode Sensor Data with CBOR on BL602"](https://lupyuen.github.io/articles/cbor)
+
+-   ["Internal Temperature Sensor on BL602"](https://lupyuen.github.io/articles/tsen)
 
 # LoRaWAN Commands
 
@@ -52,6 +56,14 @@ las_app_port open 2
 
 #  Send data to LoRaWAN port 2, 5 bytes, unconfirmed (0)
 las_app_tx 2 5 0
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0)
+las_app_tx_cbor 2 0 1234 2345
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0), 
+#  for 10 times, with a 60 second interval. Assuming that the Internal Temperature Sensor
+#  returns 12.34 degrees Celsius.
+las_app_tx_tsen 2 0 2345 10 60
 ```
 
 # LoRaWAN Commands for The Things Network
@@ -85,6 +97,14 @@ las_app_port open 2
 
 #  Send data to The Things Network port 2, 5 bytes, unconfirmed (0)
 las_app_tx 2 5 0
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0)
+las_app_tx_cbor 2 0 1234 2345
+
+#  Transmit the CBOR payload { "t": 1234, "l": 2345 } to port 2, unconfirmed (0), 
+#  for 10 times, with a 60 second interval. Assuming that the Internal Temperature Sensor
+#  returns 12.34 degrees Celsius.
+las_app_tx_tsen 2 0 2345 10 60
 ```
 
 # Message Integrity Code Errors
@@ -492,4 +512,330 @@ pbuf_queue_get
 lora_mac_proc_tx_q_event
 
 #
+```
+
+Output Log for `las_app_tx_tsen` (transmit internal temperature sensor)...
+
+```text
+# las_app_tx_tsen 2 0 4000 10 60
+offset = 2175
+temperature = 44.885849 Celsius
+Encode CBOR: { t: 4488, l: 4000 }
+CBOR Output: 11 bytes
+  0xa2 0x61 0x74 0x19 0x11 0x88 0x61 0x6c 0x19 0x0f 0xa0
+lwip_init
+-------------------->>>>>>>> LWIP tcp_port 49173
+lora_node_mcps_request
+pbuf_queue_put
+Packet sent on port 2
+lora_mac_proc_tx_q_event
+lora_mac_proc_tx_q_event: send from txq
+pbuf_queue_get
+Send
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=2
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=2
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=922200000
+SX126xWakeup
+RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
+RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=64, CrcMode=1, InvertIQ=0
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=7
+SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1
+SendFrameOnChannel: channel=2, datarate=2, txpower=0, maxeirp=16, antennagain=2
+RadioSend: size=24
+40 1a 10 0d 26 00 00 00 02 21 c5 80 e9 05 1d eb b6 1c 53 59 20 69 01 9d
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=24, CrcMode=1, InvertIQ=0
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=922200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+pbuf_queue_put
+lora_node_chk_txq
+pbuf_queue_get
+Txd on port 2 type=unconf status=0 len=11
+        dr:2
+        txpower (dbm):0
+        tries:1
+        ack_rxd:0
+        tx_time_on_air:371
+        uplink_cntr:0
+        uplink_chan:2
+pbuf_queue_get
+lora_mac_proc_tx_q_event
+offset = 2175
+temperature = 47.207531 Celsius
+Encode CBOR: { t: 4720, l: 4000 }
+CBOR Output: 11 bytes
+  0xa2 0x61 0x74 0x19 0x12 0x70 0x61 0x6c 0x19 0x0f 0xa0
+lora_node_mcps_request
+pbuf_queue_put
+Packet sent on port 2
+lora_mac_proc_tx_q_event
+lora_mac_proc_tx_q_event: send from txq
+pbuf_queue_get
+Send
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+egionAS923NextChannel: channel=0
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=0
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
+RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=64, CrcMode=1, InvertIQ=0
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=7
+SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1
+SendFrameOnChannel: channel=0, datarate=2, txpower=0, maxeirp=16, antennagain=2
+RadioSend: size=24
+40 1a 10 0d 26 00 01 00 02 a2 a3 b4 06 f0 c2 69 6e be 36 30 bf 9c 29 e3
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=24, CrcMode=1, InvertIQ=0
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_PREAMBLE_DETECTED
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_HEADER_VALID
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_DONE
+SX126xReadCommand
+SX126xReadCommand
+OnRadioRxDone
+lora_mac_process_radio_rx
+RadioSleep
+lora_mac_rx_win2_stop
+lora_mac_rtx_timer_stop
+pbuf_queue_put
+lora_node_chk_txq
+pbuf_queue_get
+Txd on port 2 type=unconf status=0 len=11
+        dr:2
+        txpower (dbm):0
+        tries:1
+        ack_rxd:0
+        tx_time_on_air:371
+        uplink_cntr:1
+        uplink_chan:0
+pbuf_queue_get
+lora_mac_proc_tx_q_event
+lora_mac_proc_tx_q_event: send empty msg
+Send
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=1
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=1
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=923400000
+SX126xWakeup
+RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
+RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=64, CrcMode=1, InvertIQ=0
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=7
+SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1
+SendFrameOnChannel: channel=1, datarate=2, txpower=0, maxeirp=16, antennagain=2
+RadioSend: size=15
+40 1a 10 0d 26 00 02 00 00 51 cd 88 53 99 7f
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=15, CrcMode=1, InvertIQ=0
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=923400000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+lora_node_chk_txq
+lora_mac_proc_tx_q_event
+offset = 2175
+temperature = 48.755322 Celsius
+Encode CBOR: { t: 4875, l: 4000 }
+CBOR Output: 11 bytes
+  0xa2 0x61 0x74 0x19 0x13 0x0b 0x61 0x6c 0x19 0x0f 0xa0
+lora_node_mcps_request
+pbuf_queue_put
+Packet sent on port 2
+lora_mac_proc_tx_q_event
+lora_mac_proc_tx_q_event: send from txq
+pbuf_queue_get
+Send
+ScheduleTx
+CalculateBackOff
+RegionNextChannel
+RegionAS923NextChannel
+RegionAS923NextChannel: channel=4
+RegionComputeRxWindowParameters
+RegionComputeRxWindowParameters
+lora_mac_rx_disable
+TODO: Radio.RxDisable
+SendFrameOnChannel: channel=4
+RegionTxConfig
+RegionAS923TxConfig
+RadioSetChannel: freq=922600000
+SX126xWakeup
+RadioSetTxConfig: modem=1, power=13, fdev=0, bandwidth=0, datarate=10, coderate=1, preambleLen=8, fixLen=0, crcOn=1, freqHopOn=0, hopPeriod=0, iqInverted=0, timeout=3000
+RadioSetTxConfig: SpreadingFactor=10, Bandwidth=4, CodingRate=1, LowDatarateOptimize=0, PreambleLength=8, HeaderType=0, PayloadLength=64, CrcMode=1, InvertIQ=0
+RadioStandby
+RadioSetModem
+SX126xSetRfTxPower
+SX126xSetTxParams: power=13, rampTime=7
+SX126xGetDeviceId: SX1262
+SX126xSetPaConfig: paDutyCycle=4, hpMax=7, deviceSel=0, paLut=1
+SendFrameOnChannel: channel=4, datarate=2, txpower=0, maxeirp=16, antennagain=2
+RadioSend: size=24
+40 1a 10 0d 26 00 03 00 02 68 c0 6f fd 81 d0 e4 9a 6f b3 10 5d 5b 6c 4a
+RadioSend: PreambleLength=8, HeaderType=0, PayloadLength=24, CrcMode=1, InvertIQ=0
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_TX_DONE
+OnRadioTxDone
+RadioSleep
+OnRxWindow1TimerEvent
+RadioSetChannel: freq=922600000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+OnRxWindow2TimerEvent
+RadioSetChannel: freq=923200000
+SX126xWakeup
+RadioSetRxConfig
+RadioStandby
+RadioSetModem
+RadioSetRxConfig done
+RadioRx
+RadioOnDioIrq
+RadioIrqProcess
+SX126xReadCommand
+IRQ_RX_TX_TIMEOUT
+OnRadioRxTimeout
+RadioSleep
+pbuf_queue_put
+lora_node_chk_txq
+pbuf_queue_get
+Txd on port 2 type=unconf status=0 len=11
+        dr:2
+        txpower (dbm):0
+        tries:1
+        ack_rxd:0
+        tx_time_on_air:371
+        uplink_cntr:3
+        uplink_chan:4
+pbuf_queue_get
+lora_mac_proc_tx_q_event
 ```

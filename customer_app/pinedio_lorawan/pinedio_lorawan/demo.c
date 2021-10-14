@@ -400,6 +400,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
     {"las_app_port",    "Open/close LoRaWAN application port",  las_cmd_app_port},
     {"las_app_tx",      "Transmit on LoRaWAN application port", las_cmd_app_tx},
     {"las_app_tx_cbor", "Transmit CBOR Payload on LoRaWAN",     las_cmd_app_tx_cbor},
+    {"las_app_tx_tsen", "Transmit Temperature on LoRaWAN",      las_cmd_app_tx_tsen},
     {"las_join",        "Perform a LoRaWAN OTA join",           las_cmd_join},
     {"las_link_chk",    "Perform a LoRaWAN link check",         las_cmd_link_chk},
 
