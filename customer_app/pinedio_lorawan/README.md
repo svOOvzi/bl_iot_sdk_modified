@@ -26,6 +26,8 @@ Read the articles...
 
 -   ["Encode Sensor Data with CBOR on BL602"](https://lupyuen.github.io/articles/cbor)
 
+-   ["Internal Temperature Sensor on BL602"](https://lupyuen.github.io/articles/tsen)
+
 # LoRaWAN Commands
 
 Run these commands to join the LoRaWAN Network and send data to the network...
