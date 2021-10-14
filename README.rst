@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Internal Temperature Sensor on BL602" <https://lupyuen.github.io/articles/tsen>`_
+
 - `"IoT Digital Twin with Roblox and The Things Network" <https://lupyuen.github.io/articles/roblox>`_
 
 - `"Encode Sensor Data with CBOR on BL602" <https://lupyuen.github.io/articles/cbor>`_
@@ -107,9 +109,9 @@ Changes
 
 - New Internal Temperature Sensor Firmware: `pinedio_tsen <customer_app/pinedio_tsen>`_
 
-- "pinedio" branch contains upstream updates for testing on PineDio Stack
+- New PineDio Stack LoRaWAN Firmware: `pinedio_lorawan <customer_app/pinedio_lorawan>`_
 
-- "tsen" branch reads the Internal Temperature Sensor and transmits over LoRaWAN
+- "pinedio" branch contains upstream updates for testing on PineDio Stack
 
 BL602 SDK (Pine64 version)
 ==========================
