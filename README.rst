@@ -1,5 +1,7 @@
 Pine64 BL602 SDK modded for the articles...
 
+- `"Internal Temperature Sensor on BL602" <https://lupyuen.github.io/articles/tsen>`_
+
 - `"IoT Digital Twin with Roblox and The Things Network" <https://lupyuen.github.io/articles/roblox>`_
 
 - `"Encode Sensor Data with CBOR on BL602" <https://lupyuen.github.io/articles/cbor>`_
