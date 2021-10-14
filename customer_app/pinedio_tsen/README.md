@@ -1,6 +1,8 @@
 # BL602 / BL604 Internal Temperature Sensor Firmware
 
-Read the article: https://lupyuen.github.io/articles/tsen
+Read the article...
+
+-   ["Internal Temperature Sensor on BL602"](https://lupyuen.github.io/articles/tsen)
 
 This firmware reads the Internal Temperature Sensor on BL602 and BL604.
 
@@ -16,6 +18,8 @@ We should see...
 temperature = 43.725010 Celsius
 Returned Temperature = 43 Celsius
 ```
+
+(The first reading may be negative due to a timing issue. This is fixed in `read_tsen2`)
 
 To read the temperature as float (instead of integer)...
 
