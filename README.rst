@@ -1,4 +1,6 @@
-Pine64 BL602 SDK modded for the articles...
+Pine64 BL602 IoT SDK modded for the articles...
+
+- `"CBOR Payload Formatter for The Things Network" <https://lupyuen.github.io/articles/payload>`_
 
 - `"Internal Temperature Sensor on BL602" <https://lupyuen.github.io/articles/tsen>`_
 
