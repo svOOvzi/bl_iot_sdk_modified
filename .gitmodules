@@ -13,3 +13,6 @@
 [submodule "components/3rdparty/tinycbor-bl602"]
 	path = components/3rdparty/tinycbor-bl602
 	url = https://github.com/lupyuen/tinycbor-bl602
+[submodule "components/3rdparty/lora-sx1262"]
+	path = components/3rdparty/lora-sx1262
+	url = https://github.com/lupyuen/lora-sx1262
