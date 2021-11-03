@@ -16,9 +16,9 @@
 [submodule "components/3rdparty/lora-sx1262"]
 	path = components/3rdparty/lora-sx1262
 	url = https://github.com/lupyuen/lora-sx1262
-[submodule "components/3rdparty/lorawan"]
-	path = components/3rdparty/lorawan
-	url = https://github.com/lupyuen/lorawan
 [submodule "components/3rdparty/lora-sx1276"]
 	path = components/3rdparty/lora-sx1276
 	url = https://github.com/lupyuen/lora-sx1276
+[submodule "components/3rdparty/lorawan"]
+	path = components/3rdparty/lorawan
+	url = https://github.com/lupyuen/lorawan
