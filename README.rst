@@ -1,5 +1,7 @@
 Pine64 BL602 IoT SDK modded for the articles...
 
+- `"Build a Linux Driver for PineDio LoRa SX1262 USB Adapter" <https://lupyuen.github.io/articles/usb>`_
+
 - `"Monitor IoT Devices in The Things Network with Prometheus and Grafana" <https://lupyuen.github.io/articles/prometheus>`_
 
 - `"CBOR Payload Formatter for The Things Network" <https://lupyuen.github.io/articles/payload>`_
@@ -81,8 +83,6 @@ Changes
 
 - New SPI Firmware that uses the SPI HAL: `sdk_app_spi_demo <customer_app/sdk_app_spi_demo>`_
 
-- (TO BE RENAMED: sdk_app_spi_demo) New SPI Firmware that uses the SPI HAL: `sdk_app_spi <customer_app/sdk_app_spi>`_
-
 - New Firmware for ST7789 SPI Display + LVGL Graphics Library: `sdk_app_st7789 <customer_app/sdk_app_st7789>`_
 
 - New Firmware for Grove E-Ink Display with UART Interface: `sdk_app_uart_eink <customer_app/sdk_app_uart_eink>`_
@@ -116,8 +116,6 @@ Changes
 - New Internal Temperature Sensor Firmware: `pinedio_tsen <customer_app/pinedio_tsen>`_
 
 - New PineDio Stack LoRaWAN Firmware: `pinedio_lorawan <customer_app/pinedio_lorawan>`_
-
-- "pinedio" branch contains upstream updates for testing on PineDio Stack
 
 BL602 SDK (Pine64 version)
 ==========================
