@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "cd customer_app/pinedio_blinky && ./run.sh",
+            "command": "git pull && cd customer_app/pinedio_lorawan && ./run.sh",
             "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",

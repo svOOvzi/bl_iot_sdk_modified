@@ -6,6 +6,8 @@ Pine64 BL602 IoT SDK modded for the articles...
 
 - `"Internal Temperature Sensor on BL602" <https://lupyuen.github.io/articles/tsen>`_
 
+- `"Internal Temperature Sensor on BL602" <https://lupyuen.github.io/articles/tsen>`_
+
 - `"IoT Digital Twin with Roblox and The Things Network" <https://lupyuen.github.io/articles/roblox>`_
 
 - `"Encode Sensor Data with CBOR on BL602" <https://lupyuen.github.io/articles/cbor>`_
@@ -108,6 +110,12 @@ Changes
 - New PineDio Stack BL604 Blinky Firmware: `pinedio_blinky <customer_app/pinedio_blinky>`_
 
 - New PineDio Stack ST7789 Firmware: `pinedio_st7789 <customer_app/pinedio_st7789>`_, `pinedio_st7789_bitbang <customer_app/pinedio_st7789_bitbang>`_
+
+- New CBOR Firmware: `pinedio_cbor <customer_app/pinedio_cbor>`_
+
+- New Internal Temperature Sensor Firmware: `pinedio_tsen <customer_app/pinedio_tsen>`_
+
+- New PineDio Stack LoRaWAN Firmware: `pinedio_lorawan <customer_app/pinedio_lorawan>`_
 
 - "pinedio" branch contains upstream updates for testing on PineDio Stack
 

@@ -175,9 +175,14 @@ void SX126xIoInit( void )
     GpioInitInput( SX126X_BUSY_PIN, 0, 0 );
     GpioInitInput( SX126X_DIO1, 0, 0 );
     ////GpioInitInput( SX126X_DEVICE_SEL_PIN, 0, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { GpioInitOutput( SX126X_DEBUG_CS_PIN, 1 ); }
+
+    //  Note: We must swap MISO and MOSI to comply with the SPI Pin Definitions in BL602 / BL604 Reference Manual
+    printf("Swap MISO and MOSI\r\n");
+    int rc = GLB_Swap_SPI_0_MOSI_With_MISO(ENABLE);  assert(rc == 0);
 
     //  Configure the SPI Port
-    int rc = spi_init(
+    rc = spi_init(
         &spi_device,     //  SPI Device
         SX126X_SPI_IDX,  //  SPI Port
         0,               //  SPI Mode: 0 for Controller
@@ -190,8 +195,8 @@ void SX126xIoInit( void )
         3,                    //  Receive DMA Channel
         SX126X_SPI_CLK_PIN,   //  SPI Clock Pin 
         SX126X_SPI_CS_OLD,    //  Unused SPI Chip Select Pin
-        SX126X_SPI_SDI_PIN,   //  SPI Serial Data In Pin  (formerly MISO)
-        SX126X_SPI_SDO_PIN    //  SPI Serial Data Out Pin (formerly MOSI)
+        SX126X_SPI_SDO_PIN,   //  SPI Serial Data Out Pin (formerly MOSI)
+        SX126X_SPI_SDI_PIN    //  SPI Serial Data In Pin  (formerly MISO)
     );
     assert(rc == 0);
 }
@@ -237,6 +242,7 @@ void SX126xIoDeInit( void )
     GpioInitOutput( SX126X_SPI_CS_PIN, 1 );
     GpioInitInput( SX126X_BUSY_PIN, 0, 0 );
     GpioInitInput( SX126X_DIO1, 0, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { GpioInitOutput( SX126X_DEBUG_CS_PIN, 1 ); }
 }
 
 void SX126xIoDbgInit( void )
@@ -303,7 +309,7 @@ void SX126xReset( void )
 
 void SX126xReset(void)
 {
-    #warning Check SX126xReset
+    //// #warning Check SX126xReset
 
     printf("SX126xReset\r\n");
 
@@ -347,11 +353,13 @@ void SX126xWakeup( void )
     CRITICAL_SECTION_BEGIN( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, RADIO_GET_STATUS );
     SpiInOut( SX126X_SPI_IDX, 0x00 );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     // Wait for chip to be ready.
     SX126xWaitOnBusy( );
@@ -367,6 +375,7 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
 
@@ -376,6 +385,7 @@ void SX126xWriteCommand( RadioCommands_t command, uint8_t *buffer, uint16_t size
     }
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     if( command != RADIO_SET_SLEEP )
     {
@@ -391,6 +401,7 @@ uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t si
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, ( uint8_t )command );
     status = SpiInOut( SX126X_SPI_IDX, 0x00 );
@@ -400,6 +411,7 @@ uint8_t SX126xReadCommand( RadioCommands_t command, uint8_t *buffer, uint16_t si
     }
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     SX126xWaitOnBusy( );
 
@@ -411,6 +423,7 @@ void SX126xWriteRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
     
     SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_REGISTER );
     SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
@@ -422,6 +435,7 @@ void SX126xWriteRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
     }
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     SX126xWaitOnBusy( );
 }
@@ -436,6 +450,7 @@ void SX126xReadRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, RADIO_READ_REGISTER );
     SpiInOut( SX126X_SPI_IDX, ( address & 0xFF00 ) >> 8 );
@@ -446,6 +461,7 @@ void SX126xReadRegisters( uint16_t address, uint8_t *buffer, uint16_t size )
         buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     SX126xWaitOnBusy( );
 }
@@ -462,6 +478,7 @@ void SX126xWriteBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, RADIO_WRITE_BUFFER );
     SpiInOut( SX126X_SPI_IDX, offset );
@@ -470,6 +487,7 @@ void SX126xWriteBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
         SpiInOut( SX126X_SPI_IDX, buffer[i] );
     }
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     SX126xWaitOnBusy( );
 }
@@ -479,6 +497,7 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
     SX126xCheckDeviceReady( );
 
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 0 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 0 ); }
 
     SpiInOut( SX126X_SPI_IDX, RADIO_READ_BUFFER );
     SpiInOut( SX126X_SPI_IDX, offset );
@@ -488,6 +507,7 @@ void SX126xReadBuffer( uint8_t offset, uint8_t *buffer, uint8_t size )
         buffer[i] = SpiInOut( SX126X_SPI_IDX, 0 );
     }
     bl_gpio_output_set( SX126X_SPI_CS_PIN, 1 );
+    if (SX126X_DEBUG_CS_PIN >= 0) { bl_gpio_output_set( SX126X_DEBUG_CS_PIN, 1 ); }
 
     SX126xWaitOnBusy( );
 }

@@ -21,13 +21,12 @@ static SPI_Flash_Cfg_Type *pFlashCfg;
 PtTable_Stuff_Config ptTableStuff[2];
 PtTable_Entry_Config ptEntry={0};
 
-#ifdef TODO  ////
+////  TODO: For Mynewt, main() should be commented out
 /*partiton need this*/
 void main(void)
 {
 
 }
-#endif  ////  TODO
 
 static BL_Err_Type PtTable_Flash_Read (uint32_t addr,uint8_t *data, uint32_t len)
 {
@@ -123,7 +122,7 @@ void mfg_flash_write_xtal_capcode(void)
 }
 
 int8_t mfg_flash_read_xtal_capcode(uint8_t *capcode,uint8_t reload)
-{    
+{
     if((reload!=0)&&(mfg_flash_read()!=0)){
         return -1;
     }

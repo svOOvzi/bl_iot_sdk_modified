@@ -18,33 +18,21 @@ The design of the SX1262 Driver is similar to the SX1276 Driver, which is explai
 
 The pins are defined here in [`include/sx126x-board.h`](include/sx126x-board.h)
 
-Note that BL602 Pins are mapped to specific SPI Functions, so not all SPI Pins may be remapped.
-
-| BL602 Pin     | SX1262 Pin          | Wire Colour 
-|:--------------|:--------------------|:-------------------
-| __`GPIO 0`__  | `BUSY`              | Dark Green
-| __`GPIO 1`__  | `ISO` _(MISO)_      | Light Green (Top)
-| __`GPIO 2`__  | Do Not Connect      | (Unused Chip Select)
-| __`GPIO 3`__  | `SCK`               | Yellow (Top)
-| __`GPIO 4`__  | `OSI` _(MOSI)_      | Blue (Top)
-| __`GPIO 11`__ | `DIO1`              | Yellow (Bottom)
-| __`GPIO 14`__ | `NSS`               | Orange
-| __`GPIO 17`__ | `RST`               | White
-| __`3V3`__     | `3.3V`              | Red
-| __`GND`__     | `GND`               | Black
-
 From [`include/sx126x-board.h`](include/sx126x-board.h):
 
 ```c
+//  Below are the pin numbers for PineDio Stack BL604 with onboard SX1262.
+//  TODO: Change the pin numbers for your SX1262 connection to BL602 / BL604
 #define SX126X_SPI_IDX           0  //  SPI Port 0
-#define SX126X_SPI_SDI_PIN       1  //  SPI Serial Data In Pin  (formerly MISO)
-#define SX126X_SPI_SDO_PIN       4  //  SPI Serial Data Out Pin (formerly MOSI)
-#define SX126X_SPI_CLK_PIN       3  //  SPI Clock Pin
-#define SX126X_SPI_CS_PIN       14  //  SPI Chip Select Pin
-#define SX126X_SPI_CS_OLD        2  //  Unused SPI Chip Select Pin
-#define SX126X_NRESET           17  //  Reset Pin
-#define SX126X_DIO1             11  //  DIO1
-#define SX126X_BUSY_PIN          0  //  Busy Pin
+#define SX126X_SPI_SDI_PIN       0  //  SPI Serial Data In Pin  (formerly MISO)
+#define SX126X_SPI_SDO_PIN      17  //  SPI Serial Data Out Pin (formerly MOSI)
+#define SX126X_SPI_CLK_PIN      11  //  SPI Clock Pin
+#define SX126X_SPI_CS_PIN       15  //  SPI Chip Select Pin
+#define SX126X_SPI_CS_OLD        8  //  Unused SPI Chip Select Pin
+#define SX126X_NRESET           18  //  Reset Pin
+#define SX126X_DIO1             19  //  DIO1
+#define SX126X_BUSY_PIN         10  //  Busy Pin
+#define SX126X_DEBUG_CS_PIN      5  //  Debug Chip Select Pin, mirrors the High / Low State of SX1262 Chip Select Pin. Set to -1 if not needed.
 #define SX126X_TCXO_WAKEUP_TIME  5  //  Time required for the TCXO to wakeup (milliseconds)
 #define SX126X_SPI_BAUDRATE  (200 * 1000)  //  SPI Frequency (200 kHz)
 ```

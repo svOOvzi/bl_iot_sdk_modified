@@ -52,7 +52,7 @@ static void backtrace_stack(int (*print_func)(const char *fmt, ...),
                             uintptr_t *fp, uintptr_t *regs)
 {
     uintptr_t *ra;
-    uint32_t i = 0; 
+    uint32_t i = 0;
 
     while (1) {
         ra = (uintptr_t *)*(unsigned long *)(fp - 1);
@@ -109,22 +109,22 @@ static inline void backtrace_stack_app(int (*print_func)(const char *fmt, ...), 
       return;
     }
 
-    pc = fp[-1];
+    pc = (uintptr_t *) fp[-1];  ////  TODO: Fix cast
 
     if ((((uintptr_t)pc & 0xff000000ul) != VALID_PC_START_XIP) && (((uintptr_t)pc & 0xff000000ul) != VALID_FP_START_XIP)) {
       print_func("!!");
       return;
     }
 
-    if (pc > VALID_FP_START_XIP) {
+    if (pc > (uintptr_t *) VALID_FP_START_XIP) {  ////  TODO: Fix cast
       /* there is a function that does not saved ra,
       * skip!
       * this value is the next fp
       */
-      fp = (uintptr_t *)pc;
+      fp = (unsigned long *)pc;  ////  TODO: Fix cast
     } else if ((uintptr_t)pc > VALID_PC_START_XIP) {
       print_func(" %p", pc);
-      fp = (uintptr_t *)fp[-2];
+      fp = (unsigned long *)fp[-2];  ////  TODO: Fix cast
 
       if (pc == (uintptr_t *)0) {
         break;
@@ -141,12 +141,12 @@ int backtrace_now_app(int (*print_func)(const char *fmt, ...)) {
     processing_backtrace = 1;
   } else {
     print_func("backtrace nested...\r\n");
-    return;
+    return 0;  ////  TODO: Fix return value
   }
 
 #if defined(__GNUC__)
   __asm__("add %0, x0, fp"
-	  : "=r"(fp));
+      : "=r"(fp));
 #else
 #error "Compiler is not gcc!"
 #endif
@@ -156,7 +156,7 @@ int backtrace_now_app(int (*print_func)(const char *fmt, ...)) {
   print_func(" <<\r\n");
 
   processing_backtrace = 0;
-
+  return 0;  ////  TODO: Fix return value
 }
 
 #else

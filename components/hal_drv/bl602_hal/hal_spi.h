@@ -29,6 +29,7 @@
  */
 #ifndef __HAL_SPI_H
 #define __HAL_SPI_H
+#include <hal/soc/spi.h>  //  For spi_dev_t
 
 int vfs_spi_fdt_init(uint32_t fdt, uint32_t dtb_uart_offset);
 

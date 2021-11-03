@@ -20,7 +20,7 @@ export BLFLASH_PATH=$PWD/../../../blflash
 export GCC_PATH=$PWD/../../../xpack-riscv-none-embed-gcc
 
 #  Build the firmware
-make
+make -j
 
 #  Generate the disassembly
 $GCC_PATH/bin/riscv-none-embed-objdump \

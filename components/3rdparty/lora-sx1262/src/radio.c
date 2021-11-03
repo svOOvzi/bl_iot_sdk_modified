@@ -539,7 +539,7 @@ void RadioInit( RadioEvents_t *events )
     //// #warning SX126x is set to LDO power regulator mode (instead of DC-DC)
     //// SX126xSetRegulatorMode( USE_LDO );   ////  Default: Use LDO
 
-    #warning SX126x is set to DC-DC power regulator mode (instead of LDO)
+    //// #warning SX126x is set to DC-DC power regulator mode (instead of LDO)
     SX126xSetRegulatorMode( USE_DCDC );  ////  Use DC-DC
 
     SX126xSetBufferBaseAddress( 0x00, 0x00 );
