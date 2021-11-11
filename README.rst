@@ -1,5 +1,7 @@
 Pine64 BL602 IoT SDK modded for the articles...
 
+- `"PineDio LoRa Gateway: Testing The Prototype" <https://lupyuen.github.io/articles/gateway>`_
+
 - `"Build a Linux Driver for PineDio LoRa SX1262 USB Adapter" <https://lupyuen.github.io/articles/usb>`_
 
 - `"Monitor IoT Devices in The Things Network with Prometheus and Grafana" <https://lupyuen.github.io/articles/prometheus>`_
