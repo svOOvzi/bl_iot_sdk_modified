@@ -339,7 +339,7 @@ blog init set power on level 2, 2, 2.
     task[29] : empty
     task[28] : empty
     task[27] : empty
-    task[26] :empty
+    task[26] : empty
     task[25] : empty
     task[24] : empty
     task[23] : empty
@@ -374,7 +374,7 @@ Display RST GPIO: 3
 SPI MOSI GPIO:    0
 SPI MISO GPIO:    8
 SPI SCK GPIO:     11
-SPI CS GPIO:      13
+SPI CS GPIO:      20
 Debug CS GPIO:    5
 Unused CS GPIO:   8
 Flash CS GPIO:    14
@@ -383,29 +383,29 @@ Backlight GPIO:   21
 Resolution:       10 x 5
 Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
-Set CS pin 13 to high
+Set CS pin 20 to high
 Set Debug CS pin 5 to high
 + rst 3
 - rst 3
 + rst 3
 c:01
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 - dc 13 command
 + dc 13 data
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 c:11
 - dc 13 command
 + dc 13 data
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 c:3a
 - dc 13 command
@@ -493,29 +493,29 @@ c:e1
 c:13
 - dc 13 command
 + dc 13 data
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 c:29
 - dc 13 command
 + dc 13 data
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 MADCTL
 c:36
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 - dc 13 command
 + dc 13 data
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 
 # display_image
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -530,10 +530,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -544,10 +544,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -558,10 +558,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -572,10 +572,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -586,10 +586,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -604,10 +604,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -618,10 +618,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -632,10 +632,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -646,10 +646,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -660,10 +660,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -678,10 +678,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -692,10 +692,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -706,10 +706,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -720,10 +720,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -734,10 +734,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -752,10 +752,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -766,10 +766,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -780,10 +780,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -794,10 +794,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -808,10 +808,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -826,10 +826,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -840,10 +840,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -854,10 +854,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -868,10 +868,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -882,10 +882,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -900,10 +900,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -914,10 +914,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -928,10 +928,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -942,10 +942,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -956,10 +956,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -974,10 +974,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -988,10 +988,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -1002,10 +1002,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -1016,10 +1016,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -1030,10 +1030,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -1048,24 +1048,23 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
-c:2a d:0001 0001
-- dc 13 command
+- dc 13 command1
 + dc 13 data
 RAMWR
 c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -1076,10 +1075,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -1090,10 +1089,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -1104,10 +1103,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -1122,10 +1121,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
@@ -1136,10 +1135,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -1150,10 +1149,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -1164,10 +1163,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -1178,10 +1177,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
@@ -1196,11 +1195,11 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
-+ cs2 5 enable
++ cs 20 enable
++ cs2 5enable
 CASET
 c:2a d:0001 0001
 - dc 13 command
@@ -1210,10 +1209,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
@@ -1224,10 +1223,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
@@ -1238,10 +1237,10 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 + dc 13 data
-+ cs 13 enable
++ cs 20 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
@@ -1252,7 +1251,7 @@ c:2c
 - dc 13 command
 + dc 13 data
   d:aaaa
-- cs 13 disable
+- cs 20 disable
 - cs2 5 disable
 
 #

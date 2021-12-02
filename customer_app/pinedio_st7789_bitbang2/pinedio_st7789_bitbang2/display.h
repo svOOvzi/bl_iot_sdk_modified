@@ -41,7 +41,7 @@
 #define DISPLAY_BLK_PIN  21
 
 /// GPIO for ST7789 SPI Chip Select Pin. We control Chip Select ourselves via GPIO, not SPI.
-#define DISPLAY_CS_PIN   13
+#define DISPLAY_CS_PIN   20
 
 /// GPIO for ST7789 SPI SCK Pin
 #define DISPLAY_SCK_PIN  11
