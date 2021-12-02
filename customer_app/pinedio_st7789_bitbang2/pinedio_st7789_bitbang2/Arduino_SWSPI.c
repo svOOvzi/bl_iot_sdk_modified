@@ -106,20 +106,33 @@ void Arduino_SWSPI_batchOperation(uint8_t batch[], size_t len)
     case BEGIN_WRITE:
       Arduino_SWSPI_beginWrite();
       break;
-    case WRITE_C8_D16:
-      l++;
+    case WRITE_C8_D16:    
+      //// l++;
       /* fall through */
     case WRITE_C8_D8:
-      l++;
+      //// l++;
       /* fall through */
     case WRITE_COMMAND_8:
+      if (batch[i] == WRITE_C8_D16) { ////
+        l++; ////
+        l++; ////
+      } ////
+
+      if (batch[i] == WRITE_C8_D8) { ////
+        l++; ////
+      } ////
+
       debug_st7789("c:%02x\r\n", batch[i + 1]);
       Arduino_SWSPI_writeCommand(batch[++i]);
       break;
     case WRITE_C16_D16:
-      l = 2;
+      //// l = 2;
       /* fall through */
     case WRITE_COMMAND_16:
+      if (batch[i] == WRITE_C16_D16) { ////
+        l = 2; ////
+      } ////
+
       _data16.msb = batch[++i];
       _data16.lsb = batch[++i];
       Arduino_SWSPI_writeCommand16(_data16.value);

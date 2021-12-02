@@ -189,10 +189,15 @@ void Arduino_ST7789_tftInit()
   if (_rst >= 0)
   {
     pinMode(_rst, OUTPUT);
+    debug_st7789("+ rst %d\r\n", _rst);
     digitalWrite(_rst, HIGH);
     Arduino_SWSPI_delay(100);
+
+    debug_st7789("- rst %d\r\n", _rst);
     digitalWrite(_rst, LOW);
     Arduino_SWSPI_delay(ST7789_RST_DELAY);
+
+    debug_st7789("+ rst %d\r\n", _rst);
     digitalWrite(_rst, HIGH);
     Arduino_SWSPI_delay(ST7789_RST_DELAY);
   }

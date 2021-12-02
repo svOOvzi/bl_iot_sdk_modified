@@ -74,17 +74,18 @@ static void Arduino_TFT_writePixelPreclipped(int16_t x, int16_t y, uint16_t colo
 static void test_display_init(char *buf, int len, int argc, char **argv)
 {
     int rc;
-    printf("Display DC GPIO: %d\r\n", DISPLAY_DC_PIN);
-    printf("SPI MOSI GPIO:   %d\r\n", DISPLAY_MOSI_PIN);
-    printf("SPI MISO GPIO:   %d\r\n", DISPLAY_MISO_PIN);
-    printf("SPI SCK GPIO:    %d\r\n", DISPLAY_SCK_PIN);
-    printf("SPI CS GPIO:     %d\r\n", DISPLAY_CS_PIN);
-    printf("Debug CS GPIO:   %d\r\n", DISPLAY_DEBUG_CS_PIN);
-    printf("Unused CS GPIO:  %d\r\n", DISPLAY_UNUSED_CS_PIN);
-    printf("Flash CS GPIO:   %d\r\n", FLASH_CS_PIN);
-    printf("SX1262 CS GPIO:  %d\r\n", SX1262_CS_PIN);
-    printf("Backlight GPIO:  %d\r\n", DISPLAY_BLK_PIN);
-    printf("Resolution:     %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
+    printf("Display DC GPIO:  %d\r\n", DISPLAY_DC_PIN);
+    printf("Display RST GPIO: %d\r\n", DISPLAY_RST_PIN);
+    printf("SPI MOSI GPIO:    %d\r\n", DISPLAY_MOSI_PIN);
+    printf("SPI MISO GPIO:    %d\r\n", DISPLAY_MISO_PIN);
+    printf("SPI SCK GPIO:     %d\r\n", DISPLAY_SCK_PIN);
+    printf("SPI CS GPIO:      %d\r\n", DISPLAY_CS_PIN);
+    printf("Debug CS GPIO:    %d\r\n", DISPLAY_DEBUG_CS_PIN);
+    printf("Unused CS GPIO:   %d\r\n", DISPLAY_UNUSED_CS_PIN);
+    printf("Flash CS GPIO:    %d\r\n", FLASH_CS_PIN);
+    printf("SX1262 CS GPIO:   %d\r\n", SX1262_CS_PIN);
+    printf("Backlight GPIO:   %d\r\n", DISPLAY_BLK_PIN);
+    printf("Resolution:       %d x %d\r\n", LV_VER_RES_MAX, LV_HOR_RES_MAX);
 
 #ifdef NOTUSED
     //  Configure Chip Select, Data/Command, MOSI, SCK pins as GPIO Pins
@@ -115,10 +116,11 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
     rc = bl_gpio_enable_output(DISPLAY_MOSI_PIN, 0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_SCK_PIN,  0, 0);  assert(rc == 0);
 
-    //  Configure DC, Chip Select, Backlight pins as GPIO Output Pins (instead of GPIO Input)
-    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,  0, 0);  assert(rc == 0);
-    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN, 0, 0);  assert(rc == 0);
+    //  Configure DC, Chip Select, Reset, Backlight pins as GPIO Output Pins (instead of GPIO Input)
+    rc = bl_gpio_enable_output(DISPLAY_DC_PIN,   0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_CS_PIN,   0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_RST_PIN,  0, 0);  assert(rc == 0);
+    rc = bl_gpio_enable_output(DISPLAY_BLK_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(DISPLAY_DEBUG_CS_PIN,  0, 0);  assert(rc == 0);  //  TODO: Remove in production
     rc = bl_gpio_enable_output(FLASH_CS_PIN,  0, 0);  assert(rc == 0);
     rc = bl_gpio_enable_output(SX1262_CS_PIN, 0, 0);  assert(rc == 0);
@@ -147,7 +149,7 @@ static void test_display_init(char *buf, int len, int argc, char **argv)
         DISPLAY_DEBUG_CS_PIN  //  cs2
     );
     Arduino_ST7789_Arduino_ST7789(
-        -1,     //  rst, 
+        DISPLAY_RST_PIN,   //  rst, 
         0,      //  r
         false,  //  ips
         LV_HOR_RES_MAX,  //  w
@@ -302,64 +304,161 @@ void __assert_func(const char *file, int line, const char *func, const char *fai
 
 /* Output Log:
 
+# reboot
+reboot
+▒Starting bl602 now....
+Booting BL602 Chip...
+██████╗ ██╗      ██████╗  ██████╗ ██████╗
+██╔══██╗██║     ██╔════╝ ██╔═████╗╚════██╗
+██████╔╝██║     ███████╗ ██║██╔██║ █████╔╝
+██╔══██╗██║     ██╔═══██╗████╔╝██║██╔═══╝
+██████╔╝███████╗╚██████╔╝╚██████╔╝███████╗
+╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝
+
+
+------------------------------------------------------------
+RISC-V Core Feature:RV32-ACFIMX
+Build Version: release_bl_iot_sdk_1.6.11-1-g66bb28da-dirty
+Build Date: Dec  2 2021
+Build Time: 14:14:27
+------------------------------------------------------------
+
+blog init set power on level 2, 2, 2.
+[IRQ] Clearing and Disable all the pending IRQ...
+[OS] Starting aos_loop_proc task...
+[OS] Starting OS Scheduler...
+=== 32 task inited
+====== bloop dump ======
+  bitmap_evt 0
+  bitmap_msg 0
+--->>> timer list:
+  32 task:
+    task[31] : SYS [built-in]
+      evt handler 0x2300a616, msg handler 0x2300a5e6, trigged cnt 0, bitmap async 0 sync 0, time consumed 0us acc 0ms, max 0us
+    task[30] : empty
+    task[29] : empty
+    task[28] : empty
+    task[27] : empty
+    task[26] :empty
+    task[25] : empty
+    task[24] : empty
+    task[23] : empty
+    task[22] : empty
+    task[21] : empty
+    task[20] : empty
+    task[19] : empty
+    task[18] : empty
+    task[17] : empty
+    task[16] : empty
+    task[15] : empty
+    task[14] : empty
+    task[13] : empty
+    task[12] : empty
+    task[11] : empty
+    task[10] : empty
+    task[09] : empty
+    task[08] : empty
+    task[07] : empty
+    task[06] : empty
+    task[05] : empty
+    task[04] : empty
+    task[03] : empty
+    task[02] : empty
+    task[01] : empty
+    task[00] : empty
+Init CLI with event Driven
 
 # display_init
-SPI MOSI GPIO:  17
-SPI MISO GPIO:  0
-SPI SCK GPIO:   11
-SPI CS GPIO:    20
-Debug CS GPIO:  5
-Unused CS GPIO: 8
-Flash CS GPIO:  14
-SX1262 CS GPIO: 15
-Backlight GPIO: 21
-Resolution:     10 x 5
+Display DC GPIO:  13
+Display RST GPIO: 3
+SPI MOSI GPIO:    0
+SPI MISO GPIO:    8
+SPI SCK GPIO:     11
+SPI CS GPIO:      13
+Debug CS GPIO:    5
+Unused CS GPIO:   8
+Flash CS GPIO:    14
+SX1262 CS GPIO:   15
+Backlight GPIO:   21
+Resolution:       10 x 5
 Set Flash CS pin 14 to high
 Set SX1262 CS pin 15 to high
-Set CS pin 20 to high
+Set CS pin 13 to high
 Set Debug CS pin 5 to high
++ rst 3
+- rst 3
++ rst 3
 c:01
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+- cs 13 disable
 - cs2 5 disable
-Sleep 120 ms
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 c:11
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+- cs 13 disable
 - cs2 5 disable
-Sleep 120 ms
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 c:3a
+- dc 13 command
++ dc 13 data
   d:55
 c:36
+- dc 13 command
++ dc 13 data
   d:00
 c:b2
+- dc 13 command
++ dc 13 data
   d:0c
   d:0c
   d:00
   d:33
   d:33
 c:b7
+- dc 13 command
++ dc 13 data
   d:35
 c:bb
+- dc 13 command
++ dc 13 data
   d:19
 c:c0
+- dc 13 command
++ dc 13 data
   d:2c
 c:c2
+- dc 13 command
++ dc 13 data
   d:01
 c:c3
+- dc 13 command
++ dc 13 data
   d:12
 c:c4
+- dc 13 command
++ dc 13 data
   d:20
 c:c6
+- dc 13 command
++ dc 13 data
   d:0f
 c:d0
+- dc 13 command
++ dc 13 data
   d:a4
   d:a1
 c:e0
+- dc 13 command
++ dc 13 data
   d:f0
   d:09
   d:13
@@ -375,6 +474,8 @@ c:e0
   d:1d
   d:21
 c:e1
+- dc 13 command
++ dc 13 data
   d:f0
   d:09
   d:13
@@ -390,492 +491,769 @@ c:e1
   d:1d
   d:21
 c:13
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+- cs 13 disable
 - cs2 5 disable
-Sleep 10 ms
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 c:29
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+- cs 13 disable
 - cs2 5 disable
 MADCTL
 c:36
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
-- cs 20 dible
+- dc 13 command
++ dc 13 data
+- cs 13 disable
 - cs2 5 disable
 
 # display_image
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0000 0000
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0005 0005
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
-:2c
-  d:a0a0
-- cs 20 disable
+c:2c
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0006 0006
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0007 0007
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0008 0008
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0000 0000
+- dc 13 command
++ dc 13 data
 RASET
 c:2b d:0009 0009
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0001 0001
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0002 0002
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0003 0003
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
-+ cs 20 enable
++ dc 13 data
++ cs 13 enable
 + cs2 5 enable
 CASET
 c:2a d:0004 0004
+- dc 13 command
++ dc 13 data
 RAMWR
 c:2c
-  d:a0a0
-- cs 20 disable
+- dc 13 command
++ dc 13 data
+  d:aaaa
+- cs 13 disable
 - cs2 5 disable
 
-# 
+#
 */
